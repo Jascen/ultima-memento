@@ -17,6 +17,7 @@ using Server.Spells.Elementalism;
 using System.Text;
 using Server;
 using System.IO;
+using Server.Engines.MLQuests;
 
 namespace Server.Mobiles
 {
@@ -343,7 +344,7 @@ namespace Server.Mobiles
 		}
 	}
 
-	public class BaseCreature : Mobile
+	public class BaseCreature : Mobile, IQuestGiver
 	{
 		public const int MaxLoyalty = 100;
 
@@ -526,6 +527,74 @@ namespace Server.Mobiles
 			set { m_SummonEnd = value; }
 		}
 
+		#region ML Quest System
+
+		private List<MLQuest> m_MLQuests;
+
+		public List<MLQuest> MLQuests
+		{
+			get
+			{
+				if ( m_MLQuests == null )
+				{
+					if ( StaticMLQuester )
+						m_MLQuests = MLQuestSystem.FindQuestList( GetType() );
+					else
+						m_MLQuests = ConstructQuestList();
+
+					if ( m_MLQuests == null )
+						return MLQuestSystem.EmptyList; // return EmptyList, but don't cache it (run construction again next time)
+				}
+
+				return m_MLQuests;
+			}
+		}
+
+		public virtual bool CanGiveMLQuest { get { return ( MLQuests.Count != 0 ); } }
+		public virtual bool StaticMLQuester { get { return true; } }
+
+		protected virtual List<MLQuest> ConstructQuestList()
+		{
+			return null;
+		}
+		
+		public virtual bool CanShout { get { return false; } }
+
+		public const int ShoutRange = 8;
+		public static readonly TimeSpan ShoutDelay = TimeSpan.FromMinutes( 1 );
+
+		private DateTime m_MLNextShout;
+
+		private void CheckShout( PlayerMobile pm, Point3D oldLocation )
+		{
+			if ( m_MLNextShout > DateTime.UtcNow || pm.Hidden || !pm.Alive )
+				return;
+
+			int shoutRange = ShoutRange;
+
+			if ( !InRange( pm.Location, shoutRange ) || InRange( oldLocation, shoutRange ) || !CanSee( pm ) || !InLOS( pm ) )
+				return;
+
+			MLQuestContext context = MLQuestSystem.GetContext( pm );
+
+			if ( context != null && context.IsFull )
+				return;
+
+			MLQuest quest = MLQuestSystem.RandomStarterQuest( this, pm, context );
+
+			if ( quest == null || !quest.Activated || ( context != null && context.IsDoingQuest( quest ) ) )
+				return;
+
+			Shout( pm );
+			m_MLNextShout = DateTime.UtcNow + ShoutDelay;
+		}
+
+		public virtual void Shout( PlayerMobile pm )
+		{
+		}
+
+		#endregion
+		
 		#region Bonding
 		public const bool BondingEnabled = true;
 
@@ -5657,6 +5726,14 @@ namespace Server.Mobiles
 			else if ( CheckGold( from, dropped ) )
 				return true;
 
+			// Note: Yes, this happens for all questers (regardless of type, e.g. escorts),
+			// even if they can't offer you anything at the moment
+			if ( CanGiveMLQuest && from is PlayerMobile )
+			{
+				MLQuestSystem.Tell( this, (PlayerMobile)from, 1074893 ); // You need to mark your quest items so I don't take the wrong object.  Then speak to me.
+				return false;
+			}
+
 			return base.OnDragDrop( from, dropped );
 		}
 
@@ -6439,6 +6516,8 @@ namespace Server.Mobiles
 			//if ( IsAnimatedDead )
 			//	Spells.Necromancy.AnimateDeadSpell.Unregister( m_SummonMaster, this );
 
+				MLQuestSystem.HandleDeletion( this );
+
 			base.OnAfterDelete();
 		}
 
@@ -7120,6 +7199,9 @@ namespace Server.Mobiles
 			}
 			/* End notice sound */
 
+			if ( CanShout && m is PlayerMobile )
+				CheckShout( (PlayerMobile)m, oldLocation );
+
 			if ( m_NoDupeGuards == m )
 				return;
 
@@ -7552,6 +7634,12 @@ namespace Server.Mobiles
 				Delete();
 			}
 
+			if ( CanGiveMLQuest && from is PlayerMobile )
+			{
+				MLQuestSystem.OnDoubleClick( this, (PlayerMobile)from );
+				return;
+			}
+
 			base.OnDoubleClick( from );
 		}
 
@@ -7789,6 +7877,9 @@ namespace Server.Mobiles
 		public override void AddNameProperties( ObjectPropertyList list )
 		{
 			base.AddNameProperties( list );
+
+			if ( CanGiveMLQuest )
+				list.Add( 1072269 ); // Quest Giver
 
 			if ( DisplayWeight && Controlled )
 				list.Add( TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString() ); // Weight: ~1_WEIGHT~ stones
@@ -8361,6 +8452,7 @@ namespace Server.Mobiles
 
 			if ( killer is PlayerMobile )
 			{
+					MLQuestSystem.HandleKill( (PlayerMobile) killer, this );
 				AssassinFunctions.CheckTarget( killer, this );
 				StandardQuestFunctions.CheckTarget( killer, this, null );
 				FishingQuestFunctions.CheckTarget( killer, this, null );

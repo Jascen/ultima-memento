@@ -1,4 +1,5 @@
 using System;
+using Server.Network;
 
 namespace Server
 {
@@ -9,6 +10,7 @@ namespace Server
 
 		public int Number{ get{ return m_Number; } }
 		public string String{ get{ return m_String; } }
+		public bool IsEmpty { get { return ( m_Number <= 0 && m_String == null ); } }
 
 		public TextDefinition( int number ) : this( number, null )
 		{
@@ -120,6 +122,33 @@ namespace Server
 				m.SendLocalizedMessage( def.Number );
 			else if( def.String != null )
 				m.SendMessage( def.String );
+		}
+
+		public static void SendMessageTo( Mobile m, TextDefinition def, int hue )
+		{
+			if ( def == null )
+				return;
+
+			if ( def.m_Number > 0 )
+				m.SendLocalizedMessage( def.m_Number, "", hue );
+			else if ( def.m_String != null )
+				m.SendMessage( hue, def.m_String );
+		}
+
+		public static void PublicOverheadMessage( Mobile m, MessageType messageType, int hue, TextDefinition def )
+		{
+			if ( def == null )
+				return;
+
+			if ( def.m_Number > 0 )
+				m.PublicOverheadMessage( messageType, hue, def.m_Number );
+			else if ( def.m_String != null )
+				m.PublicOverheadMessage( messageType, hue, false, def.m_String );
+		}
+
+		public static bool IsNullOrEmpty( TextDefinition def )
+		{
+			return ( def == null || def.IsEmpty );
 		}
 	}
 }

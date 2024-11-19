@@ -20,6 +20,7 @@ using Server.Regions;
 using Server.Accounting;
 using Server.Engines.Craft;
 using Server.Engines.PartySystem;
+using Server.Engines.MLQuests;
 
 namespace Server.Mobiles
 {
@@ -1696,6 +1697,8 @@ namespace Server.Mobiles
 						list.Add( new EjectPlayerEntry( from, this ) );
 				}
 			}
+
+			list.Add( new CallbackEntry( 6169, new ContextCallback( ToggleQuestItem ) ) ); // Toggle Quest Item
 		}
 
 		#region Insurance
@@ -1846,6 +1849,62 @@ namespace Server.Mobiles
 					m_Player.SendLocalizedMessage( 1042021 ); // Cancelled.
 				}
 			}
+		}
+
+		#endregion
+
+		#region Toggle Quest Item
+
+		private void ToggleQuestItem()
+		{
+			if ( !CheckAlive() )
+				return;
+
+			ToggleQuestItemTarget();
+		}
+
+		private void ToggleQuestItemTarget()
+		{
+			Server.Engines.MLQuests.Gumps.BaseQuestGump.CloseOtherGumps( this );
+			CloseGump( typeof( Server.Engines.MLQuests.Gumps.QuestLogDetailedGump ) );
+			CloseGump( typeof( Server.Engines.MLQuests.Gumps.QuestLogGump ) );
+			CloseGump( typeof( Server.Engines.MLQuests.Gumps.QuestOfferGump ) );
+			//CloseGump( typeof( UnknownGump802 ) );
+			//CloseGump( typeof( UnknownGump804 ) );
+
+			BeginTarget( -1, false, TargetFlags.None, new TargetCallback( ToggleQuestItem_Callback ) );
+			SendLocalizedMessage( 1072352 ); // Target the item you wish to toggle Quest Item status on <ESC> to cancel
+		}
+
+		private void ToggleQuestItem_Callback( Mobile from, object obj )
+		{
+			if ( !CheckAlive() )
+				return;
+
+			Item item = obj as Item;
+
+			if ( item == null )
+				return;
+
+			if ( from.Backpack == null || item.Parent != from.Backpack )
+			{
+				SendLocalizedMessage( 1074769 ); // An item must be in your backpack (and not in a container within) to be toggled as a quest item.
+			}
+			else if ( item.QuestItem )
+			{
+				item.QuestItem = false;
+				SendLocalizedMessage( 1072354 ); // You remove Quest Item status from the item
+			}
+			else if ( MLQuestSystem.MarkQuestItem( this, item ) )
+			{
+				SendLocalizedMessage( 1072353 ); // You set the item to Quest Item status
+			}
+			else
+			{
+				SendLocalizedMessage( 1072355, "", 0x23 ); // That item does not match any of your quest criteria
+			}
+
+			ToggleQuestItemTarget();
 		}
 
 		#endregion
@@ -3924,6 +3983,8 @@ namespace Server.Mobiles
 
 			BaseHouse.HandleDeletion( this );
 
+			MLQuestSystem.HandleDeletion( this );
+
 			DisguiseTimers.RemoveTimer( this );
 		}
 
@@ -4013,6 +4074,11 @@ namespace Server.Mobiles
 				else
 					BuffInfo.CleanupIcons( this, true );
 			}
+		}
+
+		public override void OnSkillChange( SkillName skill, double oldBase )
+		{
+			MLQuestSystem.HandleSkillGain( this, skill );
 		}
 
 		#region Fastwalk Prevention

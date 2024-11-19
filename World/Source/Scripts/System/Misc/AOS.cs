@@ -776,6 +776,11 @@ namespace Server
 				list.Add( 1060451 + 4, "#{0}\t{1}", 1044060 + (int)skill4, bonus4 );
 		}
 
+		public static int GetLabel( SkillName skill )
+		{
+			return 1044060 + (int)skill; // From RunUO 2.7
+		}
+
 		public void AddTo( Mobile m )
 		{
 			Remove();
