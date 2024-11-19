@@ -10,6 +10,7 @@ using System.Collections;
 using Server.Commands.Generic;
 using Server.Items;
 using System.IO;
+using System.Reflection;
 
 namespace Server.Engines.MLQuests
 {
@@ -103,6 +104,31 @@ namespace Server.Engines.MLQuests
 
 							RegisterQuestGiver(quest, questerType);
 						}
+					}
+				}
+			}
+			else
+			{
+				// Dynamically discover and register
+				foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
+				{
+					if (!baseQuestType.IsAssignableFrom(type)) continue;
+
+					MLQuest quest = null;
+
+					try
+					{
+						quest = Activator.CreateInstance(type) as MLQuest;
+					}
+					catch { }
+
+					if (quest == null) continue;
+
+					Register(type, quest);
+
+					foreach (var questGiver in quest.GetQuestGivers())
+					{
+						RegisterQuestGiver(quest, questGiver);
 					}
 				}
 			}

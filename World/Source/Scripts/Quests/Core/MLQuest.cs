@@ -13,7 +13,7 @@ namespace Server.Engines.MLQuests
 		Any
 	}
 
-	public class MLQuest
+	public abstract class MLQuest
 	{
 		private bool m_Deserialized;
 		private bool m_SaveEnabled;
@@ -143,6 +143,8 @@ namespace Server.Engines.MLQuests
 
 			m_SaveEnabled = true;
 		}
+
+		public abstract IEnumerable<Type> GetQuestGivers();
 
 		/// <summary>
 		/// Everything required to complete the Quest
