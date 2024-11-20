@@ -15,84 +15,28 @@ namespace Server.Engines.MLQuests
 
 	public abstract class MLQuest
 	{
-		private bool m_Deserialized;
-		private bool m_SaveEnabled;
-
-		public bool Deserialized
-		{
-			get { return m_Deserialized; }
-			set { m_Deserialized = value; }
-		}
-
-		public bool SaveEnabled
-		{
-			get { return m_SaveEnabled; }
-			set { m_SaveEnabled = value; }
-		}
-
-		private bool m_Activated;
-		private List<BaseObjective> m_Objectives;
-		private ObjectiveType m_ObjectiveType;
-		private List<BaseReward> m_Rewards;
-
-		private List<MLQuestInstance> m_Instances;
-
-		private TextDefinition m_Title;
-		private TextDefinition m_Description;
-		private TextDefinition m_RefuseMessage;
-		private TextDefinition m_InProgressMessage;
-		private TextDefinition m_CompletionMessage;
-		private TextDefinition m_CompletionNotice;
+		public bool Deserialized { get; private set; }
+		public bool SaveEnabled { get; set; }
 
 		// TODO: Flags? (Deserialized, SaveEnabled, Activated)
-		private bool m_OneTimeOnly;
-		private bool m_HasRestartDelay;
 
-		public bool Activated
-		{
-			get { return m_Activated; }
-			set { m_Activated = value; }
-		}
+		public bool Activated { get; protected set; }
 
-		public List<BaseObjective> Objectives
-		{
-			get { return m_Objectives; }
-			set { m_Objectives = value; }
-		}
+		public List<BaseObjective> Objectives { get; protected set; }
 
-		public ObjectiveType ObjectiveType
-		{
-			get { return m_ObjectiveType; }
-			set { m_ObjectiveType = value; }
-		}
+		public ObjectiveType ObjectiveType { get; protected set; }
 
-		public List<BaseReward> Rewards
-		{
-			get { return m_Rewards; }
-			set { m_Rewards = value; }
-		}
+		public List<BaseReward> Rewards { get; protected set; }
 
-		public List<MLQuestInstance> Instances
-		{
-			get { return m_Instances; }
-			set { m_Instances = value; }
-		}
+		public readonly List<MLQuestInstance> Instances;
 
-		public bool OneTimeOnly
-		{
-			get { return m_OneTimeOnly; }
-			set { m_OneTimeOnly = value; }
-		}
+		public bool OneTimeOnly { get; protected set; }
 
-		public bool HasRestartDelay
-		{
-			get { return m_HasRestartDelay; }
-			set { m_HasRestartDelay = value; }
-		}
+		public bool HasRestartDelay { get; protected set; }
 
 		public bool HasObjective<T>() where T : BaseObjective
 		{
-			foreach (BaseObjective obj in m_Objectives)
+			foreach (BaseObjective obj in Objectives)
 			{
 				if (obj is T)
 					return true;
@@ -113,18 +57,18 @@ namespace Server.Engines.MLQuests
 
 		public virtual bool RecordCompletion
 		{
-			get { return (m_OneTimeOnly || m_HasRestartDelay); }
+			get { return OneTimeOnly || HasRestartDelay; }
 		}
 
 		public virtual bool IsChainTriggered { get { return false; } }
 		public virtual Type NextQuest { get { return null; } }
 
-		public TextDefinition Title { get { return m_Title; } set { m_Title = value; } }
-		public TextDefinition Description { get { return m_Description; } set { m_Description = value; } }
-		public TextDefinition RefusalMessage { get { return m_RefuseMessage; } set { m_RefuseMessage = value; } }
-		public TextDefinition InProgressMessage { get { return m_InProgressMessage; } set { m_InProgressMessage = value; } }
-		public TextDefinition CompletionMessage { get { return m_CompletionMessage; } set { m_CompletionMessage = value; } }
-		public TextDefinition CompletionNotice { get { return m_CompletionNotice; } set { m_CompletionNotice = value; } }
+		public TextDefinition Title { get; protected set; }
+		public TextDefinition Description { get; protected set; }
+		public TextDefinition RefusalMessage { get; protected set; }
+		public TextDefinition InProgressMessage { get; protected set; }
+		public TextDefinition CompletionMessage { get; protected set; }
+		public TextDefinition CompletionNotice { get; protected set; }
 
 		public static readonly TextDefinition CompletionNoticeDefault = new TextDefinition(1072273); // You've completed a quest!  Don't forget to collect your reward.
 		public static readonly TextDefinition CompletionNoticeShort = new TextDefinition(1046258); // Your quest is complete.
@@ -133,15 +77,15 @@ namespace Server.Engines.MLQuests
 
 		public MLQuest()
 		{
-			m_Activated = false;
-			m_Objectives = new List<BaseObjective>();
-			m_ObjectiveType = ObjectiveType.All;
-			m_Rewards = new List<BaseReward>();
-			m_CompletionNotice = CompletionNoticeDefault;
+			Activated = false;
+			Objectives = new List<BaseObjective>();
+			ObjectiveType = ObjectiveType.All;
+			Rewards = new List<BaseReward>();
+			CompletionNotice = CompletionNoticeDefault;
 
-			m_Instances = new List<MLQuestInstance>();
+			Instances = new List<MLQuestInstance>();
 
-			m_SaveEnabled = true;
+			SaveEnabled = true;
 		}
 
 		public abstract IEnumerable<Type> GetQuestGivers();
@@ -208,7 +152,7 @@ namespace Server.Engines.MLQuests
 
 		public virtual bool CanOffer(IQuestGiver quester, PlayerMobile pm, MLQuestContext context, bool message)
 		{
-			if (!m_Activated || quester.Deleted)
+			if (!Activated || quester.Deleted)
 				return false;
 
 			if (context != null)
@@ -252,7 +196,7 @@ namespace Server.Engines.MLQuests
 				}
 			}
 
-			foreach (BaseObjective obj in m_Objectives)
+			foreach (BaseObjective obj in Objectives)
 			{
 				if (!obj.CanOffer(quester, pm, message))
 					return false;
@@ -332,7 +276,7 @@ namespace Server.Engines.MLQuests
 				return; // not saved or no longer exists
 
 			quest.Refresh(oldVersion);
-			quest.m_Deserialized = true;
+			quest.Deserialized = true;
 		}
 
 		public virtual int Version { get { return 0; } }

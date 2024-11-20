@@ -5,8 +5,6 @@ namespace Server.Engines.MLQuests
 	public class QuestArea
 	{
 		private TextDefinition m_Name; // So we can add custom names, different from the Region name
-		private string m_RegionName;
-		private Map m_ForceMap;
 
 		public TextDefinition Name
 		{
@@ -14,17 +12,8 @@ namespace Server.Engines.MLQuests
 			set { m_Name = value; }
 		}
 
-		public string RegionName
-		{
-			get { return m_RegionName; }
-			set { m_RegionName = value; }
-		}
-
-		public Map ForceMap
-		{
-			get { return m_ForceMap; }
-			set { m_ForceMap = value; }
-		}
+		public string RegionName { get; private set; }
+		public Map ForceMap { get; private set; }
 
 		public QuestArea(TextDefinition name, string region)
 			: this(name, region, null)
@@ -34,8 +23,8 @@ namespace Server.Engines.MLQuests
 		public QuestArea(TextDefinition name, string region, Map forceMap)
 		{
 			m_Name = name;
-			m_RegionName = region;
-			m_ForceMap = forceMap;
+			RegionName = region;
+			ForceMap = forceMap;
 
 			if (MLQuestSystem.Debug)
 				ValidationQueue<QuestArea>.Add(this);
@@ -48,10 +37,10 @@ namespace Server.Engines.MLQuests
 
 		public bool Contains(Region reg)
 		{
-			if (reg == null || (m_ForceMap != null && reg.Map != m_ForceMap))
+			if (reg == null || (ForceMap != null && reg.Map != ForceMap))
 				return false;
 
-			return reg.IsPartOf(m_RegionName);
+			return reg.IsPartOf(RegionName);
 		}
 
 		// Debug method
@@ -61,7 +50,7 @@ namespace Server.Engines.MLQuests
 
 			foreach (Region r in Region.Regions)
 			{
-				if (r.Name == m_RegionName && (m_ForceMap == null || r.Map == m_ForceMap))
+				if (r.Name == RegionName && (ForceMap == null || r.Map == ForceMap))
 				{
 					found = true;
 					break;
@@ -69,7 +58,7 @@ namespace Server.Engines.MLQuests
 			}
 
 			if (!found)
-				Console.WriteLine("Warning: QuestArea region '{0}' does not exist (ForceMap = {1})", m_RegionName, (m_ForceMap == null) ? "-null-" : m_ForceMap.ToString());
+				Console.WriteLine("Warning: QuestArea region '{0}' does not exist (ForceMap = {1})", RegionName, (ForceMap == null) ? "-null-" : ForceMap.ToString());
 		}
 	}
 }
