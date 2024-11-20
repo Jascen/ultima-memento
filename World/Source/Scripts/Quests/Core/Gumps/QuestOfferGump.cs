@@ -22,7 +22,8 @@ namespace Server.Engines.MLQuests.Gumps
 			RegisterButton(ButtonPosition.Left, ButtonGraphic.Accept, 1);
 			RegisterButton(ButtonPosition.Right, ButtonGraphic.Refuse, 2);
 
-			SetPageCount(3);
+			var hasRewards = 0 < quest.Rewards.Count;
+			SetPageCount(hasRewards ? 3 : 2);
 
 			BuildPage();
 			AddDescription(quest);
@@ -30,8 +31,11 @@ namespace Server.Engines.MLQuests.Gumps
 			BuildPage();
 			AddObjectives(quest);
 
-			BuildPage();
-			AddRewardsPage(quest);
+			if (hasRewards)
+			{
+				BuildPage();
+				AddRewardsPage(quest);
+			}
 		}
 
 		public override void OnResponse(NetState sender, RelayInfo info)
