@@ -394,10 +394,13 @@ namespace Server.Engines.MLQuests
 			return (quest != null);
 		}
 
-		public static void OnDoubleClick(IQuestGiver quester, PlayerMobile pm)
+		/// <summary>
+		/// Returns True if there was an interaction with the ML Quest System.
+		/// </summary>
+		public static bool OnDoubleClick(IQuestGiver quester, PlayerMobile pm, bool replyFailure)
 		{
 			if (quester.Deleted || !pm.Alive)
-				return;
+				return false;
 
 			MLQuestContext context = GetContext(pm);
 
@@ -406,17 +409,16 @@ namespace Server.Engines.MLQuests
 
 			if (!FindQuest(quester, pm, context, out quest, out entry))
 			{
-				Tell(quester, pm, 1080107); // I'm sorry, I have nothing for you at this time.
-				return;
+				if (replyFailure) Tell(quester, pm, 1080107); // I'm sorry, I have nothing for you at this time.
+				return false;
 			}
 
 			if (entry != null)
 			{
 				TurnToFace(quester, pm);
+				if (entry.Failed) return true; // Note: OSI sends no gump at all for failed quests, they have to be cancelled in the quest overview
 
-				if (entry.Failed)
-					return; // Note: OSI sends no gump at all for failed quests, they have to be cancelled in the quest overview
-				else if (entry.ClaimReward)
+				if (entry.ClaimReward)
 					entry.SendRewardOffer();
 				else if (entry.IsCompleted())
 					entry.SendReportBackGump();
@@ -429,6 +431,8 @@ namespace Server.Engines.MLQuests
 
 				quest.SendOffer(quester, pm);
 			}
+
+			return true;
 		}
 
 		public static bool CanMarkQuestItem(PlayerMobile pm, Item item, Type type)

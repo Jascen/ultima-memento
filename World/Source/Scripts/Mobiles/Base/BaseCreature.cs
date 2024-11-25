@@ -7636,8 +7636,7 @@ namespace Server.Mobiles
 
 			if ( CanGiveMLQuest && from is PlayerMobile )
 			{
-				MLQuestSystem.OnDoubleClick( this, (PlayerMobile)from );
-				return;
+				if (MLQuestSystem.OnDoubleClick( this, (PlayerMobile)from, false) ) return;
 			}
 
 			base.OnDoubleClick( from );
