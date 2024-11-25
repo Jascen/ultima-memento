@@ -18,9 +18,8 @@ namespace Server.Engines.MLQuests
 
 	public class MLQuestInstance
 	{
-		private PlayerMobile m_Player;
+		private IQuestGiver m_Quester;
 		private MLQuestInstanceFlags m_Flags;
-		private BaseObjectiveInstance[] m_ObjectiveInstances;
 		private Timer m_Timer;
 
 		public MLQuestInstance(MLQuest quest, IQuestGiver quester, PlayerMobile player)
@@ -29,19 +28,19 @@ namespace Server.Engines.MLQuests
 
 			Quester = quester;
 			QuesterType = (quester == null) ? null : quester.GetType();
-			m_Player = player;
+			Player = player;
 
 			Accepted = DateTime.UtcNow;
 			m_Flags = MLQuestInstanceFlags.None;
 
-			m_ObjectiveInstances = new BaseObjectiveInstance[quest.Objectives.Count];
+			Objectives = new BaseObjectiveInstance[quest.Objectives.Count];
 
 			BaseObjectiveInstance obj;
 			bool timed = false;
 
 			for (int i = 0; i < quest.Objectives.Count; ++i)
 			{
-				m_ObjectiveInstances[i] = obj = quest.Objectives[i].CreateInstance(this);
+                Objectives[i] = obj = quest.Objectives[i].CreateInstance(this);
 
 				if (obj.IsTimed)
 					timed = true;
@@ -58,7 +57,7 @@ namespace Server.Engines.MLQuests
 			if (Quest != null && Quest.Instances != null)
 				Quest.Instances.Add(this);
 
-			if (m_Player != null)
+			if (Player != null)
 				PlayerContext.QuestInstances.Add(this);
 		}
 
@@ -67,7 +66,7 @@ namespace Server.Engines.MLQuests
 			if (Quest != null && Quest.Instances != null)
 				Quest.Instances.Remove(this);
 
-			if (m_Player != null)
+			if (Player != null)
 				PlayerContext.QuestInstances.Remove(this);
 
 			Removed = true;
@@ -77,10 +76,10 @@ namespace Server.Engines.MLQuests
 
 		public IQuestGiver Quester
 		{
-			get { return Quester; }
+			get { return m_Quester; }
 			set
 			{
-				Quester = value;
+				m_Quester = value;
 				QuesterType = (value == null) ? null : value.GetType();
 			}
 		}
@@ -91,7 +90,7 @@ namespace Server.Engines.MLQuests
 
 		public MLQuestContext PlayerContext
 		{
-			get { return MLQuestSystem.GetOrCreateContext(m_Player); }
+			get { return MLQuestSystem.GetOrCreateContext(Player); }
 		}
 
 		public DateTime Accepted { get; set; }
@@ -118,7 +117,7 @@ namespace Server.Engines.MLQuests
 
 		public bool AllowsQuestItem(Item item, Type type)
 		{
-			foreach (BaseObjectiveInstance objective in m_ObjectiveInstances)
+			foreach (BaseObjectiveInstance objective in Objectives)
 			{
 				if (!objective.Expired && objective.AllowsQuestItem(item, type))
 					return true;
@@ -131,7 +130,7 @@ namespace Server.Engines.MLQuests
 		{
 			bool requiresAll = Quest.ObjectiveType == ObjectiveType.All;
 
-			foreach (BaseObjectiveInstance obj in m_ObjectiveInstances)
+			foreach (BaseObjectiveInstance obj in Objectives)
 			{
 				bool complete = obj.IsCompleted();
 
@@ -148,12 +147,12 @@ namespace Server.Engines.MLQuests
 		{
 			if (IsCompleted())
 			{
-				m_Player.PlaySound(0x5B5); // public sound
+				Player.PlaySound(0x5B5); // public sound
 
-				foreach (BaseObjectiveInstance obj in m_ObjectiveInstances)
+				foreach (BaseObjectiveInstance obj in Objectives)
 					obj.OnQuestCompleted();
 
-				TextDefinition.SendMessageTo(m_Player, Quest.CompletionNotice, 0x23);
+				TextDefinition.SendMessageTo(Player, Quest.CompletionNotice, 0x23);
 
 				/*
 				 * Advance to the ClaimReward=true stage if this quest has no
@@ -184,13 +183,13 @@ namespace Server.Engines.MLQuests
 			bool hasAnyFails = false;
 			bool hasAnyLeft = false;
 
-			foreach (BaseObjectiveInstance obj in m_ObjectiveInstances)
+			foreach (BaseObjectiveInstance obj in Objectives)
 			{
 				if (!obj.Expired)
 				{
 					if (obj.IsTimed && obj.EndTime <= DateTime.UtcNow)
 					{
-						m_Player.SendLocalizedMessage(1072258); // You failed to complete an objective in time!
+						Player.SendLocalizedMessage(1072258); // You failed to complete an objective in time!
 
 						obj.Expired = true;
 						obj.OnExpire();
@@ -213,7 +212,7 @@ namespace Server.Engines.MLQuests
 
 		public void SendProgressGump()
 		{
-			m_Player.SendGump(new QuestConversationGump(Quest, m_Player, Quest.InProgressMessage));
+			Player.SendGump(new QuestConversationGump(Quest, Player, Quest.InProgressMessage));
 		}
 
 		public void SendRewardOffer()
@@ -235,12 +234,12 @@ namespace Server.Engines.MLQuests
 					MLQuest nextQuest = MLQuestSystem.FindQuest(nextQuestType);
 
 					if (nextQuest != null)
-						nextQuest.SendOffer(Quester, m_Player);
+						nextQuest.SendOffer(Quester, Player);
 				}
 			}
 			else
 			{
-				m_Player.SendGump(new QuestRewardGump(this));
+				Player.SendGump(new QuestRewardGump(this));
 			}
 		}
 
@@ -254,7 +253,7 @@ namespace Server.Engines.MLQuests
 			if (SkipReportBack)
 				ContinueReportBack(true); // skip ahead
 			else
-				m_Player.SendGump(new QuestReportBackGump(this));
+				Player.SendGump(new QuestReportBackGump(this));
 		}
 
 		public void ContinueReportBack(bool sendRewardGump)
@@ -264,19 +263,19 @@ namespace Server.Engines.MLQuests
 			if (Quest.ObjectiveType == ObjectiveType.All)
 			{
 				// TODO: 1115877 - You no longer have the required items to complete this quest.
-				foreach (BaseObjectiveInstance objective in m_ObjectiveInstances)
+				foreach (BaseObjectiveInstance objective in Objectives)
 				{
 					if (!objective.IsCompleted())
 						return;
 				}
 
-				foreach (BaseObjectiveInstance objective in m_ObjectiveInstances)
+				foreach (BaseObjectiveInstance objective in Objectives)
 				{
 					if (!objective.OnBeforeClaimReward())
 						return;
 				}
 
-				foreach (BaseObjectiveInstance objective in m_ObjectiveInstances)
+				foreach (BaseObjectiveInstance objective in Objectives)
 					objective.OnClaimReward();
 			}
 			else
@@ -287,7 +286,7 @@ namespace Server.Engines.MLQuests
 				 */
 				bool complete = false;
 
-				foreach (BaseObjectiveInstance objective in m_ObjectiveInstances)
+				foreach (BaseObjectiveInstance objective in Objectives)
 				{
 					if (objective.IsCompleted())
 					{
@@ -311,7 +310,7 @@ namespace Server.Engines.MLQuests
 				PlayerContext.SetDoneQuest(Quest, DateTime.UtcNow + Quest.GetRestartDelay());
 
 			// This is correct for ObjectiveType.Any as well
-			foreach (BaseObjectiveInstance objective in m_ObjectiveInstances)
+			foreach (BaseObjectiveInstance objective in Objectives)
 				objective.OnAfterClaimReward();
 
 			if (sendRewardGump)
@@ -320,13 +319,13 @@ namespace Server.Engines.MLQuests
 
 		public void ClaimRewards()
 		{
-			if (Quest == null || m_Player == null || m_Player.Deleted || !ClaimReward || Removed)
+			if (Quest == null || Player == null || Player.Deleted || !ClaimReward || Removed)
 				return;
 
 			List<Item> rewards = new List<Item>();
 
 			foreach (BaseReward reward in Quest.Rewards)
-				reward.AddRewardItems(m_Player, rewards);
+				reward.AddRewardItems(Player, rewards);
 
 			if (rewards.Count != 0)
 			{
@@ -336,7 +335,7 @@ namespace Server.Engines.MLQuests
 
 				foreach (Item rewardItem in rewards)
 				{
-					if (!m_Player.AddToBackpack(rewardItem))
+					if (!Player.AddToBackpack(rewardItem))
 					{
 						canFit = false;
 						break;
@@ -348,7 +347,7 @@ namespace Server.Engines.MLQuests
 					foreach (Item rewardItem in rewards)
 						rewardItem.Delete();
 
-					m_Player.SendLocalizedMessage(1078524); // Your backpack is full. You cannot complete the quest and receive your reward.
+					Player.SendLocalizedMessage(1078524); // Your backpack is full. You cannot complete the quest and receive your reward.
 					return;
 				}
 
@@ -357,13 +356,13 @@ namespace Server.Engines.MLQuests
 					string rewardName = (rewardItem.Name != null) ? rewardItem.Name : String.Concat("#", rewardItem.LabelNumber);
 
 					if (rewardItem.Stackable)
-						m_Player.SendLocalizedMessage(1115917, String.Concat(rewardItem.Amount, "\t", rewardName)); // You receive a reward: ~1_QUANTITY~ ~2_ITEM~
+						Player.SendLocalizedMessage(1115917, String.Concat(rewardItem.Amount, "\t", rewardName)); // You receive a reward: ~1_QUANTITY~ ~2_ITEM~
 					else
-						m_Player.SendLocalizedMessage(1074360, rewardName); // You receive a reward: ~1_REWARD~
+						Player.SendLocalizedMessage(1074360, rewardName); // You receive a reward: ~1_REWARD~
 				}
 			}
 
-			foreach (BaseObjectiveInstance objective in m_ObjectiveInstances)
+			foreach (BaseObjectiveInstance objective in Objectives)
 				objective.OnRewardClaimed();
 
 			Quest.OnRewardClaimed(this);
@@ -398,9 +397,9 @@ namespace Server.Engines.MLQuests
 		{
 			Remove();
 
-			m_Player.SendSound(0x5B3); // private sound
+			Player.SendSound(0x5B3); // private sound
 
-			foreach (BaseObjectiveInstance obj in m_ObjectiveInstances)
+			foreach (BaseObjectiveInstance obj in Objectives)
 				obj.OnQuestCancelled();
 
 			Quest.OnCancel(this);
@@ -426,7 +425,7 @@ namespace Server.Engines.MLQuests
 
 		public void OnQuesterDeleted()
 		{
-			foreach (BaseObjectiveInstance obj in m_ObjectiveInstances)
+			foreach (BaseObjectiveInstance obj in Objectives)
 				obj.OnQuesterDeleted();
 
 			Quest.OnQuesterDeleted(this);
@@ -434,7 +433,7 @@ namespace Server.Engines.MLQuests
 
 		public void OnPlayerDeath()
 		{
-			foreach (BaseObjectiveInstance obj in m_ObjectiveInstances)
+			foreach (BaseObjectiveInstance obj in Objectives)
 				obj.OnPlayerDeath();
 
 			Quest.OnPlayerDeath(this);
@@ -465,9 +464,9 @@ namespace Server.Engines.MLQuests
 				writer.Write(Quester.Serial);
 
 			writer.Write(ClaimReward);
-			writer.Write(m_ObjectiveInstances.Length);
+			writer.Write(Objectives.Length);
 
-			foreach (BaseObjectiveInstance objInstance in m_ObjectiveInstances)
+			foreach (BaseObjectiveInstance objInstance in Objectives)
 				objInstance.Serialize(writer);
 		}
 
@@ -486,6 +485,7 @@ namespace Server.Engines.MLQuests
 			if (quest != null && quester != null && pm != null)
 			{
 				instance = quest.CreateInstance(quester, pm);
+				// TODO: Deserialize?
 				instance.ClaimReward = claimReward;
 			}
 			else
