@@ -8,10 +8,6 @@ namespace Server.Engines.MLQuests
 	public enum MLQuestFlag
 	{
 		None = 0x00,
-		Spellweaving = 0x01,
-		SummonFey = 0x02,
-		SummonFiend = 0x04,
-		BedlamAccess = 0x08
 	}
 
 	[PropertyObject]
@@ -59,34 +55,6 @@ namespace Server.Engines.MLQuests
 		public bool IsFull
 		{
 			get { return QuestInstances.Count >= MLQuestSystem.MaxConcurrentQuests; }
-		}
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public bool Spellweaving
-		{
-			get { return GetFlag(MLQuestFlag.Spellweaving); }
-			set { SetFlag(MLQuestFlag.Spellweaving, value); }
-		}
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public bool SummonFey
-		{
-			get { return GetFlag(MLQuestFlag.SummonFey); }
-			set { SetFlag(MLQuestFlag.SummonFey, value); }
-		}
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public bool SummonFiend
-		{
-			get { return GetFlag(MLQuestFlag.SummonFiend); }
-			set { SetFlag(MLQuestFlag.SummonFiend, value); }
-		}
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public bool BedlamAccess
-		{
-			get { return GetFlag(MLQuestFlag.BedlamAccess); }
-			set { SetFlag(MLQuestFlag.BedlamAccess, value); }
 		}
 
 		public MLQuestContext(PlayerMobile owner)
