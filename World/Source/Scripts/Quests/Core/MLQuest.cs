@@ -183,7 +183,12 @@ namespace Server.Engines.MLQuests
 						else if (nextAvailable > DateTime.UtcNow)
 						{
 							if (message)
+							{
 								MLQuestSystem.Tell(quester, pm, 1075575); // I'm sorry, but I don't have anything else for you right now. Could you check back with me in a few minutes?
+								TimeSpan timeRemaining = nextAvailable - DateTime.UtcNow;
+								string delayMessage = string.Format("You get a feeling you should return after {0:D2} days {1:D2} hours and {2:D2} minutes", timeRemaining.Days, timeRemaining.Hours, timeRemaining.Minutes);
+								pm.SendMessage(delayMessage);
+							}
 
 							return false;
 						}
