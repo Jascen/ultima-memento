@@ -50,7 +50,8 @@ namespace Server.Engines.MLQuests.Gumps
 					}
 					else
 					{
-						numberColor = stringColor = 0xFFFFFF;
+						numberColor = BaseQuestGump.COLOR_LOCALIZED;
+						stringColor = BaseQuestGump.COLOR_HTML;
 					}
 
 					TextDefinition.AddHtmlText(this, 98, 140 + 21 * i, 270, 21, instances[i].Quest.Title, false, false, numberColor, stringColor);

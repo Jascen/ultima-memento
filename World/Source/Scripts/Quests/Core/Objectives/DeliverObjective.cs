@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Server.Engines.MLQuests.Gumps;
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
@@ -97,23 +98,23 @@ namespace Server.Engines.MLQuests.Objectives
 		{
 			string amount = m_Amount.ToString();
 
-			g.AddHtmlLocalized( 98, y, 312, 16, 1072207, 0x15F90, false, false ); // Deliver
-			g.AddLabel( 143, y, 0x481, amount );
+			g.AddHtmlLocalized( 98, y, 312, 16, 1072207, BaseQuestGump.COLOR_LOCALIZED, false, false ); // Deliver
+			g.AddLabel( 143, y, BaseQuestGump.COLOR_LOCALIZED, amount );
 
 			if ( m_Name.Number > 0 )
 			{
-				g.AddHtmlLocalized( 143 + amount.Length * 15, y, 190, 18, m_Name.Number, 0x77BF, false, false );
+				g.AddHtmlLocalized( 143 + amount.Length * 15, y, 190, 18, m_Name.Number, BaseQuestGump.COLOR_LOCALIZED, false, false );
 				g.AddItem( 350, y, CollectObjective.LabelToItemID( m_Name.Number ) );
 			}
 			else if ( m_Name.String != null )
 			{
-				g.AddLabel( 143 + amount.Length * 15, y, 0x481, m_Name.String );
+				g.AddLabel( 143 + amount.Length * 15, y, BaseQuestGump.COLOR_LOCALIZED, m_Name.String );
 			}
 
 			y += 32;
 
-			g.AddHtmlLocalized( 103, y, 120, 16, 1072379, 0x15F90, false, false ); // Deliver to
-			g.AddLabel( 223, y, 0x481, QuesterNameAttribute.GetQuesterNameFor( m_Destination ) );
+			g.AddHtmlLocalized( 103, y, 120, 16, 1072379, BaseQuestGump.COLOR_LOCALIZED, false, false ); // Deliver to
+			g.AddLabel( 223, y, BaseQuestGump.COLOR_LOCALIZED, QuesterNameAttribute.GetQuesterNameFor( m_Destination ) );
 
 			y += 16;
 		}

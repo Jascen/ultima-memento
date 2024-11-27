@@ -1,6 +1,7 @@
 using System;
 using Server.Mobiles;
 using Server.Gumps;
+using Server.Engines.MLQuests.Gumps;
 
 namespace Server.Engines.MLQuests.Objectives
 {
@@ -89,7 +90,7 @@ namespace Server.Engines.MLQuests.Objectives
 			else
 				args = String.Format( "#{0}\t{1:0.0}", skillLabel, (double)m_ThresholdFixed / 10 ); // for non-integer skill levels
 
-			g.AddHtmlLocalized( 98, y, 312, 16, 1077485, args, 0x15F90, false, false ); // Increase ~1_SKILL~ to ~2_VALUE~
+			g.AddHtmlLocalized( 98, y, 312, 16, 1077485, args, BaseQuestGump.COLOR_LOCALIZED, false, false ); // Increase ~1_SKILL~ to ~2_VALUE~
 			y += 16;
 		}
 
@@ -180,7 +181,7 @@ namespace Server.Engines.MLQuests.Objectives
 
 			if ( IsCompleted() )
 			{
-				g.AddHtmlLocalized( 113, y, 312, 20, 1055121, 0xFFFFFF, false, false ); // Complete
+				g.AddHtmlLocalized( 113, y, 312, 20, 1055121, BaseQuestGump.COLOR_LOCALIZED, false, false ); // Complete
 				y += 16;
 			}
 		}

@@ -2,6 +2,7 @@ using System;
 using Server.Mobiles;
 using Server.Gumps;
 using Server.Items;
+using Server.Engines.MLQuests.Gumps;
 
 namespace Server.Engines.MLQuests.Objectives
 {
@@ -76,27 +77,14 @@ namespace Server.Engines.MLQuests.Objectives
 		{
 			if ( ShowDetailed )
 			{
-				string amount = m_DesiredAmount.ToString();
-
-				g.AddHtmlLocalized( 98, y, 350, 16, 1072205, 0x15F90, false, false ); // Obtain
-				g.AddLabel( 143, y, 0x481, amount );
-
-				if ( m_Name.Number > 0 )
-				{
-					g.AddHtmlLocalized( 143 + amount.Length * 15, y, 190, 18, m_Name.Number, 0x77BF, false, false );
-					g.AddItem( 350, y, LabelToItemID( m_Name.Number ) );
-				}
-				else if ( m_Name.String != null )
-				{
-					g.AddLabel( 143 + amount.Length * 15, y, 0x481, m_Name.String );
-				}
+				g.AddLabel( 98, y, BaseQuestGump.COLOR_LABEL, string.Format("Obtain {0:n0} {1}", m_DesiredAmount, m_Name.String) );
 			}
 			else
 			{
 				if ( m_Name.Number > 0 )
-					g.AddHtmlLocalized( 98, y, 312, 32, m_Name.Number, 0x15F90, false, false );
+					g.AddHtmlLocalized( 98, y, 312, 32, m_Name.Number, BaseQuestGump.COLOR_LOCALIZED, false, false );
 				else if ( m_Name.String != null )
-					g.AddLabel( 98, y, 0x481, m_Name.String );
+					g.AddLabel( 98, y, BaseQuestGump.COLOR_LABEL, m_Name.String );
 			}
 
 			y += 32;
@@ -244,12 +232,11 @@ namespace Server.Engines.MLQuests.Objectives
 			{
 				base.WriteToGump( g, ref y );
 
-				g.AddHtmlLocalized( 103, y, 120, 16, 3000087, 0x15F90, false, false ); // Total
-				g.AddLabel( 223, y, 0x481, GetCurrentTotal().ToString() );
+				g.AddLabel( 103, y, BaseQuestGump.COLOR_LABEL, "Total" );
+				g.AddLabel( 223, y, BaseQuestGump.COLOR_LABEL, GetCurrentTotal().ToString() );
 				y += 16;
 
-				g.AddHtmlLocalized( 103, y, 120, 16, 1074782, 0x15F90, false, false ); // Return to
-				g.AddLabel( 223, y, 0x481, QuesterNameAttribute.GetQuesterNameFor( Instance.QuesterType ) );
+				g.AddLabel( 103, y, BaseQuestGump.COLOR_LABEL, string.Format("Return to {0}.", QuesterNameAttribute.GetQuesterNameFor( Instance.QuesterType ) ) );
 				y += 16;
 			}
 		}

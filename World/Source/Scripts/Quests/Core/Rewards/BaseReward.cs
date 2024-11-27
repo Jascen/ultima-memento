@@ -1,6 +1,7 @@
 using Server.Mobiles;
 using Server.Gumps;
 using System.Collections.Generic;
+using Server.Engines.MLQuests.Gumps;
 
 namespace Server.Engines.MLQuests.Rewards
 {
@@ -23,7 +24,7 @@ namespace Server.Engines.MLQuests.Rewards
 
 		public void WriteToGump( Gump g, int x, ref int y )
 		{
-			TextDefinition.AddHtmlText( g, x, y, 280, LabelHeight, m_Name, false, false, 0x15F90, 0xBDE784 );
+			TextDefinition.AddHtmlText( g, x, y, 280, LabelHeight, m_Name, false, false, BaseQuestGump.COLOR_LOCALIZED, BaseQuestGump.COLOR_HTML );
 		}
 
 		public abstract void AddRewardItems( PlayerMobile pm, List<Item> rewards );

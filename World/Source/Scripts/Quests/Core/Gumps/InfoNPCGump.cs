@@ -10,8 +10,8 @@ namespace Server.Engines.MLQuests.Gumps
 			SetPageCount(1);
 
 			BuildPage();
-			TextDefinition.AddHtmlText(this, 160, 108, 250, 16, title, false, false, 0x2710, 0x4AC684);
-			TextDefinition.AddHtmlText(this, 98, 156, 312, 180, message, false, true, 0x15F90, 0xBDE784);
+			TextDefinition.AddHtmlText(this, 160, 108, 250, 16, title, false, false, BaseQuestGump.COLOR_LOCALIZED, BaseQuestGump.COLOR_LOCALIZED);
+			TextDefinition.AddHtmlText(this, 98, 156, 312, 180, message, false, true, BaseQuestGump.COLOR_LOCALIZED, BaseQuestGump.COLOR_LOCALIZED);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using Server.Mobiles;
 using Server.Gumps;
+using Server.Engines.MLQuests.Gumps;
 
 namespace Server.Engines.MLQuests.Objectives
 {
@@ -57,25 +58,25 @@ namespace Server.Engines.MLQuests.Objectives
 		{
 			string amount = m_DesiredAmount.ToString();
 
-			g.AddHtmlLocalized( 98, y, 312, 16, 1072204, 0x15F90, false, false ); // Slay
-			g.AddLabel( 133, y, 0x481, amount );
+			g.AddHtmlLocalized( 98, y, 312, 16, 1072204, BaseQuestGump.COLOR_LOCALIZED, false, false ); // Slay
+			g.AddLabel( 133, y, BaseQuestGump.COLOR_LABEL, amount );
 
 			if ( m_Name.Number > 0 )
-				g.AddHtmlLocalized( 133 + amount.Length * 15, y, 190, 18, m_Name.Number, 0x77BF, false, false );
+				g.AddHtmlLocalized( 133 + amount.Length * 15, y, 190, 18, m_Name.Number, BaseQuestGump.COLOR_LOCALIZED, false, false );
 			else if ( m_Name.String != null )
-				g.AddLabel( 133 + amount.Length * 15, y, 0x481, m_Name.String );
+				g.AddLabel( 133 + amount.Length * 15, y, BaseQuestGump.COLOR_LABEL, m_Name.String );
 
 			y += 16;
 
 			#region Location
 			if ( m_Area != null )
 			{
-				g.AddHtmlLocalized( 103, y, 312, 20, 1018327, 0x15F90, false, false ); // Location
+				g.AddHtmlLocalized( 103, y, 312, 20, 1018327, BaseQuestGump.COLOR_LOCALIZED, false, false ); // Location
 
 				if ( m_Area.Name.Number > 0 )
-					g.AddHtmlLocalized( 223, y, 312, 20, m_Area.Name.Number, 0xFFFFFF, false, false );
+					g.AddHtmlLocalized( 223, y, 312, 20, m_Area.Name.Number, BaseQuestGump.COLOR_LOCALIZED, false, false );
 				else if ( m_Area.Name.String != null )
-					g.AddLabel( 223, y, 0x481, m_Area.Name.String );
+					g.AddLabel( 223, y, BaseQuestGump.COLOR_LABEL, m_Area.Name.String );
 
 				y += 16;
 			}
@@ -171,12 +172,11 @@ namespace Server.Engines.MLQuests.Objectives
 
 			base.WriteToGump( g, ref y );
 
-			g.AddHtmlLocalized( 103, y, 120, 16, 3000087, 0x15F90, false, false ); // Total
-			g.AddLabel( 223, y, 0x481, m_Slain.ToString() );
+			g.AddLabel( 103, y, BaseQuestGump.COLOR_LABEL, "Total" );
+			g.AddLabel( 223, y, BaseQuestGump.COLOR_LABEL, m_Slain.ToString() );
 			y += 16;
 
-			g.AddHtmlLocalized( 103, y, 120, 16, 1074782, 0x15F90, false, false ); // Return to
-			g.AddLabel( 223, y, 0x481, QuesterNameAttribute.GetQuesterNameFor( Instance.QuesterType ) );
+			g.AddLabel( 103, y, BaseQuestGump.COLOR_LABEL, string.Format("Return to {0}.", QuesterNameAttribute.GetQuesterNameFor( Instance.QuesterType ) ) );
 			y += 16;
 		}
 
