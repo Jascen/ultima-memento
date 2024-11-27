@@ -64,27 +64,11 @@ namespace Server.Engines.MLQuests.Gumps
 			Closable = false;
 
 			AddPage( 0 );
-
-			AddImageTiled( 50, 20, 400, 460, 0x1404 );
-			AddImageTiled( 50, 29, 30, 450, 0x28DC );
-			AddImageTiled( 34, 140, 17, 339, 0x242F );
-			AddImage( 48, 135, 0x28AB );
-			AddImage( -16, 285, 0x28A2 );
-			AddImage( 0, 10, 0x28B5 );
-			AddImage( 25, 0, 0x28B4 );
-			AddImageTiled( 83, 15, 350, 15, 0x280A );
-			AddImage( 34, 479, 0x2842 );
-			AddImage( 442, 479, 0x2840 );
-			AddImageTiled( 51, 479, 392, 17, 0x2775 );
-			AddImageTiled( 415, 29, 44, 450, 0xA2D );
-			AddImageTiled( 415, 29, 30, 450, 0x28DC );
-			//AddLabel( 100, 50, 0x481, "" );
-			AddImage( 370, 50, 0x589 );
-			AddImage( 379, 60, 0x15A9 );
-			AddImage( 425, 0, 0x28C9 );
-			AddImage( 90, 33, 0x232D );
+			
+			AddImage( 50, 20, 0x1452 );
+			AddImage( 90, 33, 0x232D ); // Medallion top left
 			AddHtmlLocalized( 130, 45, 270, 16, label, 0xFFFFFF, false, false );
-			AddImageTiled( 130, 65, 175, 1, 0x238D );
+			AddImageTiled( 130, 65, 175, 1, 0x238D ); // Tiny Underline
 		}
 
 		public void BuildPage()
@@ -92,13 +76,13 @@ namespace Server.Engines.MLQuests.Gumps
 			AddPage( ++m_Page );
 
 			if ( m_Page > 1 )
-				AddButton( 130, 430, (int)ButtonGraphic.Previous, (int)ButtonGraphic.Previous + 2, 0, GumpButtonType.Page, m_Page - 1 );
+				AddButton( 130, 400, (int)ButtonGraphic.Previous, (int)ButtonGraphic.Previous + 2, 0, GumpButtonType.Page, m_Page - 1 );
 
 			if ( m_Page < m_MaxPages )
-				AddButton( 275, 430, (int)ButtonGraphic.Continue, (int)ButtonGraphic.Continue + 2, 0, GumpButtonType.Page, m_Page + 1 );
+				AddButton( 325, 400, (int)ButtonGraphic.Continue, (int)ButtonGraphic.Continue + 2, 0, GumpButtonType.Page, m_Page + 1 );
 
 			foreach ( ButtonInfo button in m_Buttons )
-				AddButton( button.Position == ButtonPosition.Left ? 95 : 313, 455, (int)button.Graphic, (int)button.Graphic + 2, button.ButtonID, GumpButtonType.Reply, 0 );
+				AddButton( button.Position == ButtonPosition.Left ? 95 : 363, 425, (int)button.Graphic, (int)button.Graphic + 2, button.ButtonID, GumpButtonType.Reply, 0 );
 
 			if ( m_Title != null )
 				AddHtmlLocalized( 130, 68, 220, 48, 1114513, m_Title, 0x2710, false, false ); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
@@ -126,8 +110,8 @@ namespace Server.Engines.MLQuests.Gumps
 
 		public void AddDescription( MLQuest quest )
 		{
-			AddHtmlLocalized( 98, 140, 312, 16, ( quest.IsChainTriggered || quest.NextQuest != null ) ? 1075024 : 1072202, 0x2710, false, false ); // Description [(quest chain)]
-			TextDefinition.AddHtmlText( this, 98, 156, 312, 240, quest.Description, false, true, 0x15F90, 0xBDE784 );
+			AddHtmlLocalized( 98, 110, 312, 16, ( quest.IsChainTriggered || quest.NextQuest != null ) ? 1075024 : 1072202, 0x2710, false, false ); // Description [(quest chain)]
+			TextDefinition.AddHtmlText( this, 98, 126, 342, 260, quest.Description, false, true, 0x15F90, 0xBDE784 );
 		}
 
 		public void AddObjectives( MLQuest quest )
@@ -208,7 +192,7 @@ namespace Server.Engines.MLQuests.Gumps
 
 		public void AddConversation( TextDefinition text )
 		{
-			TextDefinition.AddHtmlText( this, 98, 140, 312, 180, text, false, true, 0x15F90, 0xBDE784 );
+			TextDefinition.AddHtmlText( this, 98, 110, 342, 210, text, false, true, 0x15F90, 0xBDE784 );
 		}
 
 		#endregion
