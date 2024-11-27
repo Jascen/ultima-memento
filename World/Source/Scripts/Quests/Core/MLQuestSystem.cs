@@ -160,6 +160,7 @@ namespace Server.Engines.MLQuests
 
 			TargetCommands.Register(new ViewQuestsCommand());
 			TargetCommands.Register(new ViewContextCommand());
+			TargetCommands.Register(new ResetQuestTimersCommand());
 
 			EventSink.QuestGumpRequest += new QuestGumpRequestHandler(EventSink_QuestGumpRequest);
 		}
@@ -239,6 +240,37 @@ namespace Server.Engines.MLQuests
 					LogFailure("They have no ML quest context.");
 				else
 					e.Mobile.SendGump(new PropertiesGump(e.Mobile, GetOrCreateContext(pm)));
+			}
+		}
+
+		private class ResetQuestTimersCommand : BaseCommand
+		{
+			public ResetQuestTimersCommand()
+			{
+				AccessLevel = AccessLevel.GameMaster;
+				Supports = CommandSupport.Simple;
+				Commands = new string[] { "ResetQuestTimers" };
+				ObjectTypes = ObjectTypes.Mobiles;
+				Usage = "ResetQuestTimers";
+				Description = "Resets quest cooldowns for a targeted mobile.";
+			}
+
+			public override void Execute(CommandEventArgs e, object obj)
+			{
+				PlayerMobile pm = obj as PlayerMobile;
+				MLQuestContext context;
+				if (pm == null || !Contexts.TryGetValue(pm, out context))
+				{
+					LogFailure("They have no ML quest context.");
+					return;
+				}
+
+				foreach(var quest in Quests.Values)
+				{
+					if (!quest.HasRestartDelay) continue;
+
+					context.RemoveDoneQuest(quest);
+				}
 			}
 		}
 
@@ -587,7 +619,7 @@ namespace Server.Engines.MLQuests
 							break; // don't return, we may have to complete more deliveries
 						}
 					}
-				}
+                }
 			}
 
 			return deliverInstance;
