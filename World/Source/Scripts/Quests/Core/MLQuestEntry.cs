@@ -485,7 +485,6 @@ namespace Server.Engines.MLQuests
 			if (quest != null && quester != null && pm != null)
 			{
 				instance = quest.CreateInstance(quester, pm);
-				// TODO: Deserialize?
 				instance.ClaimReward = claimReward;
 			}
 			else
