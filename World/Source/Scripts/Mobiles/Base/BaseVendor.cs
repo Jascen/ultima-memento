@@ -1779,11 +1779,11 @@ namespace Server.Mobiles
 			{
 				if ( cont.ConsumeTotal( typeof( Gold ), totalCost ) )
 					bought = true;
-				else if ( totalCost < 2000 )
+				else if ( totalCost < 1 )
 					SayTo( buyer, 500192 );//Begging thy pardon, but thou casnt afford that.
 			}
 
-			if ( !bought && totalCost >= 2000 )
+			if ( !bought && totalCost >= 1 )
 			{
 				cont = buyer.FindBankNoCreate();
 				if ( cont != null && cont.ConsumeTotal( typeof( Gold ), totalCost ) )
