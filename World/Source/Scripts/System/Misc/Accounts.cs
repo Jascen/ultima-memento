@@ -770,6 +770,8 @@ namespace Server.Accounting
 {
 	public class Account : IAccount, IComparable, IComparable<Account>
 	{
+                private int m_Gold;
+                public int Gold { get { return m_Gold; } set { m_Gold = value; }}
 		public static readonly TimeSpan YoungDuration = TimeSpan.FromHours( 40.0 );
 
 		public static readonly TimeSpan InactiveDuration = TimeSpan.FromDays( 180.0 );
@@ -1414,6 +1416,7 @@ namespace Server.Accounting
 
 			m_AccessLevel = (AccessLevel)Enum.Parse( typeof( AccessLevel ), Utility.GetText( node["accessLevel"], "Player" ), true );
 			m_Flags = Utility.GetXMLInt32( Utility.GetText( node["flags"], "0" ), 0 );
+			m_Gold = Utility.GetXMLInt32( Utility.GetText( node["accountGold"], "0"), 0);
 			m_Created = Utility.GetXMLDateTime( Utility.GetText( node["created"], null ), DateTime.Now );
 			m_LastLogin = Utility.GetXMLDateTime( Utility.GetText( node["lastLogin"], null ), DateTime.Now );
 
@@ -1759,6 +1762,13 @@ namespace Server.Accounting
 			{
 				xml.WriteStartElement( "flags" );
 				xml.WriteString( XmlConvert.ToString( m_Flags ) );
+				xml.WriteEndElement();
+			}
+
+			if ( m_Gold !=0 )
+			{
+				xml.WriteStartElement ("accountGold" );
+				xml.WriteString( XmlConvert.ToString( m_Gold ) );
 				xml.WriteEndElement();
 			}
 

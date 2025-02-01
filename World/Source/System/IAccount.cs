@@ -27,6 +27,9 @@ namespace Server.Accounting
 		string Username { get; set; }
 		AccessLevel AccessLevel { get; set; }
 
+		[CommandProperty(AccessLevel.GameMaster)]
+		int Gold{ get; set; }
+
 		int Length { get; }
 		int Limit { get; }
 		int Count { get; }
