@@ -1,4 +1,6 @@
 using System;
+using Server.Mobiles;
+using Server.Accounting;
 
 namespace Server.Items
 {
@@ -47,6 +49,23 @@ namespace Server.Items
 			int newValue = this.Amount;
 
 			UpdateTotal( this, TotalType.Gold, newValue - oldValue );
+		}
+
+		public override void OnDoubleClick( Mobile from )
+		{
+			var player = from as PlayerMobile;
+			BankBox box = player.FindBankNoCreate();
+			if (player != null && box != null && IsChildOf( box ))
+			{		
+				player.AccountGold += this.Amount;
+				this.Delete();
+				player.SendMessage( this.Amount + " Gold had been move to your Account Wallet balance.");
+
+			}
+			else
+			{
+				player.SendLocalizedMessage( 1047026 );
+			}
 		}
 
 		public override int GetTotal( TotalType type )

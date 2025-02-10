@@ -1584,11 +1584,19 @@ namespace Server
 				if( oldValue != value )
 				{
 					m_Hunger = value;
-
+          //CombatBar
+          OnHungerChange(oldValue);
+          // End CombatBar
 					EventSink.InvokeHungerChanged( new HungerChangedEventArgs( this, oldValue ) );
 				}
 			}
 		}
+
+    // CombatBar
+    public virtual void OnHungerChange(int oldValue)
+    {
+    }
+    // End CombatBar
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int Thirst
@@ -1599,9 +1607,20 @@ namespace Server
 			}
 			set
 			{
-				m_Thirst = value;
+        // CombatBar
+        int oldValue = m_Thirst;
+        if (oldValue != value)
+        {
+          m_Thirst = value;
+          OnThirstChange(oldValue);
+        }
 			}
 		}
+
+    public virtual void OnThirstChange(int oldValue)
+    {
+    }
+    //End Combatbar
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int BAC
@@ -2561,12 +2580,24 @@ namespace Server
 			{
 				if( m_TithingPoints != value )
 				{
+          // CombatBar 
+          int oldValue = m_TithingPoints;
+          // End CombatBar
 					m_TithingPoints = value;
 
 					Delta( MobileDelta.TithingPoints );
+          // CombatBar
+          OnTithingPointsChange(oldValue);
+          // End CombatBar
 				}
 			}
 		}
+
+    // CombatBar
+    public virtual void OnTithingPointsChange(int oldValue)
+    {
+    }
+    // End CombatBar
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int Followers

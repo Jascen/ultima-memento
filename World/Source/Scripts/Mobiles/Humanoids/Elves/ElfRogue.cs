@@ -122,7 +122,6 @@ namespace Server.Mobiles
 		{
 			base.OnGotMeleeAttack( attacker );
 			Server.Misc.IntelligentAction.CryOut( this );
-			Server.Misc.IntelligentAction.HideStealMove( attacker, this );
 		}
 
 		public override void OnGaveMeleeAttack( Mobile defender )

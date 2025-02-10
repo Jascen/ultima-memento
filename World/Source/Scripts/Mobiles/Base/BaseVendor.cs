@@ -1697,6 +1697,8 @@ namespace Server.Mobiles
 			bool fullPurchase = true;
 			int controlSlots = buyer.FollowersMax - buyer.Followers;
 			bool tryGettingArty = false;
+			var player = buyer as PlayerMobile;
+			int accountGold = player.AccountGold;
 
 			foreach ( BuyItemResponse buy in list )
 			{
@@ -1779,21 +1781,31 @@ namespace Server.Mobiles
 			{
 				if ( cont.ConsumeTotal( typeof( Gold ), totalCost ) )
 					bought = true;
-				else if ( totalCost < 2000 )
+				else if ( totalCost < 1 )
 					SayTo( buyer, 500192 );//Begging thy pardon, but thou casnt afford that.
 			}
 
-			if ( !bought && totalCost >= 2000 )
+			if ( !bought && totalCost >= 1 )
 			{
 				cont = buyer.FindBankNoCreate();
 				if ( cont != null && cont.ConsumeTotal( typeof( Gold ), totalCost ) )
+
 				{
 					bought = true;
 					fromBank = true;
 				}
 				else
 				{
+					if (accountGold > totalCost)
+					{
+						player.AccountGold -= totalCost;
+						bought = true;
+						SayTo( buyer, "The total of thy purchase is {0} gold, which has been withdrawn from your Account Wallet.  My thanks for the patronage.", totalCost);
+					}
+					else
+					{
 					SayTo( buyer, 500191 ); //Begging thy pardon, but thy bank account lacks these funds.
+					}
 				}
 			}
 

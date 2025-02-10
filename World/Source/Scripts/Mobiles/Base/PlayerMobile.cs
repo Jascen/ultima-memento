@@ -75,6 +75,20 @@ namespace Server.Mobiles
 
 	public class PlayerMobile : Mobile
 	{
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int AccountGold
+        {
+        	get
+            	{
+                	return Account != null ? Account.Gold : 0;
+            	}
+            	set
+            	{
+                	if (Account != null) Account.Gold = value;
+            	}
+        }
+
 		private Timer Craft_Msg_Timer;
 		private Timer Craft_Snd_Timer;
 		private Timer Craft_Aft_Timer;
@@ -4048,6 +4062,33 @@ namespace Server.Mobiles
 		{
 			MLQuestSystem.HandleSkillGain( this, skill );
 		}
+
+    //CombatBar
+    public override void OnKarmaChange( int oldValue )
+		{
+      CombatBar.Refresh(this);
+    }
+
+		public override void OnFameChange( int oldValue )
+		{
+			CombatBar.Refresh(this);
+		}
+
+    public override void OnHungerChange(int oldValue)
+    {
+		   CombatBar.Refresh(this);
+    }
+
+    public override void OnThirstChange(int oldValue)
+    {
+			 CombatBar.Refresh(this);
+    }
+
+    public override void OnTithingPointsChange(int oldValue)
+    {
+        CombatBar.Refresh(this);
+    }
+    // End CombatBar
 
 		#region Fastwalk Prevention
 		private static bool FastwalkPrevention = true; // Is fastwalk prevention enabled?
