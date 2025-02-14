@@ -6,6 +6,7 @@ using Server.Mobiles;
 using Server.Gumps;
 using Server.Misc;
 using Server.Network;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -144,19 +145,19 @@ namespace Server.Items
 
 				if ( scrollWords == 1 )
 				{
-					Land land = Land.Sosaria;
-					switch ( Utility.Random( 9 ) )
+					var options = new List<Land>
 					{
-						case 0: land = Land.Sosaria; break;
-						case 1: land = Land.Lodoria; break;
-						case 2: land = Land.Serpent; break;
-						case 3: land = Land.IslesDread; break;
-						case 4: land = Land.Savaged; break;
-						case 5: land = Land.Ambrosia; break;
-						case 6: land = Land.UmberVeil; break;
-						case 7: land = Land.Kuldar; break;
-						case 8: land = Land.Underworld; break;
-					}
+						Land.Sosaria,
+						Land.Lodoria,
+						Land.Serpent,
+						Land.IslesDread,
+						Land.Savaged,
+						Land.Ambrosia,
+						Land.UmberVeil,
+						Land.Kuldar,
+						Land.Underworld,
+					};
+					Land land = Utility.Random(options);
 					Point3D loc = Worlds.GetRandomLocation( land, "land" );
 
 					ScrollX = loc.X;
@@ -185,19 +186,19 @@ namespace Server.Items
 				}
 				else if ( scrollWords == 2 )
 				{
-					Land land = Land.Sosaria;
-					switch ( Utility.Random( 9 ) )
+					var options = new List<Land>
 					{
-						case 0: land = Land.Sosaria; break;
-						case 1: land = Land.Lodoria; break;
-						case 2: land = Land.Serpent; break;
-						case 3: land = Land.IslesDread; break;
-						case 4: land = Land.Savaged; break;
-						case 5: land = Land.Ambrosia; break;
-						case 6: land = Land.UmberVeil; break;
-						case 7: land = Land.Kuldar; break;
-						case 8: land = Land.Underworld; break;
-					}
+						Land.Sosaria,
+						Land.Lodoria,
+						Land.Serpent,
+						Land.IslesDread,
+						Land.Savaged,
+						Land.Ambrosia,
+						Land.UmberVeil,
+						Land.Kuldar,
+						Land.Underworld,
+					};
+					Land land = Utility.Random(options);
 					Point3D loc = Worlds.GetRandomLocation( land, "land" );
 
 					ScrollX = loc.X;
@@ -239,19 +240,19 @@ namespace Server.Items
 				}
 				else if ( scrollWords == 3 )
 				{
-					Land land = Land.Sosaria;
-					switch ( Utility.Random( 9 ) )
+					var options = new List<Land>
 					{
-						case 0: land = Land.Sosaria; break;
-						case 1: land = Land.Lodoria; break;
-						case 2: land = Land.Serpent; break;
-						case 3: land = Land.IslesDread; break;
-						case 4: land = Land.Savaged; break;
-						case 5: land = Land.Ambrosia; break;
-						case 6: land = Land.UmberVeil; break;
-						case 7: land = Land.Kuldar; break;
-						case 8: land = Land.Underworld; break;
-					}
+						Land.Sosaria,
+						Land.Lodoria,
+						Land.Serpent,
+						Land.IslesDread,
+						Land.Savaged,
+						Land.Ambrosia,
+						Land.UmberVeil,
+						Land.Kuldar,
+						Land.Underworld,
+					};
+					Land land = Utility.Random(options);
 
 					Point3D loc = Worlds.GetRandomLocation( land, "sea" );
 
@@ -376,17 +377,17 @@ namespace Server.Items
 							case 1: vHome = "a castle in the sky"; break;
 						}
 
-						Land land = Land.Sosaria;
-						switch ( Utility.Random( 7 ) )
+						var options = new List<Land>
 						{
-							case 0: land = Land.Sosaria; break;
-							case 1: land = Land.Lodoria; break;
-							case 2: land = Land.Serpent; break;
-							case 3: land = Land.IslesDread; break;
-							case 4: land = Land.Savaged; break;
-							case 5: land = Land.Ambrosia; break;
-							case 6: land = Land.UmberVeil; break;
-						}
+							Land.Sosaria,
+							Land.Lodoria,
+							Land.Serpent,
+							Land.IslesDread,
+							Land.Savaged,
+							Land.Ambrosia,
+							Land.UmberVeil,
+						};
+						Land land = Utility.Random(options);
 						Point3D loc = Worlds.GetRandomLocation( land, "land" );
 						xSet = loc.X; ySet = loc.Y; mSet = Worlds.GetMyDefaultTreasureMap( land );
 					}

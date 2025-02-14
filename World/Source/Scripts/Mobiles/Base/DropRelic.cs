@@ -194,22 +194,10 @@ namespace Server.Misc
 						}
 						if ( from is BloodDemon && Utility.RandomMinMax( 1, 100 ) >= BrassFame )
 						{
-							if ( Utility.RandomMinMax( 1, 2 ) == 1 )
-							{
-								BaseArmor drop = Loot.RandomArmorOrShield();
-								Item itm = (Item)drop;
-								ResourceMods.SetResource( itm, CraftResource.WintrySpec );
-								itm = Server.LootPackEntry.Enchant( killer, 500, itm );
-								c.DropItem( itm );
-							}
-							else
-							{
-								BaseWeapon drop = Loot.RandomWeapon();
-								Item itm = (Item)drop;
-								ResourceMods.SetResource( itm, CraftResource.WintrySpec );
-								itm = Server.LootPackEntry.Enchant( killer, 500, itm );
-								c.DropItem( itm );
-							}
+							Item itm = Utility.RandomMinMax( 1, 2 ) == 1 ? (Item)Loot.RandomArmorOrShield() : Loot.RandomWeapon();
+							ResourceMods.SetResource( itm, CraftResource.WintrySpec );
+							itm = Server.LootPackEntry.Enchant( killer, 500, itm );
+							c.DropItem( itm );
 						}
 					}
 

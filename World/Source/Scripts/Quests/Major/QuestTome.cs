@@ -484,22 +484,21 @@ namespace Server.Items
 
 			if ( book.QuestTomeGoals > 2 ){ book.QuestTomeType = 3; }
 
-			Land searchLocation = Land.Sosaria;
-
-			switch ( Utility.RandomMinMax( 0, 10 ) )
+			var options = new List<Land>
 			{
-				case 0:		searchLocation = Land.Sosaria;		break;
-				case 1:		searchLocation = Land.Lodoria;		break;
-				case 2:		searchLocation = Land.Serpent;		break;
-				case 3:		searchLocation = Land.Sosaria;		break;
-				case 4:		searchLocation = Land.Lodoria;		break;
-				case 5:		searchLocation = Land.Serpent;		break;
-				case 6:		searchLocation = Land.UmberVeil;	break;
-				case 7:		searchLocation = Land.Ambrosia;		break;
-				case 8:		searchLocation = Land.IslesDread;	break;
-				case 9:		searchLocation = Land.Savaged;		break;
-				case 10:	searchLocation = Land.Kuldar;		break;
-			}
+				Land.Sosaria,
+				Land.Lodoria,
+				Land.Serpent,
+				Land.Sosaria,
+				Land.Lodoria,
+				Land.Serpent,
+				Land.UmberVeil,
+				Land.Ambrosia,
+				Land.IslesDread,
+				Land.Savaged,
+				Land.Kuldar,
+			};
+			Land searchLocation = PlayerSettings.GetRandomDiscoveredLand(m as PlayerMobile, options, null);
 
 			string dungeon = "the Dungeon of Doom";
 

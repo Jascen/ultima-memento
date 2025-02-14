@@ -88,26 +88,27 @@ namespace Server.Misc
 
 		public static void FindTarget( Mobile m, int fee )
 		{
-			string searchLocation = "the Land of Sosaria";
-			switch ( Utility.RandomMinMax( 0, 15 ) )
+			var options = new List<Land>
 			{
-				case 0:		searchLocation = "the Land of Sosaria";			break;
-				case 1:		searchLocation = "the Land of Sosaria";			break;
-				case 2:		searchLocation = "the Land of Sosaria";			break;
-				case 3:		searchLocation = "the Land of Lodoria";			if ( !( PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 4:		searchLocation = "the Land of Lodoria";			if ( !( PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 5:		searchLocation = "the Land of Lodoria";			if ( !( PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 6:		searchLocation = "the Serpent Island";			if ( !( PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 7:		searchLocation = "the Serpent Island";			if ( !( PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 8:		searchLocation = "the Serpent Island";			if ( !( PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 9:		searchLocation = "the Isles of Dread";			if ( !( PlayerSettings.GetDiscovered( m, "the Isles of Dread" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 10:	searchLocation = "the Savaged Empire";			if ( !( PlayerSettings.GetDiscovered( m, "the Savaged Empire" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 11:	searchLocation = "the Savaged Empire";			if ( !( PlayerSettings.GetDiscovered( m, "the Savaged Empire" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 12:	searchLocation = "the Island of Umber Veil";	if ( !( PlayerSettings.GetDiscovered( m, "the Island of Umber Veil" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 13:	searchLocation = "the Bottle World of Kuldar";	if ( !( PlayerSettings.GetDiscovered( m, "the Bottle World of Kuldar" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-				case 14:	searchLocation = "the Underworld";				if ( !( PlayerSettings.GetDiscovered( m, "the Underworld" ) ) ){ searchLocation = "the Underworld"; } break;
-				case 15:	searchLocation = "the Land of Ambrosia";		if ( !( PlayerSettings.GetDiscovered( m, "the Land of Ambrosia" ) ) ){ searchLocation = "the Land of Sosaria"; } break;
-			}
+				Land.Sosaria,
+				Land.Sosaria,
+				Land.Sosaria,
+				Land.Lodoria,
+				Land.Lodoria,
+				Land.Lodoria,
+				Land.Serpent,
+				Land.Serpent,
+				Land.Serpent,
+				Land.IslesDread,
+				Land.Savaged,
+				Land.Savaged,
+				Land.UmberVeil,
+				Land.Kuldar,
+				Land.Underworld,
+				Land.Ambrosia,
+			};
+			Land searchLand = PlayerSettings.GetRandomDiscoveredLand(m as PlayerMobile, options, null);
+			string searchLocation = Lands.LandName(searchLand);
 
 			int aCount = 0;
 			Region reg = null;

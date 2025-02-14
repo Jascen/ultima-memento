@@ -937,12 +937,30 @@ namespace Server
 		public static void RemoveItem( Item item, Mobile from, int level )
 		{
 			// Disallow items based on mob level
-			if ( !(Utility.RandomMinMax( 3, 12 ) > level) && ( CraftResources.GetType( item.Resource ) == CraftResourceType.Skin || CraftResources.GetType( item.Resource ) == CraftResourceType.Block || CraftResources.GetType( item.Resource ) == CraftResourceType.Scales ) )
+			if ( !(Utility.RandomMinMax( 3, 12 ) > level) )
 			{
-				if ( item.Parent is NotIdentified )
-					((NotIdentified)(item.Parent)).Delete();
+				bool delete = false;
+				switch ( CraftResources.GetType( item.Resource ) )
+				{
+					case CraftResourceType.Skin:
+					case CraftResourceType.Block:
+					case CraftResourceType.Scales:
+						delete = true;
+						break;
 
-				item.Delete();
+					case CraftResourceType.Metal:
+						BaseTrinket trinket = item as BaseTrinket;
+						delete = trinket != null && trinket.GemType == GemType.Pearl;
+						break;
+				}
+
+				if ( delete )
+				{
+					if ( item.Parent is NotIdentified )
+						((NotIdentified)(item.Parent)).Delete();
+
+					item.Delete();
+				}
 			}
 		}
 

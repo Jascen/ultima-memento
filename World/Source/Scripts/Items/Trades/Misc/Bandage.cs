@@ -79,6 +79,9 @@ namespace Server.Items
 			if ( BandageContext.BeginHeal( from, from ) != null )
 				m_Bandage.Consume();
 				Server.Gumps.QuickBar.RefreshQuickBar( from );
+        //CombatBar
+        Server.Gumps.CombatBar.Refresh( from );
+        //End CombatBar
 		}
 
 		// This method added for [bandother command to call.
@@ -140,6 +143,9 @@ namespace Server.Items
 						{
 							m_Bandage.Consume();
 							Server.Gumps.QuickBar.RefreshQuickBar( from );
+              //CombatBar
+              Server.Gumps.CombatBar.Refresh( from );
+              //End CombatBar
 						}
 					}
 					else

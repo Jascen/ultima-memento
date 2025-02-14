@@ -241,17 +241,26 @@ namespace Server.Engines.MLQuests.Definitions
                     {
                         if (!HasLand)
                         {
-                            switch (Utility.RandomMinMax(0, 7))
+                            var options = new List<Land>
                             {
-                                case 0: Land = Land.Sosaria; break;
-                                case 1: Land = Land.UmberVeil; break;
-                                case 2: Land = Land.Ambrosia; break;
-                                case 3: Land = Land.Lodoria; break;
-                                case 4: Land = Land.IslesDread; break;
-                                case 5: Land = Land.Savaged; break;
-                                case 6: Land = Land.Serpent; break;
-                                case 7: Land = Land.Kuldar; break;
-                            }
+                                Land.Sosaria,
+                                Land.Sosaria,
+                                Land.Sosaria,
+                                Land.Lodoria,
+                                Land.Lodoria,
+                                Land.Lodoria,
+                                Land.Serpent,
+                                Land.Serpent,
+                                Land.Serpent,
+                                Land.IslesDread,
+                                Land.Savaged,
+                                Land.Savaged,
+                                Land.UmberVeil,
+                                Land.Kuldar,
+                                Land.Underworld,
+                                Land.Ambrosia,
+                            };
+                            Land = Utility.Random(options); // Intentionally anywhere
                         }
 
                         var map = Lands.MapName(Land);

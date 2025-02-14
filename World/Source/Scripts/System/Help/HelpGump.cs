@@ -1454,15 +1454,15 @@ namespace Server.Engines.Help
 			if ( PlayerSettings.GetKeys( from, "RangerOutpost" ) ){ sQuests = sQuests + "-Discovered the Ranger Outpost.<br><br>"; }
 			if ( PlayerSettings.GetKeys( from, "DragonRiding" ) ){ sQuests = sQuests + "-Learned the secrets of riding draconic creatures.<br><br>"; }
 
-			if ( PlayerSettings.GetDiscovered( from, "the Land of Sosaria" ) ){ sQuests = sQuests + "-Discovered the World of Sosaria.<br><br>"; }
-			if ( PlayerSettings.GetDiscovered( from, "the Island of Umber Veil" ) ){ sQuests = sQuests + "-Discovered Umber Veil.<br><br>"; }
-			if ( PlayerSettings.GetDiscovered( from, "the Land of Ambrosia" ) ){ sQuests = sQuests + "-Discovered Ambrosia.<br><br>"; }
-			if ( PlayerSettings.GetDiscovered( from, "the Land of Lodoria" ) ){ sQuests = sQuests + "-Discovered the Elven World of Lodoria.<br><br>"; }
-			if ( PlayerSettings.GetDiscovered( from, "the Serpent Island" ) ){ sQuests = sQuests + "-Discovered the Serpent Island.<br><br>"; }
-			if ( PlayerSettings.GetDiscovered( from, "the Isles of Dread" ) ){ sQuests = sQuests + "-Discovered the Isles of Dread.<br><br>"; }
-			if ( PlayerSettings.GetDiscovered( from, "the Savaged Empire" ) ){ sQuests = sQuests + "-Discovered the Valley of the Savaged Empire.<br><br>"; }
-			if ( PlayerSettings.GetDiscovered( from, "the Bottle World of Kuldar" ) ){ sQuests = sQuests + "-Discovered the Bottle World of Kuldar.<br><br>"; }
-			if ( PlayerSettings.GetDiscovered( from, "the Underworld" ) ){ sQuests = sQuests + "-Discovered the Underworld.<br><br>"; }
+			if ( PlayerSettings.GetDiscovered( from, Land.Sosaria ) ){ sQuests = sQuests + "-Discovered the World of Sosaria.<br><br>"; }
+			if ( PlayerSettings.GetDiscovered( from, Land.UmberVeil ) ){ sQuests = sQuests + "-Discovered Umber Veil.<br><br>"; }
+			if ( PlayerSettings.GetDiscovered( from, Land.Ambrosia ) ){ sQuests = sQuests + "-Discovered Ambrosia.<br><br>"; }
+			if ( PlayerSettings.GetDiscovered( from, Land.Lodoria ) ){ sQuests = sQuests + "-Discovered the Elven World of Lodoria.<br><br>"; }
+			if ( PlayerSettings.GetDiscovered( from, Land.Serpent ) ){ sQuests = sQuests + "-Discovered the Serpent Island.<br><br>"; }
+			if ( PlayerSettings.GetDiscovered( from, Land.IslesDread ) ){ sQuests = sQuests + "-Discovered the Isles of Dread.<br><br>"; }
+			if ( PlayerSettings.GetDiscovered( from, Land.Savaged ) ){ sQuests = sQuests + "-Discovered the Valley of the Savaged Empire.<br><br>"; }
+			if ( PlayerSettings.GetDiscovered( from, Land.Kuldar ) ){ sQuests = sQuests + "-Discovered the Bottle World of Kuldar.<br><br>"; }
+			if ( PlayerSettings.GetDiscovered( from, Land.Underworld ) ){ sQuests = sQuests + "-Discovered the Underworld.<br><br>"; }
 
 			return "Quests For " + from.Name + "<br><br>" + sQuests;
         }

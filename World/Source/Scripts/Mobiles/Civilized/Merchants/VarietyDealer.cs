@@ -77,15 +77,15 @@ namespace Server.Mobiles
 
 				if ( dropped.Amount == 500 && Server.Items.MuseumBook.IsEnabled() )
 				{
-					if (	Server.Misc.PlayerSettings.GetDiscovered( from, "the Land of Sosaria" ) && 
-							Server.Misc.PlayerSettings.GetDiscovered( from, "the Land of Lodoria" ) && 
-							Server.Misc.PlayerSettings.GetDiscovered( from, "the Island of Umber Veil" ) && 
-							Server.Misc.PlayerSettings.GetDiscovered( from, "the Land of Ambrosia" ) && 
-							Server.Misc.PlayerSettings.GetDiscovered( from, "the Serpent Island" ) && 
-							Server.Misc.PlayerSettings.GetDiscovered( from, "the Isles of Dread" ) && 
-							Server.Misc.PlayerSettings.GetDiscovered( from, "the Savaged Empire" ) && 
-							Server.Misc.PlayerSettings.GetDiscovered( from, "the Bottle World of Kuldar" ) && 
-							Server.Misc.PlayerSettings.GetDiscovered( from, "the Underworld" )
+					if (	Server.Misc.PlayerSettings.GetDiscovered( from, Land.Sosaria ) && 
+							Server.Misc.PlayerSettings.GetDiscovered( from, Land.Lodoria ) && 
+							Server.Misc.PlayerSettings.GetDiscovered( from, Land.UmberVeil ) && 
+							Server.Misc.PlayerSettings.GetDiscovered( from, Land.Ambrosia ) && 
+							Server.Misc.PlayerSettings.GetDiscovered( from, Land.Serpent ) && 
+							Server.Misc.PlayerSettings.GetDiscovered( from, Land.IslesDread ) && 
+							Server.Misc.PlayerSettings.GetDiscovered( from, Land.Savaged ) && 
+							Server.Misc.PlayerSettings.GetDiscovered( from, Land.Kuldar ) && 
+							Server.Misc.PlayerSettings.GetDiscovered( from, Land.Underworld )
 					)
 					{
 						if ( AlreadyHasBook( from ) )

@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 using Server.Spells.Seventh;
+using System.Linq;
 
 namespace Server.Misc
 {
@@ -336,12 +337,24 @@ namespace Server.Misc
 			if ( ((PlayerMobile)m).ThiefQuest == null ){ ((PlayerMobile)m).ThiefQuest = ""; }
 		}
 
+		public static Land GetRandomDiscoveredLand( PlayerMobile m, List<Land> options, Func<Land, bool> predicate )
+		{
+			if ( m != null ) return Land.None;
+
+			options.Where(land => ( predicate != null && predicate(land) ) || GetDiscovered(m, land)).ToList();
+
+            return Utility.Random(options);
+        }
+
 		public static bool GetDiscovered( Mobile m, string world ) // -------------------------------------------------------------------------------
+		{
+			return GetDiscovered(m, Lands.LandRef(world));
+		}
+
+		public static bool GetDiscovered( Mobile m, Land land ) // -------------------------------------------------------------------------------
 		{
 			SetDiscovered( m, "none", false );
 			string discovered = ((PlayerMobile)m).CharacterDiscovered;
-
-			bool BeenThere = false;
 
 			if ( discovered.Length > 0 )
 			{
@@ -349,21 +362,21 @@ namespace Server.Misc
 				int nEntry = 1;
 				foreach (string found in discoveries)
 				{
-					if ( nEntry == 1 && found == "1" && world == "the Land of Lodoria" ){ BeenThere = true; }
-					else if ( nEntry == 2 && found == "1" && world == "the Land of Sosaria" ){ BeenThere = true; }
-					else if ( nEntry == 3 && found == "1" && world == "the Island of Umber Veil" ){ BeenThere = true; }
-					else if ( nEntry == 4 && found == "1" && world == "the Land of Ambrosia" ){ BeenThere = true; }
-					else if ( nEntry == 5 && found == "1" && world == "the Serpent Island" ){ BeenThere = true; }
-					else if ( nEntry == 6 && found == "1" && world == "the Isles of Dread" ){ BeenThere = true; }
-					else if ( nEntry == 7 && found == "1" && world == "the Savaged Empire" ){ BeenThere = true; }
-					else if ( nEntry == 8 && found == "1" && world == "the Bottle World of Kuldar" ){ BeenThere = true; }
-					else if ( nEntry == 9 && found == "1" && world == "the Underworld" ){ BeenThere = true; }
+					if ( nEntry == 1 && found == "1" && land == Land.Lodoria ) return true;
+					else if ( nEntry == 2 && found == "1" && land == Land.Sosaria ) return true;
+					else if ( nEntry == 3 && found == "1" && land == Land.UmberVeil ) return true;
+					else if ( nEntry == 4 && found == "1" && land == Land.Ambrosia ) return true;
+					else if ( nEntry == 5 && found == "1" && land == Land.Serpent ) return true;
+					else if ( nEntry == 6 && found == "1" && land == Land.IslesDread ) return true;
+					else if ( nEntry == 7 && found == "1" && land == Land.Savaged ) return true;
+					else if ( nEntry == 8 && found == "1" && land == Land.Kuldar ) return true;
+					else if ( nEntry == 9 && found == "1" && land == Land.Underworld ) return true;
 
 					nEntry++;
 				}
 			}
 
-			return BeenThere;
+			return false;
 		}
 
 		public static void SetDiscovered( Mobile m, string world, bool repeat ) // ------------------------------------------------------------------

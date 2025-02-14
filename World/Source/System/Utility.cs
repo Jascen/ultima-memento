@@ -793,6 +793,11 @@ namespace Server
 			return min + m_Random.Next( (max - min) + 1 );
 		}
 
+		public static T Random<T>( List<T> list )
+		{
+			return list[m_Random.Next( list.Count )];
+		}
+
 		public static int Random( int from, int count )
 		{
 			if ( count == 0 )

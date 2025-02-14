@@ -68,13 +68,13 @@ namespace Server.Items
 			bool CanUseMap = false;
 
 			if ( GoToWorld == Land.Sosaria ){ CanUseMap = true; }
-			else if ( GoToWorld == Land.UmberVeil && PlayerSettings.GetDiscovered( from, "the Island of Umber Veil" ) ){ CanUseMap = true; }
-			else if ( GoToWorld == Land.Ambrosia && PlayerSettings.GetDiscovered( from, "the Land of Ambrosia" ) ){ CanUseMap = true; }
-			else if ( GoToWorld == Land.Lodoria && PlayerSettings.GetDiscovered( from, "the Land of Lodoria" ) ){ CanUseMap = true; }
-			else if ( GoToWorld == Land.Serpent && PlayerSettings.GetDiscovered( from, "the Serpent Island" ) ){ CanUseMap = true; }
-			else if ( GoToWorld == Land.IslesDread && PlayerSettings.GetDiscovered( from, "the Isles of Dread" ) ){ CanUseMap = true; }
-			else if ( GoToWorld == Land.Savaged && PlayerSettings.GetDiscovered( from, "the Savaged Empire" ) ){ CanUseMap = true; }
-			else if ( GoToWorld == Land.Kuldar && PlayerSettings.GetDiscovered( from, "the Bottle World of Kuldar" ) ){ CanUseMap = true; }
+			else if ( GoToWorld == Land.UmberVeil && PlayerSettings.GetDiscovered( from, Land.UmberVeil ) ){ CanUseMap = true; }
+			else if ( GoToWorld == Land.Ambrosia && PlayerSettings.GetDiscovered( from, Land.Ambrosia ) ){ CanUseMap = true; }
+			else if ( GoToWorld == Land.Lodoria && PlayerSettings.GetDiscovered( from, Land.Lodoria ) ){ CanUseMap = true; }
+			else if ( GoToWorld == Land.Serpent && PlayerSettings.GetDiscovered( from, Land.Serpent ) ){ CanUseMap = true; }
+			else if ( GoToWorld == Land.IslesDread && PlayerSettings.GetDiscovered( from, Land.IslesDread ) ){ CanUseMap = true; }
+			else if ( GoToWorld == Land.Savaged && PlayerSettings.GetDiscovered( from, Land.Savaged ) ){ CanUseMap = true; }
+			else if ( GoToWorld == Land.Kuldar && PlayerSettings.GetDiscovered( from, Land.Kuldar ) ){ CanUseMap = true; }
 
 			if ( from.Skills[SkillName.Tracking].Value < 80 && from.Skills[SkillName.Cartography].Value < 80 )
 			{

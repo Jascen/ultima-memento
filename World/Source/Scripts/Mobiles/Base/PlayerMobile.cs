@@ -4049,6 +4049,33 @@ namespace Server.Mobiles
 			MLQuestSystem.HandleSkillGain( this, skill );
 		}
 
+    //CombatBar
+    public override void OnKarmaChange( int oldValue )
+		{
+      CombatBar.Refresh(this);
+    }
+
+		public override void OnFameChange( int oldValue )
+		{
+			CombatBar.Refresh(this);
+		}
+
+    public override void OnHungerChange(int oldValue)
+    {
+		   CombatBar.Refresh(this);
+    }
+
+    public override void OnThirstChange(int oldValue)
+    {
+			 CombatBar.Refresh(this);
+    }
+
+    public override void OnTithingPointsChange(int oldValue)
+    {
+        CombatBar.Refresh(this);
+    }
+    // End CombatBar
+
 		#region Fastwalk Prevention
 		private static bool FastwalkPrevention = true; // Is fastwalk prevention enabled?
 		private static TimeSpan FastwalkThreshold = TimeSpan.FromSeconds( 0.4 ); // Fastwalk prevention will become active after 0.4 seconds

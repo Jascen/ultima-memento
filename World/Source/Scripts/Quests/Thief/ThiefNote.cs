@@ -249,30 +249,24 @@ namespace Server.Items
 			if ( Utility.RandomBool() ) // STEAL FROM TOWN
 			{
 				int rewardMod = 1;
-				Land searchLocation = Land.Sosaria;
-				switch ( Utility.RandomMinMax( 0, 13 ) )
+				var searchOptions = new List<Land>
 				{
-					case 0:		searchLocation = Land.Sosaria;			break;
-					case 1:		searchLocation = Land.Sosaria;			break;
-					case 2:		searchLocation = Land.Sosaria;			break;
-					case 3:		searchLocation = Land.Lodoria;			rewardMod = 2;	if ( !( PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ) ){ searchLocation = Land.Sosaria; } break;
-					case 4:		searchLocation = Land.Lodoria;			rewardMod = 2;	if ( !( PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ) ){ searchLocation = Land.Sosaria; } break;
-					case 5:		searchLocation = Land.Lodoria;			rewardMod = 2;	if ( !( PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ) ){ searchLocation = Land.Sosaria; } break;
-					case 6:		searchLocation = Land.Serpent;			rewardMod = 3;	if ( !( PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ) ){ searchLocation = Land.Sosaria; } break;
-					case 7:		searchLocation = Land.Serpent;			rewardMod = 3;	if ( !( PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ) ){ searchLocation = Land.Sosaria; } break;
-					case 8:		searchLocation = Land.Serpent;			rewardMod = 3;	if ( !( PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ) ){ searchLocation = Land.Sosaria; } break;
-					case 9:		searchLocation = Land.IslesDread;		rewardMod = 4;	if ( !( PlayerSettings.GetDiscovered( m, "the Isles of Dread" ) ) ){ searchLocation = Land.Sosaria; } break;
-					case 10:	searchLocation = Land.Savaged;			rewardMod = 5;	if ( !( PlayerSettings.GetDiscovered( m, "the Savaged Empire" ) ) ){ searchLocation = Land.Sosaria; } break;
-					case 11:	searchLocation = Land.Savaged;			rewardMod = 5;	if ( !( PlayerSettings.GetDiscovered( m, "the Savaged Empire" ) ) ){ searchLocation = Land.Sosaria; } break;
-					case 12:	searchLocation = Land.UmberVeil;		rewardMod = 2;	if ( !( PlayerSettings.GetDiscovered( m, "the Island of Umber Veil" ) ) ){ searchLocation = Land.Sosaria; } break;
-					case 13:	searchLocation = Land.Kuldar;			rewardMod = 4;	if ( !( PlayerSettings.GetDiscovered( m, "the Bottle World of Kuldar" ) ) ){ searchLocation = Land.Sosaria; } break;
-				}
-
-				if ( !( PlayerSettings.GetDiscovered( m, "the Land of Sosaria" ) ) && searchLocation == Land.Sosaria )
-				{
-					if ( ((PlayerMobile)m).SkillStart == 11000 ){ searchLocation = Land.Savaged; }
-					else { searchLocation = Land.Lodoria; }
-				}
+					Land.Sosaria,
+					Land.Sosaria,
+					Land.Sosaria,
+					Land.Lodoria,
+					Land.Lodoria,
+					Land.Lodoria,
+					Land.IslesDread,
+					Land.Serpent,
+					Land.Serpent,
+					Land.Serpent,
+					Land.Savaged,
+					Land.Savaged,
+					Land.UmberVeil,
+					Land.Kuldar,
+				};
+				Land searchLocation = PlayerSettings.GetRandomDiscoveredLand(m as PlayerMobile, searchOptions, null);
 
 				if ( searchLocation == Land.Sosaria ){ rewardMod = 1; }
 
@@ -357,30 +351,24 @@ namespace Server.Items
 				}
 			}
 
-			Land dropLocation = Land.Sosaria;
-			switch ( Utility.RandomMinMax( 0, 13 ) )
+			var dropOptions = new List<Land>
 			{
-				case 0:		dropLocation = Land.Sosaria;		break;
-				case 1:		dropLocation = Land.Sosaria;		break;
-				case 2:		dropLocation = Land.Sosaria;		break;
-				case 3:		dropLocation = Land.Lodoria;		if ( !( PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ) ){ dropLocation = Land.Sosaria; } break;
-				case 4:		dropLocation = Land.Lodoria;		if ( !( PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ) ){ dropLocation = Land.Sosaria; } break;
-				case 5:		dropLocation = Land.Lodoria;		if ( !( PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ) ){ dropLocation = Land.Sosaria; } break;
-				case 6:		dropLocation = Land.Serpent;		if ( !( PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ) ){ dropLocation = Land.Sosaria; } break;
-				case 7:		dropLocation = Land.Serpent;		if ( !( PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ) ){ dropLocation = Land.Sosaria; } break;
-				case 8:		dropLocation = Land.Serpent;		if ( !( PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ) ){ dropLocation = Land.Sosaria; } break;
-				case 9:		dropLocation = Land.IslesDread;		if ( !( PlayerSettings.GetDiscovered( m, "the Isles of Dread" ) ) ){ dropLocation = Land.Sosaria; } break;
-				case 10:	dropLocation = Land.Savaged;		if ( !( PlayerSettings.GetDiscovered( m, "the Savaged Empire" ) ) ){ dropLocation = Land.Sosaria; } break;
-				case 11:	dropLocation = Land.Savaged;		if ( !( PlayerSettings.GetDiscovered( m, "the Savaged Empire" ) ) ){ dropLocation = Land.Sosaria; } break;
-				case 12:	dropLocation = Land.UmberVeil;		if ( !( PlayerSettings.GetDiscovered( m, "the Island of Umber Veil" ) ) ){ dropLocation = Land.Sosaria; } break;
-				case 13:	dropLocation = Land.Kuldar;			if ( !( PlayerSettings.GetDiscovered( m, "the Bottle World of Kuldar" ) ) ){ dropLocation = Land.Sosaria; } break;
-			}
-
-			if ( !( PlayerSettings.GetDiscovered( m, "the Land of Sosaria" ) ) && dropLocation == Land.Sosaria )
-			{
-				if ( ((PlayerMobile)m).SkillStart == 11000 ){ dropLocation = Land.Savaged; }
-				else { dropLocation = Land.Lodoria; }
-			}
+				Land.Sosaria,
+				Land.Sosaria,
+				Land.Sosaria,
+				Land.Lodoria,
+				Land.Lodoria,
+				Land.Lodoria,
+				Land.IslesDread,
+				Land.Serpent,
+				Land.Serpent,
+				Land.Serpent,
+				Land.Savaged,
+				Land.Savaged,
+				Land.UmberVeil,
+				Land.Kuldar,
+			};
+			Land dropLocation = PlayerSettings.GetRandomDiscoveredLand(m as PlayerMobile, dropOptions, null);
 
 			int dCount = 0;
 			ArrayList drops = new ArrayList();

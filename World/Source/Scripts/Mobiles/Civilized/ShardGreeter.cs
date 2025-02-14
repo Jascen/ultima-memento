@@ -178,7 +178,7 @@ namespace Server.Gumps
 
 				if ( m != null )
 				{
-					if ( PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ){ visited = true; }
+					if ( PlayerSettings.GetDiscovered( m, Land.Lodoria ) ){ visited = true; }
 				}
 				++index;
 			}
@@ -202,7 +202,7 @@ namespace Server.Gumps
 
 				if ( m != null )
 				{
-					if ( PlayerSettings.GetDiscovered( m, "the Savaged Empire" ) ){ visited = true; }
+					if ( PlayerSettings.GetDiscovered( m, Land.Savaged ) ){ visited = true; }
 				}
 				++index;
 			}
