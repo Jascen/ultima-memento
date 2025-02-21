@@ -35,7 +35,7 @@ namespace Server.Spells.DeathKnight
 			{
 				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
 			}
-			else if ( CheckHSequence( m ) && CheckFizzle() )
+			else if ( CheckHSequence( m ) )
 			{
 				m.FixedParticles( 0x3709, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
 				m.PlaySound( 0x208 );

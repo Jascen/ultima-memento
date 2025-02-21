@@ -36,7 +36,7 @@ namespace Server.Spells.DeathKnight
 
 		public void Target( Mobile m )
 		{
-			if ( CheckBSequence( m ) && CheckFizzle() )
+			if ( CheckBSequence( m ) )
 			{
 				SpellHelper.Turn( Caster, m );
 

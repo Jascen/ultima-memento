@@ -40,7 +40,7 @@ namespace Server.Spells.DeathKnight
 				Caster.LocalOverheadMessage( MessageType.Regular, 0x481, false, "That target is under the effect of that spell already." );
 			}
 
-			if ( CheckBSequence( m ) && CheckFizzle() )
+			if ( CheckBSequence( m ) )
 			{
 				SpellHelper.Turn( Caster, m );
 

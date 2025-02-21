@@ -36,7 +36,7 @@ namespace Server.Spells.DeathKnight
 			{
 				Caster.SendLocalizedMessage( 1061923 ); // The target is already frozen.
 			}
-			else if ( CheckHSequence( m ) && CheckFizzle() )
+			else if ( CheckHSequence( m ) )
 			{
 				SpellHelper.Turn( Caster, m );
 

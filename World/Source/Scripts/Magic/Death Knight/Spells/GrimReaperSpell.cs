@@ -29,7 +29,7 @@ namespace Server.Spells.DeathKnight
 
 		public override void OnCast()
 		{
-			if ( CheckSequence() && CheckFizzle() )
+			if ( CheckSequence() )
 			{
 				Caster.PlaySound( 0x0F5 );
 				Caster.PlaySound( 0x1ED );

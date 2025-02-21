@@ -57,7 +57,7 @@ namespace Server.Spells.DeathKnight
 				Caster.LocalOverheadMessage( MessageType.Regular, 0x481, false, "That target already has this affect." );
 			}
 
-			else if ( CheckBSequence( m, false ) && CheckFizzle() )
+			else if ( CheckBSequence( m, false ) )
 			{
 				SpellHelper.Turn( Caster, m );
 
