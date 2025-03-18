@@ -40,13 +40,17 @@ namespace Server.Mobiles
 			SetResistance( ResistanceType.Poison, 10, 20 );
 			SetResistance( ResistanceType.Energy, 10, 20 );
 
+			SetSkill( SkillName.MagicResist, 65.1, 80.0 );
+			SetSkill( SkillName.Tactics, 65.1, 90.0 );
+			SetSkill( SkillName.FistFighting, 65.1, 80.0 );
+
 			Fame = 8400;
 			Karma = -8400;
 
 			VirtualArmor = 35;
 
 			Tamable = true;
-			ControlSlots = 1;
+			ControlSlots = 2;
 			MinTameSkill = 105.5;
 
 			PackItem( new SulfurousAsh( 20 ) );

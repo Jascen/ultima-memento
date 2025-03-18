@@ -621,7 +621,7 @@ namespace Server.Mobiles
 
 				SetStr( 251, 290 );
 				SetDex( 63, 82 );
-				SetInt( 61, 10 );
+				SetInt( 61, 100 );
 
 				SetHits( 241, 258 );
 
