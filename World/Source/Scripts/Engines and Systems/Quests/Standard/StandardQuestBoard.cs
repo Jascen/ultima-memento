@@ -9,6 +9,8 @@ using Server.Items;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Commands;
+using Server.Engines_and_Systems.Quests.BulletinBoard.Quests;
+using Server.Engines.MLQuests;
 
 namespace Server.Items
 {
@@ -98,6 +100,7 @@ namespace Server.Items
 						nFame = Utility.RandomMinMax( 0, nFame )+2000;
 
 					StandardQuestFunctions.FindTarget( m_Mobile, nFame );
+					MLQuestSystem.FindQuest(typeof(RandomAdventuringQuest)).SendOffer(null, m_Mobile as PlayerMobile);
 
 					string TellQuest = StandardQuestFunctions.QuestStatus( m_Mobile ) + ".";
 					m_Mobile.PrivateOverheadMessage(MessageType.Regular, 1150, false, TellQuest, m_Mobile.NetState);
