@@ -15,7 +15,7 @@ using Server.Engines.MLQuests;
 namespace Server.Items
 {
 	[Flipable(0x577C, 0x577B)]
-	public class StandardQuestBoard : Item
+	public class StandardQuestBoard : Item, IQuestGiver
 	{
 		[Constructable]
 		public StandardQuestBoard() : base(0x577B)
@@ -29,7 +29,7 @@ namespace Server.Items
 		{ 
 			base.GetContextMenuEntries( from, list ); 
 			list.Add( new SpeechGumpEntry( from ) );
-			list.Add( new StandardQuestEntry( from ) );
+			list.Add( new StandardQuestEntry( from, this ) );
 			list.Add( new StandardQuestComplete( from ) ); 
 		}
 
@@ -68,10 +68,12 @@ namespace Server.Items
 		public class StandardQuestEntry : ContextMenuEntry
 		{
 			private Mobile m_Mobile;
+			private StandardQuestBoard board;
 			
-			public StandardQuestEntry( Mobile from ) : base( 6120, 12 )
+			public StandardQuestEntry( Mobile from, StandardQuestBoard board ) : base( 6120, 12 )
 			{
 				m_Mobile = from;
+				this.board = board;
 			}
 
 			public override void OnClick()
@@ -86,7 +88,25 @@ namespace Server.Items
 				int nWhenForAnotherQuest = nServerQuestTimeAllowed - nAllowedForAnotherQuest;
 				string sAllowedForAnotherQuest = nWhenForAnotherQuest.ToString();
 
-				if ( PlayerSettings.GetQuestState( m_Mobile, "StandardQuest" ) )
+				MLQuest presentedQuest = new RandomAdventuringQuest(m_Mobile as PlayerMobile);
+				MLQuest questTemplate = MLQuestSystem.FindQuest(typeof(RandomAdventuringQuest));
+				MLQuestContext context = MLQuestSystem.GetContext(m_Mobile as PlayerMobile);
+
+				
+				// TODO: I think MLQuest can override CanOffer, so this should be moved there. But for now it works.
+				bool canTakeQuest = true;
+				if (context != null)
+				{
+					for (int i = 0; i < context.QuestInstances.Count; i++)
+					{
+						if (context.QuestInstances[i].Quest is RandomAdventuringQuest)
+						{
+							canTakeQuest = false;
+						}
+					}
+				}
+
+				if (!canTakeQuest)
 				{
 					m_Mobile.PrivateOverheadMessage(MessageType.Regular, 1150, false, "You are already on a quest. Return here when you are done.", m_Mobile.NetState);
 				}
@@ -99,11 +119,11 @@ namespace Server.Items
 					int nFame = m_Mobile.Fame * 2;
 						nFame = Utility.RandomMinMax( 0, nFame )+2000;
 
-					StandardQuestFunctions.FindTarget( m_Mobile, nFame );
-					MLQuestSystem.FindQuest(typeof(RandomAdventuringQuest)).SendOffer(null, m_Mobile as PlayerMobile);
+					//StandardQuestFunctions.FindTarget( m_Mobile, nFame );
+					presentedQuest.SendOffer(board, m_Mobile as PlayerMobile);
 
-					string TellQuest = StandardQuestFunctions.QuestStatus( m_Mobile ) + ".";
-					m_Mobile.PrivateOverheadMessage(MessageType.Regular, 1150, false, TellQuest, m_Mobile.NetState);
+					//string TellQuest = StandardQuestFunctions.QuestStatus( m_Mobile ) + ".";
+					//m_Mobile.PrivateOverheadMessage(MessageType.Regular, 1150, false, TellQuest, m_Mobile.NetState);
 				}
             }
         }
@@ -124,6 +144,7 @@ namespace Server.Items
 
 				string myQuest = PlayerSettings.GetQuestInfo( m_Mobile, "StandardQuest" );
 
+				// TODO: Change this logic to check if the player is on an adventuring contract, if it's done, and then pay them out
 				int nSucceed = StandardQuestFunctions.DidQuest( m_Mobile );
 
 				if ( nSucceed > 0 )
@@ -146,6 +167,7 @@ namespace Server.Items
 		{
 			if ( dropped is Gold )
 			{
+				// TODO: Maybe figure out if we can roll this into the 'Resign' button. Otherwise, needs to interact with MLQuest
 				int nPenalty = StandardQuestFunctions.QuestFailure( from );
 
 				if ( dropped.Amount >= nPenalty )
@@ -181,6 +203,14 @@ namespace Server.Items
 		{
 			base.Deserialize(reader);
 			int version = reader.ReadInt();
+		}
+
+		public List<MLQuest> MLQuests
+		{
+			get
+			{
+				return MLQuestSystem.EmptyList;
+			}
 		}
 	}
 }

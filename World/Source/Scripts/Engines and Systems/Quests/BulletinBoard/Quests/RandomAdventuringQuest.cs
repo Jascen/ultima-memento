@@ -39,6 +39,8 @@ namespace Server.Engines_and_Systems.Quests.BulletinBoard.Quests
                 "A job taken from the bulletin board. You should view the objectives and complete them as soon as possible.";
             
             Rewards.Add(new DummyReward("A fuzzy feeling."));
+
+            Activated = true;
         }
     }
 }
