@@ -34,10 +34,9 @@ namespace Server.Engines_and_Systems.Quests.BulletinBoard.Objectives
             }
             else
             {
-                g.AddLabel(98, y, BaseQuestGump.COLOR_LABEL, instance.GetObjectiveText());
+                TextDefinition.AddHtmlText(g, 98, y, 312, 260, instance.GetObjectiveText(), false, false, BaseQuestGump.COLOR_LOCALIZED, BaseQuestGump.COLOR_HTML);
+                //g.AddLabel(98, y, BaseQuestGump.COLOR_LABEL, instance.GetObjectiveText());
             }
-
-            y += 16;
         }
 
         public override void WriteToGump(Gump g, ref int y)
