@@ -132,7 +132,7 @@ namespace Server.Engines.MLQuests.Gumps
 				}
 				else
 				{
-					objective.WriteToGump( this, ref y );
+					objective.ObjectiveTemplate.WriteToGump( this, ref y );
 				}
 
 				if ( objectiveTemplate.IsTimed )
