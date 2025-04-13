@@ -87,26 +87,11 @@ namespace Server.Items
 				int nServerQuestTimeAllowed = MyServerSettings.GetTimeBetweenQuests();
 				int nWhenForAnotherQuest = nServerQuestTimeAllowed - nAllowedForAnotherQuest;
 				string sAllowedForAnotherQuest = nWhenForAnotherQuest.ToString();
-
-				MLQuest presentedQuest = new RandomAdventuringQuest(m_Mobile as PlayerMobile);
+				
 				MLQuest questTemplate = MLQuestSystem.FindQuest(typeof(RandomAdventuringQuest));
 				MLQuestContext context = MLQuestSystem.GetContext(m_Mobile as PlayerMobile);
 
-				
-				// TODO: I think MLQuest can override CanOffer, so this should be moved there. But for now it works.
-				bool canTakeQuest = true;
-				if (context != null)
-				{
-					for (int i = 0; i < context.QuestInstances.Count; i++)
-					{
-						if (context.QuestInstances[i].Quest is RandomAdventuringQuest)
-						{
-							canTakeQuest = false;
-						}
-					}
-				}
-
-				if (!canTakeQuest)
+				if (!questTemplate.CanOffer(board, m_Mobile as PlayerMobile, false))
 				{
 					m_Mobile.PrivateOverheadMessage(MessageType.Regular, 1150, false, "You are already on a quest. Return here when you are done.", m_Mobile.NetState);
 				}
@@ -116,14 +101,7 @@ namespace Server.Items
 				}
 				else
 				{
-					int nFame = m_Mobile.Fame * 2;
-						nFame = Utility.RandomMinMax( 0, nFame )+2000;
-
-					//StandardQuestFunctions.FindTarget( m_Mobile, nFame );
-					presentedQuest.SendOffer(board, m_Mobile as PlayerMobile);
-
-					//string TellQuest = StandardQuestFunctions.QuestStatus( m_Mobile ) + ".";
-					//m_Mobile.PrivateOverheadMessage(MessageType.Regular, 1150, false, TellQuest, m_Mobile.NetState);
+					MLQuestSystem.FindQuest(typeof(RandomAdventuringQuest)).SendOffer(board, m_Mobile as PlayerMobile);
 				}
             }
         }

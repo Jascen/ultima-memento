@@ -11,89 +11,53 @@ using Server.Regions;
 
 namespace Server.Engines_and_Systems.Quests.BulletinBoard.Objectives
 {
-    public sealed class RandomAdventuringObjective : BaseObjective
+    public class RandomAdventuringObjective : BaseObjective
     {
-        private PlayerMobile Player { get; set; }
-        private RandomAdventuringObjectiveInstance PresentedInstance { get; set; }
-
         public RandomAdventuringObjective()
         {
         }
 
-        public RandomAdventuringObjective(PlayerMobile player)
-        {
-            Player = player;
-            PresentedInstance = new RandomAdventuringObjectiveInstance(Player, this);
-        }
-
-        public void WriteToGump(Gump g, RandomAdventuringObjectiveInstance instance, ref int y)
-        {
-            if (instance == null)
-            {
-                g.AddLabel(98, y, BaseQuestGump.COLOR_LABEL, "No instance");
-            }
-            else
-            {
-                TextDefinition.AddHtmlText(g, 98, y, 312, 260, instance.GetObjectiveText(), false, false, BaseQuestGump.COLOR_LOCALIZED, BaseQuestGump.COLOR_HTML);
-                //g.AddLabel(98, y, BaseQuestGump.COLOR_LABEL, instance.GetObjectiveText());
-            }
-        }
-
         public override void WriteToGump(Gump g, ref int y)
         {
-            WriteToGump(g, PresentedInstance, ref y);
+            // Ignored, as we return a radiant instance
+            return;
         }
 
         public override BaseObjectiveInstance CreateInstance(MLQuestInstance instance)
         {
-            return new RandomAdventuringObjectiveInstance(instance, this, PresentedInstance.EncodedQuestString);
+            return new RandomAdventuringObjectiveInstance(instance, this);
         }
     }
 
-    public class RandomAdventuringObjectiveInstance : BaseObjectiveInstance //, IDeserializable
+    public class RandomAdventuringObjectiveInstance : RadiantObjectiveInstance, IDeserializable
     {
         public string EncodedQuestString { get; set; }
-        private RandomAdventuringObjective Objective { get; set; }
-        private PlayerMobile m_Player { get; set; }
+        
+        private readonly PlayerMobile m_Player;
+
+        private const int Version = 1;
 
         /// <summary>
         /// Constructor for building the 'actual' quest instance the player will receive on pressing 'Accept'.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="obj"></param>
-        /// <param name="encodedQuestString"></param>
-        public RandomAdventuringObjectiveInstance(MLQuestInstance instance, BaseObjective obj, string encodedQuestString) : base(instance, obj)
+        public RandomAdventuringObjectiveInstance(MLQuestInstance instance, BaseObjective obj) : base(instance, obj)
         {
-            Objective = obj as RandomAdventuringObjective;
             m_Player = instance.Player;
-            EncodedQuestString = encodedQuestString;
-        }
-        
-        /// <summary>
-        /// Constructor for building a 'dummy' instance for easy presentation. Should probably just pull this out to a helper class and avoid the headaches.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="obj"></param>
-        public RandomAdventuringObjectiveInstance(PlayerMobile player, BaseObjective obj) : base(null, obj)
-        {
-            Objective = obj as RandomAdventuringObjective;
-            m_Player = player;
             
             // Build the actual quest objective
-            int nFame = player.Fame * 2;
+            int nFame = m_Player.Fame * 2;
             nFame = Utility.RandomMinMax( 0, nFame )+2000;
             EncodedQuestString = BuildQuestString(nFame);
         }
 
-        public override bool IsCompleted()
-        {
-            return base.IsCompleted();
-        }
-
         public override void WriteToGump(Gump g, ref int y)
         {
-            Objective.WriteToGump(g, this, ref y);
+            TextDefinition.AddHtmlText(g, 98, y, 312, 260, GetObjectiveText(), false, false, BaseQuestGump.COLOR_LOCALIZED, BaseQuestGump.COLOR_HTML);
         }
+        
+        
 
         #region Quest Strings
         
@@ -472,14 +436,17 @@ namespace Server.Engines_and_Systems.Quests.BulletinBoard.Objectives
         
         #endregion
 
-        /*public void Deserialize(GenericReader reader)
+        public void Deserialize(GenericReader reader)
         {
-            return;
+            int version = reader.ReadInt();
+            EncodedQuestString = reader.ReadString();
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-        }*/
+            writer.Write(Version);
+            writer.Write(EncodedQuestString);
+        }
     }
 }
