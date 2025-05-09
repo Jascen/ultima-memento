@@ -8,12 +8,14 @@ namespace Server.Engines.MLQuests.Gumps
 	{
 		private MLQuest m_Quest;
 		private IQuestGiver m_Quester;
+		private MLQuestInstance m_QuestInstance;
 
 		public QuestOfferGump(MLQuest quest, IQuestGiver quester, PlayerMobile pm)
 			: base(1049010) // Quest Offer
 		{
 			m_Quest = quest;
 			m_Quester = quester;
+			m_QuestInstance = quest.CreateInstance(quester, pm);
 
 			Closable = false;
 
@@ -31,7 +33,7 @@ namespace Server.Engines.MLQuests.Gumps
 			AddDescription(quest);
 
 			BuildPage();
-			AddObjectives(quest);
+			AddObjectives(m_QuestInstance);
 
 			if (hasRewards)
 			{
@@ -51,7 +53,8 @@ namespace Server.Engines.MLQuests.Gumps
 			{
 				case 1: // Accept
 					{
-						m_Quest.OnAccept(m_Quester, pm);
+						m_QuestInstance.Accept();
+						m_Quest.OnAccept(m_Quester, pm, m_QuestInstance);
 						break;
 					}
 				case 2: // Refuse
