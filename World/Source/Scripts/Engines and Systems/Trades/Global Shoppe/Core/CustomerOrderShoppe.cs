@@ -32,6 +32,17 @@ namespace Server.Engines.GlobalShoppe
             from.PlaySound(0x32); // Dropgem1
         }
 
+        public void OpenRewardSelectionGump(int index, Mobile from, TradeSkillContext context, string title, string toolName, string resourceName)
+        {
+            if (context.Orders.Count <= index) return;
+
+            var order = context.Orders[index];
+            if (!order.IsComplete) return;
+
+            from.CloseGump(typeof(RewardSelectionGump));
+            from.SendGump(new RewardSelectionGump(from, this, context, order, index, title, toolName, resourceName));
+        }
+
         public string GetDescription(IOrderContext order)
         {
             var typed = order as TOrderContext;
