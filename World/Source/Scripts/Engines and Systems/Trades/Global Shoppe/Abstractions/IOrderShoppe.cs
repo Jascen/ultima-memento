@@ -2,7 +2,7 @@ namespace Server.Engines.GlobalShoppe
 {
     public interface IOrderShoppe
     {
-        void CompleteOrder(int index, Mobile from, TradeSkillContext context);
+        void CompleteOrder(int index, Mobile from, TradeSkillContext context, RewardType selectedReward);
 
         string GetDescription(IOrderContext order);
 

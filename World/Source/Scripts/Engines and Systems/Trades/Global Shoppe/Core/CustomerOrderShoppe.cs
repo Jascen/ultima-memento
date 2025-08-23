@@ -16,16 +16,26 @@ namespace Server.Engines.GlobalShoppe
         {
         }
 
-        public void CompleteOrder(int index, Mobile from, TradeSkillContext context)
+        public void CompleteOrder(int index, Mobile from, TradeSkillContext context, RewardType selectedReward)
         {
             if (context.Orders.Count <= index) return;
 
             var order = context.Orders[index];
             if (!order.IsComplete) return;
 
-            context.Gold += order.GoldReward;
-            context.Points += order.PointReward;
-            context.Reputation = Math.Min(ShoppeConstants.MAX_REPUTATION, context.Reputation + order.ReputationReward);
+            switch (selectedReward)
+            {
+                case RewardType.Gold:
+                    context.Gold += order.GoldReward;
+                    break;
+                case RewardType.Points:
+                    context.Points += order.PointReward;
+                    break;
+                case RewardType.Reputation:
+                    context.Reputation = Math.Min(ShoppeConstants.MAX_REPUTATION, context.Reputation + order.ReputationReward);
+                    break;
+            }
+
 			SkillUtilities.DoSkillChecks(from, SkillName.Mercantile, 3);
             context.Orders.Remove(order);
 

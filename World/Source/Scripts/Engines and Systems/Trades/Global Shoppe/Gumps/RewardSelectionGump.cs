@@ -7,14 +7,6 @@ namespace Server.Engines.GlobalShoppe
 {
     public class RewardSelectionGump : Gump
     {
-        public enum RewardType
-        {
-            None = 0,
-            Gold = 1,
-            Points = 2,
-            Reputation = 3
-        }
-
         private enum Actions
         {
             Close = 0,
@@ -24,6 +16,12 @@ namespace Server.Engines.GlobalShoppe
             Claim = 10
         }
 
+        private const int CHECKED_BOX = 0xFB1;
+        private const int UNCHECKED_BOX = 0xE19;
+        private const int GOLD_ITEM_ID = 3823;
+        private const int POINTS_ITEM_ID = 0x0EEC;
+        private const int REPUTATION_ITEM_ID = 10283;
+
         private readonly Mobile m_From;
         private readonly ShoppeBase m_Shoppe;
         private readonly TradeSkillContext m_Context;
@@ -32,7 +30,7 @@ namespace Server.Engines.GlobalShoppe
         private readonly string m_Title;
         private readonly string m_ToolName;
         private readonly string m_ResourceName;
-        private RewardType m_SelectedReward;
+        private readonly RewardType m_SelectedReward;
 
         public RewardSelectionGump(
             Mobile from,
@@ -58,8 +56,8 @@ namespace Server.Engines.GlobalShoppe
 
             AddPage(0);
 
-            AddBackground(0, 0, 400, 300, 0x1453);
-            AddImageTiled(8, 8, 384, 284, 2624);
+            AddBackground(0, 0, 400, 300, 0x1453); //Tan box
+            AddImageTiled(8, 8, 384, 284, 2624); // Black box
             AddAlphaRegion(8, 8, 384, 284);
 
             TextDefinition.AddHtmlText(this, 20, 20, 360, 25, "<CENTER>Order Completed</CENTER>", HtmlColors.MUSTARD);
@@ -69,98 +67,98 @@ namespace Server.Engines.GlobalShoppe
                 ((IOrderShoppe)m_Shoppe).GetDescription(order).Replace("Craft ", ""), order.Person), HtmlColors.BROWN);
 
             int y = 120;
-            int boxWidth = 100;
-            int totalWidth = boxWidth * 3;
-            int startX = (400 - totalWidth) / 2;
+            int BOX_WIDTH = 100;
+            int TOTAL_WIDTH = BOX_WIDTH * 3;
+            int START_X = (400 - TOTAL_WIDTH) / 2;
 
-            AddRewardOption(Actions.SelectReputation, RewardType.Reputation, startX + (boxWidth * 2) + (boxWidth / 2), y, 10283, m_Order.ReputationReward.ToString(), "Reputation");
-            AddRewardOption(Actions.SelectGold, RewardType.Gold, startX + (boxWidth / 2), y, 3823, m_Order.GoldReward.ToString(), "Gold");
-            AddRewardOption(Actions.SelectPoints, RewardType.Points, startX + boxWidth + (boxWidth / 2), y, 0x0EEC, m_Order.PointReward.ToString(), "Points");
+            AddRewardOption(Actions.SelectReputation, RewardType.Reputation, START_X + (BOX_WIDTH * 2) + (BOX_WIDTH / 2), y, REPUTATION_ITEM_ID, m_Order.ReputationReward.ToString(), "Reputation");
+            AddRewardOption(Actions.SelectGold, RewardType.Gold, START_X + (BOX_WIDTH / 2), y, GOLD_ITEM_ID, m_Order.GoldReward.ToString(), "Gold");
+            AddRewardOption(Actions.SelectPoints, RewardType.Points, START_X + BOX_WIDTH + (BOX_WIDTH / 2), y, POINTS_ITEM_ID, m_Order.PointReward.ToString(), "Points");
 
-            int buttonY = 250;
-            int claimButtonX = 200;
-            int cancelButtonX = 200 - 127;
+            int BUTTON_Y = 250;
+            int CLAIM_BUTTON_X = 200;
+            int CANCEL_BUTTON_X = 200 - 127;
 
             if (m_SelectedReward != RewardType.None)
             {
-                AddButton(claimButtonX, buttonY, 4023, 4023, (int)Actions.Claim, GumpButtonType.Reply, 0);
-                TextDefinition.AddHtmlText(this, claimButtonX + 35, buttonY + 3, 100, 20, "Claim Your Fee", HtmlColors.MUSTARD);
+                AddButton(CLAIM_BUTTON_X, BUTTON_Y, 4023, 4023, (int)Actions.Claim, GumpButtonType.Reply, 0);
+                TextDefinition.AddHtmlText(this, CLAIM_BUTTON_X + 35, BUTTON_Y + 3, 100, 20, "Claim Your Fee", HtmlColors.MUSTARD);
             }
             else
             {
-                AddImage(claimButtonX, buttonY, 4020);
-                TextDefinition.AddHtmlText(this, claimButtonX + 35, buttonY + 3, 100, 20, "Claim Your Fee", HtmlColors.GRAY);
+                AddImage(CLAIM_BUTTON_X, BUTTON_Y, 4020);
+                TextDefinition.AddHtmlText(this, CLAIM_BUTTON_X + 35, BUTTON_Y + 3, 100, 20, "Claim Your Fee", HtmlColors.GRAY);
             }
 
-            AddButton(cancelButtonX, buttonY, 4020, 4020, (int)Actions.Close, GumpButtonType.Reply, 0);
-            TextDefinition.AddHtmlText(this, cancelButtonX + 35, buttonY + 3, 60, 20, "Cancel", HtmlColors.MUSTARD);
+            AddButton(CANCEL_BUTTON_X, BUTTON_Y, 4020, 4020, (int)Actions.Close, GumpButtonType.Reply, 0);
+            TextDefinition.AddHtmlText(this, CANCEL_BUTTON_X + 35, BUTTON_Y + 3, 60, 20, "Cancel", HtmlColors.MUSTARD);
         }
 
         private void AddRewardOption(Actions action, RewardType rewardType, int x, int y, int itemId, string amount, string label)
         {
-            bool isSelected = m_SelectedReward == rewardType;
+            bool IS_SELECTED = m_SelectedReward == rewardType;
             
-            int boxWidth = 80;
-            int boxHeight = 100;
-            int boxX = x - (boxWidth / 2);
-            int boxY = y - 15;
+            int BOX_WIDTH = 80;
+            int BOX_HEIGHT = 100;
+            int BOX_X = x - (BOX_WIDTH / 2);
+            int BOX_Y = y - 15;
 
-            for (int tileY = 0; tileY < 4; tileY++)
+            for (int TILE_Y = 0; TILE_Y < 4; TILE_Y++)
             {
-                for (int tileX = 0; tileX < 3; tileX++)
+                for (int TILE_X = 0; TILE_X < 3; TILE_X++)
                 {
-                    int tilePosX = boxX + 2 + (tileX * 23);
-                    int tilePosY = boxY + 2 + (tileY * 22);
-                    AddButton(tilePosX, tilePosY, 0x9C, 0x9C, (int)action, GumpButtonType.Reply, 0);
+                    int TILE_POS_X = BOX_X + 2 + (TILE_X * 23);
+                    int TILE_POS_Y = BOX_Y + 2 + (TILE_Y * 22);
+                    AddButton(TILE_POS_X, TILE_POS_Y, 0x9C, 0x9C, (int)action, GumpButtonType.Reply, 0);
                 }
             }
 
-            AddBackground(boxX, boxY, boxWidth, boxHeight, 0xA3C);
+            AddBackground(BOX_X, BOX_Y, BOX_WIDTH, BOX_HEIGHT, 0xA3C);
 
-            int iconX = x - 22;
-            int iconY = y + 5;
+            int ICON_X = x - 22;
+            int ICON_Y = y + 5;
 
             //Reputation icon is 21 wide, so needs a custom offset.
-            if (itemId == 10283)
+            if (itemId == REPUTATION_ITEM_ID)
             {
-                iconX = x - 11;
+                ICON_X = x - 11;
             }
 
-            if (itemId == 0x0EEC)
+            if (itemId == POINTS_ITEM_ID)
             {
-                AddItem(iconX, iconY, itemId, 0x44C); // 1072
+                AddItem(ICON_X, ICON_Y, itemId, 0x44C); // 1072
             }
             else
             {
-                AddItem(iconX, iconY, itemId);
+                AddItem(ICON_X, ICON_Y, itemId);
             }
             
-            TextDefinition.AddHtmlText(this, boxX, iconY + 35, boxWidth, 20, 
+            TextDefinition.AddHtmlText(this, BOX_X, ICON_Y + 35, BOX_WIDTH, 20, 
                 string.Format("<CENTER>{0}</CENTER>", amount), 
-                isSelected ? HtmlColors.WHITE : HtmlColors.MUSTARD);
+                IS_SELECTED ? HtmlColors.WHITE : HtmlColors.MUSTARD);
             
-            TextDefinition.AddHtmlText(this, boxX, iconY + 55, boxWidth, 20, 
+            TextDefinition.AddHtmlText(this, BOX_X, ICON_Y + 55, BOX_WIDTH, 20, 
                 string.Format("<CENTER>{0}</CENTER>", label), 
-                isSelected ? HtmlColors.WHITE : HtmlColors.BROWN);
+                IS_SELECTED ? HtmlColors.WHITE : HtmlColors.BROWN);
 
 
-            //Checkbox must be reversed if isSelected
-            if (isSelected)
+            //Checkbox must be reversed if IS_SELECTED
+            if (IS_SELECTED)
             {
-                AddButton(x - 15, iconY + 85, 0xFB1, 0xE19, (int)action, GumpButtonType.Reply, 0);
+                AddButton(x - 15, ICON_Y + 85, CHECKED_BOX, UNCHECKED_BOX, (int)action, GumpButtonType.Reply, 0);
             }
             else
             {
-                AddButton(x - 15, iconY + 85, 0xE19, 0xFB1, (int)action, GumpButtonType.Reply, 0);
+                AddButton(x - 15, ICON_Y + 85, UNCHECKED_BOX, CHECKED_BOX, (int)action, GumpButtonType.Reply, 0);
             }
 
         }
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {
-            var buttonID = info.ButtonID;
+            var BUTTON_ID = info.ButtonID;
             
-            switch ((Actions)buttonID)
+            switch ((Actions)BUTTON_ID)
             {
                 case Actions.Close:
                     sender.Mobile.SendGump(new ShoppeGump(
@@ -176,7 +174,7 @@ namespace Server.Engines.GlobalShoppe
                 case Actions.SelectGold:
                 case Actions.SelectPoints:
                 case Actions.SelectReputation:
-                    RewardType newSelection = (RewardType)buttonID;
+                    RewardType newSelection = (RewardType)BUTTON_ID;
                     sender.Mobile.SendGump(new RewardSelectionGump(
                         m_From,
                         m_Shoppe,
@@ -193,7 +191,7 @@ namespace Server.Engines.GlobalShoppe
                 case Actions.Claim:
                     if (m_SelectedReward != RewardType.None)
                     {
-                        CompleteOrderWithSelectedReward();
+                        ((IOrderShoppe)m_Shoppe).CompleteOrder(m_OrderIndex, m_From, m_Context, m_SelectedReward);
                         sender.Mobile.SendGump(new ShoppeGump(
                             (PlayerMobile)m_From,
                             m_Shoppe,
@@ -207,25 +205,5 @@ namespace Server.Engines.GlobalShoppe
             }
         }
 
-        private void CompleteOrderWithSelectedReward()
-        {
-            switch (m_SelectedReward)
-            {
-                case RewardType.Gold:
-                    m_Context.Gold += m_Order.GoldReward;
-                    break;
-                case RewardType.Points:
-                    m_Context.Points += m_Order.PointReward;
-                    break;
-                case RewardType.Reputation:
-                    m_Context.Reputation = System.Math.Min(ShoppeConstants.MAX_REPUTATION, m_Context.Reputation + m_Order.ReputationReward);
-                    break;
-            }
-
-            SkillUtilities.DoSkillChecks(m_From, SkillName.Mercantile, 3);
-            m_Context.Orders.Remove(m_Order);
-
-            m_From.PlaySound(0x32); // Dropgem1
-        }
     }
 }
