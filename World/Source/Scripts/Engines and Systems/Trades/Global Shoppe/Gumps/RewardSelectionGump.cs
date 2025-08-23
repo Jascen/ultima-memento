@@ -1,3 +1,4 @@
+using System;
 using Server.Gumps;
 using Server.Network;
 
@@ -42,6 +43,12 @@ namespace Server.Engines.GlobalShoppe
             m_Order = order;
             m_OrderIndex = orderIndex;
             m_SelectedReward = selectedReward;
+
+			if (false == (shoppe is IOrderShoppe))
+			{
+				Console.WriteLine("Invalid shoppe provided.");
+				return;
+			}
 
             AddPage(0);
 
@@ -169,7 +176,7 @@ namespace Server.Engines.GlobalShoppe
 
                 case Actions.Claim:
                     if (m_SelectedReward != RewardType.None)
-                    {
+                    {						
                         ((IOrderShoppe)m_Shoppe).CompleteOrder(m_OrderIndex, m_From, m_Context, m_SelectedReward);
 						m_Shoppe.OpenGump(m_From, false);
                     }
