@@ -44,17 +44,17 @@ namespace Server.Engines.GlobalShoppe
             m_OrderIndex = orderIndex;
             m_SelectedReward = selectedReward;
 
-			if (false == (shoppe is IOrderShoppe))
-			{
-				Console.WriteLine("Invalid shoppe provided.");
-				return;
-			}
-
             AddPage(0);
 
             AddBackground(0, 0, 400, 300, 0x1453); //Tan box
             AddImageTiled(8, 8, 384, 284, 2624); // Black box
             AddAlphaRegion(8, 8, 384, 284);
+
+			if (false == (shoppe is IOrderShoppe))
+			{
+				Console.WriteLine("Invalid shoppe provided.");
+				return;
+			}
 
             TextDefinition.AddHtmlText(this, 20, 20, 360, 25, "<CENTER>Order Completed</CENTER>", HtmlColors.MUSTARD);
             
