@@ -8,7 +8,7 @@ namespace Server.Engines.GlobalShoppe
 
         void OpenOrderGump(int index, Mobile from, TradeSkillContext context);
 
-        void OpenRewardSelectionGump(int index, Mobile from, TradeSkillContext context, string title, string toolName, string resourceName);
+        void OpenRewardSelectionGump(int index, Mobile from, TradeSkillContext context);
 
         void RejectOrder(int index, TradeSkillContext context);
     }

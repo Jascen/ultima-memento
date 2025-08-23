@@ -42,7 +42,7 @@ namespace Server.Engines.GlobalShoppe
             from.PlaySound(0x32); // Dropgem1
         }
 
-        public void OpenRewardSelectionGump(int index, Mobile from, TradeSkillContext context, string title, string toolName, string resourceName)
+        public void OpenRewardSelectionGump(int index, Mobile from, TradeSkillContext context)
         {
             if (context.Orders.Count <= index) return;
 
@@ -50,7 +50,7 @@ namespace Server.Engines.GlobalShoppe
             if (!order.IsComplete) return;
 
             from.CloseGump(typeof(RewardSelectionGump));
-            from.SendGump(new RewardSelectionGump(from, this, context, order, index, title, toolName, resourceName));
+            from.SendGump(new RewardSelectionGump(from, this, context, order, index));
         }
 
         public string GetDescription(IOrderContext order)

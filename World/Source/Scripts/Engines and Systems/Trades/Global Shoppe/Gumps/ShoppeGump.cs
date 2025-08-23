@@ -212,7 +212,7 @@ namespace Server.Engines.GlobalShoppe
             else if ((int)Actions.CompleteOrderBase <= buttonID) // Complete is higher
             {
                 var index = buttonID - (int)Actions.CompleteOrderBase;
-                ((IOrderShoppe)m_Shoppe).OpenRewardSelectionGump(index, sender.Mobile, m_Context, m_Title, m_ToolName, m_ResourceName);
+                ((IOrderShoppe)m_Shoppe).OpenRewardSelectionGump(index, sender.Mobile, m_Context);
                 return;
             }
             else if ((int)Actions.DoOrderBase <= buttonID) // Do Order is higher

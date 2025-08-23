@@ -1,7 +1,5 @@
 using Server.Gumps;
 using Server.Network;
-using Server.Mobiles;
-using Server.Utilities;
 
 namespace Server.Engines.GlobalShoppe
 {
@@ -27,9 +25,6 @@ namespace Server.Engines.GlobalShoppe
         private readonly TradeSkillContext m_Context;
         private readonly IOrderContext m_Order;
         private readonly int m_OrderIndex;
-        private readonly string m_Title;
-        private readonly string m_ToolName;
-        private readonly string m_ResourceName;
         private readonly RewardType m_SelectedReward;
 
         public RewardSelectionGump(
@@ -38,9 +33,6 @@ namespace Server.Engines.GlobalShoppe
             TradeSkillContext context,
             IOrderContext order,
             int orderIndex,
-            string title,
-            string toolName,
-            string resourceName,
             RewardType selectedReward = RewardType.None
             ) : base(100, 100)
         {
@@ -49,9 +41,6 @@ namespace Server.Engines.GlobalShoppe
             m_Context = context;
             m_Order = order;
             m_OrderIndex = orderIndex;
-            m_Title = title;
-            m_ToolName = toolName;
-            m_ResourceName = resourceName;
             m_SelectedReward = selectedReward;
 
             AddPage(0);
@@ -161,14 +150,7 @@ namespace Server.Engines.GlobalShoppe
             switch ((Actions)BUTTON_ID)
             {
                 case Actions.Close:
-                    sender.Mobile.SendGump(new ShoppeGump(
-                        (PlayerMobile)m_From,
-                        m_Shoppe,
-                        m_Context,
-                        m_Title,
-                        m_ToolName,
-                        m_ResourceName
-                    ));
+					m_Shoppe.OpenGump(m_From, false);
                     break;
 
                 case Actions.SelectGold:
@@ -181,9 +163,6 @@ namespace Server.Engines.GlobalShoppe
                         m_Context,
                         m_Order,
                         m_OrderIndex,
-                        m_Title,
-                        m_ToolName,
-                        m_ResourceName,
                         newSelection
                     ));
                     break;
@@ -192,14 +171,7 @@ namespace Server.Engines.GlobalShoppe
                     if (m_SelectedReward != RewardType.None)
                     {
                         ((IOrderShoppe)m_Shoppe).CompleteOrder(m_OrderIndex, m_From, m_Context, m_SelectedReward);
-                        sender.Mobile.SendGump(new ShoppeGump(
-                            (PlayerMobile)m_From,
-                            m_Shoppe,
-                            m_Context,
-                            m_Title,
-                            m_ToolName,
-                            m_ResourceName
-                        ));
+						m_Shoppe.OpenGump(m_From, false);
                     }
                     break;
             }
