@@ -63,20 +63,7 @@ namespace Server.Engines.GlobalShoppe
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (!ShoppeEngine.Instance.IsEnabled)
-            {
-                from.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, false, "Shoppe system is currently disabled.");
-                return;
-            }
-
-            if (!from.InRange(GetWorldLocation(), 2))
-            {
-                from.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
-                return;
-            }
-
-            var context = GetOrCreateContext(from);
-            OpenGump(from, context);
+			OpenGump(from, true);
         }
 
         public override bool OnDragDrop(Mobile from, Item dropped)
@@ -106,6 +93,28 @@ namespace Server.Engines.GlobalShoppe
             // Disallow moving it
             return false;
         }
+
+		public void OpenGump(Mobile from, bool sendMessage)
+		{
+            if (!ShoppeEngine.Instance.IsEnabled)
+            {
+				if (sendMessage)
+                	from.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, false, "Shoppe system is currently disabled.");
+
+                return;
+            }
+
+            if (!from.InRange(GetWorldLocation(), 2))
+            {
+				if (sendMessage)
+                	from.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+
+                return;
+            }
+
+            var context = GetOrCreateContext(from);
+            OpenGump(from, context);
+		}
 
         public override void Serialize(GenericWriter writer)
         {
