@@ -117,22 +117,30 @@ namespace Server.Engines.MLQuests.Gumps
 			TextDefinition.AddHtmlText( this, 98, 126, 342, 260, quest.Description, false, true, COLOR_HTML, COLOR_HTML );
 		}
 
-		public void AddObjectives( MLQuest quest )
+		public void AddObjectives( MLQuestInstance quest )
 		{
 			AddHtmlLocalized( 98, 140, 312, 16, 1049073, COLOR_TITLE_LOCALIZED, false, false ); // Objective:
 
 			int y = 172;
 
-			foreach ( BaseObjective objective in quest.Objectives )
+			foreach ( BaseObjectiveInstance objective in quest.Objectives )
 			{
-				objective.WriteToGump( this, ref y );
-
-				if ( objective.IsTimed )
+				BaseObjective objectiveTemplate = objective.ObjectiveTemplate;
+				if (objective is RadiantObjectiveInstance)
 				{
-					if ( objective is CollectObjective )
+					((RadiantObjectiveInstance)objective).WriteToQuestOfferGump(this, ref y);
+				}
+				else
+				{
+					objective.ObjectiveTemplate.WriteToGump( this, ref y );
+				}
+
+				if ( objectiveTemplate.IsTimed )
+				{
+					if ( objectiveTemplate is CollectObjective )
 						y -= 16;
 
-					BaseObjectiveInstance.WriteTimeRemaining( this, ref y, objective.Duration );
+					BaseObjectiveInstance.WriteTimeRemaining( this, ref y, objectiveTemplate.Duration );
 				}
 			}
 		}
@@ -145,8 +153,18 @@ namespace Server.Engines.MLQuests.Gumps
 
 			int y = 172;
 
-			foreach ( BaseObjectiveInstance objInstance in instance.Objectives )
-				objInstance.WriteToGump( this, ref y );
+			foreach (BaseObjectiveInstance objInstance in instance.Objectives)
+			{
+				if (objInstance is RadiantObjectiveInstance)
+				{
+					((RadiantObjectiveInstance)objInstance).WriteToQuestLogGump(this, ref y);
+				}
+				else
+				{
+					objInstance.WriteToGump( this, ref y );
+				}
+			}
+				
 		}
 
 		public void AddRewardsPage( MLQuest quest ) // For the quest log/offer gumps
