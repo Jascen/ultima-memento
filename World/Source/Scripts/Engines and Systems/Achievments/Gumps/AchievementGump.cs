@@ -19,12 +19,18 @@ namespace Scripts.Mythik.Systems.Achievements.Gumps
         private readonly int m_curTotal;
         private int m_Category;
         private readonly Dictionary<int, AchieveData> m_curAchieves;
+        private readonly Dictionary<int, AchieveData> m_viewerAchieves;
+        private readonly string m_targetName;
+        private readonly bool m_isOtherView;
 
-        public AchievementGump(Dictionary<int, AchieveData> achieves, int total, int pageNumber = 1, int selectedCategoryId = -1) : base(25, 25)
+        public AchievementGump(Dictionary<int, AchieveData> achieves, int total, int pageNumber = 1, int selectedCategoryId = -1, Dictionary<int, AchieveData> viewerAchieves = null, string targetName = null) : base(25, 25)
         {
             m_curAchieves = achieves;
             m_curTotal = total;
             m_Category = selectedCategoryId;
+            m_viewerAchieves = viewerAchieves;
+            m_targetName = targetName;
+            m_isOtherView = viewerAchieves != null;
             Closable = true;
             Disposable = true;
             Dragable = true;
@@ -34,6 +40,13 @@ namespace Scripts.Mythik.Systems.Achievements.Gumps
             AddBackground(0, 0, 1053, 605, 3600); // Border
             AddImage(15, 14, 13000); // UO background
             AddImage(419, 23, 13001); // Achievements
+            
+            if (m_isOtherView)
+            {
+                TextDefinition.AddHtmlText(this, 262, 55, 500, 20, string.Format("<CENTER>{0}'s Feats</CENTER>", m_targetName), false, false, COLOR_LOCALIZED, COLOR_HTML);
+            }
+            
+            TextDefinition.AddHtmlText(this, 850, 25, 180, 20, string.Format("<RIGHT>Achievement Points: {0}</RIGHT>", m_curTotal), false, false, COLOR_LOCALIZED, COLOR_HTML);
 
             var selectedCategory = AchievementSystem.Categories.FirstOrDefault(c => c.ID == selectedCategoryId);
             var categories = selectedCategory != null
@@ -49,8 +62,8 @@ namespace Scripts.Mythik.Systems.Achievements.Gumps
             var addBackButton = selectedCategory != null; // TODO: Add visual
             if (addBackButton)
             {
-                AddButton(27, 29, 4014, 4016, 1, GumpButtonType.Reply, 0);
-                AddLabel(60, 32, 1153, "All Categories");
+                AddButton(27, 39, 4014, 4016, 1, GumpButtonType.Reply, 0);
+                AddLabel(60, 42, 1153, "All Categories");
             }
 
             int i = 0;
@@ -63,20 +76,20 @@ namespace Scripts.Mythik.Systems.Achievements.Gumps
                 const int CATEGORY_WIDTH = 209;
                 if (category.Parent == 0)
                 {
-                    AddBackground(x, 68 + (i * 56), CATEGORY_WIDTH, 50, bgID);
+                    AddBackground(x, 78 + (i * 56), CATEGORY_WIDTH, 50, bgID);
                 }
                 else
                 {
                     x += 20;
-                    AddBackground(x, 68 + (i * 56), CATEGORY_WIDTH - 40, 50, bgID);
+                    AddBackground(x, 78 + (i * 56), CATEGORY_WIDTH - 40, 50, bgID);
                 }
 
                 if (category.ID == selectedCategoryId) // selected
-                    AddImage(x + 17, 86 + (i * 56), 1210, 1152);
+                    AddImage(x + 17, 96 + (i * 56), 1210, 1152);
                 else
-                    AddButton(x + 17, 86 + (i * 56), 1209, 1210, 5000 + category.ID, GumpButtonType.Reply, 0);
+                    AddButton(x + 17, 96 + (i * 56), 1209, 1210, 5000 + category.ID, GumpButtonType.Reply, 0);
 
-                TextDefinition.AddHtmlText(this, x + 37, 83 + (i * 56), CATEGORY_WIDTH, 16, category.Name, false, false, COLOR_LOCALIZED, COLOR_HTML);
+                TextDefinition.AddHtmlText(this, x + 37, 93 + (i * 56), CATEGORY_WIDTH, 16, category.Name, false, false, COLOR_LOCALIZED, COLOR_HTML);
                 ++i;
             }
 
@@ -117,43 +130,76 @@ namespace Scripts.Mythik.Systems.Achievements.Gumps
         private void AddAchieve(BaseAchievement ac, int i, int itemsPerPage, AchieveData acheiveData)
         {
             const int CARD_HEIGHT = 68;
+            const int CARD_Y_OFFSET = 10;
             const int CARD_GAP = 11;
             const int HEIGHT_PER_CARD = CARD_HEIGHT + CARD_GAP;
 
             int index = i % itemsPerPage; // Item index
 
             var isComplete = acheiveData != null && acheiveData.IsComplete;
-            var title = isComplete || !ac.HideTitle ? ac.Title : "???";
-            AddBackground(277, CARD_HEIGHT + (index * HEIGHT_PER_CARD), 727, 73, 3600);
-            AddLabel(350, 15 + CARD_HEIGHT + (index * HEIGHT_PER_CARD), 49, title);
+            
+            string title;
+            string description;
+            if (m_isOtherView)
+            {
+                bool viewerHasAchievement = m_viewerAchieves != null && 
+                                          m_viewerAchieves.ContainsKey(ac.ID) && 
+                                          m_viewerAchieves[ac.ID].IsComplete;
+                
+                if (isComplete)
+                {
+                    title = viewerHasAchievement ? ac.Title : "???";
+                }
+                else
+                {
+                    title = viewerHasAchievement ? (ac.HideTitle ? "???" : ac.Title) : "???";
+                }
+                
+                if (viewerHasAchievement && isComplete)
+                {
+                    description = ac.Desc;
+                }
+                else
+                {
+                    description = "";
+                }
+            }
+            else
+            {
+                title = isComplete || !ac.HideTitle ? ac.Title : "???";
+                description = isComplete || !ac.HideDesc ? ac.Desc : ac.HiddenDesc;
+            }
+            
+            AddBackground(277, CARD_HEIGHT + CARD_Y_OFFSET + (index * HEIGHT_PER_CARD), 727, 73, 3600);
+            AddLabel(350, 15 + CARD_HEIGHT + CARD_Y_OFFSET + (index * HEIGHT_PER_CARD), 49, title);
             if (ac.ItemIcon > 0)
             {
                 Rectangle2D bounds = ItemBounds.Table[ac.ItemIcon];
-                int y = 35 + CARD_HEIGHT + (index * HEIGHT_PER_CARD);
+                int y = 35 + CARD_HEIGHT + CARD_Y_OFFSET + (index * HEIGHT_PER_CARD);
                 AddItem(321 - bounds.Width / 2 - bounds.X, y - bounds.Height / 2 - bounds.Y, ac.ItemIcon);
             }
 
             if (!isComplete && 1 < ac.CompletionTotal)
             {
                 var progress = acheiveData != null ? acheiveData.Progress : 0;
-                AddImageTiled(890, 84 + (index * HEIGHT_PER_CARD), 95, 9, 9750); // Gray progress
+                AddImageTiled(890, 84 + CARD_Y_OFFSET + (index * HEIGHT_PER_CARD), 95, 9, 9750); // Gray progress
 
                 if (acheiveData != null)
                 {
                     var step = 95.0 / ac.CompletionTotal;
 
                     if (0 < progress)
-                        AddImageTiled(890, 84 + (index * HEIGHT_PER_CARD), (int)(progress * step), 9, 9752); // Green progress
+                        AddImageTiled(890, 84 + CARD_Y_OFFSET + (index * HEIGHT_PER_CARD), (int)(progress * step), 9, 9752); // Green progress
                 }
 
-                TextDefinition.AddHtmlText(this, 806, 23 + CARD_HEIGHT + (index * HEIGHT_PER_CARD), 185, 16, string.Format("<RIGHT>{0} / {1}</RIGHT>", progress, ac.CompletionTotal), false, false, COLOR_LOCALIZED, COLOR_HTML);
+                TextDefinition.AddHtmlText(this, 806, 23 + CARD_HEIGHT + CARD_Y_OFFSET + (index * HEIGHT_PER_CARD), 185, 16, string.Format("<RIGHT>{0} / {1}</RIGHT>", progress, ac.CompletionTotal), false, false, COLOR_LOCALIZED, COLOR_HTML);
             }
 
-            var description = isComplete || !ac.HideDesc ? ac.Desc : ac.HiddenDesc;
-            TextDefinition.AddHtmlText(this, 355, 34 + CARD_HEIGHT + (index * HEIGHT_PER_CARD), 613, 16, description, false, false, COLOR_LOCALIZED, COLOR_HTML);
+            if (!string.IsNullOrEmpty(description))
+                TextDefinition.AddHtmlText(this, 355, 34 + CARD_HEIGHT + CARD_Y_OFFSET + (index * HEIGHT_PER_CARD), 613, 16, description, false, false, COLOR_LOCALIZED, COLOR_HTML);
 
             if (acheiveData != null && acheiveData.IsComplete)
-                TextDefinition.AddHtmlText(this, 806, 12 + CARD_HEIGHT + (index * HEIGHT_PER_CARD), 185, 16, string.Format("<RIGHT>Completed {0}</RIGHT>", acheiveData.CompletedOn.ToShortDateString()), false, false, COLOR_LOCALIZED, 0x148506);
+                TextDefinition.AddHtmlText(this, 806, 12 + CARD_HEIGHT + CARD_Y_OFFSET + (index * HEIGHT_PER_CARD), 185, 16, string.Format("<RIGHT>Completed {0}</RIGHT>", acheiveData.CompletedOn.ToShortDateString()), false, false, COLOR_LOCALIZED, 0x148506);
         }
 
         public override void OnResponse(NetState sender, RelayInfo info)
@@ -166,19 +212,19 @@ namespace Scripts.Mythik.Systems.Achievements.Gumps
                     return;
 
                 case 1: // All Categories
-                    sender.Mobile.SendGump(new AchievementGump(m_curAchieves, m_curTotal, 1));
+                    sender.Mobile.SendGump(new AchievementGump(m_curAchieves, m_curTotal, 1, -1, m_viewerAchieves, m_targetName));
                     break;
 
                 default:
                     if (CATEGORY_BUTTON_OFFSET <= info.ButtonID)
                     {
                         var category = info.ButtonID - CATEGORY_BUTTON_OFFSET;
-                        sender.Mobile.SendGump(new AchievementGump(m_curAchieves, m_curTotal, 1, category));
+                        sender.Mobile.SendGump(new AchievementGump(m_curAchieves, m_curTotal, 1, category, m_viewerAchieves, m_targetName));
                     }
                     else if (PAGE_BUTTON_OFFSET <= info.ButtonID)
                     {
                         var pageNumber = info.ButtonID - PAGE_BUTTON_OFFSET;
-                        sender.Mobile.SendGump(new AchievementGump(m_curAchieves, m_curTotal, pageNumber, m_Category));
+                        sender.Mobile.SendGump(new AchievementGump(m_curAchieves, m_curTotal, pageNumber, m_Category, m_viewerAchieves, m_targetName));
                     }
 
                     break;

@@ -7,6 +7,7 @@ using Server.Commands;
 using Server.Misc;
 using Scripts.Mythik.Systems.Achievements.Gumps;
 using System.Globalization;
+using Server.Targeting;
 
 namespace Scripts.Mythik.Systems.Achievements
 {
@@ -556,11 +557,33 @@ namespace Scripts.Mythik.Systems.Achievements
             from.SendGump(new AchievementGump(achieves, total));
         }
 
+        public static void OpenOtherGump(Mobile from, PlayerMobile target)
+        {
+            if (from == null || target == null) return;
+
+            var fromPlayer = from as PlayerMobile;
+            if (fromPlayer == null || fromPlayer.Account == null) return;
+            if (target.Account == null) return;
+
+            var targetId = target.Account.Username;
+            var fromId = fromPlayer.Account.Username;
+
+            if (!m_featData.ContainsKey(targetId)) m_featData.Add(targetId, new Dictionary<int, AchieveData>());
+            if (!m_featData.ContainsKey(fromId)) m_featData.Add(fromId, new Dictionary<int, AchieveData>());
+
+            var targetAchieves = m_featData[targetId];
+            var fromAchieves = m_featData[fromId];
+            var total = GetPlayerPointsTotal(target);
+
+            from.SendGump(new AchievementGump(targetAchieves, total, 1, -1, fromAchieves, target.Name));
+        }
+
         [Usage("feats"), Aliases("achievement", "achievements")]
-        [Description("Opens the Achievements gump")]
+        [Description("Opens the Achievements gump for yourself or a targeted player")]
         private static void OpenGumpCommand(CommandEventArgs e)
         {
-            OpenGump(e.Mobile, e.Mobile);
+            e.Mobile.SendMessage("Target yourself or another player to view their feats.");
+            e.Mobile.Target = new FeatsTarget();
         }
 
         internal static void SetAchievementStatus(PlayerMobile player, BaseAchievement ach, int progress)
