@@ -33,7 +33,7 @@ namespace Server.Items
 		public CommodityDeed() : base(0x14F0)
 		{
 			Weight = 1.0;
-			Hue = 71;
+			Hue = 0x47;
 		}
 
 		public CommodityDeed(Item commodity) : this()
@@ -57,15 +57,17 @@ namespace Server.Items
 
 		public override void OnDoubleClick(Mobile from)
 		{
-			if (!IsChildOf(from.Backpack))
-			{
-				from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
-				return;
-			}
+			BankBox box = from.FindBankNoCreate();
 
 			if (m_Commodity != null)
 			{
-				RedeemCommodity(from);
+				if ( box != null && IsChildOf( box ) )
+				{
+					RedeemCommodity(from, box);
+				}
+			} else if ( box == null || !IsChildOf( box ) ) 
+			{
+					from.SendLocalizedMessage( 1047026 ); // That must be in your bank box to use it.
 			}
 			else
 			{
@@ -74,7 +76,7 @@ namespace Server.Items
 			}
 		}
 
-		private void RedeemCommodity(Mobile from)
+		private void RedeemCommodity(Mobile from, BankBox box)
 		{
 			if (m_Commodity == null || m_Commodity.Deleted)
 			{
@@ -83,13 +85,14 @@ namespace Server.Items
 				return;
 			}
 
-			if (!from.AddToBackpack(m_Commodity))
+			if (!box.DropItem(m_Commodity))
 			{
-				from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
+				from.SendLocalizedMessage(1047026); // That must be in your bank box to use it.
 				return;
 			}
 
 			m_Commodity = null;
+			from.SendLocalizedMessage(1047031);
 			Delete();
 		}
 
@@ -139,7 +142,7 @@ namespace Server.Items
 			Item item = targeted as Item;
 			if (item == null)
 			{
-				from.SendMessage("That is not a valid commodity.");
+				from.SendLocalizedMessage(1047027); // That is not a commodity the bankers will fill a commodity deed with.
 				return;
 			}
 
@@ -150,16 +153,17 @@ namespace Server.Items
 				return;
 			}
 
-			if (!item.IsChildOf(from.Backpack))
+			BankBox box = from.FindBankNoCreate();
+			if (!item.IsChildOf(box))
 			{
-				from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
+				from.SendLocalizedMessage(1047026); // That must be in your bank box to use it.
 				return;
 			}
 
 			m_Deed.SetCommodity(item);
-			item.MoveToWorld(new Point3D(0, 0, 0), Map.Internal);
+			item.Delete();
 
-			from.SendMessage("You have filled the commodity deed.");
+			from.SendLocalizedMessage(1047028);
 		}
 	}
 }
