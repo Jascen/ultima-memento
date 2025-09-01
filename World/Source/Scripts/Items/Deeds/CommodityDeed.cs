@@ -146,7 +146,7 @@ namespace Server.Items
 			ICommodity commodityItem = item as ICommodity;
 			if (commodityItem == null || !commodityItem.IsCommodity)
 			{
-				from.SendLocalizedMessage(500509); // That is not a commodity the bankers will fill a commodity deed with.
+				from.SendLocalizedMessage(1047027); // That is not a commodity the bankers will fill a commodity deed with.
 				return;
 			}
 
