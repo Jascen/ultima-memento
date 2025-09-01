@@ -1,12 +1,15 @@
 using System;
+using Server.Items.Abstractions;
 
 namespace Server.Items
 {
-	public class BaseWoodBoard : Item
+	public class BaseWoodBoard : Item, ICommodity
 	{
 		public override string DefaultDescription{ get{ return "This wood is used by carpenters, to create furniture and wooden armor. Bowyers can use these to create bows and arrows as well."; } }
 
 		public override Catalogs DefaultCatalog{ get{ return Catalogs.Crafting; } }
+
+		public virtual bool IsCommodity { get { return true; } }
 
 		[Constructable]
 		public BaseWoodBoard() : this( 1 )
