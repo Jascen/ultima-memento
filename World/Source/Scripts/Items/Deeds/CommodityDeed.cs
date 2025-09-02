@@ -1,4 +1,5 @@
 using System;
+using Server.Items;
 using Server.Items.Abstractions;
 using Server.Network;
 using Server.Targeting;
@@ -51,6 +52,8 @@ namespace Server.Items
 			if (commodityItem != null && commodityItem.IsCommodity)
 			{
 				m_Commodity = commodity;
+				commodity.Internalize();
+				Hue = 0x592; // Change color when filled
 				InvalidateProperties();
 			}
 		}
@@ -58,13 +61,17 @@ namespace Server.Items
 		public override void OnDoubleClick(Mobile from)
 		{
 			BankBox box = from.FindBankNoCreate();
-
+			
 			if (m_Commodity != null)
 			{
 				if ( box != null && IsChildOf( box ) )
 				{
 					RedeemCommodity(from, box);
 				}
+				else
+				{
+                    from.SendLocalizedMessage(1047026); // That must be in your bank box to use it.
+                }
 			} else if ( box == null || !IsChildOf( box ) ) 
 			{
 					from.SendLocalizedMessage( 1047026 ); // That must be in your bank box to use it.
@@ -80,21 +87,21 @@ namespace Server.Items
 		{
 			if (m_Commodity == null || m_Commodity.Deleted)
 			{
-				from.SendLocalizedMessage(500466); // You destroy the item.
+				from.SendLocalizedMessage(500461); // You destroy the item.
 				Delete();
 				return;
 			}
 
-			if (!box.DropItem(m_Commodity))
+			if (!box.TryDropItem(from, m_Commodity, false))
 			{
-				from.SendLocalizedMessage(1047026); // That must be in your bank box to use it.
-				return;
+				from.SendLocalizedMessage(1080017); // That container cannot hold more items.
+                return;
 			}
 
 			m_Commodity = null;
-			from.SendLocalizedMessage(1047031);
+			from.SendLocalizedMessage(1047031); //The commodity has been redeemed.
 			Delete();
-		}
+        }
 
 		public override void GetProperties(ObjectPropertyList list)
 		{
@@ -161,9 +168,8 @@ namespace Server.Items
 			}
 
 			m_Deed.SetCommodity(item);
-			item.Delete();
 
-			from.SendLocalizedMessage(1047028);
-		}
+			from.SendLocalizedMessage(1047030); //The commodity has been filled.
+        }
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using Server.Items;
 using Server.Network;
+using Server.Items.Abstractions;
 
 namespace Server.Items
 {
