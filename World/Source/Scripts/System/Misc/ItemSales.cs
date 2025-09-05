@@ -2202,6 +2202,7 @@ namespace Server
 			new ItemSalesInfo( typeof(	ClothNinjaHood	),	33	,	15	,	0	,	false	,	false	,	World.Orient	,	Category.None	,	Material.Cloth	,	Market.Monk	),
 			new ItemSalesInfo( typeof(	ClothNinjaJacket	),	24	,	0	,	0	,	false	,	false	,	World.Orient	,	Category.None	,	Material.Cloth	,	Market.Monk	),
 			new ItemSalesInfo( typeof(	Club	),	16	,	15	,	0	,	false	,	false	,	World.None	,	Category.Weapon	,	Material.Wood	,	Market.Carpenter	),
+			new ItemSalesInfo( typeof(	CommodityDeed	),	1000	,	20	,	0	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Banker	),
 			new ItemSalesInfo( typeof(	DDRelicCoins	),	1	,	0	,	200	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Banker	),
 			new ItemSalesInfo( typeof(	ColorCandleLong	),	180	,	1	,	95	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Tinker	),
 			new ItemSalesInfo( typeof(	ColorCandleShort	),	170	,	1	,	95	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Tinker	),

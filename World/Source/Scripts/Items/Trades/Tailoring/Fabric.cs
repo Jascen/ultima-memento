@@ -1,14 +1,17 @@
 using System;
 using Server.Items;
 using Server.Network;
+using Server.Items.Abstractions;
 
 namespace Server.Items
 {
-	public abstract class BaseFabric : Item, IScissorable, IDyable
+	public abstract class BaseFabric : Item, IScissorable, IDyable, ICommodity
 	{
 		public override string DefaultDescription{ get{ return "This cloth is commonly used by tailors to make clothing. You can also cut it with scissors to make bandages."; } }
 
 		public override Catalogs DefaultCatalog{ get{ return Catalogs.Crafting; } }
+
+		public virtual bool IsCommodity { get { return true; } }
 
 		public override double DefaultWeight
 		{
