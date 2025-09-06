@@ -904,8 +904,8 @@ namespace Server.Gumps
 
 			if ( origin == 0 ){ from.SendSound( 0x4A ); }
 
-            int LRCCap = 100;
-            int LMCCap = 100;
+			int LRCCap = MyServerSettings.LowerReg();;
+            int LMCCap = MyServerSettings.LowerMana();
             int SwingSpeedCap = 100;
             int HCICap = 45;
             int DCICap = 45;
@@ -978,94 +978,81 @@ namespace Server.Gumps
 
 			AddHtml( 61, 406, 100, 20, @"<BODY><BASEFONT Color=" + warnColor + ">" + warnMsg + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
-			string colA = "";
-			colA = colA + "Strength<BR><BR>";
-			colA = colA + "Dexterity<BR><BR>";
-			colA = colA + "Intelligence<BR><BR>";
-			colA = colA + "Fame<BR><BR>";
-			colA = colA + "Karma<BR><BR>";
-			colA = colA + "Tithe<BR><BR>";
-			colA = colA + "Hunger<BR><BR>";
-			colA = colA + "Thirst<BR><BR>";
-			colA = colA + "Potion Enhance<BR><BR>";
-			colA = colA + "Bank Gold<BR><BR>";
+			var colAB = new YPosition(45, 35);
 
-			string colB = "";
-			colB = colB + "" + String.Format(" {0} + {1}", from.RawStr, from.Str - from.RawStr ) + "<BR><BR>";
-			colB = colB + "" + String.Format(" {0} + {1}", from.RawDex, from.Dex - from.RawDex ) + "<BR><BR>";
-			colB = colB + "" + String.Format(" {0} + {1}", from.RawInt, from.Int - from.RawInt ) + "<BR><BR>";
-			colB = colB + "" + String.Format(" {0}", from.Fame ) + "<BR><BR>";
-			colB = colB + "" + String.Format(" {0}", from.Karma ) + "<BR><BR>";
-			colB = colB + "" + String.Format(" {0}", from.TithingPoints ) + "<BR><BR>";
-			colB = colB + "" + String.Format(" {0}", from.Hunger ) + "<BR><BR>";
-			colB = colB + "" + String.Format(" {0}", from.Thirst ) + "<BR><BR>";
-			colB = colB + "" + String.Format(" {0}%", EP ) + "<BR><BR>";
-			colB = colB + "" + Banker.GetBalance( from ) + "<BR> <BR><BR>";
-
-			AddHtml( 20, 45, 200, 370, @"<BODY><BASEFONT Color=" + color + ">" + colA + "</BASEFONT></BODY>", (bool)false, (bool)false);
-			AddHtml( 135, 45, 80, 370, @"<BODY><BASEFONT Color=" + color + "><div align=right>" + colB + "</div></BASEFONT></BODY>", (bool)false, (bool)false);
+			AddStatLine(20, 135, 80, "Strength", String.Format(" {0} + {1}", from.RawStr, from.Str - from.RawStr), null, color, colAB);
+			AddStatLine(20, 135, 80, "Dexterity", String.Format(" {0} + {1}", from.RawDex, from.Dex - from.RawDex), null, color, colAB);
+			AddStatLine(20, 135, 80, "Intelligence", String.Format(" {0} + {1}", from.RawInt, from.Int - from.RawInt), null, color, colAB);
+			AddStatLine(20, 135, 80, "Fame", String.Format(" {0}", from.Fame), String.Format("Maximum: {0}", Titles.MaxFame), color, colAB);
+			AddStatLine(20, 135, 80, "Karma", String.Format(" {0}", from.Karma), String.Format("Maximum: {0}", Titles.MaxKarma), color, colAB);
+			AddStatLine(20, 135, 80, "Tithe", String.Format(" {0}", from.TithingPoints), String.Format("Maximum: {0}", TithingGump.MaxTithingPoints), color, colAB);
+			AddStatLine(20, 135, 80, "Hunger", String.Format(" {0}", from.Hunger), "Maximum: 20", color, colAB);
+			AddStatLine(20, 135, 80, "Thirst", String.Format(" {0}", from.Thirst), "Maximum: 20", color, colAB);
+			AddStatLine(20, 135, 80, "Potion Enhance", String.Format(" {0}%", EP), "Maximum 50%", color, colAB);
+			AddStatLine(20, 135, 80, "Bank Gold", Banker.GetBalance(from).ToString(), null, color, colAB);
 
 			///////////////////////////////////////////////////////////////////////////////////
 
-			string colC = "";
-			colC = colC + "Level<BR><BR>";
-			colC = colC + "Hits<BR><BR>";
-			colC = colC + "Stamina<BR><BR>";
-			colC = colC + "Mana<BR><BR>";
-			colC = colC + "Hits Regen<BR><BR>";
-			colC = colC + "Stamina Regen<BR><BR>";
-			colC = colC + "Mana Regen<BR><BR>";
-			if ( MyServerSettings.LowerReg() > 0 ){ colC = colC + "Low Reagent<BR><BR>"; }
-			if ( MyServerSettings.LowerMana() > 0 ){ colC = colC + "Low Mana<BR><BR>"; }
-			colC = colC + "Resurrect Cost<BR><BR>";
-			colC = colC + "Murders<BR><BR>";
+			var colCD = new YPosition(45, 35);
 
-			string colD = "";
-			colD = colD + "" + String.Format(" {0}", CharacterLevel ) + "<BR><BR>";
-			colD = colD + "" + String.Format(" {0} + {1}", from.Hits - AosAttributes.GetValue( from, AosAttribute.BonusHits ), AosAttributes.GetValue( from, AosAttribute.BonusHits ) ) + "<BR><BR>";
-			colD = colD + "" + String.Format(" {0} + {1}", from.Stam - AosAttributes.GetValue( from, AosAttribute.BonusStam ), AosAttributes.GetValue( from, AosAttribute.BonusStam ) ) + "<BR><BR>";
-			colD = colD + "" + String.Format(" {0} + {1}", from.Mana - AosAttributes.GetValue( from, AosAttribute.BonusMana ), AosAttributes.GetValue( from, AosAttribute.BonusMana ) ) + "<BR><BR>";
-			colD = colD + "" + String.Format(" {0}", AosAttributes.GetValue( from, AosAttribute.RegenHits ) ) + "<BR><BR>";
-			colD = colD + "" + String.Format(" {0}", AosAttributes.GetValue( from, AosAttribute.RegenStam ) ) + "<BR><BR>";
-			colD = colD + "" + String.Format(" {0}", AosAttributes.GetValue( from, AosAttribute.RegenMana ) ) + "<BR><BR>";
-			if ( MyServerSettings.LowerReg() > 0 ){ colD = colD + "" + String.Format(" {0}%", LRC ) + "<BR><BR>"; }
-			if ( MyServerSettings.LowerMana() > 0 ){ colD = colD + "" + String.Format(" {0}%", LMC ) + "<BR><BR>"; }
-			colD = colD + "" + String.Format(" {0}", HealCost ) + "<BR><BR>";
-			colD = colD + "" + String.Format(" {0}", from.Kills) + "<BR><BR>";
-
-			AddHtml( 260, 45, 150, 380, @"<BODY><BASEFONT Color=" + color + ">" + colC + "</BASEFONT></BODY>", (bool)false, (bool)false);
-			AddHtml( 375, 45, 80, 380, @"<BODY><BASEFONT Color=" + color + "><div align=right>" + colD + "</div></BASEFONT></BODY>", (bool)false, (bool)false);
+			AddStatLine(260, 375, 80, "Level", String.Format(" {0}", CharacterLevel), null, color, colCD);
+			AddStatLine(260, 375, 80, "Hits", String.Format(" {0} + {1}", from.Hits - AosAttributes.GetValue(from, AosAttribute.BonusHits), AosAttributes.GetValue(from, AosAttribute.BonusHits)), null, color, colCD);
+			AddStatLine(260, 375, 80, "Stamina", String.Format(" {0} + {1}", from.Stam - AosAttributes.GetValue(from, AosAttribute.BonusStam), AosAttributes.GetValue(from, AosAttribute.BonusStam)), null, color, colCD);
+			AddStatLine(260, 375, 80, "Mana", String.Format(" {0} + {1}", from.Mana - AosAttributes.GetValue(from, AosAttribute.BonusMana), AosAttributes.GetValue(from, AosAttribute.BonusMana)), null, color, colCD);
+			AddStatLine(260, 375, 80, "Hits Regen", String.Format(" {0}", AosAttributes.GetValue(from, AosAttribute.RegenHits)), null, color, colCD);
+			AddStatLine(260, 375, 80, "Stamina Regen", String.Format(" {0}", AosAttributes.GetValue(from, AosAttribute.RegenStam)), null, color, colCD);
+			AddStatLine(260, 375, 80, "Mana Regen", String.Format(" {0}", AosAttributes.GetValue(from, AosAttribute.RegenMana)), null, color, colCD);
+			
+			if (MyServerSettings.LowerReg() > 0)
+				AddStatLine(260, 375, 80, "Low Reagent", String.Format(" {0}%", LRC), String.Format("Maximum: {0}%", MyServerSettings.LowerReg()), color, colCD);
+			if (MyServerSettings.LowerMana() > 0)
+				AddStatLine(260, 375, 80, "Low Mana", String.Format(" {0}%", LMC), String.Format("Maximum: {0}%", MyServerSettings.LowerMana()), color, colCD);
+			
+			AddStatLine(260, 375, 80, "Resurrect Cost", String.Format(" {0}", HealCost), null, color, colCD);
+			AddStatLine(260, 375, 80, "Murders", String.Format(" {0}", from.Kills), null, color, colCD);
 
 			///////////////////////////////////////////////////////////////////////////////////
+			var colEF = new YPosition(45, 35);
 
-			string colE = "";
-			colE = colE + "Hit Chance<BR><BR>";
-			colE = colE + "Defend Chance<BR><BR>";
-			colE = colE + "Swing Speed<BR><BR>";
-			colE = colE + "Swing Speed +<BR><BR>";
-			colE = colE + "Bandage Speed<BR><BR>";
-			colE = colE + "Damage Increase<BR><BR>";
-			colE = colE + "Reflect Damage<BR><BR>";
-			colE = colE + "Fast Cast<BR><BR>";
-			colE = colE + "Cast Recovery<BR><BR>";
-			colE = colE + "Spell Damage +<BR><BR>";
-			colE = colE + "Magic/Melee Absorb<BR><BR>";
+			AddStatLine(500, 615, 80, "Hit Chance", String.Format(" {0}%", HCI), String.Format("Maximum: {0}%", HCICap), color, colEF);
+			AddStatLine(500, 615, 80, "Defend Chance", String.Format(" {0}%", DCI), String.Format("Maximum: {0}%", DCICap), color, colEF); 
+			AddStatLine(500, 615, 80, "Swing Speed", String.Format(" {0}s", new DateTime(SwingSpeed.Ticks).ToString("s.ff")), null, color, colEF);
+			AddStatLine(500, 615, 80, "Swing Speed +", String.Format(" {0}%", SSI), String.Format("Maximum: {0}%", SSICap), color, colEF);
+			AddStatLine(500, 615, 80, "Bandage Speed", String.Format(" {0:0.0}s", new DateTime(TimeSpan.FromMilliseconds(BandageSpeedMilliseconds).Ticks).ToString("s.ff")), null, color, colEF);
+			AddStatLine(500, 615, 80, "Damage Increase", String.Format(" {0}%", DamageIncrease), String.Format("Maximum: {0}%", DamageIncreaseCap), color, colEF);
+			AddStatLine(500, 615, 80, "Reflect Damage", String.Format(" {0}%", ReflectDamage), String.Format("Maximum: {0}%", ReflectDamageCap), color, colEF);
+			AddStatLine(500, 615, 80, "Fast Cast", String.Format(" {0}", FC), String.Format("Maximum: {0}", FCCap), color, colEF);
+			AddStatLine(500, 615, 80, "Cast Recovery", String.Format(" {0}", FCR), null, color, colEF);
+			AddStatLine(500, 615, 80, "Spell Damage +", String.Format(" {0}%", SDI), String.Format("Maximum: {0}%", SDICap), color, colEF);
+			AddStatLine(500, 615, 80, "Magic/Melee Absorb", MgAb + "/" + MeAb, null, color, colEF);
+		}
 
-			string colF = "";
-			colF = colF + "" + String.Format(" {0}%", HCI ) + "<BR><BR>";
-			colF = colF + "" + String.Format(" {0}%", DCI ) + "<BR><BR>";
-			colF = colF + "" + String.Format(" {0}s", new DateTime(SwingSpeed.Ticks).ToString("s.ff") ) + "<BR><BR>";
-			colF = colF + "" + String.Format(" {0}%", SSI ) + "<BR><BR>";
-			colF = colF + "" + String.Format(" {0:0.0}s", new DateTime(TimeSpan.FromMilliseconds( BandageSpeedMilliseconds ).Ticks).ToString("s.ff") ) + "<BR><BR>";
-			colF = colF + "" + String.Format(" {0}%", DamageIncrease ) + "<BR><BR>";
-			colF = colF + "" + String.Format(" {0}%", ReflectDamage ) + "<BR><BR>";
-			colF = colF + "" + String.Format(" {0}", FC ) + "<BR><BR>";
-			colF = colF + "" + String.Format(" {0}", FCR ) + "<BR><BR>";
-			colF = colF + "" + String.Format(" {0}%", SDI ) + "<BR><BR>";
-			colF = colF + "" + MgAb + "/" + MeAb + "<BR><BR>";
+		private class YPosition
+		{
+			public int Current { get; set; }
+			public int LineHeight { get; private set; }
 
-			AddHtml( 500, 45, 150, 380, @"<BODY><BASEFONT Color=" + color + ">" + colE + "</BASEFONT></BODY>", (bool)false, (bool)false);
-			AddHtml( 615, 45, 80, 380, @"<BODY><BASEFONT Color=" + color + "><div align=right>" + colF + "</div></BASEFONT></BODY>", (bool)false, (bool)false);
+			public YPosition(int startY, int lineHeight)
+			{
+				Current = startY;
+				LineHeight = lineHeight;
+			}
+
+			public int Next()
+			{
+				int currentY = Current;
+				Current += LineHeight;
+				return currentY;
+			}
+		}
+
+		private void AddStatLine(int labelX, int valueX, int width, string label, string value, string tooltip, string color, YPosition yPos)
+		{
+			int currentY = yPos.Next();
+			AddHtml(labelX, currentY, 200, 20, @"<BODY><BASEFONT Color=" + color + ">" + label + "</BASEFONT></BODY>", false, false);
+			AddHtml(valueX, currentY, width, 20, @"<BODY><BASEFONT Color=" + color + "><div align=right>" + value + "</div></BASEFONT></BODY>", false, false);
+			if (!string.IsNullOrEmpty(tooltip))
+				AddTooltip(tooltip);
 		}
     
 		public override void OnResponse( NetState sender, RelayInfo info )

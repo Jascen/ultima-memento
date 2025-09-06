@@ -9,8 +9,9 @@ namespace Server.Gumps
 	{
 		private Mobile m_From;
 		private int m_Offer;
+        public const int MaxTithingPoints = 100000;
 
-		public TithingGump( Mobile from, int offer ) : base( 160, 40 )
+        public TithingGump( Mobile from, int offer ) : base( 160, 40 )
 		{
 			int totalGold = from.TotalGold;
 
@@ -90,8 +91,8 @@ namespace Server.Gumps
 					else if ( m_Offer < 0 )
 						m_Offer = 0;
 
-					if ( (m_From.TithingPoints + m_Offer) > 100000 ) // TODO: What's the maximum?
-						m_Offer = (100000 - m_From.TithingPoints);
+					if ( (m_From.TithingPoints + m_Offer) > MaxTithingPoints) // TODO: What's the maximum?
+						m_Offer = (MaxTithingPoints - m_From.TithingPoints);
 
 					if ( m_Offer <= 0 )
 					{
