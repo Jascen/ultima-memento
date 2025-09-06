@@ -3974,7 +3974,10 @@ namespace Server.Mobiles
 				if( value )
 					AddBuff( new BuffInfo( BuffIcon.Paralyze, 1075827 ) );	//Paralyze/You are frozen and can not move
 				else
+				{
 					BuffInfo.CleanupIcons( this, true );
+					BuffInfo.AddParalyzeImmunity( this );
+				}
 			}
 		}
 
@@ -4488,7 +4491,13 @@ namespace Server.Mobiles
 
 			if( state != null && state.BuffIcon )
 			{
-				state.Send( new AddBuffPacket( this, b ) );
+				if( b is EnhancedBuff )
+				{
+					EnhancedBuff enhanced = (EnhancedBuff)b;
+					state.Send( new EnhancedBuffPacket( this, enhanced.ID, enhanced.TitleCliloc, enhanced.SecondaryCliloc, (enhanced.TimeStart != DateTime.MinValue) ? ((enhanced.TimeStart + enhanced.TimeLength) - DateTime.Now) : TimeSpan.Zero ) );
+				}
+				else
+					state.Send( new AddBuffPacket( this, b ) );
 			}
 		}
 
@@ -4521,6 +4530,36 @@ namespace Server.Mobiles
 
 			if( m_BuffTable.Count <= 0 )
 				m_BuffTable = null;
+		}
+
+		public bool HasBuff( BuffIcon buffIcon )
+		{
+			return m_BuffTable != null && m_BuffTable.ContainsKey( buffIcon );
+		}
+
+		public BuffInfo GetBuff( BuffIcon buffIcon )
+		{
+			if( m_BuffTable != null && m_BuffTable.ContainsKey( buffIcon ) )
+				return m_BuffTable[buffIcon];
+			
+			return null;
+		}
+		
+		public T GetBuff<T>( BuffIcon buffIcon ) where T : BuffInfo
+		{
+			BuffInfo buff = GetBuff( buffIcon );
+			return buff as T;
+		}
+		
+		public ParalyzeImmunityBuff GetParalyzeImmunity()
+		{
+			return GetBuff<ParalyzeImmunityBuff>( BuffIcon.Deflection );
+		}
+		
+		public EnhancedBuff GetEnhancedBuff( BuffIcon buffIcon )
+		{
+			BuffInfo buff = GetBuff( buffIcon );
+			return buff as EnhancedBuff;
 		}
 
         public override void OnRawStatChange(StatType stat, int oldValue)

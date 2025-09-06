@@ -59,7 +59,7 @@ namespace Server.Items
 				
 				AOS.Damage( defender, attacker, amount, 100, 0, 0, 0, 0 );
 
-				if( Server.Items.ParalyzingBlow.IsImmune( defender ) )	//Does it still do damage?
+				if( Server.Items.ParalyzingBlow.IsImmune( defender ) || BuffInfo.HasParalyzeImmunity( defender ) )	//Does it still do damage?
 				{
 					attacker.SendLocalizedMessage( 1070804 ); // Your target resists paralysis.
 					defender.SendLocalizedMessage( 1070813 ); // You resist paralysis.
