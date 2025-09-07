@@ -898,13 +898,13 @@ namespace Server.Gumps
 			from.SendGump( new StatsGump( from, from, 0 ) );
         }
 
-        public StatsGump ( Mobile m, Mobile from, int origin ) : base ( 50,50 )
+        public StatsGump(Mobile m, Mobile from, int origin) : base(50, 50)
         {
-			m_Origin = origin;
+            m_Origin = origin;
 
-			if ( origin == 0 ){ from.SendSound( 0x4A ); }
+            if (origin == 0) { from.SendSound(0x4A); }
 
-			int LRCCap = MyServerSettings.LowerReg();;
+            int LRCCap = MyServerSettings.LowerReg(); ;
             int LMCCap = MyServerSettings.LowerMana();
             int SwingSpeedCap = 100;
             int HCICap = 45;
@@ -912,122 +912,123 @@ namespace Server.Gumps
             int FCCap = 4; // FC 4 For Paladin, otherwise FC 2 for Mage
             int DamageIncreaseCap = 100;
             int SDICap = 1000000;
-				if ( SDICap > MyServerSettings.SpellDamageIncreaseVsMonsters() && MyServerSettings.SpellDamageIncreaseVsMonsters() > 0 ){ SDICap = MyServerSettings.SpellDamageIncreaseVsMonsters(); }
+            if (SDICap > MyServerSettings.SpellDamageIncreaseVsMonsters() && MyServerSettings.SpellDamageIncreaseVsMonsters() > 0) { SDICap = MyServerSettings.SpellDamageIncreaseVsMonsters(); }
             int ReflectDamageCap = 100;
             int SSICap = 100;
-            
-            int LRC = AosAttributes.GetValue( from, AosAttribute.LowerRegCost ) > LRCCap ? LRCCap : AosAttributes.GetValue( from, AosAttribute.LowerRegCost );
-            int LMC = AosAttributes.GetValue( from, AosAttribute.LowerManaCost ) > LMCCap ? LMCCap : AosAttributes.GetValue( from, AosAttribute.LowerManaCost );
-			int BandageSpeedMilliseconds = BandageContext.HealTimer( m, m );
+
+            int LRC = AosAttributes.GetValue(from, AosAttribute.LowerRegCost);
+            int LMC = AosAttributes.GetValue(from, AosAttribute.LowerManaCost);
+            int BandageSpeedMilliseconds = BandageContext.HealTimer(m, m);
             TimeSpan SwingSpeed = (from.Weapon as BaseWeapon).GetDelay(from) > TimeSpan.FromSeconds(SwingSpeedCap) ? TimeSpan.FromSeconds(SwingSpeedCap) : (from.Weapon as BaseWeapon).GetDelay(from);
-            int HCI = AosAttributes.GetValue( from, AosAttribute.AttackChance ) > HCICap ? HCICap : AosAttributes.GetValue( from, AosAttribute.AttackChance );
-            int DCI = AosAttributes.GetValue( from, AosAttribute.DefendChance ) > DCICap ? DCICap : AosAttributes.GetValue( from, AosAttribute.DefendChance );
-            int FC = AosAttributes.GetValue( from, AosAttribute.CastSpeed ) > FCCap ? FCCap : AosAttributes.GetValue( from, AosAttribute.CastSpeed );
-            int FCR = AosAttributes.GetValue( from, AosAttribute.CastRecovery );
-            int DamageIncrease = AosAttributes.GetValue( from, AosAttribute.WeaponDamage ) > DamageIncreaseCap ? DamageIncreaseCap : AosAttributes.GetValue( from, AosAttribute.WeaponDamage );
-            int SDI = AosAttributes.GetValue( from, AosAttribute.SpellDamage ) > SDICap ? SDICap : AosAttributes.GetValue( from, AosAttribute.SpellDamage );
-            int ReflectDamage = AosAttributes.GetValue( from, AosAttribute.ReflectPhysical ) > ReflectDamageCap ? ReflectDamageCap : AosAttributes.GetValue( from, AosAttribute.ReflectPhysical );
-            int SSI = AosAttributes.GetValue( from, AosAttribute.WeaponSpeed ) > SSICap ? SSICap : AosAttributes.GetValue( from, AosAttribute.WeaponSpeed );
-            int HealCost = GetPlayerInfo.GetResurrectCost( from );
-			int CharacterLevel = GetPlayerInfo.GetPlayerLevel( from );
-            int EP = BasePotion.EnhancePotions( from );
+            int HCI = AosAttributes.GetValue(from, AosAttribute.AttackChance);
+            int DCI = AosAttributes.GetValue(from, AosAttribute.DefendChance);
+            int FC = AosAttributes.GetValue(from, AosAttribute.CastSpeed) > FCCap ? FCCap : AosAttributes.GetValue(from, AosAttribute.CastSpeed);
+            int FCR = AosAttributes.GetValue(from, AosAttribute.CastRecovery);
+            int DamageIncrease = AosAttributes.GetValue(from, AosAttribute.WeaponDamage);
+            int SDI = AosAttributes.GetValue(from, AosAttribute.SpellDamage);
+            int ReflectDamage = AosAttributes.GetValue(from, AosAttribute.ReflectPhysical);
+            int SSI = AosAttributes.GetValue(from, AosAttribute.WeaponSpeed);
+            int HealCost = GetPlayerInfo.GetResurrectCost(from);
+            int CharacterLevel = GetPlayerInfo.GetPlayerLevel(from);
+            int EP = BasePotion.EnhancePotions(from);
             int MgAb = from.MagicDamageAbsorb;
             int MeAb = from.MeleeDamageAbsorb;
 
-            this.Closable=true;
-			this.Disposable=true;
-			this.Dragable=true;
-			this.Resizable=false;
+            this.Closable = true;
+            this.Disposable = true;
+            this.Dragable = true;
+            this.Resizable = false;
 
-			AddPage(0);
+            AddPage(0);
 
-			// 0 - BUTTON // 1 - PLAYERS HANDBOOK // 2 - DIVINATION
+            // 0 - BUTTON // 1 - PLAYERS HANDBOOK // 2 - DIVINATION
 
-			int img = 11420;
-			string color = "#E4E377";
+            int img = 11420;
+            string color = "#E4E377";
 
-			if ( m_Origin == 1 )
-			{
-				img = 11417;
-				color = "#DCB179";
-			}
-			else if ( m_Origin == 2 )
-			{
-				img = 11419;
-				color = "#E59DE2";
-			}
+            if (m_Origin == 1)
+            {
+                img = 11417;
+                color = "#DCB179";
+            }
+            else if (m_Origin == 2)
+            {
+                img = 11419;
+                color = "#E59DE2";
+            }
 
-			AddImage(1, 1, img, Server.Misc.PlayerSettings.GetGumpHue( m ));
+            AddImage(1, 1, img, Server.Misc.PlayerSettings.GetGumpHue(m));
 
-			string name = from.Name;
-				if ( from.Title != "" && from.Title != null ){ name = name + " " + from.Title; }
-				else { name = name + " the " + GetPlayerInfo.GetSkillTitle( from ) + ""; }
+            string name = from.Name;
+            if (from.Title != "" && from.Title != null) { name = name + " " + from.Title; }
+            else { name = name + " the " + GetPlayerInfo.GetSkillTitle(from) + ""; }
 
-			AddHtml( 15, 15, 400, 20, @"<BODY><BASEFONT Color=" + color + ">" + name.ToUpper() + "</BASEFONT></BODY>", (bool)false, (bool)false);
+            AddHtml(15, 15, 400, 20, @"<BODY><BASEFONT Color=" + color + ">" + name.ToUpper() + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
-			AddButton(667, 12, 4017, 4017, 0, GumpButtonType.Reply, 0);
+            AddButton(667, 12, 4017, 4017, 0, GumpButtonType.Reply, 0);
 
-			AddButton(20, 402, 4011, 4011, 666, GumpButtonType.Reply, 0);
-			string warnColor = "#7ab582";
-			string warnMsg = "Innocent";
-			if ( Server.Misc.GetPlayerInfo.IsWanted( from ) )
-			{
-				warnColor = "#d38a8a";
-				warnMsg = "Guilty";
-			}	
+            AddButton(260, 12, 4011, 4011, 666, GumpButtonType.Reply, 0);
+            string warnColor = "#7ab582";
+            string warnMsg = "Innocent";
+            if (Server.Misc.GetPlayerInfo.IsWanted(from))
+            {
+                warnColor = "#d38a8a";
+                warnMsg = "Guilty";
+            }
 
-			AddHtml( 61, 406, 100, 20, @"<BODY><BASEFONT Color=" + warnColor + ">" + warnMsg + "</BASEFONT></BODY>", (bool)false, (bool)false);
+            AddHtml(293, 16, 60, 20, @"<BODY><BASEFONT Color=" + warnColor + ">" + warnMsg + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
-			var colAB = new YPosition(45, 35);
+            var colAB = new YPosition(45, 35);
 
-			AddStatLine(20, 135, 80, "Strength", String.Format(" {0} + {1}", from.RawStr, from.Str - from.RawStr), null, color, colAB);
-			AddStatLine(20, 135, 80, "Dexterity", String.Format(" {0} + {1}", from.RawDex, from.Dex - from.RawDex), null, color, colAB);
-			AddStatLine(20, 135, 80, "Intelligence", String.Format(" {0} + {1}", from.RawInt, from.Int - from.RawInt), null, color, colAB);
-			AddStatLine(20, 135, 80, "Fame", String.Format(" {0}", from.Fame), String.Format("Maximum: {0}", Titles.MaxFame), color, colAB);
-			AddStatLine(20, 135, 80, "Karma", String.Format(" {0}", from.Karma), String.Format("Maximum: {0}", Titles.MaxKarma), color, colAB);
-			AddStatLine(20, 135, 80, "Tithe", String.Format(" {0}", from.TithingPoints), String.Format("Maximum: {0}", TithingGump.MaxTithingPoints), color, colAB);
-			AddStatLine(20, 135, 80, "Hunger", String.Format(" {0}", from.Hunger), "Maximum: 20", color, colAB);
-			AddStatLine(20, 135, 80, "Thirst", String.Format(" {0}", from.Thirst), "Maximum: 20", color, colAB);
-			AddStatLine(20, 135, 80, "Potion Enhance", String.Format(" {0}%", EP), "Maximum 50%", color, colAB);
-			AddStatLine(20, 135, 80, "Bank Gold", Banker.GetBalance(from).ToString(), null, color, colAB);
+            AddStatLine(20, 135, 80, "Level", String.Format(" {0}", CharacterLevel), null, color, colAB);
+            AddStatLine(20, 135, 80, "Strength", String.Format(" {0} + {1}", from.RawStr, from.Str - from.RawStr), null, color, colAB);
+            AddStatLine(20, 135, 80, "Dexterity", String.Format(" {0} + {1}", from.RawDex, from.Dex - from.RawDex), null, color, colAB);
+            AddStatLine(20, 135, 80, "Intelligence", String.Format(" {0} + {1}", from.RawInt, from.Int - from.RawInt), null, color, colAB);
+            AddStatLine(20, 135, 80, "Fame", String.Format(" {0}", from.Fame), String.Format("Maximum Fame: {0}", Titles.MaxFame), color, colAB);
+            AddStatLine(20, 135, 80, "Karma", String.Format(" {0}", from.Karma), String.Format("Maximum Karma: {0}", Titles.MaxKarma), color, colAB);
+            AddStatLine(20, 135, 80, "Tithe", String.Format(" {0}", from.TithingPoints), String.Format("Maximum Tithe: {0}", TithingGump.MaxTithingPoints), color, colAB);
+            AddStatLine(20, 135, 80, "Hunger", String.Format(" {0}", from.Hunger), "Maximum Hunger is 20.", color, colAB);
+            AddStatLine(20, 135, 80, "Thirst", String.Format(" {0}", from.Thirst), "Maximum Thirst is 20.", color, colAB);
+            AddStatLine(20, 135, 80, "Potion Enhance", String.Format(" {0}/50%", EP), "Increased Effect of Potions.", color, colAB);
+            AddStatLine(20, 135, 80, "Bank Gold", Banker.GetBalance(from).ToString(), null, color, colAB);
 
-			///////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////
 
-			var colCD = new YPosition(45, 35);
+            var colCD = new YPosition(45, 35);
 
-			AddStatLine(260, 375, 80, "Level", String.Format(" {0}", CharacterLevel), null, color, colCD);
-			AddStatLine(260, 375, 80, "Hits", String.Format(" {0} + {1}", from.Hits - AosAttributes.GetValue(from, AosAttribute.BonusHits), AosAttributes.GetValue(from, AosAttribute.BonusHits)), null, color, colCD);
-			AddStatLine(260, 375, 80, "Stamina", String.Format(" {0} + {1}", from.Stam - AosAttributes.GetValue(from, AosAttribute.BonusStam), AosAttributes.GetValue(from, AosAttribute.BonusStam)), null, color, colCD);
-			AddStatLine(260, 375, 80, "Mana", String.Format(" {0} + {1}", from.Mana - AosAttributes.GetValue(from, AosAttribute.BonusMana), AosAttributes.GetValue(from, AosAttribute.BonusMana)), null, color, colCD);
-			AddStatLine(260, 375, 80, "Hits Regen", String.Format(" {0}", AosAttributes.GetValue(from, AosAttribute.RegenHits)), null, color, colCD);
-			AddStatLine(260, 375, 80, "Stamina Regen", String.Format(" {0}", AosAttributes.GetValue(from, AosAttribute.RegenStam)), null, color, colCD);
-			AddStatLine(260, 375, 80, "Mana Regen", String.Format(" {0}", AosAttributes.GetValue(from, AosAttribute.RegenMana)), null, color, colCD);
-			
-			if (MyServerSettings.LowerReg() > 0)
-				AddStatLine(260, 375, 80, "Low Reagent", String.Format(" {0}%", LRC), String.Format("Maximum: {0}%", MyServerSettings.LowerReg()), color, colCD);
-			if (MyServerSettings.LowerMana() > 0)
-				AddStatLine(260, 375, 80, "Low Mana", String.Format(" {0}%", LMC), String.Format("Maximum: {0}%", MyServerSettings.LowerMana()), color, colCD);
-			
-			AddStatLine(260, 375, 80, "Resurrect Cost", String.Format(" {0}", HealCost), null, color, colCD);
-			AddStatLine(260, 375, 80, "Murders", String.Format(" {0}", from.Kills), null, color, colCD);
+            AddStatLine(260, 375, 80, "Hits", String.Format(" {0} + {1}", from.Hits - AosAttributes.GetValue(from, AosAttribute.BonusHits), AosAttributes.GetValue(from, AosAttribute.BonusHits)), null, color, colCD);
+            AddStatLine(260, 375, 80, "Stamina", String.Format(" {0} + {1}", from.Stam - AosAttributes.GetValue(from, AosAttribute.BonusStam), AosAttributes.GetValue(from, AosAttribute.BonusStam)), null, color, colCD);
+            AddStatLine(260, 375, 80, "Mana", String.Format(" {0} + {1}", from.Mana - AosAttributes.GetValue(from, AosAttribute.BonusMana), AosAttributes.GetValue(from, AosAttribute.BonusMana)), null, color, colCD);
+            AddStatLine(260, 375, 80, "Hits Regen", String.Format(" {0}", AosAttributes.GetValue(from, AosAttribute.RegenHits)), null, color, colCD);
+            AddStatLine(260, 375, 80, "Stamina Regen", String.Format(" {0}", AosAttributes.GetValue(from, AosAttribute.RegenStam)), null, color, colCD);
+            AddStatLine(260, 375, 80, "Mana Regen", String.Format(" {0}", AosAttributes.GetValue(from, AosAttribute.RegenMana)), null, color, colCD);
 
-			///////////////////////////////////////////////////////////////////////////////////
-			var colEF = new YPosition(45, 35);
+            if (MyServerSettings.LowerReg() > 0)
+                AddStatLine(260, 375, 80, "Low Reagent", String.Format(" {0}/{1}%", LRC, MyServerSettings.LowerReg()), "Chance to not use a reagent.", color, colCD);
+            if (MyServerSettings.LowerMana() > 0)
+                AddStatLine(260, 375, 80, "Low Mana", String.Format(" {0}/{1}%", LMC, MyServerSettings.LowerMana()), "Mana Cost Reduction.", color, colCD);
 
-			AddStatLine(500, 615, 80, "Hit Chance", String.Format(" {0}%", HCI), String.Format("Maximum: {0}%", HCICap), color, colEF);
-			AddStatLine(500, 615, 80, "Defend Chance", String.Format(" {0}%", DCI), String.Format("Maximum: {0}%", DCICap), color, colEF); 
-			AddStatLine(500, 615, 80, "Swing Speed", String.Format(" {0}s", new DateTime(SwingSpeed.Ticks).ToString("s.ff")), null, color, colEF);
-			AddStatLine(500, 615, 80, "Swing Speed +", String.Format(" {0}%", SSI), String.Format("Maximum: {0}%", SSICap), color, colEF);
-			AddStatLine(500, 615, 80, "Bandage Speed", String.Format(" {0:0.0}s", new DateTime(TimeSpan.FromMilliseconds(BandageSpeedMilliseconds).Ticks).ToString("s.ff")), null, color, colEF);
-			AddStatLine(500, 615, 80, "Damage Increase", String.Format(" {0}%", DamageIncrease), String.Format("Maximum: {0}%", DamageIncreaseCap), color, colEF);
-			AddStatLine(500, 615, 80, "Reflect Damage", String.Format(" {0}%", ReflectDamage), String.Format("Maximum: {0}%", ReflectDamageCap), color, colEF);
-			AddStatLine(500, 615, 80, "Fast Cast", String.Format(" {0}", FC), String.Format("Maximum: {0}", FCCap), color, colEF);
-			AddStatLine(500, 615, 80, "Cast Recovery", String.Format(" {0}", FCR), null, color, colEF);
-			AddStatLine(500, 615, 80, "Spell Damage +", String.Format(" {0}%", SDI), String.Format("Maximum: {0}%", SDICap), color, colEF);
-			AddStatLine(500, 615, 80, "Magic/Melee Absorb", MgAb + "/" + MeAb, null, color, colEF);
-		}
+            AddStatLine(260, 375, 80, "Spell Damage +", String.Format(" {0}/{1}%", SDI, SDICap), "Percent Increased Spell Damage", color, colCD);
+            AddStatLine(260, 375, 80, "Resurrect Cost", String.Format(" {0}", HealCost), null, color, colCD);
+            AddStatLine(260, 375, 80, "Murders", String.Format(" {0}", from.Kills), null, color, colCD);
 
-		private class YPosition
+            ///////////////////////////////////////////////////////////////////////////////////
+            var colEF = new YPosition(45, 35);
+
+            AddStatLine(500, 615, 80, "Hit Chance", String.Format(" {0}/{1}%", HCI, HCICap), "Additional Chance to Hit.", color, colEF);
+            AddStatLine(500, 615, 80, "Defend Chance", String.Format(" {0}/{1}%", DCI, DCICap), "Additional Chance to Defend.", color, colEF);
+            AddStatLine(500, 615, 80, "Swing Speed", String.Format(" {0}s", new DateTime(SwingSpeed.Ticks).ToString("s.ff")), null, color, colEF);
+            AddStatLine(500, 615, 80, "Swing Speed +", String.Format(" {0}/{1}%", SSI, SSICap), "Percent increased Swing Speed.", color, colEF);
+            AddStatLine(500, 615, 80, "Bandage Speed", String.Format(" {0:0.0}s", new DateTime(TimeSpan.FromMilliseconds(BandageSpeedMilliseconds).Ticks).ToString("s.ff")), null, color, colEF);
+            AddStatLine(500, 615, 80, "Damage Increase", String.Format(" {0}/{1}%", DamageIncrease, DamageIncreaseCap), "Percent Increased Damage.", color, colEF);
+            AddStatLine(500, 615, 80, "Reflect Damage", String.Format(" {0}/{1}%", ReflectDamage, ReflectDamageCap), "Reflect Percent of Damage.", color, colEF);
+            AddStatLine(500, 615, 80, "Fast Cast", String.Format(" {0}", FC), String.Format("Maximum Cast Speed: {0}", FCCap), color, colEF);
+            AddStatLine(500, 615, 80, "Cast Recovery", String.Format(" {0}", FCR), null, color, colEF);
+            AddStatLine(500, 615, 80, "Magic Absorb", String.Format(" {0}", MgAb), null, color, colEF);
+            AddStatLine(500, 615, 80, "Melee Absorb", String.Format(" {0}", MeAb), null, color, colEF);
+        }
+
+        private class YPosition
 		{
 			public int Current { get; set; }
 			public int LineHeight { get; private set; }
@@ -1069,6 +1070,7 @@ namespace Server.Gumps
 			else { from.SendSound( 0x4A ); }
 		}
     }
+
 }
 
 namespace Server.Engines.Quests
