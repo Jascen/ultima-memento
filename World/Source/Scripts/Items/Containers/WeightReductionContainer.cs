@@ -192,9 +192,14 @@ namespace Server.Items
             {
                 if (AccessDelayMessage != "")
                     from.SendMessage(Utility.RandomNeutralHue(), AccessDelayMessage);
-
-                from.SendMessage(String.Format("You will need to wait approximately {0} more minutes before you can try again",
-                    NextAccessTime.Subtract(DateTime.Now).Minutes));
+                if(NextAccessTime.Subtract(DateTime.Now).Minutes) < 1){
+                    from.SendMessage(String.Format("You will need to wait approximately {0} more seconds before you can try again",
+                      NextAccessTime.Subtract(DateTime.Now).Seconds));
+                }else {
+                    from.SendMessage(String.Format("You will need to wait approximately {0} more minutes before you can try again",
+                      NextAccessTime.Subtract(DateTime.Now).Minutes));
+                }
+                  
 
                 return false;
             }
@@ -217,8 +222,14 @@ namespace Server.Items
                 if (AccessDelayMessage != "")
                     from.SendMessage(Utility.RandomNeutralHue(), AccessDelayMessage);
 
-                from.SendMessage(String.Format("You will need to wait approximately {0} more minutes before you can try again",
-                    NextAccessTime.Subtract(DateTime.Now).Minutes));
+                if (NextAccessTime.Subtract(DateTime.Now).Minutes) < 1){
+                    from.SendMessage(String.Format("You will need to wait approximately {0} more seconds before you can try again",
+                      NextAccessTime.Subtract(DateTime.Now).Seconds));
+                }else
+                {
+                    from.SendMessage(String.Format("You will need to wait approximately {0} more minutes before you can try again",
+                      NextAccessTime.Subtract(DateTime.Now).Minutes));
+                }
 
                 return false;
             }
