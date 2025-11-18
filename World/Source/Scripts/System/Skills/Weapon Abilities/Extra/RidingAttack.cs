@@ -35,7 +35,7 @@ namespace Server.Items
 			{
 				int amount = 10 + (int)(10.0 * (attacker.Skills[SkillName.Knightship].Value) / 70.0 + 5);
 				AOS.Damage( defender, attacker, amount, 100, 0, 0, 0, 0 );
-				if( Server.Items.ParalyzingBlow.IsImmune( defender ) )
+				if( Server.Items.ParalyzingBlow.IsImmune( defender ) || BuffInfo.HasParalyzeImmunity( defender ) )
 				{
 					attacker.SendLocalizedMessage( 1070804 );
 					defender.SendLocalizedMessage( 1070813 );
