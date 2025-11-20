@@ -26,6 +26,8 @@ namespace Server.Engines.Craft
 
 		protected override void OnTick()
 		{
+			int last = m_Context.Current;
+
 			if (!m_Context.Paused && m_CraftItem.Craft(Player, m_CraftSystem, m_TypeRes, m_Tool, m_Context))
 				Player.EndAction(typeof(CraftSystem));
 
@@ -35,7 +37,7 @@ namespace Server.Engines.Craft
 			else if (m_Tool == null || m_Tool.Parent != Player)
 				Cancel();
 
-			if (!m_Context.Paused && !m_Context.Suppressed && !m_Context.Cancelled)
+			if (!m_Context.Paused && !m_Context.Suppressed && !m_Context.Cancelled && last != m_Context.Current)
 				RefreshGump(isComplete);
 		}
 
