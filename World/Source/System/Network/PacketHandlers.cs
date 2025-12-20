@@ -23,6 +23,7 @@ using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using Server.Accounting;
 using Server.Gumps;
@@ -150,6 +151,8 @@ namespace Server.Network
 			Register( 0xE1,   0, false, new OnPacketReceive( ClientType ) );
 			Register( 0xEF,  21, false, new OnPacketReceive( LoginServerSeed ) );
 			Register( 0xF8, 106, false, new OnPacketReceive( CreateCharacter70160 ) );
+			Register( 0xEC, 0, false, new OnPacketReceive( KrEquip ) );
+			Register( 0xED, 0, false, new OnPacketReceive( KrUnequip ) );
 
 			Register6017( 0x08, 15, true, new OnPacketReceive( DropReq6017 ) );
 
@@ -2312,6 +2315,40 @@ namespace Server.Network
 			}
 		}
 
+		private static readonly Layer[] _forbiddenLayers = new Layer[] {Layer.Backpack, Layer.FacialHair, Layer.Hair, Layer.Invalid, Layer.ShopBuy, Layer.ShopResale, Layer.ShopSell, Layer.Bank};
+		
+		public static void KrEquip( NetState state, PacketReader pvSrc )
+		{
+			if (state.Mobile == null) return;
+			
+			int count = pvSrc.ReadByte();
+			for (var i = 0; i < count; ++i)
+			{
+				Serial serial = pvSrc.ReadInt32();
+				var item = World.FindItem(serial);
+
+				if (item != null && !_forbiddenLayers.Contains(item.Layer))
+					state.Mobile.EquipItem(item);
+			}
+		}
+
+		public static void KrUnequip( NetState state, PacketReader pvSrc )
+		{
+			if (state.Mobile == null) return;
+			
+			int count = pvSrc.ReadByte();
+			for (var i = 0; i < count; ++i)
+			{
+				Layer layer = (Layer)pvSrc.ReadUInt16();
+				
+				if(_forbiddenLayers.Contains(layer))
+					continue;
+
+				Item item = state.Mobile.FindItemOnLayer(layer);
+				if (item != null)
+					state.Mobile.PlaceInBackpack(item);
+			}
+		}
 
 		private static bool m_ClientVerification = true;
 
