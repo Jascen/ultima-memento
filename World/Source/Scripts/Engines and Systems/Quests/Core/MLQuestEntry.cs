@@ -35,22 +35,11 @@ namespace Server.Engines.MLQuests
 			m_Flags = MLQuestInstanceFlags.None;
 
 			Objectives = new BaseObjectiveInstance[quest.Objectives.Count];
-
-			BaseObjectiveInstance obj;
-			bool timed = false;
-
+			
 			for (int i = 0; i < quest.Objectives.Count; ++i)
 			{
-				Objectives[i] = obj = quest.Objectives[i].CreateInstance(this);
-
-				if (obj.IsTimed)
-					timed = true;
+				Objectives[i] = quest.Objectives[i].CreateInstance(this);
 			}
-
-			Register();
-
-			if (timed)
-				m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5), Slice);
 		}
 
 		private void Register()
@@ -71,6 +60,31 @@ namespace Server.Engines.MLQuests
 				PlayerContext.QuestInstances.Remove(this);
 
 			Removed = true;
+		}
+
+		/// <summary>
+		/// Handles the logic for actually accepting the quest instance. Sets up timers, registers the instance, etc.
+		/// </summary>
+		public void Accept()
+		{
+			Accepted = DateTime.UtcNow;
+			
+			bool timed = false;
+			for (int i = 0; i < Objectives.Length; i++)
+			{
+				BaseObjectiveInstance objective = Objectives[i];
+				
+				objective.Accept();
+				if (objective.IsTimed)
+				{
+					timed = true;
+				}
+			}
+
+			Register();
+			
+			if (timed)
+				m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5), Slice);
 		}
 
 		public MLQuest Quest { get; private set; }
