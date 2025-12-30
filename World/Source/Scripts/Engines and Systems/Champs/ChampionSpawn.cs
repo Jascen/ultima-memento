@@ -707,6 +707,13 @@ namespace Server.Engines.CannedEvil
 		{
 			m_Kills = 0;
 
+			if (Level == 0 && m_WhiteSkulls.Count == 0)
+			{
+				Stop();
+				Cleanup();
+				return;
+			}
+
 			if (m_WhiteSkulls.Count == 0)
 			{
 				// They didn't even get 20%, go back a level
