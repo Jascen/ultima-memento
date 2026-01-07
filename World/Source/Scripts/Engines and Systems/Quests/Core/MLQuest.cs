@@ -225,12 +225,10 @@ namespace Server.Engines.MLQuests
 			pm.SendGump(new QuestOfferGump(this, quester, pm));
 		}
 
-		public virtual void OnAccept(IQuestGiver quester, PlayerMobile pm)
+		public virtual void OnAccept(IQuestGiver quester, PlayerMobile pm,  MLQuestInstance instance)
 		{
 			if (!CanOffer(quester, pm, true))
 				return;
-
-			MLQuestInstance instance = CreateInstance(quester, pm);
 
 			pm.SendLocalizedMessage(1049019); // You have accepted the Quest.
 			pm.SendSound(0x2E7); // private sound

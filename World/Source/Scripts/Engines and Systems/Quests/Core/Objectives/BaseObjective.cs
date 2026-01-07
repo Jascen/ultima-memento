@@ -28,6 +28,8 @@ namespace Server.Engines.MLQuests.Objectives
 		private MLQuestInstance m_Instance;
 		private DateTime m_EndTime;
 		private bool m_Expired;
+		
+		public BaseObjective ObjectiveTemplate { get; set; }
 
 		public MLQuestInstance Instance
 		{
@@ -54,9 +56,13 @@ namespace Server.Engines.MLQuests.Objectives
 		public BaseObjectiveInstance( MLQuestInstance instance, BaseObjective obj )
 		{
 			m_Instance = instance;
+			ObjectiveTemplate = obj;
+		}
 
-			if ( obj.IsTimed )
-				m_EndTime = DateTime.UtcNow + obj.Duration;
+		public void Accept()
+		{
+			if ( ObjectiveTemplate.IsTimed )
+				m_EndTime = DateTime.UtcNow + ObjectiveTemplate.Duration;
 		}
 
 		public virtual void WriteToGump( Gump g, ref int y )
