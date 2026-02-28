@@ -163,6 +163,9 @@ namespace Server.Spells.Sixth
 			{
 				if ( Visible && !Server.Spells.SpellHelper.isFriend( m_Caster, m ) )
 				{
+					if ( BuffInfo.HasParalyzeImmunity( m ) )
+						return true;
+
 					if ( SpellHelper.CanRevealCaster( m ) )
 						m_Caster.RevealingAction();
 
