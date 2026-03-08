@@ -9889,6 +9889,19 @@ namespace Server.Mobiles
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int RemoveStep { get { return m_RemoveStep; } set { m_RemoveStep = value; } }
 
+		public override void ComputeResistances()
+		{
+			base.ComputeResistances();
+
+			if (Spells.Fourth.CurseSpell.UnderEffect( this ))
+			{
+				for( int i = 1; i < Resistances.Length; ++i ) // Skip physical
+				{
+					Resistances[i] = Math.Max(0, Resistances[i] - 10);
+				}
+			}
+		}
+
         #region Jako Taming
         private uint m_level = 1;
         protected virtual TimeSpan NextMateDelay(uint atLevel) { return (atLevel == AbsMaxLevel ? TimeSpan.FromDays(14) : TimeSpan.FromDays(7)); }
