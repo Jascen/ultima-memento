@@ -12,7 +12,7 @@ namespace Server.Spells
 {
 	public class SpellRegistry
 	{
-		private static Type[] m_Types = new Type[700];
+		private static Type[] m_Types = new Type[10000];
 		private static int m_Count;
 
 		public static Type[] Types

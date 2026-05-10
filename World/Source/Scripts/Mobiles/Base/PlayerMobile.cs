@@ -924,6 +924,13 @@ namespace Server.Mobiles
 				// Adjust item graphics/visibility on paperdoll
 				from.ProcessClothing();
 			}
+
+			// Send dynamic spellbook registrations to client
+			if ( from.NetState != null )
+			{
+				Console.WriteLine( "[DynamicSpellbook] OnLogin: Sending registrations to {0}", from.Name );
+				Server.Spells.Dynamic.DynamicSpellbookManager.SendAllRegistrations( from.NetState );
+			}
 		}
 
 		private bool m_NoDeltaRecursion;
