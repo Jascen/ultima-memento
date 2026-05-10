@@ -2,6 +2,7 @@ using System;
 using Server.Network;
 using Server.Gumps;
 using Server.Utilities;
+using Server.Mobiles;
 
 namespace Server.Items
 {
@@ -11,7 +12,8 @@ namespace Server.Items
 		BloodOfVampire,
 		CloningCrystalJedi,
 		CloningCrystalSyth,
-		RestorativeSoil
+		RestorativeSoil,
+		PermadeathPlaceholder
 	}
 
     public class SoulOrb : Item
@@ -61,6 +63,12 @@ namespace Server.Items
 
 		public override void OnDoubleClick( Mobile from )
 		{
+			if ( OrbType == SoulOrbType.PermadeathPlaceholder )
+			{
+				from.SendMessage("This contains your soul. Are you trying to delete yourself?!");
+				return;
+			}
+
             var confirmation = new ConfirmationGump(
                 from,
 				"Delete " + Name,
@@ -74,6 +82,18 @@ namespace Server.Items
 
 		public static SoulOrb Create( Mobile from, SoulOrbType orbType )
 		{
+			if ( false == ( from is PlayerMobile ) ) return null;
+
+			var player = from as PlayerMobile;
+			if ( player.Temptations.HasPermanentDeath || player.Avatar.Active )
+			{
+				if ( orbType != SoulOrbType.PermadeathPlaceholder )
+				{
+					from.SendMessage("This item would have no effect.");
+					return null;
+				}
+			}
+
 			WorldUtilities.DeleteAllItems<SoulOrb>( item => item.m_Owner == from );
 
 			var orb = new SoulOrb
@@ -106,6 +126,11 @@ namespace Server.Items
 					orb.Hue = 0;
 					break;
 
+				case SoulOrbType.PermadeathPlaceholder:
+					orb.Visible = false;
+					orb.Movable = false;
+					break;
+				
 				case SoulOrbType.Default:
 				default:
 					break;
@@ -155,6 +180,7 @@ namespace Server.Items
 					list.Add( 1049644, "Contains genetic patterns for " + m_Owner.Name );
 					break;
 
+				case SoulOrbType.PermadeathPlaceholder:
 				case SoulOrbType.RestorativeSoil:
 				case SoulOrbType.Default:
 				default:
@@ -173,17 +199,35 @@ namespace Server.Items
 				m_Timer = null;
 			}
 
-			m_Timer = Timer.DelayCall(m_Delay, () =>
+			m_Timer = Timer.DelayCall(m_Delay, m_Delay, () =>
 				{
 					if ( Owner != null && !Owner.Deleted && !Deleted )
 					{
-						if ( Owner.Alive ) return;
+						if ( Owner.Alive )
+						{
+							if ( m_Timer != null )
+							{
+								m_Timer.Stop();
+								m_Timer = null;
+							}
+
+							return;
+						}
+
 						if ( Owner.NetState == null ) return;
 
-						var gump = new AutoResurrectGump(this);
-						Owner.SendSound( 0x0F8 );
-						Owner.CloseGump( typeof( AutoResurrectGump ) );
-						Owner.SendGump( gump );
+						// Don't use this gump for permadeath
+						if ( OrbType == SoulOrbType.PermadeathPlaceholder )
+						{
+							Owner.Resurrect();
+						}
+						else
+						{
+							var gump = new AutoResurrectGump(this);
+							Owner.SendSound( 0x0F8 );
+							Owner.CloseGump( typeof( AutoResurrectGump ) );
+							Owner.SendGump( gump );
+						}
 					}
 				}
 			);

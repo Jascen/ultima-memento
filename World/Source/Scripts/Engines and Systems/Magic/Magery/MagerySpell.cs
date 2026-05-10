@@ -90,11 +90,6 @@ namespace Server.Spells
 			return GetResistPercentForCircle( target, Circle );
 		}
 
-		public override TimeSpan GetCastDelay()
-		{
-			return base.GetCastDelay();
-		}
-
 		public override TimeSpan CastDelayBase
 		{
 			get

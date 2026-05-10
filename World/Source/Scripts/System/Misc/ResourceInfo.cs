@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Server.Misc;
+using System.Linq;
 
 namespace Server.Items
 {
@@ -108,16 +108,16 @@ namespace Server.Items
 			ShadowIron	 	= CraftAttInfo( 	3	,	3	,	3	,	2	,	2	,	null,	0	,	0	,	0	,	0	,	null,	75	,	0	,	0	 ); // 13
 			Copper	 	 	= CraftAttInfo( 	3	,	3	,	3	,	3	,	2	,	null,	0	,	0	,	20	,	10	,	null,	25	,	0	,	0	 );
 			Bronze	 	 	= CraftAttInfo( 	3	,	3	,	3	,	3	,	3	,	null,	0	,	40	,	0	,	0	,	null,	30	,	0	,	0	 );
-			Golden	 	 	= CraftAttInfo( 	4	,	3	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	30	,	40	,	40	 );
+			Golden	 	 	= CraftAttInfo( 	4	,	3	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	30	,	0	,	40	 );
 			Agapite	 	 	= CraftAttInfo( 	4	,	4	,	3	,	3	,	3	,	null,	30	,	0	,	20	,	0	,	null,	25	,	0	,	0	 );
 			Verite	 	 	= CraftAttInfo( 	4	,	4	,	4	,	3	,	3	,	null,	0	,	0	,	20	,	40	,	null,	25	,	0	,	0	 );
 			Valorite	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	3	,	null,	20	,	10	,	20	,	10	,	null,	40	,	0	,	0	 );
 			Nepturite	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	25	,	0	,	0	,	25	,	null,	40	,	0	,	0	 );
 			Obsidian	 	= CraftAttInfo( 	5	,	4	,	4	,	4	,	4	,	null,	0	,	20	,	10	,	0	,	null,	40	,	0	,	0	 );
-			Steel	 	 	= CraftAttInfo( 	5	,	5	,	4	,	4	,	4	,	null,	0	,	0	,	0	,	0	,	null,	50	,	25	,	0	 );
-			Brass	 	 	= CraftAttInfo( 	5	,	5	,	5	,	4	,	4	,	null,	0	,	20	,	20	,	0	,	null,	55	,	45	,	0	 );
-			Mithril	 	 	= CraftAttInfo( 	5	,	5	,	5	,	5	,	4	,	null,	0	,	0	,	30	,	0	,	null,	100	,	75	,	100	 );
-			Xormite	 	 	= CraftAttInfo( 	5	,	5	,	5	,	5	,	5	,	null,	0	,	0	,	30	,	0	,	null,	100	,	75	,	0	 );
+			Steel	 	 	= CraftAttInfo( 	5	,	5	,	4	,	4	,	4	,	null,	0	,	0	,	0	,	0	,	null,	50	,	0	,	0	 );
+			Brass	 	 	= CraftAttInfo( 	5	,	5	,	5	,	4	,	4	,	null,	0	,	20	,	20	,	0	,	null,	55	,	0	,	0	 );
+			Mithril	 	 	= CraftAttInfo( 	5	,	5	,	5	,	5	,	4	,	null,	0	,	0	,	30	,	0	,	null,	100	,	50	,	100	 );
+			Xormite	 	 	= CraftAttInfo( 	5	,	5	,	5	,	5	,	5	,	null,	0	,	0	,	30	,	0	,	null,	0	,	25	,	0	 );
 			Dwarven	 	 	= CraftAttInfo( 	6	,	5	,	5	,	5	,	5	,	null,	0	,	0	,	0	,	0	,	null,	100	,	10	,	0	 );
 			//
 			Agrinium	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	0	,	0	,	0	,	0	,	null,	80	,	25	,	0	 );
@@ -196,11 +196,11 @@ namespace Server.Items
 			Syncloth	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	0	,	0	,	0	,	0	,	null,	80	,	40	,	0	 );
 			Thermoweave	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	0	,	20	,	20	,	0	,	null,	80	,	50	,	0	 );
 																																				
-			AshTree	 		= CraftAttInfo( 	2	,	2	,	2	,	1	,	1	,	null,	5	,	5	,	5	,	5	,	null,	10	,	20	,	0	 ); // 8
+			AshTree	 		= CraftAttInfo( 	2	,	2	,	2	,	1	,	1	,	null,	5	,	5	,	5	,	5	,	null,	10	,	35	,	0	 ); // 8
 			CherryTree	 	= CraftAttInfo( 	3	,	3	,	3	,	3	,	2	,	null,	0	,	0	,	20	,	10	,	null,	25	,	0	,	0	 ); // 14
 			EbonyTree	 	= CraftAttInfo( 	3	,	3	,	3	,	3	,	3	,	null,	20	,	0	,	0	,	0	,	null,	40	,	0	,	0	 );
-			GoldenOakTree	= CraftAttInfo( 	4	,	3	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	20	,	40	,	40	 );
-			HickoryTree	 	= CraftAttInfo( 	4	,	4	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	50	,	30	,	0	 );
+			GoldenOakTree	= CraftAttInfo( 	4	,	3	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	20	,	0	,	40	 );
+			HickoryTree	 	= CraftAttInfo( 	4	,	4	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	50	,	0	,	0	 );
 			MahoganyTree	= CraftAttInfo( 	4	,	4	,	4	,	3	,	3	,	null,	0	,	0	,	20	,	10	,	null,	55	,	0	,	0	 );
 			OakTree	 		= CraftAttInfo( 	4	,	4	,	4	,	4	,	3	,	null,	0	,	40	,	0	,	0	,	null,	55	,	0	,	0	 );
 			PineTree	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	30	,	0	,	20	,	0	,	null,	60	,	0	,	0	 );
@@ -220,32 +220,32 @@ namespace Server.Items
 			TeejTree	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	0	,	0	,	0	,	0	,	null,	80	,	0	,	0	 );
 			VeshokTree	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	0	,	0	,	0	,	0	,	null,	80	,	0	,	0	 );
 																																				
-			FurryFabric	 	= CraftAttInfo( 	1	,	1	,	1	,	1	,	1	,	null,	0	,	0	,	0	,	0	,	null,	5	,	0	,	0	 );
-			WoolyFabric	 	= CraftAttInfo( 	2	,	1	,	1	,	1	,	1	,	null,	25	,	0	,	0	,	0	,	null,	5	,	0	,	0	 );
-			SilkFabric	 	= CraftAttInfo( 	2	,	2	,	1	,	1	,	1	,	null,	0	,	0	,	0	,	25	,	null,	10	,	5	,	10	 );
-			HauntedFabric	= CraftAttInfo( 	2	,	2	,	2	,	1	,	1	,	null,	0	,	0	,	25	,	0	,	null,	15	,	10	,	0	 );
-			ArcticFabric	= CraftAttInfo( 	2	,	2	,	2	,	2	,	1	,	null,	50	,	0	,	0	,	0	,	null,	20	,	15	,	0	 );
-			PyreFabric	 	= CraftAttInfo( 	2	,	2	,	2	,	2	,	2	,	null,	0	,	50	,	0	,	0	,	null,	20	,	15	,	0	 );
-			VenomousFabric	= CraftAttInfo( 	3	,	2	,	2	,	2	,	2	,	null,	0	,	0	,	0	,	50	,	null,	25	,	20	,	0	 );
-			MysteriousFabric= CraftAttInfo( 	3	,	3	,	2	,	2	,	2	,	null,	0	,	0	,	50	,	0	,	null,	30	,	25	,	20	 );
-			VileFabric	 	= CraftAttInfo( 	3	,	3	,	3	,	2	,	2	,	null,	0	,	0	,	25	,	25	,	null,	35	,	30	,	0	 );
-			DivineFabric	= CraftAttInfo( 	3	,	3	,	3	,	3	,	2	,	null,	10	,	10	,	25	,	0	,	null,	35	,	30	,	50	 );
-			FiendishFabric	= CraftAttInfo( 	3	,	3	,	3	,	3	,	3	,	null,	10	,	25	,	10	,	0	,	null,	40	,	35	,	0	 );
+			FurryFabric	 	= CraftAttInfo( 	1	,	1	,	1	,	1	,	1	,	null,	0	,	0	,	0	,	0	,	null,	0	,	25	,	0	 );
+			WoolyFabric	 	= CraftAttInfo( 	2	,	1	,	1	,	1	,	1	,	null,	25	,	0	,	0	,	0	,	null,	0	,	25	,	0	 );
+			SilkFabric	 	= CraftAttInfo( 	2	,	2	,	1	,	1	,	1	,	null,	0	,	0	,	0	,	25	,	null,	0	,	25	,	10	 );
+			HauntedFabric	= CraftAttInfo( 	2	,	2	,	2	,	1	,	1	,	null,	0	,	0	,	25	,	0	,	null,	0	,	25	,	0	 );
+			ArcticFabric	= CraftAttInfo( 	2	,	2	,	2	,	2	,	1	,	null,	50	,	0	,	0	,	0	,	null,	0	,	25	,	0	 );
+			PyreFabric	 	= CraftAttInfo( 	2	,	2	,	2	,	2	,	2	,	null,	0	,	50	,	0	,	0	,	null,	0	,	25	,	0	 );
+			VenomousFabric	= CraftAttInfo( 	3	,	2	,	2	,	2	,	2	,	null,	0	,	0	,	0	,	50	,	null,	0	,	25	,	0	 );
+			MysteriousFabric= CraftAttInfo( 	3	,	3	,	2	,	2	,	2	,	null,	0	,	0	,	50	,	0	,	null,	0	,	25	,	20	 );
+			VileFabric	 	= CraftAttInfo( 	3	,	3	,	3	,	2	,	2	,	null,	0	,	0	,	25	,	25	,	null,	0	,	25	,	0	 );
+			DivineFabric	= CraftAttInfo( 	3	,	3	,	3	,	3	,	2	,	null,	10	,	10	,	25	,	0	,	null,	50	,	25	,	50	 );
+			FiendishFabric	= CraftAttInfo( 	3	,	3	,	3	,	3	,	3	,	null,	10	,	25	,	10	,	0	,	null,	50	,	25	,	0	 );
 																																				
 			AmethystBlock	= CraftAttInfo( 	3	,	3	,	2	,	2	,	2	,	null,	0	,	0	,	25	,	0	,	null,	100	,	0	,	10	 );
 			EmeraldBlock	= CraftAttInfo( 	3	,	3	,	3	,	2	,	2	,	null,	0	,	0	,	0	,	25	,	null,	100	,	0	,	0	 );
 			GarnetBlock	 	= CraftAttInfo( 	3	,	3	,	3	,	3	,	2	,	null,	0	,	0	,	10	,	10	,	null,	100	,	0	,	5	 );
 			IceBlock	 	= CraftAttInfo( 	3	,	3	,	3	,	3	,	3	,	null,	50	,	0	,	0	,	0	,	null,	100	,	0	,	0	 );
-			JadeBlock	 	= CraftAttInfo( 	4	,	3	,	3	,	3	,	3	,	null,	0	,	10	,	0	,	20	,	null,	100	,	40	,	40	 );
+			JadeBlock	 	= CraftAttInfo( 	4	,	3	,	3	,	3	,	3	,	null,	0	,	10	,	0	,	20	,	null,	100	,	0	,	40	 );
 			MarbleBlock	 	= CraftAttInfo( 	4	,	4	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	150	,	0	,	0	 );
-			OnyxBlock	 	= CraftAttInfo( 	4	,	4	,	4	,	3	,	3	,	null,	20	,	20	,	20	,	20	,	null,	100	,	40	,	30	 );
-			QuartzBlock	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	3	,	null,	0	,	25	,	25	,	0	,	null,	100	,	20	,	0	 );
+			OnyxBlock	 	= CraftAttInfo( 	4	,	4	,	4	,	3	,	3	,	null,	20	,	20	,	20	,	20	,	null,	100	,	0	,	30	 );
+			QuartzBlock	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	3	,	null,	0	,	25	,	25	,	0	,	null,	100	,	0	,	0	 );
 			RubyBlock	 	= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	0	,	60	,	0	,	0	,	null,	100	,	0	,	10	 );
 			SapphireBlock	= CraftAttInfo( 	5	,	4	,	4	,	4	,	4	,	null,	0	,	30	,	0	,	0	,	null,	100	,	0	,	0	 );
 			SilverBlock	 	= CraftAttInfo( 	5	,	5	,	4	,	4	,	4	,	null,	20	,	20	,	20	,	20	,	null,	100	,	0	,	20	 );
 			SpinelBlock	 	= CraftAttInfo( 	5	,	5	,	5	,	4	,	4	,	null,	0	,	0	,	30	,	0	,	null,	100	,	0	,	0	 );
-			StarRubyBlock	= CraftAttInfo( 	5	,	5	,	5	,	5	,	4	,	null,	0	,	15	,	15	,	0	,	null,	100	,	10	,	10	 );
-			TopazBlock	 	= CraftAttInfo( 	5	,	5	,	5	,	5	,	5	,	null,	0	,	0	,	20	,	20	,	null,	100	,	10	,	0	 );
+			StarRubyBlock	= CraftAttInfo( 	5	,	5	,	5	,	5	,	4	,	null,	0	,	15	,	15	,	0	,	null,	100	,	0	,	10	 );
+			TopazBlock	 	= CraftAttInfo( 	5	,	5	,	5	,	5	,	5	,	null,	0	,	0	,	20	,	20	,	null,	100	,	0	,	0	 );
 			CaddelliteBlock	= CraftAttInfo( 	6	,	5	,	5	,	5	,	5	,	null,	0	,	0	,	50	,	0	,	null,	200	,	0	,	0	 );
 																																				
 			DemonSkin	 	= CraftAttInfo( 	2	,	0	,	3	,	2	,	2	,	null,	0	,	50	,	0	,	0	,	null,	50	,	0	,	20	 );
@@ -255,27 +255,27 @@ namespace Server.Items
 			TrollSkin	 	= CraftAttInfo( 	4	,	1	,	0	,	3	,	0	,	null,	0	,	0	,	0	,	0	,	null,	60	,	0	,	0	 );
 			UnicornSkin	 	= CraftAttInfo( 	2	,	0	,	0	,	2	,	4	,	null,	0	,	0	,	50	,	0	,	null,	30	,	0	,	50	 );
 			IcySkin	 		= CraftAttInfo( 	4	,	5	,	0	,	2	,	2	,	null,	50	,	0	,	0	,	0	,	null,	30	,	0	,	0	 );
-			Seaweed	 		= CraftAttInfo( 	4	,	2	,	1	,	4	,	2	,	null,	0	,	0	,	0	,	25	,	null,	20	,	50	,	0	 );
+			Seaweed	 		= CraftAttInfo( 	4	,	2	,	1	,	4	,	2	,	null,	0	,	0	,	0	,	25	,	null,	20	,	0	,	0	 );
 			LavaSkin	 	= CraftAttInfo( 	4	,	0	,	5	,	2	,	2	,	null,	0	,	80	,	0	,	0	,	null,	40	,	0	,	0	 );
 			DeadSkin	 	= CraftAttInfo( 	2	,	4	,	1	,	4	,	2	,	null,	0	,	0	,	0	,	60	,	null,	40	,	0	,	0	 );
 																																				
 			DrowSkeletal	= CraftAttInfo( 	2	,	2	,	2	,	2	,	2	,	null,	0	,	0	,	25	,	0	,	null,	5	,	0	,	5	 );
-			OrcSkeletal	 	= CraftAttInfo( 	3	,	2	,	2	,	2	,	2	,	null,	0	,	0	,	0	,	0	,	null,	10	,	5	,	0	 );
-			ReptileSkeletal	= CraftAttInfo( 	3	,	3	,	2	,	2	,	2	,	null,	0	,	0	,	0	,	25	,	null,	10	,	5	,	0	 );
-			OgreSkeletal	= CraftAttInfo( 	3	,	3	,	3	,	2	,	2	,	null,	0	,	0	,	0	,	0	,	null,	20	,	10	,	0	 );
-			TrollSkeletal	= CraftAttInfo( 	3	,	3	,	3	,	3	,	2	,	null,	0	,	0	,	0	,	0	,	null,	20	,	10	,	0	 );
-			GargoyleSkeletal= CraftAttInfo( 	3	,	3	,	3	,	3	,	3	,	null,	0	,	50	,	0	,	0	,	null,	30	,	15	,	0	 );
-			MinotaurSkeletal= CraftAttInfo( 	4	,	3	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	30	,	15	,	0	 );
-			LycanSkeletal	= CraftAttInfo( 	4	,	4	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	40	,	20	,	0	 );
-			SharkSkeletal	= CraftAttInfo( 	4	,	4	,	4	,	3	,	3	,	null,	25	,	0	,	0	,	0	,	null,	40	,	20	,	0	 );
-			ColossalSkeletal= CraftAttInfo( 	4	,	4	,	4	,	4	,	3	,	null,	0	,	0	,	0	,	0	,	null,	40	,	20	,	0	 );
-			MysticalSkeletal= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	0	,	0	,	50	,	0	,	null,	50	,	25	,	10	 );
-			VampireSkeletal	= CraftAttInfo( 	5	,	4	,	4	,	4	,	4	,	null,	0	,	0	,	25	,	25	,	null,	60	,	30	,	0	 );
-			LichSkeletal	= CraftAttInfo( 	5	,	5	,	4	,	4	,	4	,	null,	25	,	0	,	0	,	25	,	null,	60	,	30	,	0	 );
-			SphinxSkeletal	= CraftAttInfo( 	5	,	5	,	5	,	4	,	4	,	null,	15	,	15	,	15	,	15	,	null,	70	,	35	,	30	 );
-			DevilSkeletal	= CraftAttInfo( 	5	,	5	,	5	,	5	,	4	,	null,	0	,	35	,	15	,	0	,	null,	70	,	35	,	50	 );
-			DracoSkeletal	= CraftAttInfo( 	5	,	5	,	5	,	5	,	5	,	null,	20	,	20	,	20	,	20	,	null,	100	,	50	,	0	 );
-			XenoSkeletal	= CraftAttInfo( 	6	,	5	,	5	,	5	,	5	,	null,	10	,	10	,	30	,	10	,	null,	80	,	40	,	0	 );
+			OrcSkeletal	 	= CraftAttInfo( 	3	,	2	,	2	,	2	,	2	,	null,	0	,	0	,	0	,	0	,	null,	10	,	0	,	0	 );
+			ReptileSkeletal	= CraftAttInfo( 	3	,	3	,	2	,	2	,	2	,	null,	0	,	0	,	0	,	25	,	null,	10	,	0	,	0	 );
+			OgreSkeletal	= CraftAttInfo( 	3	,	3	,	3	,	2	,	2	,	null,	0	,	0	,	0	,	0	,	null,	20	,	0	,	0	 );
+			TrollSkeletal	= CraftAttInfo( 	3	,	3	,	3	,	3	,	2	,	null,	0	,	0	,	0	,	0	,	null,	20	,	0	,	0	 );
+			GargoyleSkeletal= CraftAttInfo( 	3	,	3	,	3	,	3	,	3	,	null,	0	,	50	,	0	,	0	,	null,	30	,	0	,	0	 );
+			MinotaurSkeletal= CraftAttInfo( 	4	,	3	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	30	,	0	,	0	 );
+			LycanSkeletal	= CraftAttInfo( 	4	,	4	,	3	,	3	,	3	,	null,	0	,	0	,	0	,	0	,	null,	40	,	0	,	0	 );
+			SharkSkeletal	= CraftAttInfo( 	4	,	4	,	4	,	3	,	3	,	null,	25	,	0	,	0	,	0	,	null,	40	,	0	,	0	 );
+			ColossalSkeletal= CraftAttInfo( 	4	,	4	,	4	,	4	,	3	,	null,	0	,	0	,	0	,	0	,	null,	40	,	0	,	0	 );
+			MysticalSkeletal= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	0	,	0	,	50	,	0	,	null,	50	,	0	,	10	 );
+			VampireSkeletal	= CraftAttInfo( 	5	,	4	,	4	,	4	,	4	,	null,	0	,	0	,	25	,	25	,	null,	60	,	0	,	0	 );
+			LichSkeletal	= CraftAttInfo( 	5	,	5	,	4	,	4	,	4	,	null,	25	,	0	,	0	,	25	,	null,	60	,	0	,	0	 );
+			SphinxSkeletal	= CraftAttInfo( 	5	,	5	,	5	,	4	,	4	,	null,	15	,	15	,	15	,	15	,	null,	70	,	0	,	30	 );
+			DevilSkeletal	= CraftAttInfo( 	5	,	5	,	5	,	5	,	4	,	null,	0	,	35	,	15	,	0	,	null,	70	,	0	,	50	 );
+			DracoSkeletal	= CraftAttInfo( 	5	,	5	,	5	,	5	,	5	,	null,	20	,	20	,	20	,	20	,	null,	100	,	0	,	0	 );
+			XenoSkeletal	= CraftAttInfo( 	6	,	5	,	5	,	5	,	5	,	null,	10	,	10	,	30	,	10	,	null,	80	,	0	,	0	 );
 			//
 			AndorianSkeletal= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	0	,	50	,	0	,	0	,	null,	80	,	35	,	0	 );
 			CardassianSkeletal= CraftAttInfo( 	4	,	4	,	4	,	4	,	4	,	null,	10	,	10	,	10	,	10	,	null,	80	,	30	,	50	 );
@@ -583,22 +583,27 @@ namespace Server.Items
 			return (CraftResource)obj;
 		}
 
+		private static CraftResourceInfo[] GetResourceList( CraftResourceType resourceType )
+		{
+			switch ( resourceType )
+			{
+				case CraftResourceType.Metal: return m_MetalInfo;
+				case CraftResourceType.Leather: return m_LeatherInfo;
+				case CraftResourceType.Scales: return m_ScaleInfo;
+				case CraftResourceType.Wood: return m_WoodInfo;
+				case CraftResourceType.Block: return m_BlockInfo;
+				case CraftResourceType.Skin: return m_SkinInfo;
+				case CraftResourceType.Special: return m_SpecialInfo;
+				case CraftResourceType.Skeletal: return m_SkeletalInfo;
+				case CraftResourceType.Fabric: return m_FabricInfo;
+			}
+			
+			return null;
+		}
+
 		public static CraftResourceInfo GetInfo( CraftResource resource )
 		{
-			CraftResourceInfo[] list = null;
-
-			switch ( GetType( resource ) )
-			{
-				case CraftResourceType.Metal: list = m_MetalInfo; break;
-				case CraftResourceType.Leather: list = m_LeatherInfo; break;
-				case CraftResourceType.Scales: list = m_ScaleInfo; break;
-				case CraftResourceType.Wood: list = m_WoodInfo; break;
-				case CraftResourceType.Block: list = m_BlockInfo; break;
-				case CraftResourceType.Skin: list = m_SkinInfo; break;
-				case CraftResourceType.Special: list = m_SpecialInfo; break;
-				case CraftResourceType.Skeletal: list = m_SkeletalInfo; break;
-				case CraftResourceType.Fabric: list = m_FabricInfo; break;
-			}
+			CraftResourceInfo[] list = GetResourceList( GetType( resource ) );
 
 			if ( list != null )
 			{
@@ -609,6 +614,35 @@ namespace Server.Items
 			}
 
 			return null;
+		}
+
+		public static CraftResource GetRandomNonBasicResource( CraftResourceType resourceType )
+		{
+			CraftResourceInfo[] list = GetResourceList( resourceType );
+			if ( list == null ) return CraftResource.None;
+
+			var basicType = GetStart( resourceType );
+
+			return Utility.Random( list.Where(x => !IsVeryBasic(x.Resource) ).ToList() ).Resource;
+		}
+
+		public static bool IsVeryBasic( CraftResource resource )
+		{
+			switch ( resource )
+			{
+				case CraftResource.Iron:
+				case CraftResource.RegularLeather:
+				case CraftResource.RegularWood:
+				case CraftResource.Fabric:
+				case CraftResource.BrittleSkeletal:
+				case CraftResource.RedScales:
+				// case CraftResource.AmethystBlock:
+				// case CraftResource.DemonSkin:
+				// case CraftResource.SpectralSpec:
+					return true;
+			}
+
+			return false;
 		}
 
 		public static CraftResourceType GetType( CraftResource resource )
@@ -818,9 +852,9 @@ namespace Server.Items
 			return (CraftResources.GetName( resource )).ToLower();
 		}
 
-		public static CraftResource GetStart( CraftResource resource )
+		public static CraftResource GetStart( CraftResourceType resourceType )
 		{
-			switch ( GetType( resource ) )
+			switch ( resourceType )
 			{
 				case CraftResourceType.Metal: return CraftResource.Iron;
 				case CraftResourceType.Leather: return CraftResource.RegularLeather;
@@ -834,6 +868,11 @@ namespace Server.Items
 			}
 
 			return CraftResource.None;
+		}
+
+		public static CraftResource GetStart( CraftResource resource )
+		{
+			return GetStart( GetType( resource ) );
 		}
 
 		public static int GetIndex( CraftResource resource )

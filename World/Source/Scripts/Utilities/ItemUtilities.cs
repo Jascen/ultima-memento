@@ -32,7 +32,7 @@ namespace Server.Utilities
 			}
 		}
 
-		public static bool HasItemOwnershipRights(Mobile from, Item item, bool sendMessage)
+		public static bool HasItemOwnershipRights(Mobile from, Item item)
 		{
 			if (AccessLevel.Player < from.AccessLevel) return true;
 
@@ -48,6 +48,14 @@ namespace Server.Utilities
 
 			var house = BaseHouse.FindHouseAt(item);
 			if (house != null && house.IsOwner(from)) return true;
+
+			return false;
+		}
+
+		public static bool HasItemOwnershipRights(Mobile from, Item item, bool sendMessage)
+		{
+			var success = HasItemOwnershipRights(from, item);
+			if (success) return true;
 
 			if (sendMessage)
 				from.SendMessage("You may only Organize containers that belong to you.");

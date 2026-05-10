@@ -1645,7 +1645,6 @@ namespace Server.Items
 			int lifeLeech = 0;
 			int stamLeech = 0;
 			int manaLeech = 0;
-			int wraithLeech = 0;
 
 			if ( (int)(m_AosWeaponAttributes.HitLeechHits * propertyBonus) > Utility.Random( 100 ) )
 				lifeLeech += 30; // HitLeechHits% chance to leech 30% of damage as hit points
@@ -1658,21 +1657,6 @@ namespace Server.Items
 
 			if ( m_Cursed )
 				lifeLeech += 50; // Additional 50% life leech for cursed weapons (necro spell)
-
-			context = TransformationSpellHelper.GetContext( attacker );
-
-			if ( context != null && context.Type == typeof( VampiricEmbraceSpell ) )
-				lifeLeech += 20; // Vampiric embrace gives an additional 20% life leech
-
-			if ( context != null && context.Type == typeof( WraithFormSpell ) )
-			{
-				wraithLeech = (5 + (int)((15 * attacker.Skills.Spiritualism.Value) / 100)); // Wraith form gives an additional 5-20% mana leech
-
-				// Mana leeched by the Wraith Form spell is actually stolen, not just leeched.
-				defender.Mana -= AOS.Scale( damageGiven, wraithLeech );
-
-				manaLeech += wraithLeech;
-			}
 
 			if ( lifeLeech != 0 )
 				attacker.Hits += AOS.Scale( damageGiven, lifeLeech );
@@ -1840,8 +1824,7 @@ namespace Server.Items
 
 				bool willPoison = true;
 
-				int ClassicPoisons = 0;
-				ClassicPoisons = ((PlayerMobile)attacker).ClassicPoisoning;
+				bool ClassicPoisons = ((PlayerMobile)attacker).Preferences.ClassicPoisoning;
 
 				if ( p != null )
 				{
@@ -1861,11 +1844,11 @@ namespace Server.Items
 							willPoison = false;
 					}
 
-					if ( Server.Items.WeaponAbility.GetCurrentAbility( attacker ) == WeaponAbility.ShadowInfectiousStrike && willPoison == true && ClassicPoisons == 0 )
+					if ( Server.Items.WeaponAbility.GetCurrentAbility( attacker ) == WeaponAbility.ShadowInfectiousStrike && willPoison == true && !ClassicPoisons )
 						willPoison = false;
-					else if ( Server.Items.WeaponAbility.GetCurrentAbility( attacker ) == WeaponAbility.InfectiousStrike && willPoison == true && ClassicPoisons == 0 )
+					else if ( Server.Items.WeaponAbility.GetCurrentAbility( attacker ) == WeaponAbility.InfectiousStrike && willPoison == true && !ClassicPoisons )
 						willPoison = false;
-					else if ( ClassicPoisons == 0 )
+					else if ( !ClassicPoisons )
 						willPoison = false;
 
 					if ( defender.Poisoned && willPoison == true )
@@ -1877,7 +1860,7 @@ namespace Server.Items
 							willPoison = false;
 					}
 
-					if ( ClassicPoisons > 0 && !( this is BaseKnife || this is BaseSword || this is BaseSpear ) )
+					if ( ClassicPoisons && !( this is BaseKnife || this is BaseSword || this is BaseSpear ) )
 					{
 						willPoison = false;
 					}
@@ -1918,8 +1901,6 @@ namespace Server.Items
 
 				// SDI bonus
 				damageBonus += AosAttributes.GetValue( attacker, AosAttribute.SpellDamage );
-
-				TransformContext context = TransformationSpellHelper.GetContext( attacker );
 			}
 
 			damage = AOS.Scale( damage, 100 + damageBonus );

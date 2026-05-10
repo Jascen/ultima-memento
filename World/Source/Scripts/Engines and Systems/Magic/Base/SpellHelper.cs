@@ -778,11 +778,6 @@ namespace Server.Spells
 
 				int damageGiven = AOS.Damage( target, from, iDamage, phys, fire, cold, pois, nrgy );
 
-				if ( from != null ) // sanity check
-				{
-					DoLeech( damageGiven, from, target );
-				}
-
 				WeightOverloading.DFA = DFAlgorithm.Standard;
 			}
 			else
@@ -805,17 +800,11 @@ namespace Server.Spells
 
 			if ( context != null ) /* cleanup */
 			{
-				if ( context.Type == typeof( WraithFormSpell ) )
+				if (context.Type == typeof(WraithFormSpell))
 				{
-					int wraithLeech = ( 5 + (int)( ( 15 * Spell.ItemSkillValue( from, SkillName.Spiritualism, false ) ) / 100 ) ); // Wraith form gives 5-20% mana leech
-					int manaLeech = AOS.Scale( damageGiven, wraithLeech );
-					if ( manaLeech != 0 )
-					{
-						from.Mana += manaLeech;
-						from.PlaySound( 0x44D );
-					}
+					WraithFormSpell.DoWraithLeech(from, target, damageGiven);
 				}
-				else if ( context.Type == typeof( VampiricEmbraceSpell ) )
+				else if (context.Type == typeof(VampiricEmbraceSpell))
 				{
 					from.Hits += AOS.Scale( damageGiven, 20 );
 					from.PlaySound( 0x44D );
@@ -905,11 +894,6 @@ namespace Server.Spells
 				WeightOverloading.DFA = m_DFA;
 
 				int damageGiven = AOS.Damage( m_Target, m_From, m_Damage, m_Phys, m_Fire, m_Cold, m_Pois, m_Nrgy );
-
-				if ( m_From != null ) // sanity check
-				{
-					DoLeech( damageGiven, m_From, m_Target );
-				}
 
 				WeightOverloading.DFA = DFAlgorithm.Standard;
 

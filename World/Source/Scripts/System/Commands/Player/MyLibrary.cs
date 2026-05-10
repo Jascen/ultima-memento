@@ -1,19 +1,8 @@
 using System;
-using Server;
-using Server.Gumps;
 using Server.Network;
-using Server.Menus;
-using Server.Menus.Questions;
-using Server.Accounting;
-using Server.Multis;
 using Server.Mobiles;
-using Server.Regions;
-using System.Collections;
-using System.Collections.Generic;
-using Server.Commands;
 using Server.Misc;
 using Server.Items;
-using System.Globalization;
 
 namespace Server.Gumps 
 {
@@ -26,7 +15,7 @@ namespace Server.Gumps
 			m_Origin = source;
 
 			if ( from.AccessLevel >= AccessLevel.GameMaster )
-				((PlayerMobile)from).MyLibrary = "1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#";
+				((PlayerMobile)from).Preferences.MyLibrary = "1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#1#";
 
             this.Closable=true;
 			this.Disposable=true;

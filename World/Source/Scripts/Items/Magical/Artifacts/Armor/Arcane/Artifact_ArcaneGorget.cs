@@ -17,9 +17,9 @@ namespace Server.Items
 			Attributes.NightSight = 1;
 			Attributes.DefendChance = 8;
 			Attributes.CastSpeed = 1;
-			Attributes.LowerManaCost = 2;
-			Attributes.LowerRegCost = 2;
-			Attributes.SpellDamage = 2;
+			Attributes.LowerManaCost = 5;
+			Attributes.LowerRegCost = 5;
+			Attributes.SpellDamage = 5;
 			ArtifactLevel = ArtifactLevel.StandardArtefact;
 			Server.Misc.Arty.ArtySetup( this, 6, "" );
 		}
@@ -38,6 +38,13 @@ namespace Server.Items
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
+
+			if (version < 1)
+			{
+				Attributes.LowerManaCost = 5;
+				Attributes.LowerRegCost = 5;
+				Attributes.SpellDamage = 5;
+			}
 		}
 	}
 }

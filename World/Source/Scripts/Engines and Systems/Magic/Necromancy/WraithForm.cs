@@ -35,6 +35,23 @@ namespace Server.Spells.Necromancy
 		{
 		}
 
+		private static int WraithLeechValue(Mobile wraith)
+		{
+			return 5 + (int)( ( 15 * Spell.ItemSkillValue( wraith, SkillName.Spiritualism, false ) ) / 100 ) ; // Wraith form gives 5-20% mana leech
+		}
+
+		public static void DoWraithLeech(Mobile wraith, Mobile defender, int damageGiven)
+		{
+			if ( wraith == null || defender == null) return;
+
+			var manaLeech = Math.Min(defender.Mana, AOS.Scale(damageGiven, WraithLeechValue(wraith)));
+			if (manaLeech < 1) return;
+
+			wraith.Mana += manaLeech;
+			defender.Mana -= manaLeech;
+			wraith.PlaySound(0x44D);
+		}
+
 		public override void DoEffect( Mobile m )
 		{
 			if ( m is PlayerMobile )
@@ -43,8 +60,7 @@ namespace Server.Spells.Necromancy
 			m.PlaySound( 0x17F );
 			m.FixedParticles( 0x374A, 1, 15, 9902, 1108, 4, EffectLayer.Waist );
 
-			int wraithLeech = (5 + (int)((15 * Spell.ItemSkillValue( m, SkillName.Spiritualism, false )) / 100)); // Wraith form gives an additional 5-20% mana leech
-			string args = String.Format("{0}", wraithLeech);
+			string args = String.Format("{0}", WraithLeechValue(m));
 			BuffInfo.RemoveBuff( m, BuffIcon.WraithForm );
 			BuffInfo.AddBuff( m, new BuffInfo(BuffIcon.WraithForm, 1063607, 1063608, args.ToString(), true));
 		}

@@ -11,6 +11,7 @@ namespace Server.Items
 		public GhostShipAnchor() : base( 0x14F7 )
 		{
 			Hue = 0x47E;
+			Weight = 80;
 			ArtifactLevel = ArtifactLevel.DecorativeArtefact;
 		}
 
@@ -22,7 +23,7 @@ namespace Server.Items
 		{
 			base.Serialize( writer );
 
-			writer.Write( (int) 1 );
+			writer.Write( (int) 2 );
 		}
 		
 		public override void Deserialize(GenericReader reader)
@@ -32,6 +33,9 @@ namespace Server.Items
 			int version = reader.ReadInt();
 			if (version < 1)
 				ArtifactLevel = ArtifactLevel.DecorativeArtefact;
+			
+			if (version < 2)
+				Weight = 80;
 		}
 	}
 }

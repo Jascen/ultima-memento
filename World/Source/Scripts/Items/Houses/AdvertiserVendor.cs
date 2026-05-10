@@ -1,17 +1,10 @@
 using System;
-using System.Collections;
-using Server;
-using Server.Items;
 using Server.Network;
-using Server.Prompts;
-using System.Net;
 using Server.Accounting;
 using Server.Mobiles;
-using Server.Commands;
-using Server.Regions;
-using Server.Spells;
 using Server.Gumps;
-using Server.Targeting;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -34,16 +27,24 @@ namespace Server.Items
 
 		public override void OnDoubleClick( Mobile e )
 		{
-			ArrayList list = new ArrayList();
+			var player = e as PlayerMobile;
+			if (player == null) return;
 
-			foreach ( Mobile mob in World.Mobiles.Values )
-			{
-				if ( mob is PlayerVendor )
-				{
-					PlayerVendor pv = mob as PlayerVendor;
-					list.Add( pv ); 					
-				}
-			}
+			var list = World.Mobiles.Values
+				.Where(x => x is PlayerVendor)
+				.Cast<PlayerVendor>()
+				.Where(x => {
+					var owner = x.Owner as PlayerMobile;
+					if (owner == null) return false;
+
+					// If the player is a special game mode, only show those vendors
+					if (player.Avatar.Active) return owner.Avatar.Active;
+					if (player.Temptations.HasPermanentDeath) return owner.Temptations.HasPermanentDeath;
+
+					return true;
+				})
+				.ToList();
+
 			e.SendGump( new FindPlayerVendorsGump( e, list, 1 ) );
 		}
 
@@ -51,7 +52,7 @@ namespace Server.Items
 		{
 			private const int GreenHue = 0x40;
 			private const int RedHue = 0x20;
-			private ArrayList m_List;
+			private List<PlayerVendor> m_List;
 			private int m_Page;
 			private Mobile m_From;
 
@@ -61,7 +62,7 @@ namespace Server.Items
 				AddAlphaRegion( x, y, width, height );
 			}
 
-			public FindPlayerVendorsGump( Mobile from, ArrayList list, int page ) : base( 50, 40 )
+			public FindPlayerVendorsGump( Mobile from, List<PlayerVendor> list, int page ) : base( 50, 40 )
 			{
 				from.CloseGump( typeof( FindPlayerVendorsGump ) );
 				int pvs = 0;
@@ -73,22 +74,14 @@ namespace Server.Items
 				AddPage( 0 );
 				AddBackground( 0, 0, 645, 325, 3500 );
 				AddBlackAlpha( 20, 20, 604, 277 );
-
-				if ( m_List == null )
+				pvs = list.Count;
+				if ( list.Count % 12 == 0 )
 				{
-					return;
+					pageCount = (list.Count / 12);
 				}
 				else
 				{
-					pvs = list.Count;
-					if ( list.Count % 12 == 0 )
-					{
-						pageCount = (list.Count / 12);
-					}
-					else
-					{
-						pageCount = (list.Count / 12) + 1;
-					}
+					pageCount = (list.Count / 12) + 1;
 				}
 
 				AddLabelCropped( 32, 20, 100, 20, 1152, "Shop Name" );

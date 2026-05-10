@@ -48,7 +48,7 @@ namespace Server.Items
             base.GetProperties(list);
 
             list.Add(1060584, Uses.ToString()); // uses remaining: ~1_val~
-            list.Add("Consecrates a weapon for 1 hour");
+            list.Add("Consecrates a weapon for 4 hours");
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -58,7 +58,7 @@ namespace Server.Items
 
         protected bool ApplyBonus(Mobile from, BaseWeapon weapon)
         {
-            ConsecrateWeaponSpell.Apply(from, weapon, TimeSpan.FromHours(1), false);
+            ConsecrateWeaponSpell.Apply(from, weapon, TimeSpan.FromHours(4), false);
             return true;
         }
 

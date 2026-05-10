@@ -1,13 +1,8 @@
 using System;
-using System.Collections;
-using Server;
 using Server.Mobiles;
-using Server.Network;
-using Server.Items;
-using Server.Targeting;
-using Server.Gumps;
-using Server.Spells;
 using Server.Misc;
+using Server.Engines.MobileEnhancement;
+using Server.Items;
 
 namespace Server.Spells.Song
 {
@@ -18,89 +13,85 @@ namespace Server.Spells.Song
 				-1
 			);
 
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 5 ); } }
-		public override double RequiredSkill{ get{ return 50.0; } }
-		public override int RequiredMana{ get{ return 12; } }
-		
-		public PoisonCarolSong( Mobile caster, Item scroll) : base( caster, scroll, m_Info )
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds(0.5); } }
+		public override double RequiredSkill { get { return 50.0; } }
+		public override int RequiredMana { get { return 12; } }
+
+		public PoisonCarolSong(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
 		{
-			
 		}
 
-        public override void OnCast()
-        {
+		public override void OnCast()
+		{
 			base.OnCast();
 
 			bool sings = false;
- 
-			if( CheckSequence() )
+
+			if (CheckSequence())
 			{
+				var durationSeconds = 0.24 * MusicSkill(Caster) + 30;
+				var duration = TimeSpan.FromSeconds(durationSeconds);
+
+				foreach (var friend in GetNearbyFriends())
+				{
+					var recipient = new PoisonCarolRecipient(Caster, friend, duration);
+					Engine.Instance.AddEnhancement(friend, recipient);
+				}
+
 				sings = true;
- 
-				ArrayList targets = new ArrayList();
-
-				foreach ( Mobile m in Caster.GetMobilesInRange( 10 ) )
-				{
-					if ( isFriendly( Caster, m ) && m.PoisonResistance < MySettings.S_MaxResistance )
-						targets.Add( m );
-				}
-				
-				
-				for ( int i = 0; i < targets.Count; ++i )
-				{
-					Mobile m = (Mobile)targets[i];
-					
-					TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
-                    int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
-	
-					if ( ( amount + m.PoisonResistance ) > MySettings.S_MaxResistance )
-						amount = MySettings.S_MaxResistance - m.PoisonResistance;
-
-					m.SendMessage( "Your resistance to poison has increased." );
-					ResistanceMod mod1 = new ResistanceMod( ResistanceType.Poison, + amount );
-						
-					m.AddResistanceMod( mod1 );
-						
-					m.FixedParticles( 0x373A, 10, 15, 5012, 0x238, 3, EffectLayer.Waist );
-						
-					new ExpireTimer( m, mod1, duration ).Start();
-
-					string args = String.Format("{0}", amount);
-					BuffInfo.RemoveBuff( m, BuffIcon.PoisonCarol );
-					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.PoisonCarol, 1063581, 1063582, duration, m, args.ToString(), true));
-				}
 			}
 
-			BardFunctions.UseBardInstrument( m_Book.Instrument, sings, Caster );
+			BardFunctions.UseBardInstrument(BaseInstrument.GetInstrument(Caster), sings, Caster);
 			FinishSequence();
 		}
 
-		private class ExpireTimer : Timer
+		private class PoisonCarolRecipient : TimeDependentRecipient<PoisonCarolSong>
 		{
-			private Mobile m_Mobile;
-			private ResistanceMod m_Mods;
+			private readonly Mobile Caster;
+			private ResistanceMod m_Mod;
 
-			public ExpireTimer( Mobile m, ResistanceMod mod, TimeSpan delay ) : base( delay )
+			public PoisonCarolRecipient(Mobile caster, Mobile targetMobile, TimeSpan duration) : base(targetMobile, duration)
 			{
-				m_Mobile = m;
-				m_Mods = mod;
+				Caster = caster;
 			}
 
-			public void DoExpire()
+			protected override void RemoveInternal()
 			{
-				PlayerMobile dpm = m_Mobile as PlayerMobile;
-				m_Mobile.RemoveResistanceMod( m_Mods );
-				
-				Stop();
+				if (m_Mod == null) return;
+
+				var m = TargetMobile;
+				m.RemoveResistanceMod(m_Mod);
+				m_Mod = null;
+
+				BuffInfo.RemoveBuff(m, BuffIcon.PoisonCarol);
+				m.SendMessage("The effect of {0} wears off.", m_Info.Name);
 			}
 
-			protected override void OnTick()
+			protected override bool TryApplyInternal()
 			{
-				if ( m_Mobile != null )
+				var m = TargetMobile;
+				var amount = MyServerSettings.PlayerLevelMod(MusicSkill(Caster) / 16, Caster);
+
+				// Clamp creature resistance bonus to player max
+				if (m is BaseCreature)
 				{
-					m_Mobile.SendMessage( "The effect of the poison carol wears off." );
-					DoExpire();
+					if ((amount + m.PoisonResistance) > MySettings.S_MaxResistance)
+					{
+						amount = MySettings.S_MaxResistance - m.PoisonResistance;
+						if (amount < 1) return false;
+					}
 				}
+
+				m.SendMessage("Your resistance to poison has increased.");
+				m_Mod = new ResistanceMod(ResistanceType.Poison, +amount);
+				m.AddResistanceMod(m_Mod);
+				m.FixedParticles(0x373A, 10, 15, 5012, 0x238, 3, EffectLayer.Waist);
+
+				string args = String.Format("{0}", amount);
+				BuffInfo.RemoveBuff(m, BuffIcon.PoisonCarol);
+				BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.PoisonCarol, 1063581, 1063582, Duration, null, args));
+
+				return true;
 			}
 		}
 	}

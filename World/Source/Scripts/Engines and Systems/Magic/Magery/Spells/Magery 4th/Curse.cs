@@ -61,16 +61,12 @@ namespace Server.Spells.Fourth
 				SpellHelper.AddStatCurse( Caster, m, StatType.Int ); SpellHelper.DisableSkillCheck = false;
 
 				Timer t = (Timer)m_UnderEffect[m];
-
-				if ( m.Player )
-				{
-					if (t != null && t.Running)
-						t.Stop();
-					
-					TimeSpan duration = SpellHelper.GetDuration( Caster, m );
-					m_UnderEffect[m] = t = Timer.DelayCall( duration, new TimerStateCallback( RemoveEffect ), m );
-					m.UpdateResistances();
-				}
+				if (t != null && t.Running)
+					t.Stop();
+				
+				TimeSpan duration = SpellHelper.GetDuration( Caster, m );
+				m_UnderEffect[m] = t = Timer.DelayCall( duration, new TimerStateCallback( RemoveEffect ), m );
+				m.UpdateResistances();
 
 				if ( m.Spell != null )
 					m.Spell.OnCasterHurt();

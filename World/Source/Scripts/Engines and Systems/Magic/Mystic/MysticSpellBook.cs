@@ -27,7 +27,6 @@ namespace Server.Items
 		[Constructable]
 		public MysticSpellbook( ulong content ) : base( content, 0x6725 )
 		{
-			Layer = Layer.Invalid;
 			Name = "monk's tome";
 
 			if ( owner == null )
@@ -1164,7 +1163,7 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 0 ); // version
+			writer.Write( (int) 1 ); // version
 			writer.Write( (Mobile)owner);
 
             writer.Write( PackShrine );
@@ -1380,6 +1379,8 @@ namespace Server.Items
 
 			if ( ItemID != 0x6725 && ItemID != 0x6726 )
 				ItemID = 0x6725;
+			
+			if (version < 1) Layer = Layer.Trinket;
 		}
 	}
 }

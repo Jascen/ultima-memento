@@ -3,9 +3,8 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
 using Server.Targeting;
-using Server.Regions;
 using System.Collections;
-using System.Collections.Generic;
+using Server.Engines.PartySystem;
 
 namespace Server.SkillHandlers
 {
@@ -72,17 +71,23 @@ namespace Server.SkillHandlers
 
 					foreach ( Mobile trg in inRange )
 					{
-						if ( trg.Hidden && src != trg )
-						{
-							double ss = srcSkill + Utility.Random( 21 ) - 10;
-							double ts = trg.Skills[SkillName.Hiding].Value + Utility.Random( 21 ) - 10;
+						if (!trg.Hidden) continue;
+						if (src == trg) continue;
 
-							if ( src.AccessLevel >= trg.AccessLevel && ( ss >= ts || ( inHouse && house.IsInside( trg ) ) ) )
-							{
-								trg.RevealingAction();
-								trg.SendLocalizedMessage( 500814 ); // You have been revealed!
-								foundAnyone = true;
-							}
+						if (trg is PlayerMobile && src is PlayerMobile)
+						{
+							var party = ((PlayerMobile)src).Party as Party;
+							if (party != null && party.Contains(trg)) continue;
+						}
+						
+						double ss = srcSkill + Utility.Random( 21 ) - 10;
+						double ts = trg.Skills[SkillName.Hiding].Value + Utility.Random( 21 ) - 10;
+
+						if ( src.AccessLevel >= trg.AccessLevel && ( ss >= ts || ( inHouse && house.IsInside( trg ) ) ) )
+						{
+							trg.RevealingAction();
+							trg.SendLocalizedMessage( 500814 ); // You have been revealed!
+							foundAnyone = true;
 						}
 					}
 

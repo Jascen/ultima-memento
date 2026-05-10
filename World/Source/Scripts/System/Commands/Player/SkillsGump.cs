@@ -1,14 +1,6 @@
-using System;
-using Server;
-using System.Collections;
 using Server.Network;
 using Server.Mobiles;
-using Server.Items;
 using Server.Misc;
-using Server.Commands;
-using Server.Commands.Generic;
-using Server.Prompts;
-using Server.Gumps;
 
 namespace Server.Gumps 
 {
@@ -32,15 +24,14 @@ namespace Server.Gumps
 			AddButton(967, 10, 4017, 4017, 0, GumpButtonType.Reply, 0);
 			AddHtml( 396, 12, 559, 20, @"<BODY><BASEFONT Color=" + color + ">" + from.Name + " the " + GetPlayerInfo.GetSkillTitle( from ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
-			int skillTitle = ((PlayerMobile)from).CharacterSkill;
-			int statCap = from.StatCap;
+			var player = (PlayerMobile)from;
 
 			while ( display > 0 )
 			{
 				display--;
 				line++;
 
-				GetLine( line, skillTitle, statCap );
+				GetLine( line, player );
 			}
         }
     
@@ -55,7 +46,7 @@ namespace Server.Gumps
 			else { from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) ); }
 		}
 
-		public void GetLine( int val, int skill, int statCap )
+		public void GetLine( int val, PlayerMobile player )
 		{
 			string color = "#ddbc4b";
 			int skl = 0;
@@ -120,7 +111,7 @@ namespace Server.Gumps
 
 			else if ( val == 56 ){ skl = 0; txt = "Auto Title"; }
 
-			else if ( val == 57 && statCap > 250 ){ skl = 66; txt = "Titan of Ether"; }
+			else if ( val == 57 && player.IsTitanOfEther ){ skl = 66; txt = "Titan of Ether"; }
 
 			if ( txt != "" )
 			{
@@ -130,7 +121,7 @@ namespace Server.Gumps
 				else if ( val < 47 ){ x = 365; y = 25 + ((val-23)*28); }
 				else { x = 700; y = 25 + ((val-46)*28); }
 
-				if ( skill == skl ){ btn = 4018; } else { btn = 3609; }
+				if ( player.CharacterSkill == skl ){ btn = 4018; } else { btn = 3609; }
 				if ( skl == 0 ){ skl = 99; y = y + 28;}
 				if ( skl == 66 ){ y = y + 28;}
 

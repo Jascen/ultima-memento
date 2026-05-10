@@ -2981,7 +2981,7 @@ namespace Server.Misc
 
 		public static bool HealThySelf( Mobile from )
 		{
-			if ( from.Mana > 20 && Utility.RandomMinMax( 1, 4 ) == 1  )
+			if ( from.Mana > 20 && !Server.Items.MortalStrike.IsWounded( from ) && Utility.RandomMinMax( 1, 4 ) == 1  )
 			{
 				from.Mana = from.Mana - 20;
 				from.Hits = from.HitsMax;

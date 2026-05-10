@@ -46,8 +46,6 @@ namespace Server.Spells.Fifth
 			return true;
 		}
 
-		private static Hashtable m_Table = new Hashtable();
-
 		public override void OnCast()
 		{
 			DefensiveSpell.EndDefense( Caster );

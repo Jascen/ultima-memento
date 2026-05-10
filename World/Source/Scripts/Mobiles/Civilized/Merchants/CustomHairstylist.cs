@@ -20,11 +20,6 @@ namespace Server.Mobiles
 		public override bool IsActiveBuyer{ get{ return false; } }
 		public override bool IsActiveSeller{ get{ return true; } }
 
-        public override bool OnBuyItems( Mobile buyer, List<BuyItemResponse> list )
-		{
-			return false;
-		}
-
 		public static readonly object From = new object();
 		public static readonly object Vendor = new object();
 		public static readonly object Price = new object();

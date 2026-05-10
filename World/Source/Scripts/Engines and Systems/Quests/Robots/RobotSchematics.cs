@@ -258,7 +258,7 @@ namespace Server.Items
 
 			RobotItem ball = new RobotItem();
 
-			ball.RobotOwner = m.Serial;
+			ball.RobotOwner = m;
 			ball.Hue = 0;
 
 			m.AddToBackpack ( ball );

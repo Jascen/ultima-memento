@@ -26,21 +26,7 @@ namespace Server.Items
 		Mystic,
 		Syth,
 		Jedi,
-		Archmage,
-
-		// Dynamic spellbooks (types 20-254 for TazUO dynamic spellbook system)
-		Knightship = 20,
-		DynamicElementalism = 21,
-		DynamicSong = 22,
-		DynamicDeathKnight = 23,
-		DynamicDruidism = 24,
-		DynamicHolyMan = 25,
-		DynamicJedi = 26,
-		DynamicJester = 27,
-		DynamicResearch = 28,
-		DynamicShinobi = 29,
-		DynamicSyth = 30,
-		DynamicWitch = 31
+		Archmage
 	}
 
 	public class Spellbook : Item, ICraftable, ISlayer
@@ -119,12 +105,14 @@ namespace Server.Items
 				return false;
 			else if ( this is SythSpellbook )
 				return false;
-			else if ( this is KnightshipSpellbook )
-				return false;
-			else if ( this is DynamicElementalSpellbook )
-				return false;
 
 			return true;
+		}
+
+		public bool AllowSlayers()
+		{
+			return this is ElementalSpellbook
+				|| GetType() == typeof(Spellbook);
 		}
 
 		public static void Initialize()
@@ -202,18 +190,6 @@ namespace Server.Items
 				case 11:	type = SpellbookType.Syth; break;
 				case 12:	type = SpellbookType.Jedi; break;
 				case 13:	type = SpellbookType.Archmage; break;
-				case 20:	type = SpellbookType.Knightship; break;
-				case 21:	type = SpellbookType.DynamicElementalism; break;
-				case 22:	type = SpellbookType.DynamicSong; break;
-				case 23:	type = SpellbookType.DynamicDeathKnight; break;
-				case 24:	type = SpellbookType.DynamicDruidism; break;
-				case 25:	type = SpellbookType.DynamicHolyMan; break;
-				case 26:	type = SpellbookType.DynamicJedi; break;
-				case 27:	type = SpellbookType.DynamicJester; break;
-				case 28:	type = SpellbookType.DynamicResearch; break;
-				case 29:	type = SpellbookType.DynamicShinobi; break;
-				case 30:	type = SpellbookType.DynamicSyth; break;
-				case 31:	type = SpellbookType.DynamicWitch; break;
 			}
 
 			Spellbook book = Spellbook.Find( from, -1, type );
@@ -289,30 +265,6 @@ namespace Server.Items
 				return SpellbookType.Jedi;
 			else if ( spellID >= 600 && spellID < 664 )
 				return SpellbookType.Archmage;
-			else if ( spellID >= 2000 && spellID < 2010 )
-				return SpellbookType.Knightship;
-			else if ( spellID >= 2100 && spellID < 2132 )
-				return SpellbookType.DynamicElementalism;
-			else if ( spellID >= 2200 && spellID < 2216 )
-				return SpellbookType.DynamicSong;
-			else if ( spellID >= 2300 && spellID < 2314 )
-				return SpellbookType.DynamicDeathKnight;
-			else if ( spellID >= 2400 && spellID < 2416 )
-				return SpellbookType.DynamicDruidism;
-			else if ( spellID >= 2500 && spellID < 2514 )
-				return SpellbookType.DynamicHolyMan;
-			else if ( spellID >= 2600 && spellID < 2610 )
-				return SpellbookType.DynamicJedi;
-			else if ( spellID >= 2700 && spellID < 2710 )
-				return SpellbookType.DynamicJester;
-			else if ( spellID >= 2800 && spellID < 2864 )
-				return SpellbookType.DynamicResearch;
-			else if ( spellID >= 2900 && spellID < 2908 )
-				return SpellbookType.DynamicShinobi;
-			else if ( spellID >= 3000 && spellID < 3010 )
-				return SpellbookType.DynamicSyth;
-			else if ( spellID >= 3100 && spellID < 3116 )
-				return SpellbookType.DynamicWitch;
 
 			return SpellbookType.Invalid;
 		}
@@ -380,16 +332,6 @@ namespace Server.Items
 		public static Spellbook FindArchmage( Mobile from )
 		{
 			return Find( from, -1, SpellbookType.Archmage );
-		}
-
-		public static Spellbook FindKnightship( Mobile from )
-		{
-			return Find( from, -1, SpellbookType.Knightship );
-		}
-
-		public static Spellbook FindDynamicElementalism( Mobile from )
-		{
-			return Find( from, -1, SpellbookType.DynamicElementalism );
 		}
 
 		public static Spellbook Find( Mobile from, int spellID )
@@ -491,26 +433,7 @@ namespace Server.Items
 
 		public static bool ValidateSpellbook( Spellbook book, int spellID, SpellbookType type )
 		{
-			bool typeMatch = book.SpellbookType == type || book.SpellbookType == GetDynamicCounterpart( type );
-			return ( typeMatch && ( spellID == -1 || book.HasSpell( spellID ) ) );
-		}
-
-		public static SpellbookType GetDynamicCounterpart( SpellbookType type )
-		{
-			switch ( type )
-			{
-				case SpellbookType.Song:           return SpellbookType.DynamicSong;
-				case SpellbookType.DeathKnight:    return SpellbookType.DynamicDeathKnight;
-				case SpellbookType.HolyMan:        return SpellbookType.DynamicHolyMan;
-				case SpellbookType.Jedi:           return SpellbookType.DynamicJedi;
-				case SpellbookType.Syth:           return SpellbookType.DynamicSyth;
-				case SpellbookType.Archmage:       return SpellbookType.DynamicResearch;
-				case SpellbookType.Elementalism:   return SpellbookType.DynamicElementalism;
-				case SpellbookType.Paladin:        return SpellbookType.Knightship;
-				// No legacy type for these (they were non-spellbook systems)
-				// DynamicDruidism, DynamicJester, DynamicShinobi, DynamicWitch
-				default:                           return SpellbookType.Invalid;
-			}
+			return ( book.SpellbookType == type && ( spellID == -1 || book.HasSpell( spellID ) ) );
 		}
 
 		public override bool DisplayWeight { get { return false; } }
@@ -827,7 +750,7 @@ namespace Server.Items
 				from.SendMessage("Your need at least a natural neophyte skill in necromancy to equip that!");
 				return false;
 			}}
-			else if ( this is ElementalSpellbook || this is DynamicElementalSpellbook )
+			else if ( this is ElementalSpellbook )
 			{
 				if ( from.Skills[SkillName.Elementalism].Base < 30 )
 				{
@@ -848,17 +771,12 @@ namespace Server.Items
 				from.SendMessage("Your need at least a natural neophyte skill in bushido to equip that!");
 				return false;
 			}}
-			else if ( this is BookOfChivalry ){ if ( from.Skills[SkillName.Knightship].Base < 30 && from.Karma < 0 )
+			else if ( this is BookOfChivalry ){ if ( from.Skills[SkillName.Knightship].Base < 30 || from.Karma < 0 )
 			{
 				from.SendMessage("Your need at least a natural neophyte skill in knightship to equip that!");
 				return false;
 			}}
-			else if ( this is KnightshipSpellbook ){ if ( from.Skills[SkillName.Knightship].Base < 30 && from.Karma < 0 )
-			{
-				from.SendMessage("Your need at least a natural neophyte skill in knightship to equip that!");
-				return false;
-			}}
-			else if ( this is DeathKnightSpellbook ){ if ( from.Skills[SkillName.Knightship].Base < 30 && from.Karma > 0 )
+			else if ( this is DeathKnightSpellbook ){ if ( from.Skills[SkillName.Knightship].Base < 30 || from.Karma > 0 )
 			{
 				from.SendMessage("Your need at least a natural neophyte skill in knightship to equip that!");
 				return false;
@@ -867,10 +785,11 @@ namespace Server.Items
 			{
 				return false;
 			}
-			else if ( this is MysticSpellbook )
+			else if ( this is MysticSpellbook ){ if ( from.Skills[SkillName.Focus].Base < 100 || from.Skills[SkillName.Meditation].Base < 100 )
 			{
+				from.SendMessage("Your need at least a natural grandmaster skill in focus and meditation to equip that!");
 				return false;
-			}
+			}}
 			else if ( this is SythSpellbook )
 			{
 				return false;
@@ -917,16 +836,6 @@ namespace Server.Items
 
 			if ( ns == null )
 				return;
-
-			Console.WriteLine( "[Spellbook] DisplayTo: type={0}, ItemID=0x{1:X4}, BookOffset={2}, Content=0x{3:X}, isDynamic={4}",
-				SpellbookType, ItemID, BookOffset, m_Content, Server.Spells.Dynamic.DynamicSpellbookManager.IsDynamicSpellbook( SpellbookType ) );
-
-			// For dynamic spellbooks, send the serial-to-type mapping before anything else
-			// so the client knows this specific item is a dynamic spellbook (not a standard one sharing the same graphic)
-			if ( Server.Spells.Dynamic.DynamicSpellbookManager.IsDynamicSpellbook( SpellbookType ) )
-			{
-				to.Send( new Server.Spells.Dynamic.RegisterSpellbookSerial( Serial, (byte)SpellbookType ) );
-			}
 
 			if ( Parent == null )
 			{

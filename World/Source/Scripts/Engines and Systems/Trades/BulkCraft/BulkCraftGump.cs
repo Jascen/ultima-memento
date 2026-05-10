@@ -7,8 +7,11 @@ namespace Server.Engines.Craft
 {
 	public class BulkCraftGump : Gump
 	{
-		private readonly PlayerMobile m_Player;
+		private readonly int GUMP_HEIGHT = 160;
+		private readonly int GUMP_WIDTH = 170;
+		private const int PADDING = 10;
 
+		private readonly PlayerMobile m_Player;
 		private readonly BulkCraftContext m_Context;
 
 		public BulkCraftGump(PlayerMobile player, BulkCraftContext context, bool isComplete = false) : base(25, 25)
@@ -16,18 +19,34 @@ namespace Server.Engines.Craft
 			m_Player = player;
 			m_Context = context;
 
-			AddBackground(0, 0, 180, 170, 2620); // Slate background gold trim
+			if (context.LastMessage != null)
+			{
+				GUMP_WIDTH += 40;
+				GUMP_HEIGHT += 30;
+			}
 
-			int x = 10;
-			int y = 10;
+			AddBackground(0, 0, GUMP_WIDTH + PADDING * 2, GUMP_HEIGHT + PADDING * 2, 2620); // Slate background gold trim
+
+			int x = PADDING;
+			int y = PADDING;
 
 			if (context.Paused)
-				TextDefinition.AddHtmlText(this, x, y - 4, 200, 16, "Session is paused...", false, false, HtmlColors.RED, HtmlColors.RED);
+				TextDefinition.AddHtmlText(this, x, y - 4, GUMP_WIDTH, 20, "Session is paused...", false, false, HtmlColors.RED, HtmlColors.RED);
 			else if (isComplete)
-				TextDefinition.AddHtmlText(this, x, y - 4, 200, 16, "Crafting session complete...", false, false, HtmlColors.RED, HtmlColors.RED);
+				TextDefinition.AddHtmlText(this, x, y - 4, GUMP_WIDTH, 20, "Crafting session complete...", false, false, HtmlColors.RED, HtmlColors.RED);
+			else if ( context.LastMessage != null )
+			{
+				int noticeNumber = context.LastMessage is int && (int)context.LastMessage > 0 ? (int)context.LastMessage : 0;
+				string noticeText = noticeNumber > 0 ? CliLocTable.Lookup(noticeNumber) : (string)context.LastMessage;
+				if (!string.IsNullOrWhiteSpace(noticeText))
+					TextDefinition.AddHtmlText(this, x, y - 4, GUMP_WIDTH, 60, noticeText, false, false, HtmlColors.RED, HtmlColors.RED);
+				else if (noticeNumber > 0)
+					TextDefinition.AddHtmlText(this, x, y - 4, GUMP_WIDTH, 60, noticeNumber, false, false, LabelColors.PALE_RED, HtmlColors.PALE_RED);
+				y += 30;
+			}
 			else
-				TextDefinition.AddHtmlText(this, x, y - 4, 200, 16, string.Format("Crafting '{0}' items...", context.Amount), false, false, LabelColors.OFFWHITE, HtmlColors.OFFWHITE);
-			y += 20;
+				TextDefinition.AddHtmlText(this, x, y - 4, GUMP_WIDTH, 20, string.Format("Crafting '{0}' items...", context.Amount), false, false, LabelColors.OFFWHITE, HtmlColors.OFFWHITE);
+			y += 30;
 
 			// Add progress bar
 			const int PROGRESS_WIDTH = 96;
@@ -65,7 +84,7 @@ namespace Server.Engines.Craft
 		private void AddLabelWithValue(int x, int y, string label, int value)
 		{
 			TextDefinition.AddHtmlText(this, x, y - 4, 100, 16, label, false, false, LabelColors.OFFWHITE, HtmlColors.OFFWHITE);
-			TextDefinition.AddHtmlText(this, x + 100, y - 4, 65, 16, string.Format("<RIGHT>{0}</RIGHT>", value), false, false, LabelColors.OFFWHITE, HtmlColors.OFFWHITE);
+			TextDefinition.AddHtmlText(this, x + 100, y - 4, GUMP_WIDTH - 100, 16, string.Format("<RIGHT>{0}</RIGHT>", value), false, false, LabelColors.OFFWHITE, HtmlColors.OFFWHITE);
 		}
 
 		private void AddButtonWithLabel(int x, int y, string text, int buttonID)

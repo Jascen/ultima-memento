@@ -1,26 +1,21 @@
-using System; 
-using System.Collections; 
-using Server; 
 using Server.Items; 
 using Server.Network; 
-using Server.Spells;
-using Server.Misc; 
 using Server.Spells.Song; 
-using Server.Prompts;
-using Server.Targeting; 
  
 
 namespace Server.Gumps 
 { 
 	public class SongBookGump : Gump 
 	{ 
-		private SongBook m_Book; 
+		private readonly SongBook m_Book; 
 
-		public static bool HasSpell( Mobile from, int spellID ) 
-		{ 
-			Spellbook book = Spellbook.Find( from, spellID ); 
-			return ( book != null && book.HasSpell( spellID ) ); 
-		} 
+		public bool HasSpell( Mobile from, int spellID )
+		{
+			if ( m_Book.RootParentEntity == from )
+				return (m_Book.HasSpell(spellID));
+			else
+				return false;
+		}
        
 		public SongBookGump( Mobile from, SongBook book, int page ) : base( 100, 100 ) 
 		{ 
@@ -50,9 +45,7 @@ namespace Server.Gumps
 
 			if ( page == 1 )
 			{
-				AddButton(392, 46, 7048, 7048, 99, GumpButtonType.Reply, 0);
 				AddHtml( 107, 46, 186, 20, @"<BODY><BASEFONT Color=" + color + "><CENTER>BARDIC SONGS</CENTER></BASEFONT></BODY>", (bool)false, (bool)false);
-				AddHtml( 422, 51, 148, 20, @"<BODY><BASEFONT Color=" + color + ">Assign Instrument</BASEFONT></BODY>", (bool)false, (bool)false);
 
 				int x = 95;
 				int y = 100;
@@ -313,12 +306,7 @@ namespace Server.Gumps
 		{
 			Mobile from = state.Mobile; 
 
-			if ( info.ButtonID == 99 )
-			{
-				from.SendMessage( "Click your instrument of bardic choice." );
-				from.Target = new InternalTarget( m_Book );
-			}
-			else if ( info.ButtonID < 300 && info.ButtonID > 0 )
+			if ( info.ButtonID < 300 && info.ButtonID > 0 )
 			{
 				from.SendSound( 0x55 );
 				int page = info.ButtonID;
@@ -326,19 +314,9 @@ namespace Server.Gumps
 				if ( page > 9 ){ page = 1; }
 				from.SendGump( new SongBookGump( from, m_Book, page ) );
 			}
-			else if ( m_Book.Instrument != null && m_Book.Instrument.Parent != from )
-			{
-				from.SendMessage( "Your chosen instrument must be equipped!" );
-			}
 			else if ( info.ButtonID > 300 )
 			{
-				if ( m_Book.Instrument == null && HasSpell(from, info.ButtonID) )
-				{
-					from.SendMessage( "You need an instrument to play that song!" );
-					from.SendMessage( "Select your instrument of bardic choice." );
-					from.Target = new InternalTarget( m_Book );
-				}
-				else if ( info.ButtonID == 351 ){ new ArmysPaeonSong( from, null ).Cast(); }
+				if ( info.ButtonID == 351 ){ new ArmysPaeonSong( from, null ).Cast(); }
 				else if ( info.ButtonID == 352 ){ new EnchantingEtudeSong( from, null ).Cast(); }
 				else if ( info.ButtonID == 353 ){ new EnergyCarolSong( from, null ).Cast(); }
 				else if ( info.ButtonID == 354 ){ new EnergyThrenodySong( from, null ).Cast(); }
@@ -357,29 +335,6 @@ namespace Server.Gumps
 			}
 			else
 				from.PlaySound( 0x55 );
-		} 
-
-		private class InternalTarget : Target
-		{
-			private SongBook Book;
-
-			public InternalTarget( SongBook book ) : base( 1, false, TargetFlags.None ) 
-			{
-				Book = book;
-			}
-
-			protected override void OnTarget( Mobile from, object target )
-			{
-				if ( target is BaseInstrument )
-				{
-					Book.Instrument = (BaseInstrument)target;
-					from.SendMessage( "You set your instrument to play for these songs." );
-				}
-				else
-				{
-					from.SendMessage( "That is not an instrument you can play!" );
-				}
-			}
 		}
 	} 
 }

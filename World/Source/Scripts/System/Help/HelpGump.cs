@@ -1,21 +1,17 @@
 using System;
-using Server;
 using Server.Gumps;
 using Server.Network;
-using Server.Menus;
 using Server.Menus.Questions;
-using Server.Accounting;
 using Server.Multis;
 using Server.Mobiles;
 using Server.Regions;
 using System.Collections;
-using System.Collections.Generic;
 using Server.Commands;
 using Server.Misc;
 using Server.Items;
-using System.Globalization;
 using Server.Engines.MLQuests.Gumps;
 using Scripts.Mythik.Systems.Achievements;
+using Server.SpellBars;
 
 namespace Server.Engines.Help
 {
@@ -555,13 +551,15 @@ namespace Server.Engines.Help
 				AddSetting(xs, g, from, "Classic Poisoning", PageActionType.Setting_ClassicPoisoning, PageActionType.Setting_ClassicPoisoning_Info);
 				if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
 
-				if ( from.RaceID > 0 && (from.Region).Name == "the Tavern" && Server.Items.BaseRace.GetMonsterMage( from.RaceID ) )
+				if ( from.RaceID > 0 && Server.Items.BaseRace.GetMonsterMage( from.RaceID ) )
 				{
 					string magic = "Default";
 					if ( from.RaceMagicSchool == 1 ){ magic = "Magery"; }
 					else if ( from.RaceMagicSchool == 2 ){ magic = "Necromancy"; }
 					else if ( from.RaceMagicSchool == 3 ){ magic = "Elementalism"; }
-					AddSetting(xs, g, from, "Creature Magic (" + magic + ")", PageActionType.Setting_CreatureMagicFocus, PageActionType.Setting_CreatureMagicFocus_Info);
+
+					var inTavern = from.Region.Name == "the Tavern";
+					AddSetting(xs, g, from, "Creature Magic (" + magic + ")", PageActionType.Setting_CreatureMagicFocus, PageActionType.Setting_CreatureMagicFocus_Info, inTavern);
 					if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
 				}
 
@@ -757,7 +755,7 @@ namespace Server.Engines.Help
 			}
 		}
 
-		private void AddSetting(int x, int y, PlayerMobile from, string name, PageActionType actionType, PageActionType infoType)
+		private void AddSetting(int x, int y, PlayerMobile from, string name, PageActionType actionType, PageActionType infoType, bool addActionButton = true)
 		{
 			const int RIGHT_ARROW = 4005;
 			const int CHECKED_BOX = 4018;
@@ -767,7 +765,10 @@ namespace Server.Engines.Help
 				: IsActive(from, actionType)
 					? CHECKED_BOX
 					: UNCHECKED_BOX;
-			AddButton(x, y, isSelected, isSelected, (int)actionType, GumpButtonType.Reply, 0);
+
+			if (addActionButton)
+				AddButton(x, y, isSelected, isSelected, (int)actionType, GumpButtonType.Reply, 0);
+
 			AddButton(x+40, y, 4011, 4011, (int)infoType, GumpButtonType.Reply, 0);
 			AddHtml( x+80, y + 3, 316, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">" + name + "</BASEFONT></BODY>", (bool)false, (bool)false);
 		}
@@ -880,36 +881,36 @@ namespace Server.Engines.Help
 				case PageActionType.Do_Toggle_AFK: return Server.Commands.AFK.m_AFK.Contains( from.Serial.Value );
 
 				case PageActionType.Setting_AutoAttack: return !from.NoAutoAttack;
-				case PageActionType.Setting_AutoSheath: return from.CharacterSheath == 1;
-				case PageActionType.Setting_ClassicPoisoning: return from.ClassicPoisoning == 1;
+				case PageActionType.Setting_AutoSheath: return from.Preferences.CharacterSheath;
+				case PageActionType.Setting_ClassicPoisoning: return from.Preferences.ClassicPoisoning;
 				case PageActionType.Setting_CreatureSounds: return from.RaceMakeSounds;
-				case PageActionType.Setting_GumpImages: return from.GumpHue > 0;
+				case PageActionType.Setting_GumpImages: return from.Preferences.GumpHue > 0;
 				case PageActionType.Setting_MessageColors: return from.RainbowMsg;
-				case PageActionType.Setting_MusicTone: return from.CharMusical == "Forest";
+				case PageActionType.Setting_MusicTone: return from.Preferences.CharMusical == "Forest";
 				case PageActionType.Setting_PrivatePlay: return !from.PublicInfo;
-				case PageActionType.Setting_WeaponAbilityBar: return from.WeaponBarOpen > 0;
-				case PageActionType.Setting_WeaponAbilityNames: return from.CharacterWepAbNames == 1;
+				case PageActionType.Setting_WeaponAbilityBar: return from.Preferences.WeaponBarOpen;
+				case PageActionType.Setting_WeaponAbilityNames: return from.Preferences.CharacterWepAbNames;
 				case PageActionType.Setting_UseAncientSpellbook: return ResearchSettings.BookCaster( from );
-				case PageActionType.Setting_DoubleClickToIDItems: return from.DoubleClickID;
+				case PageActionType.Setting_DoubleClickToIDItems: return from.Preferences.DoubleClickID;
 				case PageActionType.Setting_OrdinaryResources: return from.HarvestOrdinary;
-				case PageActionType.Setting_RemoveVendorGoldSafeguard: return from.IgnoreVendorGoldSafeguard;
-				case PageActionType.Setting_SuppressVendorTooltips: return from.SuppressVendorTooltip;
-				case PageActionType.Setting_SingleAttemptID: return from.SingleAttemptID;
-				case PageActionType.Setting_ColorlessFabricBreakdown: return from.ColorlessFabricBreakdown;
+				case PageActionType.Setting_RemoveVendorGoldSafeguard: return from.Preferences.IgnoreVendorGoldSafeguard;
+				case PageActionType.Setting_SuppressVendorTooltips: return from.Preferences.SuppressVendorTooltip;
+				case PageActionType.Setting_SingleAttemptID: return from.Preferences.SingleAttemptID;
+				case PageActionType.Setting_ColorlessFabricBreakdown: return from.Preferences.ColorlessFabricBreakdown;
 
-				case PageActionType.Setting_Playstyle_Normal: return from.CharacterEvil == 0 && from.CharacterOriental == 0 && from.CharacterBarbaric == 0;
-				case PageActionType.Setting_Playstyle_Evil: return from.CharacterEvil == 1;
-				case PageActionType.Setting_Playstyle_Oriental: return from.CharacterOriental == 1;
-				case PageActionType.Setting_Playstyle_Barbaric: return from.CharacterBarbaric == 1 || from.CharacterBarbaric == 2;
+				case PageActionType.Setting_Playstyle_Normal: return !from.Preferences.CharacterEvil && !from.Preferences.CharacterOriental && from.Preferences.CharacterBarbaric == 0;
+				case PageActionType.Setting_Playstyle_Evil: return from.Preferences.CharacterEvil;
+				case PageActionType.Setting_Playstyle_Oriental: return from.Preferences.CharacterOriental;
+				case PageActionType.Setting_Playstyle_Barbaric: return from.Preferences.CharacterBarbaric == 1 || from.Preferences.CharacterBarbaric == 2;
 
-				case PageActionType.Setting_MagerySpellColor_White: return from.MagerySpellHue == 0x47E;
-				case PageActionType.Setting_MagerySpellColor_Black: return from.MagerySpellHue == 0x94E;
-				case PageActionType.Setting_MagerySpellColor_Blue: return from.MagerySpellHue == 0x48D;
-				case PageActionType.Setting_MagerySpellColor_Red: return from.MagerySpellHue == 0x48E;
-				case PageActionType.Setting_MagerySpellColor_Green: return from.MagerySpellHue == 0x48F;
-				case PageActionType.Setting_MagerySpellColor_Purple: return from.MagerySpellHue == 0x490;
-				case PageActionType.Setting_MagerySpellColor_Yellow: return from.MagerySpellHue == 0x491;
-				case PageActionType.Setting_MagerySpellColor_Default: return from.MagerySpellHue == 0;
+				case PageActionType.Setting_MagerySpellColor_White: return from.Preferences.MagerySpellHue == 0x47E;
+				case PageActionType.Setting_MagerySpellColor_Black: return from.Preferences.MagerySpellHue == 0x94E;
+				case PageActionType.Setting_MagerySpellColor_Blue: return from.Preferences.MagerySpellHue == 0x48D;
+				case PageActionType.Setting_MagerySpellColor_Red: return from.Preferences.MagerySpellHue == 0x48E;
+				case PageActionType.Setting_MagerySpellColor_Green: return from.Preferences.MagerySpellHue == 0x48F;
+				case PageActionType.Setting_MagerySpellColor_Purple: return from.Preferences.MagerySpellHue == 0x490;
+				case PageActionType.Setting_MagerySpellColor_Yellow: return from.Preferences.MagerySpellHue == 0x491;
+				case PageActionType.Setting_MagerySpellColor_Default: return from.Preferences.MagerySpellHue == 0;
 
 				case PageActionType.Setting_SkillList: return true;
 			}
@@ -1159,41 +1160,27 @@ namespace Server.Engines.Help
 					}
 					case PageActionType.Setting_WeaponAbilityNames:
 					{
-						if ( ((PlayerMobile)from).CharacterWepAbNames != 1 )
-						{
-							((PlayerMobile)from).CharacterWepAbNames = 1;
-						}
-						else
-						{
-							((PlayerMobile)from).CharacterWepAbNames = 0;
-						}
+						from.Preferences.CharacterWepAbNames = !from.Preferences.CharacterWepAbNames;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_AutoSheath:
 					{
-						if ( ((PlayerMobile)from).CharacterSheath == 1 )
-						{
-							((PlayerMobile)from).CharacterSheath = 0;
-						}
-						else
-						{
-							((PlayerMobile)from).CharacterSheath = 1;
-						}
+						from.Preferences.CharacterSheath = !from.Preferences.CharacterSheath;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_MusicTone:
 					{
-						string tunes = ((PlayerMobile)from).CharMusical;
+						string tunes = from.Preferences.CharMusical;
 
 						if ( tunes == "Forest" )
 						{
-							((PlayerMobile)from).CharMusical = "Dungeon";
+							from.Preferences.CharMusical = "Dungeon";
 						}
 						else
 						{
-							((PlayerMobile)from).CharMusical = "Forest";
+							from.Preferences.CharMusical = "Forest";
 						}
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
@@ -1229,11 +1216,11 @@ namespace Server.Engines.Help
 					{
 						if ( !ResearchSettings.BookCaster( from ) )
 						{
-							((PlayerMobile)from).UsingAncientBook = true;
+							((PlayerMobile)from).Preferences.UsingAncientBook = true;
 						}
 						else
 						{
-							((PlayerMobile)from).UsingAncientBook = false;
+							((PlayerMobile)from).Preferences.UsingAncientBook = false;
 						}
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
@@ -1252,31 +1239,22 @@ namespace Server.Engines.Help
 					}
 					case PageActionType.Setting_GumpImages:
 					{
-						int gump = ((PlayerMobile)from).GumpHue;
+						int gump = ((PlayerMobile)from).Preferences.GumpHue;
 
 						if ( gump > 0 )
 						{
-							((PlayerMobile)from).GumpHue = 0;
+							((PlayerMobile)from).Preferences.GumpHue = 0;
 						}
 						else
 						{
-							((PlayerMobile)from).GumpHue = 1;
+							((PlayerMobile)from).Preferences.GumpHue = 1;
 						}
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_WeaponAbilityBar:
 					{
-						int wep = ((PlayerMobile)from).WeaponBarOpen;
-
-						if ( wep > 0 )
-						{
-							((PlayerMobile)from).WeaponBarOpen = 0;
-						}
-						else
-						{
-							((PlayerMobile)from).WeaponBarOpen = 1;
-						}
+						from.Preferences.WeaponBarOpen = !from.Preferences.WeaponBarOpen;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
@@ -1303,7 +1281,7 @@ namespace Server.Engines.Help
 					case PageActionType.Setting_CreatureType:
 					{
 						from.RaceSection = 1;
-						from.SendGump( new Server.Items.RacePotions.RacePotionsGump( from, 1 ) );
+						from.SendGump( new Server.Items.RacePotions.RacePotionsGump( from, 1, true ) );
 						break;
 					}
 					case PageActionType.Setting_CreatureSounds:
@@ -1318,27 +1296,27 @@ namespace Server.Engines.Help
 					}
 					case PageActionType.Setting_Playstyle_Normal:
 					{
-						((PlayerMobile)from).CharacterEvil = 0;
-						((PlayerMobile)from).CharacterOriental = 0;
-						((PlayerMobile)from).CharacterBarbaric = 0;
+						((PlayerMobile)from).Preferences.CharacterEvil = false;
+						((PlayerMobile)from).Preferences.CharacterOriental = false;
+						((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
 						Server.Items.BarbaricSatchel.GetRidOf( from );
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_Playstyle_Evil:
 					{
-						((PlayerMobile)from).CharacterEvil = 1;
-						((PlayerMobile)from).CharacterOriental = 0;
-						((PlayerMobile)from).CharacterBarbaric = 0;
+						((PlayerMobile)from).Preferences.CharacterEvil = true;
+						((PlayerMobile)from).Preferences.CharacterOriental = false;
+						((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
 						Server.Items.BarbaricSatchel.GetRidOf( from );
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_Playstyle_Oriental:
 					{
-						((PlayerMobile)from).CharacterEvil = 0;
-						((PlayerMobile)from).CharacterOriental = 1;
-						((PlayerMobile)from).CharacterBarbaric = 0;
+						((PlayerMobile)from).Preferences.CharacterEvil = false;
+						((PlayerMobile)from).Preferences.CharacterOriental = true;
+						((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
 						Server.Items.BarbaricSatchel.GetRidOf( from );
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
@@ -1371,20 +1349,20 @@ namespace Server.Engines.Help
 					}
 					case PageActionType.Setting_Playstyle_Barbaric:
 					{
-						if ( ((PlayerMobile)from).CharacterBarbaric == 1 && from.Female )
+						if ( ((PlayerMobile)from).Preferences.CharacterBarbaric == 1 && from.Female )
 						{
-							((PlayerMobile)from).CharacterBarbaric = 2;
+							((PlayerMobile)from).Preferences.CharacterBarbaric = 2;
 						}
-						else if ( ((PlayerMobile)from).CharacterBarbaric > 0 )
+						else if ( ((PlayerMobile)from).Preferences.CharacterBarbaric > 0 )
 						{
-							((PlayerMobile)from).CharacterBarbaric = 0;
+							((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
 							Server.Items.BarbaricSatchel.GetRidOf( from );
 						}
 						else
 						{
-							((PlayerMobile)from).CharacterEvil = 0;
-							((PlayerMobile)from).CharacterOriental = 0;
-							((PlayerMobile)from).CharacterBarbaric = 1;
+							((PlayerMobile)from).Preferences.CharacterEvil = false;
+							((PlayerMobile)from).Preferences.CharacterOriental = false;
+							((PlayerMobile)from).Preferences.CharacterBarbaric = 1;
 							Server.Items.BarbaricSatchel.GivePack( from );
 						}
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
@@ -1392,14 +1370,7 @@ namespace Server.Engines.Help
 					}
 					case PageActionType.Setting_ClassicPoisoning:
 					{
-						if ( ((PlayerMobile)from).ClassicPoisoning == 1 )
-						{
-							((PlayerMobile)from).ClassicPoisoning = 0;
-						}
-						else
-						{
-							((PlayerMobile)from).ClassicPoisoning = 1;
-						}
+						from.Preferences.ClassicPoisoning = !from.Preferences.ClassicPoisoning;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
@@ -1411,31 +1382,31 @@ namespace Server.Engines.Help
 					}
 					case PageActionType.Setting_DoubleClickToIDItems:
 					{
-						((PlayerMobile)from).DoubleClickID = !((PlayerMobile)from).DoubleClickID;
+						from.Preferences.DoubleClickID = !from.Preferences.DoubleClickID;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_RemoveVendorGoldSafeguard:
 					{
-						((PlayerMobile)from).IgnoreVendorGoldSafeguard = !((PlayerMobile)from).IgnoreVendorGoldSafeguard;
+						from.Preferences.IgnoreVendorGoldSafeguard = !from.Preferences.IgnoreVendorGoldSafeguard;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_SuppressVendorTooltips:
 					{
-						((PlayerMobile)from).SuppressVendorTooltip = !((PlayerMobile)from).SuppressVendorTooltip;
+						from.Preferences.SuppressVendorTooltip = !from.Preferences.SuppressVendorTooltip;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_SingleAttemptID:
 					{
-						((PlayerMobile)from).SingleAttemptID = !((PlayerMobile)from).SingleAttemptID;
+						from.Preferences.SingleAttemptID = !from.Preferences.SingleAttemptID;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_ColorlessFabricBreakdown:
 					{
-						((PlayerMobile)from).ColorlessFabricBreakdown = !((PlayerMobile)from).ColorlessFabricBreakdown;
+						from.Preferences.ColorlessFabricBreakdown = !from.Preferences.ColorlessFabricBreakdown;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
@@ -1558,49 +1529,49 @@ namespace Server.Engines.Help
 
 					case PageActionType.Setting_MagerySpellColor_White:
 					{
-						((PlayerMobile)from).MagerySpellHue = 0x47E;
+						from.Preferences.MagerySpellHue = 0x47E;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_MagerySpellColor_Black:
 					{
-						((PlayerMobile)from).MagerySpellHue = 0x94E;
+						from.Preferences.MagerySpellHue = 0x94E;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_MagerySpellColor_Blue:
 					{
-						((PlayerMobile)from).MagerySpellHue = 0x48D;
+						from.Preferences.MagerySpellHue = 0x48D;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_MagerySpellColor_Red:
 					{
-						((PlayerMobile)from).MagerySpellHue = 0x48E;
+						from.Preferences.MagerySpellHue = 0x48E;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_MagerySpellColor_Green:
 					{
-						((PlayerMobile)from).MagerySpellHue = 0x48F;
+						from.Preferences.MagerySpellHue = 0x48F;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_MagerySpellColor_Purple:
 					{
-						((PlayerMobile)from).MagerySpellHue = 0x490;
+						from.Preferences.MagerySpellHue = 0x490;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_MagerySpellColor_Yellow:
 					{
-						((PlayerMobile)from).MagerySpellHue = 0x491;
+						from.Preferences.MagerySpellHue = 0x491;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_MagerySpellColor_Default:
 					{
-						((PlayerMobile)from).MagerySpellHue = 0;
+						from.Preferences.MagerySpellHue = 0;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
@@ -2225,7 +2196,7 @@ namespace Server.Engines.Help
 				{
 					scrollbar = false;
 					title = "Creature Magic";
-					info = "Some creatures have a natural ability for magic. This setting lets you change which school of magic you want to focus on: magery, necromancy, or elementalism. This allows magery or necromancy creatures to move their focus into elementalism, or to switch between magery and necromancy.";
+					info = "You must be in the Tavern to change this setting.<br><br>Some creatures have a natural ability for magic. This setting lets you change which school of magic you want to focus on: magery, necromancy, or elementalism. This allows magery or necromancy creatures to move their focus into elementalism, or to switch between magery and necromancy.";
 					break;
 				}
 

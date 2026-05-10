@@ -159,6 +159,9 @@ namespace Server.Spells.Chivalry
 			else
 			{
 				caster.PlaySound( 0x1DF );
+
+				if ( o is BookBox || o is CurseItem )
+					caster.SendMessage("You fail to lift the curse.");
 			}
 
 			FinishSequence();

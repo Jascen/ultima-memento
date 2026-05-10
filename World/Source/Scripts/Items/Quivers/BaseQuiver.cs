@@ -131,7 +131,7 @@ namespace Server.Items
 
 		private static Type[] m_Ammo = new Type[]
 		{
-			typeof( Arrow ), typeof( Bolt )
+			typeof( Arrow ), typeof( Bolt ), typeof( HarpoonRope ), typeof( ThrowingWeapon )
 		};
 
 		public bool CheckType( Item item )
@@ -166,17 +166,28 @@ namespace Server.Items
 				return false;
 			}
 
-			Item arrow = this.FindItemByType( typeof ( Arrow ) );
-			Item bolt = this.FindItemByType( typeof ( Bolt ) );
-
-			if ( arrow != null && item is Arrow )
+			if ( item is Arrow )
 			{
-				if ( arrow.Amount + item.Amount <= m_Capacity )
+				Item existing = this.FindItemByType( typeof ( Arrow ) );
+				if ( existing != null && existing.Amount + item.Amount <= m_Capacity )
 					return true;
 			}
-			if ( bolt != null && item is Bolt )
+			else if ( item is Bolt )
 			{
-				if ( bolt.Amount + item.Amount <= m_Capacity )
+				Item existing = this.FindItemByType( typeof ( Bolt ) );
+				if ( existing != null && existing.Amount + item.Amount <= m_Capacity )
+					return true;
+			}
+			else if ( item is HarpoonRope )
+			{
+				Item existing = this.FindItemByType( typeof ( HarpoonRope ) );
+				if ( existing != null && existing.Amount + item.Amount <= m_Capacity )
+					return true;
+			}
+			else if ( item is ThrowingWeapon )
+			{
+				Item existing = this.FindItemByType( typeof ( ThrowingWeapon ) );
+				if ( existing != null && existing.Amount + item.Amount <= m_Capacity )
 					return true;
 			}
 

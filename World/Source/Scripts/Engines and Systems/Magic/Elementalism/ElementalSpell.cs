@@ -150,11 +150,6 @@ namespace Server.Spells.Elementalism
 			return GetResistPercentForCircle( target, Circle );
 		}
 
-		public override TimeSpan GetCastDelay()
-		{
-			return base.GetCastDelay();
-		}
-
 		public override TimeSpan CastDelayBase
 		{
 			get
@@ -221,7 +216,7 @@ namespace Server.Spells.Elementalism
 			else if ( id == 303 ){ shortName = "Sanctuary"; longName = "Elemental Sanctuary"; mantra = "Invata"; }
 			else if ( id == 304 ){ shortName = "Pain"; longName = "Elemental Pain"; mantra = "Durere"; sphere = "Second"; }
 			else if ( id == 305 ){ shortName = "Protection"; longName = "Elemental Protection"; mantra = "Proteja"; sphere = "Second"; }
-			else if ( id == 306 ){ shortName = "Purge"; longName = "Elemental Purge"; mantra = "Vindeca"; sphere = "Second"; }
+			else if ( id == 306 ){ shortName = "Purge"; longName = "Elemental Purge"; mantra = "Purifica"; sphere = "Second"; }
 			else if ( id == 307 ){ shortName = "Steed"; longName = "Elemental Steed"; mantra = "Faptura"; sphere = "Second"; }
 			else if ( id == 308 ){ shortName = "Call"; longName = "Elemental Call"; mantra = "Striga"; sphere = "Third"; skill = "9"; }
 			else if ( id == 309 ){ shortName = "Force"; longName = "Elemental Force"; mantra = "Forta"; sphere = "Third"; skill = "9"; }

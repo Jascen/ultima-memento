@@ -65,8 +65,8 @@ namespace Server.Engines.GlobalShoppe
 					_Reward.Create(5000, () => { return new MetalDyeTubTemp(20); }, uses: 20, description: "Apply dye to metal items."),
 					_Reward.Create(10000, () => { return new AncientCraftingGloves(SkillName.Blacksmith, 5, 10); }, uses: 10, name: "Ancient Blacksmith Gloves (+5 skill)"),
 
-					_Reward.Create(5000, () => { return new SmithHammerRunicI(5); }, uses: 5, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
-					_Reward.Create(20000, () => { return new SmithHammerRunicII(5); }, uses: 5, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
+					_Reward.Create(5000, () => { return new SmithHammerRunicI(15); }, uses: 15, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
+					_Reward.Create(20000, () => { return new SmithHammerRunicII(10); }, uses: 10, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
 					_Reward.Create(50000, () => { return new SmithHammerRunicIII(5); }, uses: 5, name: "Runic (III)", description: "Runic tool; crafted items have 3 magical properties."),
 
 					_Reward.Create(100000, () => { return new Artifact_BootsofHermes(); }, description: "Allows players to run at mounted speed."),
@@ -80,8 +80,8 @@ namespace Server.Engines.GlobalShoppe
 					_Reward.Create(5000, () => { return new WoodDyeTubTemp(20); }, uses: 20, description: "Apply dye to wooden items."),
 					_Reward.Create(10000, () => { return new AncientCraftingGloves(SkillName.Bowcraft, 5, 10); }, uses: 10, name: "Ancient Bowyer Gloves (+5 skill)"),
 
-					_Reward.Create(5000, () => { return new FletcherToolsRunicI(5); }, uses: 5, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
-					_Reward.Create(20000, () => { return new FletcherToolsRunicII(5); }, uses: 5, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
+					_Reward.Create(5000, () => { return new FletcherToolsRunicI(15); }, uses: 15, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
+					_Reward.Create(20000, () => { return new FletcherToolsRunicII(10); }, uses: 10, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
 					_Reward.Create(50000, () => { return new FletcherToolsRunicIII(5); }, uses: 5, name: "Runic (III)", description: "Runic tool; crafted items have 3 magical properties."),
 
 					_Reward.Create(100000, () => { return new Artifact_BootsofHermes(); }, description: "Allows players to run at mounted speed."),
@@ -94,8 +94,8 @@ namespace Server.Engines.GlobalShoppe
 					_Reward.Create(5000, () => { return new WoodDyeTubTemp(20); }, uses: 20, description: "Apply dye to wooden items."),
 					_Reward.Create(10000, () => { return new AncientCraftingGloves(SkillName.Carpentry, 5, 10); }, uses: 10, name: "Ancient Carpenter Gloves (+5 skill)"),
 
-					_Reward.Create(5000, () => { return new CarpenterToolsRunicI(5); }, uses: 5, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
-					_Reward.Create(20000, () => { return new CarpenterToolsRunicII(5); }, uses: 5, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
+					_Reward.Create(5000, () => { return new CarpenterToolsRunicI(15); }, uses: 15, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
+					_Reward.Create(20000, () => { return new CarpenterToolsRunicII(10); }, uses: 10, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
 					_Reward.Create(50000, () => { return new CarpenterToolsRunicIII(5); }, uses: 5, name: "Runic (III)", description: "Runic tool; crafted items have 3 magical properties."),
 
 					_Reward.Create(100000, () => { return new Artifact_BootsofHermes(); }, description: "Allows players to run at mounted speed."),
@@ -130,8 +130,8 @@ namespace Server.Engines.GlobalShoppe
 					_Reward.Create(2000, () => { return new Monocle(250); }, uses: 250),
 					_Reward.Create(10000, () => { return new AncientCraftingGloves(SkillName.Inscribe, 5, 10); }, uses: 10, name: "Ancient Librarian Gloves (+5 skill)"),
 
-					_Reward.Create(5000, () => { return new ScribesPenRunicI(5); }, uses: 5, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
-					_Reward.Create(20000, () => { return new ScribesPenRunicII(5); }, uses: 5, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
+					_Reward.Create(5000, () => { return new ScribesPenRunicI(15); }, uses: 15, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
+					_Reward.Create(20000, () => { return new ScribesPenRunicII(10); }, uses: 10, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
 					_Reward.Create(50000, () => { return new ScribesPenRunicIII(5); }, uses: 5, name: "Runic (III)", description: "Runic tool; crafted items have 3 magical properties."),
 
 					_Reward.Create(100000, () => { return new Artifact_BootsofHermes(); }, description: "Allows players to run at mounted speed."),
@@ -144,8 +144,8 @@ namespace Server.Engines.GlobalShoppe
 					_Reward.Create(2500, () => { return new DurabilityPotion(); }),
 					_Reward.Create(10000, () => { return new AncientCraftingGloves(SkillName.Forensics, 5, 10); }, uses: 10, name: "Ancient Mortician Gloves (+5 skill)"),
 
-					_Reward.Create(5000, () => { return new UndertakerKitRunicI(5); }, uses: 5, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
-					_Reward.Create(20000, () => { return new UndertakerKitRunicII(5); }, uses: 5, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
+					_Reward.Create(5000, () => { return new UndertakerKitRunicI(15); }, uses: 15, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
+					_Reward.Create(20000, () => { return new UndertakerKitRunicII(10); }, uses: 10, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
 					_Reward.Create(50000, () => { return new UndertakerKitRunicIII(5); }, uses: 5, name: "Runic (III)", description: "Runic tool; crafted items have 3 magical properties."),
 
 					_Reward.Create(100000, () => { return new Artifact_BootsofHermes(); }, description: "Allows players to run at mounted speed."),
@@ -160,12 +160,12 @@ namespace Server.Engines.GlobalShoppe
 					_Reward.Create(5000, () => { return new LeatherDyeTubTemp(20); }, uses: 20, description: "Apply dye to leather items."),
 					_Reward.Create(10000, () => { return new AncientCraftingGloves(SkillName.Tailoring, 5, 10); }, uses: 10, name: "Ancient Tailor Gloves (+5 skill)"),
 
-					_Reward.Create(5000, () => { return new SewingKitRunicI(5); }, uses: 5, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
-					_Reward.Create(20000, () => { return new SewingKitRunicII(5); }, uses: 5, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
+					_Reward.Create(5000, () => { return new SewingKitRunicI(15); }, uses: 15, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
+					_Reward.Create(20000, () => { return new SewingKitRunicII(10); }, uses: 10, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
 					_Reward.Create(50000, () => { return new SewingKitRunicIII(5); }, uses: 5, name: "Runic (III)", description: "Runic tool; crafted items have 3 magical properties."),
 
-					_Reward.Create(5000, () => { return new LeatherworkingToolsRunicI(5); }, uses: 5, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
-					_Reward.Create(20000, () => { return new LeatherworkingToolsRunicII(5); }, uses: 5, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
+					_Reward.Create(5000, () => { return new LeatherworkingToolsRunicI(15); }, uses: 15, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
+					_Reward.Create(20000, () => { return new LeatherworkingToolsRunicII(10); }, uses: 10, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
 					_Reward.Create(50000, () => { return new LeatherworkingToolsRunicIII(5); }, uses: 5, name: "Runic (III)", description: "Runic tool; crafted items have 3 magical properties."),
 
 					_Reward.Create(100000, () => { return new Artifact_BootsofHermes(); }, description: "Allows players to run at mounted speed."),
@@ -179,8 +179,8 @@ namespace Server.Engines.GlobalShoppe
 					_Reward.Create(10000, () => { return new AncientCraftingGloves(SkillName.Tinkering, 5, 10); }, uses: 10, name: "Ancient Tinker Gloves (+5 skill)"),
 					_Reward.Create(50000, () => { return new HueVacuumTube(); }, uses: 1),
 
-					_Reward.Create(5000, () => { return new TinkerToolsRunicI(5); }, uses: 5, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
-					_Reward.Create(20000, () => { return new TinkerToolsRunicII(5); }, uses: 5, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
+					_Reward.Create(5000, () => { return new TinkerToolsRunicI(15); }, uses: 15, name: "Runic (I)", description: "Runic tool; crafted items have 1 magical property."),
+					_Reward.Create(20000, () => { return new TinkerToolsRunicII(10); }, uses: 10, name: "Runic (II)", description: "Runic tool; crafted items have 2 magical properties."),
 					_Reward.Create(50000, () => { return new TinkerToolsRunicIII(5); }, uses: 5, name: "Runic (III)", description: "Runic tool; crafted items have 3 magical properties."),
 
 					_Reward.Create(100000, () => { return new Artifact_BootsofHermes(); }, description: "Allows players to run at mounted speed."),
@@ -417,7 +417,7 @@ namespace Server.Engines.GlobalShoppe
 				return Create(itemSnapshot.ItemID, name, description, cost, onSelect);
 			}
 
-			public static _Reward Create(int graphic, string name, string description, int cost, Func<Item> onSelect)
+			private static _Reward Create(int graphic, string name, string description, int cost, Func<Item> onSelect)
 			{
 				return new _Reward
 				{

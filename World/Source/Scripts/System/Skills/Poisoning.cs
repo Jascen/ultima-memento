@@ -69,7 +69,7 @@ namespace Server.SkillHandlers
 					{
 						BaseWeapon weapon = (BaseWeapon)targeted;
 
-						if ( ((PlayerMobile)from).ClassicPoisoning != 1 )
+						if ( !((PlayerMobile)from).Preferences.ClassicPoisoning )
 						{
 							startTimer = (	weapon.PrimaryAbility == WeaponAbility.InfectiousStrike || 
 											weapon.SecondaryAbility == WeaponAbility.InfectiousStrike || 
@@ -88,7 +88,7 @@ namespace Server.SkillHandlers
 							startTimer = ( weapon.Type == WeaponType.Slashing || weapon.Type == WeaponType.Piercing );
 							if ( startTimer == false ){ from.SendMessage(38, "You can only poison slashing or piercing weapons."); }
 						}
-						else if ( weapon.Layer == Layer.TwoHanded && ((PlayerMobile)from).ClassicPoisoning == 1 )
+						else if ( weapon.Layer == Layer.TwoHanded && !((PlayerMobile)from).Preferences.ClassicPoisoning )
 						{
 							from.SendMessage(38, "You can only poison one-handed slashing or piercing weapons.");
 						}

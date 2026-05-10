@@ -459,10 +459,9 @@ namespace Server.Misc
 					state.Send( new CharacterListUpdate( acct ) );
 					return;
 				}
-				
-				var permanentlyDead = ((PlayerMobile)m).Temptations.HasPermanentDeath && !m.Alive;
 
-				if ( !permanentlyDead )
+				var player = (PlayerMobile)m;
+				if ( !player.Avatar.Active && !player.Temptations.HasPermanentDeath )
 				{
 					if ( DateTime.Now < (m.CreationTime + DeleteDelay) )
 					{

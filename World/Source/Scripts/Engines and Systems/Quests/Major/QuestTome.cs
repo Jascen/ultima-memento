@@ -595,9 +595,12 @@ namespace Server.Items
 			}
 			else if ( chest != null && book.VillainName == chest.VillainName && book.VillainTitle == chest.VillainTitle && book.QuestTomeOwner == player && book.QuestTomeGoals >= 3 )
 			{
+				player.AddToBackpack(new HoardMinionFamiliarItem());
 				ApproachObsidian.TitanRiches( player );
+				CustomEventSink.InvokeCombatQuestCompleted(player, 10000);
 				player.LocalOverheadMessage(MessageType.Emote, 1150, true, "You found " + book.GoalItem4 + ".");
 				book.QuestTomeGoals++;
+
 				return true;
 			}
 			return false;

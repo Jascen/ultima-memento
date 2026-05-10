@@ -1,5 +1,4 @@
 using System;
-using Server;
 using Server.Targeting;
 using Server.Items;
 
@@ -45,15 +44,25 @@ namespace Server.Engines.Craft
 			if ( !Item.IsStandardResource( item.Resource ) )
 				return EnhanceResult.AlreadyEnhanced;
 			
-			int num = craftSystem.CanCraft( from, tool, item.GetType() );
+			var itemType = item.GetType();
+			int num = craftSystem.CanCraft( from, tool, itemType );
 			
 			if ( num > 0 )
 			{
-				resMessage = num;
-				return EnhanceResult.None;
+				if ( num > 0 )
+				{
+					resMessage = num;
+					return EnhanceResult.None;
+				}
 			}
 
-			CraftItem craftItem = craftSystem.CraftItems.SearchFor( item.GetType() );
+			CraftItem craftItem = craftSystem.CraftItems.SearchFor( itemType );
+			if ( craftItem == null )
+			{
+				itemType = TryGetFallbackItemType(itemType);
+				if (itemType != null)
+					craftItem = craftSystem.CraftItems.SearchFor( itemType );
+			}
 
 			if ( craftItem == null || craftItem.Resources.Count == 0 )
 				return EnhanceResult.BadItem;
@@ -220,6 +229,19 @@ namespace Server.Engines.Craft
 					from.SendGump( new CraftGump( from, m_CraftSystem, m_Tool, message ) );
 				}
 			}
+		}
+
+		private static Type TryGetFallbackItemType(Type itemType)
+		{
+			if (itemType == typeof(RangerArms)) return typeof(StuddedArms);
+			if (itemType == typeof(RangerChest)) return typeof(StuddedChest);
+			if (itemType == typeof(RangerGloves)) return typeof(StuddedGloves);
+			if (itemType == typeof(RangerGorget)) return typeof(StuddedGorget);
+			if (itemType == typeof(RangerLegs)) return typeof(StuddedLegs);
+
+			if (itemType == typeof(HideChest)) return typeof(LeatherChest);
+			
+			return null;
 		}
 	}
 }

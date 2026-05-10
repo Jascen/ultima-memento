@@ -794,6 +794,7 @@ namespace Server.Items
 		public bool isAlchemy( Item item )
 		{
 			if (
+				item is BaseMixture || 
 				item is AgilityPotion || 
 				item is GreaterAgilityPotion || 
 				item is ConflagrationPotion || 

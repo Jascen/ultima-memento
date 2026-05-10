@@ -21,17 +21,17 @@ namespace Server.Items
 
 		public override SkillName AccuracySkill{ get{ return SkillName.Marksmanship; } }
 
-		public override WeaponAbility PrimaryAbility{ get{ return WeaponAbility.ParalyzingBlow; } }
-		public override WeaponAbility SecondaryAbility{ get{ return WeaponAbility.MortalStrike; } }
-		public override WeaponAbility ThirdAbility{ get{ return WeaponAbility.MovingShot; } }
-		public override WeaponAbility FourthAbility{ get{ return WeaponAbility.DoubleShot; } }
-		public override WeaponAbility FifthAbility{ get{ return WeaponAbility.InfectiousStrike; } }
+		public override WeaponAbility PrimaryAbility{ get{ return WeaponAbility.ArmorIgnore; } }
+		public override WeaponAbility SecondaryAbility{ get{ return WeaponAbility.ShadowStrike; } }
+		public override WeaponAbility ThirdAbility{ get{ return WeaponAbility.MortalStrike; } }
+		public override WeaponAbility FourthAbility{ get{ return WeaponAbility.InfectiousStrike; } }
+		public override WeaponAbility FifthAbility{ get{ return WeaponAbility.DoubleShot; } }
 
 		public override int AosStrengthReq{ get{ return 20; } }
-		public override int AosMinDamage{ get{ return Core.ML ? 15 : 16; } }
-		public override int AosMaxDamage{ get{ return Core.ML ? 19 : 18; } }
+		public override int AosMinDamage{ get{ return 15; } }
+		public override int AosMaxDamage{ get{ return 19; } }
 		public override int AosSpeed{ get{ return 25; } }
-		public override float MlSpeed{ get{ return 5.00f; } }
+		public override float MlSpeed{ get{ return 4.00f; } }
 
 		public override int OldStrengthReq{ get{ return 15; } }
 		public override int OldMinDamage{ get{ return 9; } }
@@ -102,16 +102,6 @@ namespace Server.Items
 
 				return TimeSpan.FromSeconds( 0.25 );
 			}
-		}
-
-		public override void OnHit( Mobile attacker, Mobile defender, double damageBonus )
-		{
-			base.OnHit( attacker, defender, damageBonus );
-		}
-
-		public override void OnMiss( Mobile attacker, Mobile defender )
-		{
-			base.OnMiss( attacker, defender );
 		}
 
 		public override bool OnFired( Mobile attacker, Mobile defender )

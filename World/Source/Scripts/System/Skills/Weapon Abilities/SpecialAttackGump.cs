@@ -406,14 +406,14 @@ namespace Server.Items
             Mobile m = e.Mobile;
 			if ( m is PlayerMobile )
 			{
-				if ( ((PlayerMobile)m).CharacterWepAbNames != 1 )
+				if ( !((PlayerMobile)m).Preferences.CharacterWepAbNames )
 				{
-					((PlayerMobile)m).CharacterWepAbNames = 1;
+					((PlayerMobile)m).Preferences.CharacterWepAbNames = true;
 					m.SendMessage(68, "You have enabled weapon ability names.");
 				}
 				else
 				{
-					((PlayerMobile)m).CharacterWepAbNames = 0;
+					((PlayerMobile)m).Preferences.CharacterWepAbNames = false;
 					m.SendMessage(38, "You have disabled weapon ability names.");
 				}
 			}
@@ -423,7 +423,7 @@ namespace Server.Items
         {
 			if ( m is PlayerMobile )
 			{
-				if ( ((PlayerMobile)m).CharacterWepAbNames > 0 )
+				if ( ((PlayerMobile)m).Preferences.CharacterWepAbNames )
 					return true;
 			}
 

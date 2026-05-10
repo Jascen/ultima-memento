@@ -610,7 +610,9 @@ namespace Server.Items
 						else
 						{
 							e.SendMessage("You found the chest just below the ground, so you have no more use for the parchment.");
-							Item chest = new BuriedChest( ScrollLevel*2, ScrollCharacter, e );
+
+							int level = 1 + Math.Min( 10, Math.Max(0, ScrollLevel) );
+							Item chest = new BuriedChest( level, ScrollCharacter, e );
 							chest.MoveToWorld( e.Location, e.Map );
 							LoggingFunctions.LogQuestChest( e, ScrollCharacter );
 							e.PlaySound( 0x125 );

@@ -70,7 +70,7 @@ namespace Server.Items
 						if ( extraCloth )
 							resc.Amount = resc.Amount * 10;
 						
-						if (from is PlayerMobile && false == ((PlayerMobile)from).ColorlessFabricBreakdown)
+						if (from is PlayerMobile && false == ((PlayerMobile)from).Preferences.ColorlessFabricBreakdown)
 							resc.Hue = item.Hue;
 
 						item.Delete();

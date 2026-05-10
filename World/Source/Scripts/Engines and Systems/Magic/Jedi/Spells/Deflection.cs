@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using Server;
-using Server.Targeting;
-using Server.Network;
 using Server.Items;
 
 namespace Server.Spells.Jedi
@@ -43,8 +39,6 @@ namespace Server.Spells.Jedi
 
 			return true;
 		}
-
-		private static Hashtable m_Table = new Hashtable();
 
 		public override void OnCast()
 		{

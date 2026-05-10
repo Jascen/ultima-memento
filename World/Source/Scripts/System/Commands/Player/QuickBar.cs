@@ -14,6 +14,7 @@ using Server.Commands;
 using Server.Misc;
 using Server.Items;
 using System.Globalization;
+using Server.SpellBars;
 
 namespace Server.Gumps 
 {

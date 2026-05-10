@@ -171,7 +171,7 @@ namespace Server.Items
 		[Constructable]
 		public ThighBoots( int hue ) : base( 0x1711, hue )
 		{
-			Name = "boots";
+			Name = "thigh boots";
 			Weight = 4.0;
 		}
 

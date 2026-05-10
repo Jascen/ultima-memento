@@ -28,6 +28,10 @@ namespace Server.Temptation
 		{ get { return GetFlag(TemptationFlags.Deathwish); } }
 
 		[CommandProperty(AccessLevel.GameMaster)]
+		public bool Active
+		{ get { return this != Default; } }
+
+		[CommandProperty(AccessLevel.GameMaster)]
 		public bool CanUsePuzzleboxes
 		{
 			get { return GetFlag(TemptationFlags.Puzzle_master); }
@@ -40,6 +44,13 @@ namespace Server.Temptation
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public TemptationFlags Flags { get; set; }
+
+		[CommandProperty(AccessLevel.GameMaster)]
+		public bool HasAggressiveNerfs
+		{
+			get { return GetFlag(TemptationFlags.Aggressive_nerfs); }
+			set { SetFlag(TemptationFlags.Aggressive_nerfs, value); }
+		}
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public bool HasPermanentDeath
@@ -64,11 +75,15 @@ namespace Server.Temptation
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public bool LimitTitanBonus
-		{ get { return GetFlag(TemptationFlags.Puzzle_master); } }
+		{ get { return GetFlag(TemptationFlags.Puzzle_master | TemptationFlags.Aggressive_nerfs); } }
+
+		[CommandProperty(AccessLevel.GameMaster)]
+		public bool ReduceFugitiveSkillCap
+		{ get { return GetFlag(TemptationFlags.Puzzle_master | TemptationFlags.Aggressive_nerfs); } }
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public bool ReduceRacialMagicalAttributes
-		{ get { return GetFlag(TemptationFlags.Puzzle_master); } }
+		{ get { return GetFlag(TemptationFlags.Puzzle_master | TemptationFlags.Aggressive_nerfs); } }
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public bool ReduceStatGainDelay

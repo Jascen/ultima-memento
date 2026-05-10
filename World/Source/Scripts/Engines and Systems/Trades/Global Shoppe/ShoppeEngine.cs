@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Server.Mobiles;
 
 namespace Server.Engines.GlobalShoppe
 {
@@ -37,12 +38,12 @@ namespace Server.Engines.GlobalShoppe
 
         public PlayerContext GetOrCreateContext(Mobile mobile)
         {
-            var username = mobile.Account.Username;
+            var id = TryGetId(mobile as PlayerMobile);
 
             PlayerContext context;
-            if (m_Context.TryGetValue(username, out context)) return context;
+            if (m_Context.TryGetValue(id, out context)) return context;
 
-            return m_Context[username] = new PlayerContext();
+            return m_Context[id] = new PlayerContext();
         }
 
         public TradeSkillContext GetOrCreateShoppeContext(Mobile mobile, ShoppeType shoppeType)
@@ -96,6 +97,22 @@ namespace Server.Engines.GlobalShoppe
                     }
                 }
             );
+        }
+
+        private static string TryGetId(PlayerMobile player)
+        {
+            if (player == null || player.Account == null)
+            {
+                Console.WriteLine("Failed to ID for {0}", player != null ? player.Name : "Unknown Mobile");
+                return null;
+            }
+
+            var username = player.Account.Username.Replace("$", "");
+            var id = username;
+            if (player.Avatar.Active) id += "-$AV";
+            else if (player.Temptations.HasPermanentDeath) id += "-$HC";
+
+            return id;
         }
 
         private class InternalTimer : Timer

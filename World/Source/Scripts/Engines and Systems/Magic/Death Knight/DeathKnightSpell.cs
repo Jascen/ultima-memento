@@ -1,11 +1,6 @@
 using System;
-using Server;
-using Server.Spells;
 using Server.Network;
-using Server.Mobiles;
 using Server.Items;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace Server.Spells.DeathKnight
 {
@@ -204,7 +199,6 @@ namespace Server.Spells.DeathKnight
 
 			if ( tithing > 0 )
 			{
-				ArrayList targets = new ArrayList();
 				foreach ( Item item in World.Items.Values )
 				{
 					if ( item is SoulLantern )
@@ -225,7 +219,6 @@ namespace Server.Spells.DeathKnight
 		{
 			int souls = 0;
 
-			ArrayList targets = new ArrayList();
 			foreach ( Item item in World.Items.Values )
 			{
 				if ( item is SoulLantern )

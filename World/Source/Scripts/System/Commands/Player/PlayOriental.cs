@@ -1,7 +1,4 @@
-﻿using System;
-using Server;
-using System.Collections.Generic;
-using Server.Commands;
+﻿using Server.Commands;
 using Server.Mobiles;
 
 namespace Server.Items
@@ -17,19 +14,20 @@ namespace Server.Items
         [Description("Enables or disables the oriental play style.")]
         private static void OnTogglePlayOriental(CommandEventArgs e)
         {
-            Mobile m = e.Mobile;
+            var m = e.Mobile as PlayerMobile;
+			if (m == null) return;
 
-			if ( ((PlayerMobile)m).CharacterOriental == 1 )
+			if ( m.Preferences.CharacterOriental )
 			{
 				m.SendMessage(38, "You have disabled the oriental play style.");
-				((PlayerMobile)m).CharacterOriental = 0;
+				m.Preferences.CharacterOriental = false;
 			}
 			else
 			{
 				m.SendMessage(68, "You have enabled the oriental play style.");
-				((PlayerMobile)m).CharacterOriental = 1;
-				((PlayerMobile)m).CharacterEvil = 0;
-				((PlayerMobile)m).CharacterBarbaric = 0;
+				m.Preferences.CharacterOriental = true;
+				m.Preferences.CharacterEvil = false;
+				m.Preferences.CharacterBarbaric = 0;
 			}
         }
     }

@@ -139,7 +139,7 @@ namespace Server
 		public static Type DefaultRegionType{ get{ return m_DefaultRegionType; } set{ m_DefaultRegionType = value; } }
 
 		private static TimeSpan m_StaffLogoutDelay = TimeSpan.FromSeconds( 10.0 );
-		private static TimeSpan m_DefaultLogoutDelay = TimeSpan.FromMinutes( 5.0 );
+		private static TimeSpan m_DefaultLogoutDelay = TimeSpan.FromSeconds( 30 );
 
 		public static TimeSpan StaffLogoutDelay{ get{ return m_StaffLogoutDelay; } set{ m_StaffLogoutDelay = value; } }
 		public static TimeSpan DefaultLogoutDelay{ get{ return m_DefaultLogoutDelay; } set{ m_DefaultLogoutDelay = value; } }

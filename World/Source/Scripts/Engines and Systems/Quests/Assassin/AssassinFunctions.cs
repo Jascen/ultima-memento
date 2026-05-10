@@ -301,6 +301,7 @@ namespace Server.Misc
 					int totalKarma = nAssassinFee;
 						if ( sAssassinCategory == "Innocent" ){ totalKarma = nAssassinFee * 2; } // MORE KARMA LOSS FOR CITIZENS
 
+					CustomEventSink.InvokeCombatQuestCompleted( m, nAssassinFee );
 					Titles.AwardFame( m, ((int)(totalKarma/100)), true );
 					Titles.AwardKarma( m, -((int)(totalKarma/100)), true );
 

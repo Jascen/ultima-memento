@@ -15,7 +15,7 @@ namespace Server.Items
 		public Bottle( int amount ) : base( 0xF0E )
 		{
 			Stackable = true;
-			Weight = 1.0;
+			Weight = 0.5;
 			Amount = amount;
 			Built = true;
 		}
@@ -24,13 +24,11 @@ namespace Server.Items
 		{
 		}
 
-		
-
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
 
-			writer.Write( (int) 0 ); // version
+			writer.Write( (int) 1 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
@@ -39,7 +37,7 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 
-			Built = true;
+			if (version < 1) Weight = 0.5;
 		}
 	}
 }

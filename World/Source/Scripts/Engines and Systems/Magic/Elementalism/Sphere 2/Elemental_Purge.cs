@@ -7,7 +7,7 @@ namespace Server.Spells.Elementalism
 	public class Elemental_Purge_Spell : ElementalSpell
 	{
 		private static SpellInfo m_Info = new SpellInfo(
-				"Elemental Purge", "Vindeca",
+				"Elemental Purge", "Purifica",
 				212,
 				9061
 			);

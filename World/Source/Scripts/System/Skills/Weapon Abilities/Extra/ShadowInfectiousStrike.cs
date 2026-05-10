@@ -20,10 +20,7 @@ namespace Server.Items
 			bool canpoison = true;
 			bool canhide = true;
 
-			int ClassicPoisons = 0;
-			ClassicPoisons = ((PlayerMobile)attacker).ClassicPoisoning;
-
-			if ( ClassicPoisons > 0 )
+			if ( ((PlayerMobile)attacker).Preferences.ClassicPoisoning )
 			{
 				attacker.SendMessage( "You cannot use this attack with your current poison settings!" );
 				return;

@@ -73,6 +73,11 @@ namespace Server.Items
 				return;
 			}
 
+			DoEffect( attacker, defender );
+		}
+
+		public static void DoEffect ( Mobile attacker, Mobile defender )
+		{
 			defender.FixedEffect( 0x376A, 9, 32 );
 			defender.PlaySound( 0x204 );
 

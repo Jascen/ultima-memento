@@ -1,31 +1,7 @@
-using System;
-using Server;
-using System.Collections;
-using Server.Network;
 using Server.Mobiles;
-using Server.Items;
-using Server.Misc;
 using Server.Commands;
-using Server.Commands.Generic;
-using Server.Spells;
-using Server.Spells.First;
-using Server.Spells.Second;
-using Server.Spells.Third;
-using Server.Spells.Fourth;
-using Server.Spells.Fifth;
-using Server.Spells.Sixth;
-using Server.Spells.Seventh;
-using Server.Spells.Eighth;
-using Server.Spells.Necromancy;
-using Server.Spells.Chivalry;
-using Server.Spells.DeathKnight; 
-using Server.Spells.Song;
-using Server.Spells.HolyMan;
-using Server.Spells.Research;
-using Server.Prompts;
-using Server.Gumps;
 
-namespace Server.Items
+namespace Server.SpellBars
 {
     class AncientBook
     {
@@ -44,15 +20,17 @@ namespace Server.Items
 		public static void AncientBook_OnCommand( CommandEventArgs e )
 		{
             Mobile m = e.Mobile;
+			var player = m as PlayerMobile;
+			if (player == null) return;
 
-			if ( !((PlayerMobile)m).UsingAncientBook )
+			if ( !player.Preferences.UsingAncientBook )
 			{
-				((PlayerMobile)m).UsingAncientBook = true;
+				player.Preferences.UsingAncientBook = true;
 				m.SendMessage(38, "You are now using the ancient spellbook.");
 			}
 			else
 			{
-				((PlayerMobile)m).UsingAncientBook = false;
+				player.Preferences.UsingAncientBook = false;
 				m.SendMessage(68, "You are now using the research bag.");
 			}
         }

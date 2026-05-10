@@ -26,13 +26,23 @@ namespace Server.Items
 
 		public override void OnDoubleClick( Mobile from )
 		{
+			if ( from is PlayerMobile )
+			{
+				var player = (PlayerMobile)from;
+				if (player.Avatar.Active && !player.Avatar.UnlockMonsterRaces)
+				{
+					from.SendMessage("An Avatar must unlock the Monster Races system before using this.");
+					return;
+				}
+			}
+
 			if ( from.InRange( this.GetWorldLocation(), 4 ) && MyServerSettings.MonstersAllowed() )
 			{
 				if ( from.RaceSection < 1 ){ from.RaceSection = 1; }
 				from.CloseGump( typeof( GypsyTarotGump ) );
 				from.CloseGump( typeof( WelcomeGump ) );
 				from.CloseGump( typeof( RacePotionsGump ) );
-				from.SendGump( new RacePotionsGump( from, 0 ) );
+				from.SendGump( new RacePotionsGump( from, 0, false ) );
 				from.PlaySound( 0x02F );
 			}
 		}
@@ -55,11 +65,13 @@ namespace Server.Items
 
 		public class RacePotionsGump : Gump
 		{
+			private bool m_RequireConfirmation;
 			private int m_Tavern; 
 
-			public RacePotionsGump( Mobile from, int tavern ): base( 50, 50 )
+			public RacePotionsGump( Mobile from, int tavern, bool requireConfirmation ): base( 50, 50 )
 			{
 				m_Tavern = tavern;
+				m_RequireConfirmation = requireConfirmation;
 				string color = "#c09b88";
 				int page = from.RaceSection;
 
@@ -282,7 +294,7 @@ namespace Server.Items
 				if ( info.ButtonID == 123456789 )
 				{
 					from.RaceSection = 0;
-					from.SendGump( new RacePotionsGump( from, m_Tavern ) );
+					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation ) );
 					from.SendSound( 0x4A ); 
 				}
 				else if ( info.ButtonID > 6000 && info.ButtonID < 6100 )
@@ -336,26 +348,34 @@ namespace Server.Items
 					else if ( quick == 44 ){ move = 166; }
 
 					from.RaceSection = move+1;
-					from.SendGump( new RacePotionsGump( from, m_Tavern ) );
+					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation ) );
 					from.SendSound( 0x4A ); 
 				}
 				else if ( info.ButtonID == 9999 )
 				{
-					from.SendGump( new RacePotionsGump( from, m_Tavern ) );
+					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation ) );
 					from.SendGump( new CreatureHelpGump( from, m_Tavern ) );
 					from.SendSound( 0x4A ); 
 				}
 				else if ( info.ButtonID > 0 && info.ButtonID < 180 )
 				{
 					from.RaceSection = info.ButtonID;
-					from.SendGump( new RacePotionsGump( from, m_Tavern ) );
+					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation ) );
 					from.SendSound( 0x4A ); 
 				}
 				else if ( info.ButtonID == 1000 )
 				{
-					BaseRace.BackToHuman( from );
-					if ( m_Tavern == 0 ){ from.PlaySound( Utility.RandomList( 0x030, 0x031 ) ); }
-					Effects.SendLocationParticles( EffectItem.Create( from.Location, from.Map, EffectItem.DefaultDuration ), 0x3728, 8, 20, 0, 0, 5042, 0 );
+					ConfirmationGump.PromptIfFalse(
+						from,
+						m_RequireConfirmation,
+						() =>
+							{
+								BaseRace.BackToHuman( from );
+								if ( m_Tavern == 0 ){ from.PlaySound( Utility.RandomList( 0x030, 0x031 ) ); }
+								Effects.SendLocationParticles( EffectItem.Create( from.Location, from.Map, EffectItem.DefaultDuration ), 0x3728, 8, 20, 0, 0, 5042, 0 );
+							},
+						onConfirmed => new ConfirmationGump(from, "Confirm Race Change", "Changing to a Human will cause you to permanently lose all racial bonuses. You will not be able to change back. Are you sure you want to change?", onConfirmed )
+					);
 				}
 				else if ( info.ButtonID > 80000 )
 				{

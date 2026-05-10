@@ -53,12 +53,16 @@ namespace Server.Engines.Messaging
 
 		private void OnPlayerVendorSale(PlayerVendorSaleEventArgs e)
 		{
+			if (AccessLevel.Counselor <= e.Mobile.AccessLevel) return;
+
 			EventService.QueueMessage(string.Format("*{0}* has purchased *{1}* from *{2}*", e.Mobile.Name, e.Item.Name, e.VendorName));
 		}
 
 		private void OnAchievementObtained(AchievementObtainedArgs e)
 		{
 			var type = e.Achievement.GetType();
+			if (AccessLevel.Counselor <= e.Mobile.AccessLevel) return;
+
 			if (type == typeof(DiscoveryAchievement)) // town or dungeon
 			{
 				EventService.QueueMessage(string.Format("*{0}* has discovered *{1}*", e.Mobile.Name, e.Achievement.Title));
@@ -87,7 +91,10 @@ namespace Server.Engines.Messaging
 		private void OnBeginJourney(BeginJourneyArgs e)
 		{
 			var player = e.Mobile;
-			var message = string.Format("*{0}* has begun their journey", player.Name);
+			if (AccessLevel.Counselor <= player.AccessLevel) return;
+
+			var name = player.Avatar.Active ? string.Format("{0} {1}", Icons.Dagger, player.Name) : player.Name;
+			var message = string.Format("*{0}* has begun their journey", name);
 
 			var temptationFlags = player.Temptations.Flags;
 			if (temptationFlags != TemptationFlags.None)
@@ -120,7 +127,7 @@ namespace Server.Engines.Messaging
 		{
 			var player = args.Mobile as PlayerMobile;
 			if (player == null) return;
-			if (AccessLevel.Counselor < player.AccessLevel) return;
+			if (AccessLevel.Counselor <= player.AccessLevel) return;
 			if (!player.PublicInfo) return;
 
 			var builder = new StringBuilder();
@@ -151,6 +158,7 @@ namespace Server.Engines.Messaging
 		private void OnEventLogged(EventLoggedArgs e)
 		{
 			if (!e.Mobile.PublicInfo) return;
+			if (AccessLevel.Counselor <= e.Mobile.AccessLevel) return;
 
 			string @event = e.Event;
 			if (!e.IsAnonymous)
@@ -164,7 +172,7 @@ namespace Server.Engines.Messaging
 			var player = e.Mobile as PlayerMobile;
 			if (player == null) return;
 			if (e.Item == null) return;
-			if (AccessLevel.Counselor < player.AccessLevel) return;
+			if (AccessLevel.Counselor <= player.AccessLevel) return;
 
 			EventService.QueueMessage(string.Format("*{0}* has acquired *{1}*!", player.RawName, e.Item.Name));
 		}
@@ -173,7 +181,7 @@ namespace Server.Engines.Messaging
 		{
 			var player = args.Mobile as PlayerMobile;
 			if (player == null) return;
-			if (AccessLevel.Counselor < player.AccessLevel) return;
+			if (AccessLevel.Counselor <= player.AccessLevel) return;
 			if (!player.PublicInfo) return;
 
 			EventService.QueueMessage(string.Format("*{0} {1}* has entered the realm", player.Name, player.Title != null ? player.Title : "the " + GetPlayerInfo.GetSkillTitle(player)));
@@ -183,7 +191,7 @@ namespace Server.Engines.Messaging
 		{
 			var player = args.Mobile as PlayerMobile;
 			if (player == null) return;
-			if (AccessLevel.Counselor < player.AccessLevel) return;
+			if (AccessLevel.Counselor <= player.AccessLevel) return;
 			if (!player.PublicInfo) return;
 
 			EventService.QueueMessage(string.Format("*{0}* has left the realm", player.RawName));

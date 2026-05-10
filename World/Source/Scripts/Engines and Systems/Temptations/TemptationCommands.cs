@@ -26,6 +26,12 @@ namespace Server.Temptation
 				return;
 			}
 
+			if (from.Avatar.Active && !from.Avatar.UnlockTemptations)
+			{
+				from.SendMessage("An Avatar must unlock the Temptations system before using this command.");
+				return;
+			}
+
 			from.SendGump(new TemptationGump(pm, new PlayerContext(from.Temptations), from));
 		}
 	}

@@ -1,8 +1,5 @@
 using System;
-using Server;
-using Server.Misc;
 using Server.Mobiles;
-using Server.Temptation;
 
 namespace Server.Misc
 {
@@ -163,6 +160,7 @@ namespace Server.Misc
 
 			if (from is PlayerMobile)
 			{	
+				var player = (PlayerMobile)from;
 				if (skill.Base <= 50)
 					gc *= 1.5;
 				else if (skill.Base <= 70)
@@ -182,7 +180,13 @@ namespace Server.Misc
 				else if (skill.Base <= 125)
 					gc *= 0.38;
 				
-				if (((PlayerMobile)from).Temptations.AcceleratedSkillGain)
+				if (player.Avatar.Active)
+				{
+					if (player.Avatar.SkillGainRateLevel > 0)
+						gc *= 1 + (Engines.Avatar.Constants.SKILL_GAIN_RATE_PER_LEVEL * player.Avatar.SkillGainRateLevel * 0.01);
+				}
+
+				if (player.Temptations.AcceleratedSkillGain)
 					gc *= 1.25;
 			}
 			
@@ -462,23 +466,25 @@ namespace Server.Misc
 					return false;
 			}
 
-			if ( from.StatCap > 250 )
+			if ( from is PlayerMobile )
 			{
-				switch ( stat )
+				var player = (PlayerMobile)from;
+				if (player.IsTitanOfEther)
 				{
-					case Stat.Str: return ( from.StrLock == StatLockType.Up && from.RawStr < 175 );
-					case Stat.Dex: return ( from.DexLock == StatLockType.Up && from.RawDex < 175 );
-					case Stat.Int: return ( from.IntLock == StatLockType.Up && from.RawInt < 175 );
+					switch ( stat )
+					{
+						case Stat.Str: return from.StrLock == StatLockType.Up && from.RawStr < 175;
+						case Stat.Dex: return from.DexLock == StatLockType.Up && from.RawDex < 175;
+						case Stat.Int: return from.IntLock == StatLockType.Up && from.RawInt < 175;
+					}
 				}
 			}
-			else
+
+			switch ( stat )
 			{
-				switch ( stat )
-				{
-					case Stat.Str: return ( from.StrLock == StatLockType.Up && from.RawStr < 150 );
-					case Stat.Dex: return ( from.DexLock == StatLockType.Up && from.RawDex < 150 );
-					case Stat.Int: return ( from.IntLock == StatLockType.Up && from.RawInt < 150 );
-				}
+				case Stat.Str: return from.StrLock == StatLockType.Up && from.RawStr < 150;
+				case Stat.Dex: return from.DexLock == StatLockType.Up && from.RawDex < 150;
+				case Stat.Int: return from.IntLock == StatLockType.Up && from.RawInt < 150;
 			}
 
 			return false;
@@ -543,6 +549,8 @@ namespace Server.Misc
 
 		public static TimeSpan GetCooldownRemaining(PlayerMobile player, StatType stat)
 		{
+			if (player.Avatar.Active) return TimeSpan.Zero;
+
 			var gainDelay = player.Temptations.ReduceStatGainDelay ? TimeSpan.FromMinutes(5) : m_StatGainDelay;
 
 			DateTime end;
@@ -561,6 +569,8 @@ namespace Server.Misc
 
 		public static void GainStat( Mobile from, Stat stat )
 		{
+			var isAvatar = from is PlayerMobile && ((PlayerMobile)from).Avatar.Active;
+
 			switch( stat )
 			{
 				case Stat.Str:
@@ -569,7 +579,7 @@ namespace Server.Misc
 						if ( (from.LastStrGain + m_PetStatGainDelay) >= DateTime.Now )
 							return;
 					}
-					else if( (from.LastStrGain + m_StatGainDelay) >= DateTime.Now )
+					else if( !isAvatar && (from.LastStrGain + m_StatGainDelay) >= DateTime.Now )
 						return;
 
 					from.LastStrGain = DateTime.Now;
@@ -581,7 +591,7 @@ namespace Server.Misc
 						if ( (from.LastDexGain + m_PetStatGainDelay) >= DateTime.Now )
 							return;
 					}
-					else if( (from.LastDexGain + m_StatGainDelay) >= DateTime.Now )
+					else if( !isAvatar && (from.LastDexGain + m_StatGainDelay) >= DateTime.Now )
 						return;
 
 					from.LastDexGain = DateTime.Now;
@@ -594,7 +604,7 @@ namespace Server.Misc
 							return;
 					}
 
-					else if( (from.LastIntGain + m_StatGainDelay) >= DateTime.Now )
+					else if( !isAvatar && (from.LastIntGain + m_StatGainDelay) >= DateTime.Now )
 						return;
 
 					from.LastIntGain = DateTime.Now;

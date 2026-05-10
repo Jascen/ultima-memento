@@ -187,6 +187,13 @@ namespace Server
 
             if (Feint.Registry.ContainsKey(m) && Feint.Registry[m].Enemy == from)
                 totalDamage -= (int)(totalDamage * ((double)Feint.Registry[m].DamageReduction / 100));
+			
+			if ( totalDamage < 1 ) return 0;
+
+            if (from != null) // sanity check
+            {
+                SpellHelper.DoLeech(totalDamage, from, m);
+            }
 
 			m.Damage( totalDamage, from );
 			return totalDamage;
@@ -249,7 +256,7 @@ namespace Server
 		{
 		}
 
-		public static int GetValue( Mobile m, AosAttribute attribute )
+		public static int GetValue( Mobile m, AosAttribute attribute, bool applyCap = true )
 		{
 			if( !Core.AOS )
 				return 0;
@@ -346,6 +353,8 @@ namespace Server
 				if ( ((PlayerMobile)m).Temptations.ReduceRacialMagicalAttributes ) value = Math.Max( value, raceValue ); // Does not effect Stats, Skills, or Resists
 				else value += raceValue;
 			}
+
+			if (!applyCap) return value;
 				
 			if ( attribute == AosAttribute.LowerRegCost && value > MyServerSettings.LowerReg() )
 				value = MyServerSettings.LowerReg();

@@ -17,9 +17,9 @@ namespace Server.Commands
             var player = e.Mobile as PlayerMobile;
             if (player == null) return;
 
-            player.IgnoreVendorGoldSafeguard = !player.IgnoreVendorGoldSafeguard;
+            player.Preferences.IgnoreVendorGoldSafeguard = !player.Preferences.IgnoreVendorGoldSafeguard;
 
-            var message = player.IgnoreVendorGoldSafeguard
+            var message = player.Preferences.IgnoreVendorGoldSafeguard
                 ? "Safeguard disabled. Vendors will no longer stop sales they cannot afford."
                 : "Vendors will now stop sales if they cannot afford it.";
             player.SendMessage(68, message);

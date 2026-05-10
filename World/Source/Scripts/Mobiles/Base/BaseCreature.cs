@@ -5488,15 +5488,20 @@ namespace Server.Mobiles
 		{
 			if ( CheckTeachingMatch( from ) )
 			{
-				if ( Teach( m_Teaching, from, dropped.Amount, true ) )
+				int cost = 0;
+				if ( Teach( m_Teaching, from, dropped.Amount, true, out cost ) )
 				{
 					if ( this is BaseVendor )
-						((BaseVendor)this).AddToCoinPurse( from, dropped.Amount );
-
+						((BaseVendor)this).AddToCoinPurse( from, cost );
+					
 					this.InvalidateProperties();
 
-					dropped.Delete();
-					return true;
+					dropped.Amount -= cost;
+					if (dropped.Amount < 1)
+						dropped.Delete();
+
+					// If it wasn't deleted, bounce it back
+					return dropped.Deleted;
 				}
 			}
 			else if ( IsHumanInTown() )
@@ -7002,6 +7007,13 @@ namespace Server.Mobiles
 
 		public virtual bool Teach( SkillName skill, Mobile m, int maxPointsToLearn, bool doTeach )
 		{
+			int cost = 0;
+			return Teach( skill, m, maxPointsToLearn, doTeach, out cost );
+		}
+
+		public virtual bool Teach( SkillName skill, Mobile m, int maxPointsToLearn, bool doTeach, out int cost )
+		{
+			cost = 0;
 			int pointsToLearn = 0;
 			TeachResult res = CheckTeachSkills( skill, m, maxPointsToLearn, ref pointsToLearn, doTeach );
 
@@ -7035,6 +7047,7 @@ namespace Server.Mobiles
 						Say( 501539 ); // Let me show thee something of how this is done.
 						m.SendLocalizedMessage( 501540 ); // Your skill level increases.
 
+						cost = pointsToLearn;
 						m_Teaching = (SkillName)(-1);
 
 						if ( m is PlayerMobile )
@@ -8397,6 +8410,7 @@ namespace Server.Mobiles
 				GenerateLoot( false );
 				if ( Backpack != null )
 				{
+					LootPackChange.MakeCoins(this.Backpack, this);
 					var lootingRights = GetLootingRights( this.DamageEntries, this.HitsMax );
 					var mobiles = lootingRights.Select(store => store.m_Mobile);
 					NotIdentified.DoAutoDelete( Backpack, mobiles );
@@ -8651,12 +8665,12 @@ namespace Server.Mobiles
 			return rights;
 		}
 
-		public virtual void OnKilledBy( Mobile mob )
+		public virtual void OnKilledBy( Mobile mob, Container corpse, int damagerCount, int totalDamage )
 		{
 			if ( m_Paragon && Paragon.CheckArtifactChance( mob, this ) )
 				Paragon.GiveArtifactTo( mob );
 
-            EventSink.InvokeOnKilledBy(new OnKilledByArgs(this, mob));
+            EventSink.InvokeOnKilledBy( this, mob, corpse, damagerCount, totalDamage );
 		}
 
 		public override void OnDeath( Container c )
@@ -8776,17 +8790,16 @@ namespace Server.Mobiles
 					int totalKarma = -Karma / 100;
 
 					List<DamageStore> list = GetLootingRights( this.DamageEntries, this.HitsMax );
+
 					List<Mobile> titles = new List<Mobile>();
 					List<int> fame = new List<int>();
 					List<int> karma = new List<int>();
 
-					for ( int i = 0; i < list.Count; ++i )
+					var mobilesWhoKilledMob = new HashSet<Serial>();
+					var damageValueTrack = 0;
+
+					foreach ( var ds in list )
 					{
-						DamageStore ds = list[i];
-
-						if ( !ds.m_HasRight )
-							continue;
-
 						Party party = Engines.PartySystem.Party.Get( ds.m_Mobile );
 
 						if ( party != null )
@@ -8823,12 +8836,23 @@ namespace Server.Mobiles
 							karma.Add( totalKarma );
 						}
 
-						OnKilledBy( ds.m_Mobile );
+						damageValueTrack = Math.Max( damageValueTrack, ds.m_Damage );
+
+						OnKilledBy( ds.m_Mobile, c, party != null ? 2 : list.Count, ds.m_Damage );
+						mobilesWhoKilledMob.Add( ds.m_Mobile.Serial );
 					}
+
 					for ( int i = 0; i < titles.Count; ++i )
 					{
-						Titles.AwardFame( titles[ i ], fame[ i ], true );
-						Titles.AwardKarma( titles[ i ], karma[ i ], true );
+						var mobile = titles[ i ];
+						Titles.AwardFame( mobile, fame[ i ], true );
+						Titles.AwardKarma( mobile, karma[ i ], true );
+
+						// Grant credit to people who haven't gotten credit yet
+						if ( !mobilesWhoKilledMob.Contains( mobile.Serial ) )
+						{
+							OnKilledBy( mobile, c, 2, damageValueTrack );
+						}
 					}
 				}
 
@@ -9675,10 +9699,7 @@ namespace Server.Mobiles
 		{
 			BardProvoked = true;
 
-			if ( !Core.ML )
-			{
-				this.PublicOverheadMessage( MessageType.Emote, EmoteHue, false, "*looks furious*" );
-			}
+			this.PublicOverheadMessage( MessageType.Emote, EmoteHue, false, "*looks furious*" );
 
 			if ( bSuccess )
 			{
@@ -9867,6 +9888,19 @@ namespace Server.Mobiles
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int RemoveStep { get { return m_RemoveStep; } set { m_RemoveStep = value; } }
+
+		public override void ComputeResistances()
+		{
+			base.ComputeResistances();
+
+			if (Spells.Fourth.CurseSpell.UnderEffect( this ))
+			{
+				for( int i = 1; i < Resistances.Length; ++i ) // Skip physical
+				{
+					Resistances[i] = Math.Max(0, Resistances[i] - 10);
+				}
+			}
+		}
 
         #region Jako Taming
         private uint m_level = 1;
@@ -10100,8 +10134,10 @@ namespace Server.Mobiles
         /// <returns>The amount of experience the mobile had before the change.</returns>
         public uint setLevel(uint newLevel, bool tellOwner)
         {
+			bool levelUp = m_level < newLevel;
+
             uint oldExp = Experience;
-            if (newLevel < m_level)
+            if (!levelUp)
             {
                 if (tellOwner && ControlMaster != null)
                     ControlMaster.SendMessage("Your pet has decreased in level!");
@@ -10119,22 +10155,12 @@ namespace Server.Mobiles
 						{
 							if (MinTameSkill < 1) break;
 
-							ControlMaster.CheckTargetSkill( SkillName.Taming, this, MinTameSkill - 25.0, MinTameSkill + 25.0 );
-							MinTameSkill--;
+							ControlMaster.CheckTargetSkillExplicit( SkillName.Taming, this, MinTameSkill - 25.0, MinTameSkill + 25.0 );
 						}
 					}
                 }
 
-				if ( newLevel == 3 ) // Auto-Bond
-				{
-					if (!IsBonded && ControlMaster != null)
-					{
-						IsBonded = true;
-						BondingBegin = DateTime.MinValue;
-						ControlMaster.SendLocalizedMessage( 1049666 ); // Your pet has bonded with you!
-					}
-				}
-				else if ( newLevel == AbsMaxLevel ) // Reduce control slots, down to 2
+				if ( newLevel == AbsMaxLevel ) // Reduce control slots, down to 2
 				{
 					const int MIN_CONTROL_SLOTS = 2;
 					if ( MIN_CONTROL_SLOTS <= ControlSlots - 1)
@@ -10152,6 +10178,16 @@ namespace Server.Mobiles
 				// Pet is re-leveling up
                 m_level = newLevel;
             }
+
+			if ( levelUp && 3 <= newLevel ) // Auto-Bond
+			{
+				if (!IsBonded && ControlMaster != null)
+				{
+					IsBonded = true;
+					BondingBegin = DateTime.MinValue;
+					ControlMaster.SendLocalizedMessage( 1049666 ); // Your pet has bonded with you!
+				}
+			}
 
             //Effects.SendLocationParticles(EffectItem.Create(Location, Map, EffectItem.DefaultDuration), 0x20F6, 10, 5, 5023);
             if (tellOwner && ControlMaster != null)

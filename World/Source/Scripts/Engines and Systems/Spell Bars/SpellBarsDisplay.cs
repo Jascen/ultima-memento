@@ -27,7 +27,7 @@ using Server.Spells.Research;
 using Server.Prompts;
 using Server.Gumps;
 
-namespace Server.Gumps 
+namespace Server.SpellBars 
 {
     public class SpellBarsArch1 : Gump
     {
@@ -213,76 +213,78 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsArch1 ) );
-
 			switch ( info.ButtonID )
 			{
-				case 0: { break; }
-				case 99: { if ( ResearchSettings.HasSpell( from, 1 ) ) { new ResearchConjure( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 1: { if ( ResearchSettings.HasSpell( from, 2 ) ) { new ResearchDeathSpeak( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 2: { if ( ResearchSettings.HasSpell( from, 3 ) ) { new ResearchSneak( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 3: { if ( ResearchSettings.HasSpell( from, 4 ) ) { new ResearchCreateFire( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 4: { if ( ResearchSettings.HasSpell( from, 5 ) ) { new ResearchSummonElectricalElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 5: { if ( ResearchSettings.HasSpell( from, 6 ) ) { new ResearchConfusionBlast( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 6: { if ( ResearchSettings.HasSpell( from, 7 ) ) { new ResearchSeeTruth( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 7: { if ( ResearchSettings.HasSpell( from, 8 ) ) { new ResearchIcicle( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 8: { if ( ResearchSettings.HasSpell( from, 9 ) ) { new ResearchExtinguish( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 9: { if ( ResearchSettings.HasSpell( from, 10 ) ) { new ResearchRockFlesh( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 10: { if ( ResearchSettings.HasSpell( from, 11 ) ) { new ResearchMassMight( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 11: { if ( ResearchSettings.HasSpell( from, 12 ) ) { new ResearchEndureCold( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 12: { if ( ResearchSettings.HasSpell( from, 13 ) ) { new ResearchSummonWeedElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 13: { if ( ResearchSettings.HasSpell( from, 14 ) ) { new ResearchSummonCreature( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 14: { if ( ResearchSettings.HasSpell( from, 15 ) ) { new ResearchHealingTouch( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 15: { if ( ResearchSettings.HasSpell( from, 16 ) ) { new ResearchSnowBall( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 16: { if ( ResearchSettings.HasSpell( from, 17 ) ) { new ResearchClone( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 17: { if ( ResearchSettings.HasSpell( from, 18 ) ) { new ResearchGrantPeace( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 18: { if ( ResearchSettings.HasSpell( from, 19 ) ) { new ResearchSleep( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 19: { if ( ResearchSettings.HasSpell( from, 20 ) ) { new ResearchEndureHeat( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 20: { if ( ResearchSettings.HasSpell( from, 21 ) ) { new ResearchSummonIceElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 21: { if ( ResearchSettings.HasSpell( from, 22 ) ) { new ResearchEtherealTravel( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 22: { if ( ResearchSettings.HasSpell( from, 23 ) ) { new ResearchWizardEye( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 23: { if ( ResearchSettings.HasSpell( from, 24 ) ) { new ResearchFrostField( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 24: { if ( ResearchSettings.HasSpell( from, 25 ) ) { new ResearchCreateGold( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 25: { if ( ResearchSettings.HasSpell( from, 26 ) ) { new ResearchSummonDead( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 26: { if ( ResearchSettings.HasSpell( from, 27 ) ) { new ResearchCauseFear( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 27: { if ( ResearchSettings.HasSpell( from, 28 ) ) { new ResearchIgnite( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 28: { if ( ResearchSettings.HasSpell( from, 29 ) ) { new ResearchSummonMudElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 29: { if ( ResearchSettings.HasSpell( from, 30 ) ) { new ResearchBanishDaemon( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 30: { if ( ResearchSettings.HasSpell( from, 31 ) ) { new ResearchFadefromSight( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 31: { if ( ResearchSettings.HasSpell( from, 32 ) ) { new ResearchGasCloud( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 32: { if ( ResearchSettings.HasSpell( from, 33 ) ) { new ResearchSwarm( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 33: { if ( ResearchSettings.HasSpell( from, 34 ) ) { new ResearchMaskofDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 34: { if ( ResearchSettings.HasSpell( from, 35 ) ) { new ResearchEnchant( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 35: { if ( ResearchSettings.HasSpell( from, 36 ) ) { new ResearchFlameBolt( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 36: { if ( ResearchSettings.HasSpell( from, 37 ) ) { new ResearchSummonGemElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 37: { if ( ResearchSettings.HasSpell( from, 38 ) ) { new ResearchCallDestruction( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 38: { if ( ResearchSettings.HasSpell( from, 39 ) ) { new ResearchDivination( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 39: { if ( ResearchSettings.HasSpell( from, 40 ) ) { new ResearchFrostStrike( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 40: { if ( ResearchSettings.HasSpell( from, 41 ) ) { new ResearchMagicSteed( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 41: { if ( ResearchSettings.HasSpell( from, 42 ) ) { new ResearchCreateGolem( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 42: { if ( ResearchSettings.HasSpell( from, 43 ) ) { new ResearchSleepField( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 43: { if ( ResearchSettings.HasSpell( from, 44 ) ) { new ResearchConflagration( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 44: { if ( ResearchSettings.HasSpell( from, 45 ) ) { new ResearchSummonAcidElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 45: { if ( ResearchSettings.HasSpell( from, 46 ) ) { new ResearchMeteorShower( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 46: { if ( ResearchSettings.HasSpell( from, 47 ) ) { new ResearchIntervention( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 47: { if ( ResearchSettings.HasSpell( from, 48 ) ) { new ResearchHailStorm( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 48: { if ( ResearchSettings.HasSpell( from, 49 ) ) { new ResearchAerialServant( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 49: { if ( ResearchSettings.HasSpell( from, 50 ) ) { new ResearchOpenGround( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 50: { if ( ResearchSettings.HasSpell( from, 51 ) ) { new ResearchCharm( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 51: { if ( ResearchSettings.HasSpell( from, 52 ) ) { new ResearchExplosion( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 52: { if ( ResearchSettings.HasSpell( from, 53 ) ) { new ResearchSummonPoisonElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 53: { if ( ResearchSettings.HasSpell( from, 54 ) ) { new ResearchSummonDevil( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 54: { if ( ResearchSettings.HasSpell( from, 55 ) ) { new ResearchAirWalk( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 55: { if ( ResearchSettings.HasSpell( from, 56 ) ) { new ResearchAvalanche( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 56: { if ( ResearchSettings.HasSpell( from, 57 ) ) { new ResearchDeathVortex( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 57: { if ( ResearchSettings.HasSpell( from, 58 ) ) { new ResearchWithstandDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 58: { if ( ResearchSettings.HasSpell( from, 59 ) ) { new ResearchMassSleep( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 59: { if ( ResearchSettings.HasSpell( from, 60 ) ) { new ResearchRingofFire( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 60: { if ( ResearchSettings.HasSpell( from, 61 ) ) { new ResearchSummonBloodElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 61: { if ( ResearchSettings.HasSpell( from, 62 ) ) { new ResearchDevastation( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 62: { if ( ResearchSettings.HasSpell( from, 63 ) ) { new ResearchRestoration( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
-				case 63: { if ( ResearchSettings.HasSpell( from, 64 ) ) { new ResearchMassDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch1( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 99: { if ( ResearchSettings.HasSpell( from, 1 ) ) { new ResearchConjure( from, null ).Cast(); } break; }
+				case 1: { if ( ResearchSettings.HasSpell( from, 2 ) ) { new ResearchDeathSpeak( from, null ).Cast(); } break; }
+				case 2: { if ( ResearchSettings.HasSpell( from, 3 ) ) { new ResearchSneak( from, null ).Cast(); } break; }
+				case 3: { if ( ResearchSettings.HasSpell( from, 4 ) ) { new ResearchCreateFire( from, null ).Cast(); } break; }
+				case 4: { if ( ResearchSettings.HasSpell( from, 5 ) ) { new ResearchSummonElectricalElemental( from, null ).Cast(); } break; }
+				case 5: { if ( ResearchSettings.HasSpell( from, 6 ) ) { new ResearchConfusionBlast( from, null ).Cast(); } break; }
+				case 6: { if ( ResearchSettings.HasSpell( from, 7 ) ) { new ResearchSeeTruth( from, null ).Cast(); } break; }
+				case 7: { if ( ResearchSettings.HasSpell( from, 8 ) ) { new ResearchIcicle( from, null ).Cast(); } break; }
+				case 8: { if ( ResearchSettings.HasSpell( from, 9 ) ) { new ResearchExtinguish( from, null ).Cast(); } break; }
+				case 9: { if ( ResearchSettings.HasSpell( from, 10 ) ) { new ResearchRockFlesh( from, null ).Cast(); } break; }
+				case 10: { if ( ResearchSettings.HasSpell( from, 11 ) ) { new ResearchMassMight( from, null ).Cast(); } break; }
+				case 11: { if ( ResearchSettings.HasSpell( from, 12 ) ) { new ResearchEndureCold( from, null ).Cast(); } break; }
+				case 12: { if ( ResearchSettings.HasSpell( from, 13 ) ) { new ResearchSummonWeedElemental( from, null ).Cast(); } break; }
+				case 13: { if ( ResearchSettings.HasSpell( from, 14 ) ) { new ResearchSummonCreature( from, null ).Cast(); } break; }
+				case 14: { if ( ResearchSettings.HasSpell( from, 15 ) ) { new ResearchHealingTouch( from, null ).Cast(); } break; }
+				case 15: { if ( ResearchSettings.HasSpell( from, 16 ) ) { new ResearchSnowBall( from, null ).Cast(); } break; }
+				case 16: { if ( ResearchSettings.HasSpell( from, 17 ) ) { new ResearchClone( from, null ).Cast(); } break; }
+				case 17: { if ( ResearchSettings.HasSpell( from, 18 ) ) { new ResearchGrantPeace( from, null ).Cast(); } break; }
+				case 18: { if ( ResearchSettings.HasSpell( from, 19 ) ) { new ResearchSleep( from, null ).Cast(); } break; }
+				case 19: { if ( ResearchSettings.HasSpell( from, 20 ) ) { new ResearchEndureHeat( from, null ).Cast(); } break; }
+				case 20: { if ( ResearchSettings.HasSpell( from, 21 ) ) { new ResearchSummonIceElemental( from, null ).Cast(); } break; }
+				case 21: { if ( ResearchSettings.HasSpell( from, 22 ) ) { new ResearchEtherealTravel( from, null ).Cast(); } break; }
+				case 22: { if ( ResearchSettings.HasSpell( from, 23 ) ) { new ResearchWizardEye( from, null ).Cast(); } break; }
+				case 23: { if ( ResearchSettings.HasSpell( from, 24 ) ) { new ResearchFrostField( from, null ).Cast(); } break; }
+				case 24: { if ( ResearchSettings.HasSpell( from, 25 ) ) { new ResearchCreateGold( from, null ).Cast(); } break; }
+				case 25: { if ( ResearchSettings.HasSpell( from, 26 ) ) { new ResearchSummonDead( from, null ).Cast(); } break; }
+				case 26: { if ( ResearchSettings.HasSpell( from, 27 ) ) { new ResearchCauseFear( from, null ).Cast(); } break; }
+				case 27: { if ( ResearchSettings.HasSpell( from, 28 ) ) { new ResearchIgnite( from, null ).Cast(); } break; }
+				case 28: { if ( ResearchSettings.HasSpell( from, 29 ) ) { new ResearchSummonMudElemental( from, null ).Cast(); } break; }
+				case 29: { if ( ResearchSettings.HasSpell( from, 30 ) ) { new ResearchBanishDaemon( from, null ).Cast(); } break; }
+				case 30: { if ( ResearchSettings.HasSpell( from, 31 ) ) { new ResearchFadefromSight( from, null ).Cast(); } break; }
+				case 31: { if ( ResearchSettings.HasSpell( from, 32 ) ) { new ResearchGasCloud( from, null ).Cast(); } break; }
+				case 32: { if ( ResearchSettings.HasSpell( from, 33 ) ) { new ResearchSwarm( from, null ).Cast(); } break; }
+				case 33: { if ( ResearchSettings.HasSpell( from, 34 ) ) { new ResearchMaskofDeath( from, null ).Cast(); } break; }
+				case 34: { if ( ResearchSettings.HasSpell( from, 35 ) ) { new ResearchEnchant( from, null ).Cast(); } break; }
+				case 35: { if ( ResearchSettings.HasSpell( from, 36 ) ) { new ResearchFlameBolt( from, null ).Cast(); } break; }
+				case 36: { if ( ResearchSettings.HasSpell( from, 37 ) ) { new ResearchSummonGemElemental( from, null ).Cast(); } break; }
+				case 37: { if ( ResearchSettings.HasSpell( from, 38 ) ) { new ResearchCallDestruction( from, null ).Cast(); } break; }
+				case 38: { if ( ResearchSettings.HasSpell( from, 39 ) ) { new ResearchDivination( from, null ).Cast(); } break; }
+				case 39: { if ( ResearchSettings.HasSpell( from, 40 ) ) { new ResearchFrostStrike( from, null ).Cast(); } break; }
+				case 40: { if ( ResearchSettings.HasSpell( from, 41 ) ) { new ResearchMagicSteed( from, null ).Cast(); } break; }
+				case 41: { if ( ResearchSettings.HasSpell( from, 42 ) ) { new ResearchCreateGolem( from, null ).Cast(); } break; }
+				case 42: { if ( ResearchSettings.HasSpell( from, 43 ) ) { new ResearchSleepField( from, null ).Cast(); } break; }
+				case 43: { if ( ResearchSettings.HasSpell( from, 44 ) ) { new ResearchConflagration( from, null ).Cast(); } break; }
+				case 44: { if ( ResearchSettings.HasSpell( from, 45 ) ) { new ResearchSummonAcidElemental( from, null ).Cast(); } break; }
+				case 45: { if ( ResearchSettings.HasSpell( from, 46 ) ) { new ResearchMeteorShower( from, null ).Cast(); } break; }
+				case 46: { if ( ResearchSettings.HasSpell( from, 47 ) ) { new ResearchIntervention( from, null ).Cast(); } break; }
+				case 47: { if ( ResearchSettings.HasSpell( from, 48 ) ) { new ResearchHailStorm( from, null ).Cast(); } break; }
+				case 48: { if ( ResearchSettings.HasSpell( from, 49 ) ) { new ResearchAerialServant( from, null ).Cast(); } break; }
+				case 49: { if ( ResearchSettings.HasSpell( from, 50 ) ) { new ResearchOpenGround( from, null ).Cast(); } break; }
+				case 50: { if ( ResearchSettings.HasSpell( from, 51 ) ) { new ResearchCharm( from, null ).Cast(); } break; }
+				case 51: { if ( ResearchSettings.HasSpell( from, 52 ) ) { new ResearchExplosion( from, null ).Cast(); } break; }
+				case 52: { if ( ResearchSettings.HasSpell( from, 53 ) ) { new ResearchSummonPoisonElemental( from, null ).Cast(); } break; }
+				case 53: { if ( ResearchSettings.HasSpell( from, 54 ) ) { new ResearchSummonDevil( from, null ).Cast(); } break; }
+				case 54: { if ( ResearchSettings.HasSpell( from, 55 ) ) { new ResearchAirWalk( from, null ).Cast(); } break; }
+				case 55: { if ( ResearchSettings.HasSpell( from, 56 ) ) { new ResearchAvalanche( from, null ).Cast(); } break; }
+				case 56: { if ( ResearchSettings.HasSpell( from, 57 ) ) { new ResearchDeathVortex( from, null ).Cast(); } break; }
+				case 57: { if ( ResearchSettings.HasSpell( from, 58 ) ) { new ResearchWithstandDeath( from, null ).Cast(); } break; }
+				case 58: { if ( ResearchSettings.HasSpell( from, 59 ) ) { new ResearchMassSleep( from, null ).Cast(); } break; }
+				case 59: { if ( ResearchSettings.HasSpell( from, 60 ) ) { new ResearchRingofFire( from, null ).Cast(); } break; }
+				case 60: { if ( ResearchSettings.HasSpell( from, 61 ) ) { new ResearchSummonBloodElemental( from, null ).Cast(); } break; }
+				case 61: { if ( ResearchSettings.HasSpell( from, 62 ) ) { new ResearchDevastation( from, null ).Cast(); } break; }
+				case 62: { if ( ResearchSettings.HasSpell( from, 63 ) ) { new ResearchRestoration( from, null ).Cast(); } break; }
+				case 63: { if ( ResearchSettings.HasSpell( from, 64 ) ) { new ResearchMassDeath( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsArch1( from ) );
 		}
     }
 }
@@ -295,7 +297,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsArch2 : Gump
     {
@@ -480,76 +482,78 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsArch2 ) );
-
 			switch ( info.ButtonID )
 			{
-				case 0: { break; }
-				case 99: { if ( ResearchSettings.HasSpell( from, 1 ) ) { new ResearchConjure( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 1: { if ( ResearchSettings.HasSpell( from, 2 ) ) { new ResearchDeathSpeak( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 2: { if ( ResearchSettings.HasSpell( from, 3 ) ) { new ResearchSneak( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 3: { if ( ResearchSettings.HasSpell( from, 4 ) ) { new ResearchCreateFire( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 4: { if ( ResearchSettings.HasSpell( from, 5 ) ) { new ResearchSummonElectricalElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 5: { if ( ResearchSettings.HasSpell( from, 6 ) ) { new ResearchConfusionBlast( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 6: { if ( ResearchSettings.HasSpell( from, 7 ) ) { new ResearchSeeTruth( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 7: { if ( ResearchSettings.HasSpell( from, 8 ) ) { new ResearchIcicle( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 8: { if ( ResearchSettings.HasSpell( from, 9 ) ) { new ResearchExtinguish( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 9: { if ( ResearchSettings.HasSpell( from, 10 ) ) { new ResearchRockFlesh( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 10: { if ( ResearchSettings.HasSpell( from, 11 ) ) { new ResearchMassMight( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 11: { if ( ResearchSettings.HasSpell( from, 12 ) ) { new ResearchEndureCold( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 12: { if ( ResearchSettings.HasSpell( from, 13 ) ) { new ResearchSummonWeedElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 13: { if ( ResearchSettings.HasSpell( from, 14 ) ) { new ResearchSummonCreature( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 14: { if ( ResearchSettings.HasSpell( from, 15 ) ) { new ResearchHealingTouch( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 15: { if ( ResearchSettings.HasSpell( from, 16 ) ) { new ResearchSnowBall( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 16: { if ( ResearchSettings.HasSpell( from, 17 ) ) { new ResearchClone( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 17: { if ( ResearchSettings.HasSpell( from, 18 ) ) { new ResearchGrantPeace( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 18: { if ( ResearchSettings.HasSpell( from, 19 ) ) { new ResearchSleep( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 19: { if ( ResearchSettings.HasSpell( from, 20 ) ) { new ResearchEndureHeat( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 20: { if ( ResearchSettings.HasSpell( from, 21 ) ) { new ResearchSummonIceElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 21: { if ( ResearchSettings.HasSpell( from, 22 ) ) { new ResearchEtherealTravel( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 22: { if ( ResearchSettings.HasSpell( from, 23 ) ) { new ResearchWizardEye( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 23: { if ( ResearchSettings.HasSpell( from, 24 ) ) { new ResearchFrostField( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 24: { if ( ResearchSettings.HasSpell( from, 25 ) ) { new ResearchCreateGold( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 25: { if ( ResearchSettings.HasSpell( from, 26 ) ) { new ResearchSummonDead( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 26: { if ( ResearchSettings.HasSpell( from, 27 ) ) { new ResearchCauseFear( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 27: { if ( ResearchSettings.HasSpell( from, 28 ) ) { new ResearchIgnite( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 28: { if ( ResearchSettings.HasSpell( from, 29 ) ) { new ResearchSummonMudElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 29: { if ( ResearchSettings.HasSpell( from, 30 ) ) { new ResearchBanishDaemon( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 30: { if ( ResearchSettings.HasSpell( from, 31 ) ) { new ResearchFadefromSight( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 31: { if ( ResearchSettings.HasSpell( from, 32 ) ) { new ResearchGasCloud( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 32: { if ( ResearchSettings.HasSpell( from, 33 ) ) { new ResearchSwarm( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 33: { if ( ResearchSettings.HasSpell( from, 34 ) ) { new ResearchMaskofDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 34: { if ( ResearchSettings.HasSpell( from, 35 ) ) { new ResearchEnchant( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 35: { if ( ResearchSettings.HasSpell( from, 36 ) ) { new ResearchFlameBolt( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 36: { if ( ResearchSettings.HasSpell( from, 37 ) ) { new ResearchSummonGemElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 37: { if ( ResearchSettings.HasSpell( from, 38 ) ) { new ResearchCallDestruction( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 38: { if ( ResearchSettings.HasSpell( from, 39 ) ) { new ResearchDivination( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 39: { if ( ResearchSettings.HasSpell( from, 40 ) ) { new ResearchFrostStrike( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 40: { if ( ResearchSettings.HasSpell( from, 41 ) ) { new ResearchMagicSteed( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 41: { if ( ResearchSettings.HasSpell( from, 42 ) ) { new ResearchCreateGolem( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 42: { if ( ResearchSettings.HasSpell( from, 43 ) ) { new ResearchSleepField( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 43: { if ( ResearchSettings.HasSpell( from, 44 ) ) { new ResearchConflagration( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 44: { if ( ResearchSettings.HasSpell( from, 45 ) ) { new ResearchSummonAcidElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 45: { if ( ResearchSettings.HasSpell( from, 46 ) ) { new ResearchMeteorShower( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 46: { if ( ResearchSettings.HasSpell( from, 47 ) ) { new ResearchIntervention( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 47: { if ( ResearchSettings.HasSpell( from, 48 ) ) { new ResearchHailStorm( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 48: { if ( ResearchSettings.HasSpell( from, 49 ) ) { new ResearchAerialServant( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 49: { if ( ResearchSettings.HasSpell( from, 50 ) ) { new ResearchOpenGround( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 50: { if ( ResearchSettings.HasSpell( from, 51 ) ) { new ResearchCharm( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 51: { if ( ResearchSettings.HasSpell( from, 52 ) ) { new ResearchExplosion( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 52: { if ( ResearchSettings.HasSpell( from, 53 ) ) { new ResearchSummonPoisonElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 53: { if ( ResearchSettings.HasSpell( from, 54 ) ) { new ResearchSummonDevil( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 54: { if ( ResearchSettings.HasSpell( from, 55 ) ) { new ResearchAirWalk( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 55: { if ( ResearchSettings.HasSpell( from, 56 ) ) { new ResearchAvalanche( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 56: { if ( ResearchSettings.HasSpell( from, 57 ) ) { new ResearchDeathVortex( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 57: { if ( ResearchSettings.HasSpell( from, 58 ) ) { new ResearchWithstandDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 58: { if ( ResearchSettings.HasSpell( from, 59 ) ) { new ResearchMassSleep( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 59: { if ( ResearchSettings.HasSpell( from, 60 ) ) { new ResearchRingofFire( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 60: { if ( ResearchSettings.HasSpell( from, 61 ) ) { new ResearchSummonBloodElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 61: { if ( ResearchSettings.HasSpell( from, 62 ) ) { new ResearchDevastation( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 62: { if ( ResearchSettings.HasSpell( from, 63 ) ) { new ResearchRestoration( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
-				case 63: { if ( ResearchSettings.HasSpell( from, 64 ) ) { new ResearchMassDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch2( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 99: { if ( ResearchSettings.HasSpell( from, 1 ) ) { new ResearchConjure( from, null ).Cast(); } break; }
+				case 1: { if ( ResearchSettings.HasSpell( from, 2 ) ) { new ResearchDeathSpeak( from, null ).Cast(); } break; }
+				case 2: { if ( ResearchSettings.HasSpell( from, 3 ) ) { new ResearchSneak( from, null ).Cast(); } break; }
+				case 3: { if ( ResearchSettings.HasSpell( from, 4 ) ) { new ResearchCreateFire( from, null ).Cast(); } break; }
+				case 4: { if ( ResearchSettings.HasSpell( from, 5 ) ) { new ResearchSummonElectricalElemental( from, null ).Cast(); } break; }
+				case 5: { if ( ResearchSettings.HasSpell( from, 6 ) ) { new ResearchConfusionBlast( from, null ).Cast(); } break; }
+				case 6: { if ( ResearchSettings.HasSpell( from, 7 ) ) { new ResearchSeeTruth( from, null ).Cast(); } break; }
+				case 7: { if ( ResearchSettings.HasSpell( from, 8 ) ) { new ResearchIcicle( from, null ).Cast(); } break; }
+				case 8: { if ( ResearchSettings.HasSpell( from, 9 ) ) { new ResearchExtinguish( from, null ).Cast(); } break; }
+				case 9: { if ( ResearchSettings.HasSpell( from, 10 ) ) { new ResearchRockFlesh( from, null ).Cast(); } break; }
+				case 10: { if ( ResearchSettings.HasSpell( from, 11 ) ) { new ResearchMassMight( from, null ).Cast(); } break; }
+				case 11: { if ( ResearchSettings.HasSpell( from, 12 ) ) { new ResearchEndureCold( from, null ).Cast(); } break; }
+				case 12: { if ( ResearchSettings.HasSpell( from, 13 ) ) { new ResearchSummonWeedElemental( from, null ).Cast(); } break; }
+				case 13: { if ( ResearchSettings.HasSpell( from, 14 ) ) { new ResearchSummonCreature( from, null ).Cast(); } break; }
+				case 14: { if ( ResearchSettings.HasSpell( from, 15 ) ) { new ResearchHealingTouch( from, null ).Cast(); } break; }
+				case 15: { if ( ResearchSettings.HasSpell( from, 16 ) ) { new ResearchSnowBall( from, null ).Cast(); } break; }
+				case 16: { if ( ResearchSettings.HasSpell( from, 17 ) ) { new ResearchClone( from, null ).Cast(); } break; }
+				case 17: { if ( ResearchSettings.HasSpell( from, 18 ) ) { new ResearchGrantPeace( from, null ).Cast(); } break; }
+				case 18: { if ( ResearchSettings.HasSpell( from, 19 ) ) { new ResearchSleep( from, null ).Cast(); } break; }
+				case 19: { if ( ResearchSettings.HasSpell( from, 20 ) ) { new ResearchEndureHeat( from, null ).Cast(); } break; }
+				case 20: { if ( ResearchSettings.HasSpell( from, 21 ) ) { new ResearchSummonIceElemental( from, null ).Cast(); } break; }
+				case 21: { if ( ResearchSettings.HasSpell( from, 22 ) ) { new ResearchEtherealTravel( from, null ).Cast(); } break; }
+				case 22: { if ( ResearchSettings.HasSpell( from, 23 ) ) { new ResearchWizardEye( from, null ).Cast(); } break; }
+				case 23: { if ( ResearchSettings.HasSpell( from, 24 ) ) { new ResearchFrostField( from, null ).Cast(); } break; }
+				case 24: { if ( ResearchSettings.HasSpell( from, 25 ) ) { new ResearchCreateGold( from, null ).Cast(); } break; }
+				case 25: { if ( ResearchSettings.HasSpell( from, 26 ) ) { new ResearchSummonDead( from, null ).Cast(); } break; }
+				case 26: { if ( ResearchSettings.HasSpell( from, 27 ) ) { new ResearchCauseFear( from, null ).Cast(); } break; }
+				case 27: { if ( ResearchSettings.HasSpell( from, 28 ) ) { new ResearchIgnite( from, null ).Cast(); } break; }
+				case 28: { if ( ResearchSettings.HasSpell( from, 29 ) ) { new ResearchSummonMudElemental( from, null ).Cast(); } break; }
+				case 29: { if ( ResearchSettings.HasSpell( from, 30 ) ) { new ResearchBanishDaemon( from, null ).Cast(); } break; }
+				case 30: { if ( ResearchSettings.HasSpell( from, 31 ) ) { new ResearchFadefromSight( from, null ).Cast(); } break; }
+				case 31: { if ( ResearchSettings.HasSpell( from, 32 ) ) { new ResearchGasCloud( from, null ).Cast(); } break; }
+				case 32: { if ( ResearchSettings.HasSpell( from, 33 ) ) { new ResearchSwarm( from, null ).Cast(); } break; }
+				case 33: { if ( ResearchSettings.HasSpell( from, 34 ) ) { new ResearchMaskofDeath( from, null ).Cast(); } break; }
+				case 34: { if ( ResearchSettings.HasSpell( from, 35 ) ) { new ResearchEnchant( from, null ).Cast(); } break; }
+				case 35: { if ( ResearchSettings.HasSpell( from, 36 ) ) { new ResearchFlameBolt( from, null ).Cast(); } break; }
+				case 36: { if ( ResearchSettings.HasSpell( from, 37 ) ) { new ResearchSummonGemElemental( from, null ).Cast(); } break; }
+				case 37: { if ( ResearchSettings.HasSpell( from, 38 ) ) { new ResearchCallDestruction( from, null ).Cast(); } break; }
+				case 38: { if ( ResearchSettings.HasSpell( from, 39 ) ) { new ResearchDivination( from, null ).Cast(); } break; }
+				case 39: { if ( ResearchSettings.HasSpell( from, 40 ) ) { new ResearchFrostStrike( from, null ).Cast(); } break; }
+				case 40: { if ( ResearchSettings.HasSpell( from, 41 ) ) { new ResearchMagicSteed( from, null ).Cast(); } break; }
+				case 41: { if ( ResearchSettings.HasSpell( from, 42 ) ) { new ResearchCreateGolem( from, null ).Cast(); } break; }
+				case 42: { if ( ResearchSettings.HasSpell( from, 43 ) ) { new ResearchSleepField( from, null ).Cast(); } break; }
+				case 43: { if ( ResearchSettings.HasSpell( from, 44 ) ) { new ResearchConflagration( from, null ).Cast(); } break; }
+				case 44: { if ( ResearchSettings.HasSpell( from, 45 ) ) { new ResearchSummonAcidElemental( from, null ).Cast(); } break; }
+				case 45: { if ( ResearchSettings.HasSpell( from, 46 ) ) { new ResearchMeteorShower( from, null ).Cast(); } break; }
+				case 46: { if ( ResearchSettings.HasSpell( from, 47 ) ) { new ResearchIntervention( from, null ).Cast(); } break; }
+				case 47: { if ( ResearchSettings.HasSpell( from, 48 ) ) { new ResearchHailStorm( from, null ).Cast(); } break; }
+				case 48: { if ( ResearchSettings.HasSpell( from, 49 ) ) { new ResearchAerialServant( from, null ).Cast(); } break; }
+				case 49: { if ( ResearchSettings.HasSpell( from, 50 ) ) { new ResearchOpenGround( from, null ).Cast(); } break; }
+				case 50: { if ( ResearchSettings.HasSpell( from, 51 ) ) { new ResearchCharm( from, null ).Cast(); } break; }
+				case 51: { if ( ResearchSettings.HasSpell( from, 52 ) ) { new ResearchExplosion( from, null ).Cast(); } break; }
+				case 52: { if ( ResearchSettings.HasSpell( from, 53 ) ) { new ResearchSummonPoisonElemental( from, null ).Cast(); } break; }
+				case 53: { if ( ResearchSettings.HasSpell( from, 54 ) ) { new ResearchSummonDevil( from, null ).Cast(); } break; }
+				case 54: { if ( ResearchSettings.HasSpell( from, 55 ) ) { new ResearchAirWalk( from, null ).Cast(); } break; }
+				case 55: { if ( ResearchSettings.HasSpell( from, 56 ) ) { new ResearchAvalanche( from, null ).Cast(); } break; }
+				case 56: { if ( ResearchSettings.HasSpell( from, 57 ) ) { new ResearchDeathVortex( from, null ).Cast(); } break; }
+				case 57: { if ( ResearchSettings.HasSpell( from, 58 ) ) { new ResearchWithstandDeath( from, null ).Cast(); } break; }
+				case 58: { if ( ResearchSettings.HasSpell( from, 59 ) ) { new ResearchMassSleep( from, null ).Cast(); } break; }
+				case 59: { if ( ResearchSettings.HasSpell( from, 60 ) ) { new ResearchRingofFire( from, null ).Cast(); } break; }
+				case 60: { if ( ResearchSettings.HasSpell( from, 61 ) ) { new ResearchSummonBloodElemental( from, null ).Cast(); } break; }
+				case 61: { if ( ResearchSettings.HasSpell( from, 62 ) ) { new ResearchDevastation( from, null ).Cast(); } break; }
+				case 62: { if ( ResearchSettings.HasSpell( from, 63 ) ) { new ResearchRestoration( from, null ).Cast(); } break; }
+				case 63: { if ( ResearchSettings.HasSpell( from, 64 ) ) { new ResearchMassDeath( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsArch2( from ) );
 		}
     }
 }
@@ -562,7 +566,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsArch3 : Gump
     {
@@ -747,76 +751,78 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsArch3 ) );
-
 			switch ( info.ButtonID )
 			{
-				case 0: { break; }
-				case 99: { if ( ResearchSettings.HasSpell( from, 1 ) ) { new ResearchConjure( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 1: { if ( ResearchSettings.HasSpell( from, 2 ) ) { new ResearchDeathSpeak( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 2: { if ( ResearchSettings.HasSpell( from, 3 ) ) { new ResearchSneak( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 3: { if ( ResearchSettings.HasSpell( from, 4 ) ) { new ResearchCreateFire( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 4: { if ( ResearchSettings.HasSpell( from, 5 ) ) { new ResearchSummonElectricalElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 5: { if ( ResearchSettings.HasSpell( from, 6 ) ) { new ResearchConfusionBlast( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 6: { if ( ResearchSettings.HasSpell( from, 7 ) ) { new ResearchSeeTruth( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 7: { if ( ResearchSettings.HasSpell( from, 8 ) ) { new ResearchIcicle( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 8: { if ( ResearchSettings.HasSpell( from, 9 ) ) { new ResearchExtinguish( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 9: { if ( ResearchSettings.HasSpell( from, 10 ) ) { new ResearchRockFlesh( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 10: { if ( ResearchSettings.HasSpell( from, 11 ) ) { new ResearchMassMight( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 11: { if ( ResearchSettings.HasSpell( from, 12 ) ) { new ResearchEndureCold( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 12: { if ( ResearchSettings.HasSpell( from, 13 ) ) { new ResearchSummonWeedElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 13: { if ( ResearchSettings.HasSpell( from, 14 ) ) { new ResearchSummonCreature( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 14: { if ( ResearchSettings.HasSpell( from, 15 ) ) { new ResearchHealingTouch( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 15: { if ( ResearchSettings.HasSpell( from, 16 ) ) { new ResearchSnowBall( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 16: { if ( ResearchSettings.HasSpell( from, 17 ) ) { new ResearchClone( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 17: { if ( ResearchSettings.HasSpell( from, 18 ) ) { new ResearchGrantPeace( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 18: { if ( ResearchSettings.HasSpell( from, 19 ) ) { new ResearchSleep( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 19: { if ( ResearchSettings.HasSpell( from, 20 ) ) { new ResearchEndureHeat( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 20: { if ( ResearchSettings.HasSpell( from, 21 ) ) { new ResearchSummonIceElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 21: { if ( ResearchSettings.HasSpell( from, 22 ) ) { new ResearchEtherealTravel( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 22: { if ( ResearchSettings.HasSpell( from, 23 ) ) { new ResearchWizardEye( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 23: { if ( ResearchSettings.HasSpell( from, 24 ) ) { new ResearchFrostField( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 24: { if ( ResearchSettings.HasSpell( from, 25 ) ) { new ResearchCreateGold( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 25: { if ( ResearchSettings.HasSpell( from, 26 ) ) { new ResearchSummonDead( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 26: { if ( ResearchSettings.HasSpell( from, 27 ) ) { new ResearchCauseFear( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 27: { if ( ResearchSettings.HasSpell( from, 28 ) ) { new ResearchIgnite( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 28: { if ( ResearchSettings.HasSpell( from, 29 ) ) { new ResearchSummonMudElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 29: { if ( ResearchSettings.HasSpell( from, 30 ) ) { new ResearchBanishDaemon( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 30: { if ( ResearchSettings.HasSpell( from, 31 ) ) { new ResearchFadefromSight( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 31: { if ( ResearchSettings.HasSpell( from, 32 ) ) { new ResearchGasCloud( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 32: { if ( ResearchSettings.HasSpell( from, 33 ) ) { new ResearchSwarm( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 33: { if ( ResearchSettings.HasSpell( from, 34 ) ) { new ResearchMaskofDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 34: { if ( ResearchSettings.HasSpell( from, 35 ) ) { new ResearchEnchant( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 35: { if ( ResearchSettings.HasSpell( from, 36 ) ) { new ResearchFlameBolt( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 36: { if ( ResearchSettings.HasSpell( from, 37 ) ) { new ResearchSummonGemElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 37: { if ( ResearchSettings.HasSpell( from, 38 ) ) { new ResearchCallDestruction( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 38: { if ( ResearchSettings.HasSpell( from, 39 ) ) { new ResearchDivination( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 39: { if ( ResearchSettings.HasSpell( from, 40 ) ) { new ResearchFrostStrike( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 40: { if ( ResearchSettings.HasSpell( from, 41 ) ) { new ResearchMagicSteed( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 41: { if ( ResearchSettings.HasSpell( from, 42 ) ) { new ResearchCreateGolem( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 42: { if ( ResearchSettings.HasSpell( from, 43 ) ) { new ResearchSleepField( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 43: { if ( ResearchSettings.HasSpell( from, 44 ) ) { new ResearchConflagration( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 44: { if ( ResearchSettings.HasSpell( from, 45 ) ) { new ResearchSummonAcidElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 45: { if ( ResearchSettings.HasSpell( from, 46 ) ) { new ResearchMeteorShower( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 46: { if ( ResearchSettings.HasSpell( from, 47 ) ) { new ResearchIntervention( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 47: { if ( ResearchSettings.HasSpell( from, 48 ) ) { new ResearchHailStorm( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 48: { if ( ResearchSettings.HasSpell( from, 49 ) ) { new ResearchAerialServant( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 49: { if ( ResearchSettings.HasSpell( from, 50 ) ) { new ResearchOpenGround( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 50: { if ( ResearchSettings.HasSpell( from, 51 ) ) { new ResearchCharm( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 51: { if ( ResearchSettings.HasSpell( from, 52 ) ) { new ResearchExplosion( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 52: { if ( ResearchSettings.HasSpell( from, 53 ) ) { new ResearchSummonPoisonElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 53: { if ( ResearchSettings.HasSpell( from, 54 ) ) { new ResearchSummonDevil( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 54: { if ( ResearchSettings.HasSpell( from, 55 ) ) { new ResearchAirWalk( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 55: { if ( ResearchSettings.HasSpell( from, 56 ) ) { new ResearchAvalanche( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 56: { if ( ResearchSettings.HasSpell( from, 57 ) ) { new ResearchDeathVortex( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 57: { if ( ResearchSettings.HasSpell( from, 58 ) ) { new ResearchWithstandDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 58: { if ( ResearchSettings.HasSpell( from, 59 ) ) { new ResearchMassSleep( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 59: { if ( ResearchSettings.HasSpell( from, 60 ) ) { new ResearchRingofFire( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 60: { if ( ResearchSettings.HasSpell( from, 61 ) ) { new ResearchSummonBloodElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 61: { if ( ResearchSettings.HasSpell( from, 62 ) ) { new ResearchDevastation( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 62: { if ( ResearchSettings.HasSpell( from, 63 ) ) { new ResearchRestoration( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
-				case 63: { if ( ResearchSettings.HasSpell( from, 64 ) ) { new ResearchMassDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch3( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 99: { if ( ResearchSettings.HasSpell( from, 1 ) ) { new ResearchConjure( from, null ).Cast(); } break; }
+				case 1: { if ( ResearchSettings.HasSpell( from, 2 ) ) { new ResearchDeathSpeak( from, null ).Cast(); } break; }
+				case 2: { if ( ResearchSettings.HasSpell( from, 3 ) ) { new ResearchSneak( from, null ).Cast(); } break; }
+				case 3: { if ( ResearchSettings.HasSpell( from, 4 ) ) { new ResearchCreateFire( from, null ).Cast(); } break; }
+				case 4: { if ( ResearchSettings.HasSpell( from, 5 ) ) { new ResearchSummonElectricalElemental( from, null ).Cast(); } break; }
+				case 5: { if ( ResearchSettings.HasSpell( from, 6 ) ) { new ResearchConfusionBlast( from, null ).Cast(); } break; }
+				case 6: { if ( ResearchSettings.HasSpell( from, 7 ) ) { new ResearchSeeTruth( from, null ).Cast(); } break; }
+				case 7: { if ( ResearchSettings.HasSpell( from, 8 ) ) { new ResearchIcicle( from, null ).Cast(); } break; }
+				case 8: { if ( ResearchSettings.HasSpell( from, 9 ) ) { new ResearchExtinguish( from, null ).Cast(); } break; }
+				case 9: { if ( ResearchSettings.HasSpell( from, 10 ) ) { new ResearchRockFlesh( from, null ).Cast(); } break; }
+				case 10: { if ( ResearchSettings.HasSpell( from, 11 ) ) { new ResearchMassMight( from, null ).Cast(); } break; }
+				case 11: { if ( ResearchSettings.HasSpell( from, 12 ) ) { new ResearchEndureCold( from, null ).Cast(); } break; }
+				case 12: { if ( ResearchSettings.HasSpell( from, 13 ) ) { new ResearchSummonWeedElemental( from, null ).Cast(); } break; }
+				case 13: { if ( ResearchSettings.HasSpell( from, 14 ) ) { new ResearchSummonCreature( from, null ).Cast(); } break; }
+				case 14: { if ( ResearchSettings.HasSpell( from, 15 ) ) { new ResearchHealingTouch( from, null ).Cast(); } break; }
+				case 15: { if ( ResearchSettings.HasSpell( from, 16 ) ) { new ResearchSnowBall( from, null ).Cast(); } break; }
+				case 16: { if ( ResearchSettings.HasSpell( from, 17 ) ) { new ResearchClone( from, null ).Cast(); } break; }
+				case 17: { if ( ResearchSettings.HasSpell( from, 18 ) ) { new ResearchGrantPeace( from, null ).Cast(); } break; }
+				case 18: { if ( ResearchSettings.HasSpell( from, 19 ) ) { new ResearchSleep( from, null ).Cast(); } break; }
+				case 19: { if ( ResearchSettings.HasSpell( from, 20 ) ) { new ResearchEndureHeat( from, null ).Cast(); } break; }
+				case 20: { if ( ResearchSettings.HasSpell( from, 21 ) ) { new ResearchSummonIceElemental( from, null ).Cast(); } break; }
+				case 21: { if ( ResearchSettings.HasSpell( from, 22 ) ) { new ResearchEtherealTravel( from, null ).Cast(); } break; }
+				case 22: { if ( ResearchSettings.HasSpell( from, 23 ) ) { new ResearchWizardEye( from, null ).Cast(); } break; }
+				case 23: { if ( ResearchSettings.HasSpell( from, 24 ) ) { new ResearchFrostField( from, null ).Cast(); } break; }
+				case 24: { if ( ResearchSettings.HasSpell( from, 25 ) ) { new ResearchCreateGold( from, null ).Cast(); } break; }
+				case 25: { if ( ResearchSettings.HasSpell( from, 26 ) ) { new ResearchSummonDead( from, null ).Cast(); } break; }
+				case 26: { if ( ResearchSettings.HasSpell( from, 27 ) ) { new ResearchCauseFear( from, null ).Cast(); } break; }
+				case 27: { if ( ResearchSettings.HasSpell( from, 28 ) ) { new ResearchIgnite( from, null ).Cast(); } break; }
+				case 28: { if ( ResearchSettings.HasSpell( from, 29 ) ) { new ResearchSummonMudElemental( from, null ).Cast(); } break; }
+				case 29: { if ( ResearchSettings.HasSpell( from, 30 ) ) { new ResearchBanishDaemon( from, null ).Cast(); } break; }
+				case 30: { if ( ResearchSettings.HasSpell( from, 31 ) ) { new ResearchFadefromSight( from, null ).Cast(); } break; }
+				case 31: { if ( ResearchSettings.HasSpell( from, 32 ) ) { new ResearchGasCloud( from, null ).Cast(); } break; }
+				case 32: { if ( ResearchSettings.HasSpell( from, 33 ) ) { new ResearchSwarm( from, null ).Cast(); } break; }
+				case 33: { if ( ResearchSettings.HasSpell( from, 34 ) ) { new ResearchMaskofDeath( from, null ).Cast(); } break; }
+				case 34: { if ( ResearchSettings.HasSpell( from, 35 ) ) { new ResearchEnchant( from, null ).Cast(); } break; }
+				case 35: { if ( ResearchSettings.HasSpell( from, 36 ) ) { new ResearchFlameBolt( from, null ).Cast(); } break; }
+				case 36: { if ( ResearchSettings.HasSpell( from, 37 ) ) { new ResearchSummonGemElemental( from, null ).Cast(); } break; }
+				case 37: { if ( ResearchSettings.HasSpell( from, 38 ) ) { new ResearchCallDestruction( from, null ).Cast(); } break; }
+				case 38: { if ( ResearchSettings.HasSpell( from, 39 ) ) { new ResearchDivination( from, null ).Cast(); } break; }
+				case 39: { if ( ResearchSettings.HasSpell( from, 40 ) ) { new ResearchFrostStrike( from, null ).Cast(); } break; }
+				case 40: { if ( ResearchSettings.HasSpell( from, 41 ) ) { new ResearchMagicSteed( from, null ).Cast(); } break; }
+				case 41: { if ( ResearchSettings.HasSpell( from, 42 ) ) { new ResearchCreateGolem( from, null ).Cast(); } break; }
+				case 42: { if ( ResearchSettings.HasSpell( from, 43 ) ) { new ResearchSleepField( from, null ).Cast(); } break; }
+				case 43: { if ( ResearchSettings.HasSpell( from, 44 ) ) { new ResearchConflagration( from, null ).Cast(); } break; }
+				case 44: { if ( ResearchSettings.HasSpell( from, 45 ) ) { new ResearchSummonAcidElemental( from, null ).Cast(); } break; }
+				case 45: { if ( ResearchSettings.HasSpell( from, 46 ) ) { new ResearchMeteorShower( from, null ).Cast(); } break; }
+				case 46: { if ( ResearchSettings.HasSpell( from, 47 ) ) { new ResearchIntervention( from, null ).Cast(); } break; }
+				case 47: { if ( ResearchSettings.HasSpell( from, 48 ) ) { new ResearchHailStorm( from, null ).Cast(); } break; }
+				case 48: { if ( ResearchSettings.HasSpell( from, 49 ) ) { new ResearchAerialServant( from, null ).Cast(); } break; }
+				case 49: { if ( ResearchSettings.HasSpell( from, 50 ) ) { new ResearchOpenGround( from, null ).Cast(); } break; }
+				case 50: { if ( ResearchSettings.HasSpell( from, 51 ) ) { new ResearchCharm( from, null ).Cast(); } break; }
+				case 51: { if ( ResearchSettings.HasSpell( from, 52 ) ) { new ResearchExplosion( from, null ).Cast(); } break; }
+				case 52: { if ( ResearchSettings.HasSpell( from, 53 ) ) { new ResearchSummonPoisonElemental( from, null ).Cast(); } break; }
+				case 53: { if ( ResearchSettings.HasSpell( from, 54 ) ) { new ResearchSummonDevil( from, null ).Cast(); } break; }
+				case 54: { if ( ResearchSettings.HasSpell( from, 55 ) ) { new ResearchAirWalk( from, null ).Cast(); } break; }
+				case 55: { if ( ResearchSettings.HasSpell( from, 56 ) ) { new ResearchAvalanche( from, null ).Cast(); } break; }
+				case 56: { if ( ResearchSettings.HasSpell( from, 57 ) ) { new ResearchDeathVortex( from, null ).Cast(); } break; }
+				case 57: { if ( ResearchSettings.HasSpell( from, 58 ) ) { new ResearchWithstandDeath( from, null ).Cast(); } break; }
+				case 58: { if ( ResearchSettings.HasSpell( from, 59 ) ) { new ResearchMassSleep( from, null ).Cast(); } break; }
+				case 59: { if ( ResearchSettings.HasSpell( from, 60 ) ) { new ResearchRingofFire( from, null ).Cast(); } break; }
+				case 60: { if ( ResearchSettings.HasSpell( from, 61 ) ) { new ResearchSummonBloodElemental( from, null ).Cast(); } break; }
+				case 61: { if ( ResearchSettings.HasSpell( from, 62 ) ) { new ResearchDevastation( from, null ).Cast(); } break; }
+				case 62: { if ( ResearchSettings.HasSpell( from, 63 ) ) { new ResearchRestoration( from, null ).Cast(); } break; }
+				case 63: { if ( ResearchSettings.HasSpell( from, 64 ) ) { new ResearchMassDeath( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsArch3( from ) );
 		}
     }
 }
@@ -829,7 +835,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsArch4 : Gump
     {
@@ -1014,76 +1020,78 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsArch4 ) );
-
 			switch ( info.ButtonID )
 			{
-				case 0: { break; }
-				case 99: { if ( ResearchSettings.HasSpell( from, 1 ) ) { new ResearchConjure( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 1: { if ( ResearchSettings.HasSpell( from, 2 ) ) { new ResearchDeathSpeak( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 2: { if ( ResearchSettings.HasSpell( from, 3 ) ) { new ResearchSneak( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 3: { if ( ResearchSettings.HasSpell( from, 4 ) ) { new ResearchCreateFire( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 4: { if ( ResearchSettings.HasSpell( from, 5 ) ) { new ResearchSummonElectricalElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 5: { if ( ResearchSettings.HasSpell( from, 6 ) ) { new ResearchConfusionBlast( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 6: { if ( ResearchSettings.HasSpell( from, 7 ) ) { new ResearchSeeTruth( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 7: { if ( ResearchSettings.HasSpell( from, 8 ) ) { new ResearchIcicle( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 8: { if ( ResearchSettings.HasSpell( from, 9 ) ) { new ResearchExtinguish( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 9: { if ( ResearchSettings.HasSpell( from, 10 ) ) { new ResearchRockFlesh( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 10: { if ( ResearchSettings.HasSpell( from, 11 ) ) { new ResearchMassMight( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 11: { if ( ResearchSettings.HasSpell( from, 12 ) ) { new ResearchEndureCold( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 12: { if ( ResearchSettings.HasSpell( from, 13 ) ) { new ResearchSummonWeedElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 13: { if ( ResearchSettings.HasSpell( from, 14 ) ) { new ResearchSummonCreature( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 14: { if ( ResearchSettings.HasSpell( from, 15 ) ) { new ResearchHealingTouch( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 15: { if ( ResearchSettings.HasSpell( from, 16 ) ) { new ResearchSnowBall( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 16: { if ( ResearchSettings.HasSpell( from, 17 ) ) { new ResearchClone( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 17: { if ( ResearchSettings.HasSpell( from, 18 ) ) { new ResearchGrantPeace( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 18: { if ( ResearchSettings.HasSpell( from, 19 ) ) { new ResearchSleep( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 19: { if ( ResearchSettings.HasSpell( from, 20 ) ) { new ResearchEndureHeat( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 20: { if ( ResearchSettings.HasSpell( from, 21 ) ) { new ResearchSummonIceElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 21: { if ( ResearchSettings.HasSpell( from, 22 ) ) { new ResearchEtherealTravel( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 22: { if ( ResearchSettings.HasSpell( from, 23 ) ) { new ResearchWizardEye( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 23: { if ( ResearchSettings.HasSpell( from, 24 ) ) { new ResearchFrostField( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 24: { if ( ResearchSettings.HasSpell( from, 25 ) ) { new ResearchCreateGold( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 25: { if ( ResearchSettings.HasSpell( from, 26 ) ) { new ResearchSummonDead( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 26: { if ( ResearchSettings.HasSpell( from, 27 ) ) { new ResearchCauseFear( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 27: { if ( ResearchSettings.HasSpell( from, 28 ) ) { new ResearchIgnite( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 28: { if ( ResearchSettings.HasSpell( from, 29 ) ) { new ResearchSummonMudElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 29: { if ( ResearchSettings.HasSpell( from, 30 ) ) { new ResearchBanishDaemon( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 30: { if ( ResearchSettings.HasSpell( from, 31 ) ) { new ResearchFadefromSight( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 31: { if ( ResearchSettings.HasSpell( from, 32 ) ) { new ResearchGasCloud( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 32: { if ( ResearchSettings.HasSpell( from, 33 ) ) { new ResearchSwarm( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 33: { if ( ResearchSettings.HasSpell( from, 34 ) ) { new ResearchMaskofDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 34: { if ( ResearchSettings.HasSpell( from, 35 ) ) { new ResearchEnchant( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 35: { if ( ResearchSettings.HasSpell( from, 36 ) ) { new ResearchFlameBolt( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 36: { if ( ResearchSettings.HasSpell( from, 37 ) ) { new ResearchSummonGemElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 37: { if ( ResearchSettings.HasSpell( from, 38 ) ) { new ResearchCallDestruction( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 38: { if ( ResearchSettings.HasSpell( from, 39 ) ) { new ResearchDivination( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 39: { if ( ResearchSettings.HasSpell( from, 40 ) ) { new ResearchFrostStrike( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 40: { if ( ResearchSettings.HasSpell( from, 41 ) ) { new ResearchMagicSteed( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 41: { if ( ResearchSettings.HasSpell( from, 42 ) ) { new ResearchCreateGolem( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 42: { if ( ResearchSettings.HasSpell( from, 43 ) ) { new ResearchSleepField( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 43: { if ( ResearchSettings.HasSpell( from, 44 ) ) { new ResearchConflagration( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 44: { if ( ResearchSettings.HasSpell( from, 45 ) ) { new ResearchSummonAcidElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 45: { if ( ResearchSettings.HasSpell( from, 46 ) ) { new ResearchMeteorShower( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 46: { if ( ResearchSettings.HasSpell( from, 47 ) ) { new ResearchIntervention( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 47: { if ( ResearchSettings.HasSpell( from, 48 ) ) { new ResearchHailStorm( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 48: { if ( ResearchSettings.HasSpell( from, 49 ) ) { new ResearchAerialServant( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 49: { if ( ResearchSettings.HasSpell( from, 50 ) ) { new ResearchOpenGround( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 50: { if ( ResearchSettings.HasSpell( from, 51 ) ) { new ResearchCharm( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 51: { if ( ResearchSettings.HasSpell( from, 52 ) ) { new ResearchExplosion( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 52: { if ( ResearchSettings.HasSpell( from, 53 ) ) { new ResearchSummonPoisonElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 53: { if ( ResearchSettings.HasSpell( from, 54 ) ) { new ResearchSummonDevil( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 54: { if ( ResearchSettings.HasSpell( from, 55 ) ) { new ResearchAirWalk( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 55: { if ( ResearchSettings.HasSpell( from, 56 ) ) { new ResearchAvalanche( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 56: { if ( ResearchSettings.HasSpell( from, 57 ) ) { new ResearchDeathVortex( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 57: { if ( ResearchSettings.HasSpell( from, 58 ) ) { new ResearchWithstandDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 58: { if ( ResearchSettings.HasSpell( from, 59 ) ) { new ResearchMassSleep( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 59: { if ( ResearchSettings.HasSpell( from, 60 ) ) { new ResearchRingofFire( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 60: { if ( ResearchSettings.HasSpell( from, 61 ) ) { new ResearchSummonBloodElemental( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 61: { if ( ResearchSettings.HasSpell( from, 62 ) ) { new ResearchDevastation( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 62: { if ( ResearchSettings.HasSpell( from, 63 ) ) { new ResearchRestoration( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
-				case 63: { if ( ResearchSettings.HasSpell( from, 64 ) ) { new ResearchMassDeath( from, null ).Cast(); from.SendGump( new SpellBarsArch4( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 99: { if ( ResearchSettings.HasSpell( from, 1 ) ) { new ResearchConjure( from, null ).Cast(); } break; }
+				case 1: { if ( ResearchSettings.HasSpell( from, 2 ) ) { new ResearchDeathSpeak( from, null ).Cast(); } break; }
+				case 2: { if ( ResearchSettings.HasSpell( from, 3 ) ) { new ResearchSneak( from, null ).Cast(); } break; }
+				case 3: { if ( ResearchSettings.HasSpell( from, 4 ) ) { new ResearchCreateFire( from, null ).Cast(); } break; }
+				case 4: { if ( ResearchSettings.HasSpell( from, 5 ) ) { new ResearchSummonElectricalElemental( from, null ).Cast(); } break; }
+				case 5: { if ( ResearchSettings.HasSpell( from, 6 ) ) { new ResearchConfusionBlast( from, null ).Cast(); } break; }
+				case 6: { if ( ResearchSettings.HasSpell( from, 7 ) ) { new ResearchSeeTruth( from, null ).Cast(); } break; }
+				case 7: { if ( ResearchSettings.HasSpell( from, 8 ) ) { new ResearchIcicle( from, null ).Cast(); } break; }
+				case 8: { if ( ResearchSettings.HasSpell( from, 9 ) ) { new ResearchExtinguish( from, null ).Cast(); } break; }
+				case 9: { if ( ResearchSettings.HasSpell( from, 10 ) ) { new ResearchRockFlesh( from, null ).Cast(); } break; }
+				case 10: { if ( ResearchSettings.HasSpell( from, 11 ) ) { new ResearchMassMight( from, null ).Cast(); } break; }
+				case 11: { if ( ResearchSettings.HasSpell( from, 12 ) ) { new ResearchEndureCold( from, null ).Cast(); } break; }
+				case 12: { if ( ResearchSettings.HasSpell( from, 13 ) ) { new ResearchSummonWeedElemental( from, null ).Cast(); } break; }
+				case 13: { if ( ResearchSettings.HasSpell( from, 14 ) ) { new ResearchSummonCreature( from, null ).Cast(); } break; }
+				case 14: { if ( ResearchSettings.HasSpell( from, 15 ) ) { new ResearchHealingTouch( from, null ).Cast(); } break; }
+				case 15: { if ( ResearchSettings.HasSpell( from, 16 ) ) { new ResearchSnowBall( from, null ).Cast(); } break; }
+				case 16: { if ( ResearchSettings.HasSpell( from, 17 ) ) { new ResearchClone( from, null ).Cast(); } break; }
+				case 17: { if ( ResearchSettings.HasSpell( from, 18 ) ) { new ResearchGrantPeace( from, null ).Cast(); } break; }
+				case 18: { if ( ResearchSettings.HasSpell( from, 19 ) ) { new ResearchSleep( from, null ).Cast(); } break; }
+				case 19: { if ( ResearchSettings.HasSpell( from, 20 ) ) { new ResearchEndureHeat( from, null ).Cast(); } break; }
+				case 20: { if ( ResearchSettings.HasSpell( from, 21 ) ) { new ResearchSummonIceElemental( from, null ).Cast(); } break; }
+				case 21: { if ( ResearchSettings.HasSpell( from, 22 ) ) { new ResearchEtherealTravel( from, null ).Cast(); } break; }
+				case 22: { if ( ResearchSettings.HasSpell( from, 23 ) ) { new ResearchWizardEye( from, null ).Cast(); } break; }
+				case 23: { if ( ResearchSettings.HasSpell( from, 24 ) ) { new ResearchFrostField( from, null ).Cast(); } break; }
+				case 24: { if ( ResearchSettings.HasSpell( from, 25 ) ) { new ResearchCreateGold( from, null ).Cast(); } break; }
+				case 25: { if ( ResearchSettings.HasSpell( from, 26 ) ) { new ResearchSummonDead( from, null ).Cast(); } break; }
+				case 26: { if ( ResearchSettings.HasSpell( from, 27 ) ) { new ResearchCauseFear( from, null ).Cast(); } break; }
+				case 27: { if ( ResearchSettings.HasSpell( from, 28 ) ) { new ResearchIgnite( from, null ).Cast(); } break; }
+				case 28: { if ( ResearchSettings.HasSpell( from, 29 ) ) { new ResearchSummonMudElemental( from, null ).Cast(); } break; }
+				case 29: { if ( ResearchSettings.HasSpell( from, 30 ) ) { new ResearchBanishDaemon( from, null ).Cast(); } break; }
+				case 30: { if ( ResearchSettings.HasSpell( from, 31 ) ) { new ResearchFadefromSight( from, null ).Cast(); } break; }
+				case 31: { if ( ResearchSettings.HasSpell( from, 32 ) ) { new ResearchGasCloud( from, null ).Cast(); } break; }
+				case 32: { if ( ResearchSettings.HasSpell( from, 33 ) ) { new ResearchSwarm( from, null ).Cast(); } break; }
+				case 33: { if ( ResearchSettings.HasSpell( from, 34 ) ) { new ResearchMaskofDeath( from, null ).Cast(); } break; }
+				case 34: { if ( ResearchSettings.HasSpell( from, 35 ) ) { new ResearchEnchant( from, null ).Cast(); } break; }
+				case 35: { if ( ResearchSettings.HasSpell( from, 36 ) ) { new ResearchFlameBolt( from, null ).Cast(); } break; }
+				case 36: { if ( ResearchSettings.HasSpell( from, 37 ) ) { new ResearchSummonGemElemental( from, null ).Cast(); } break; }
+				case 37: { if ( ResearchSettings.HasSpell( from, 38 ) ) { new ResearchCallDestruction( from, null ).Cast(); } break; }
+				case 38: { if ( ResearchSettings.HasSpell( from, 39 ) ) { new ResearchDivination( from, null ).Cast(); } break; }
+				case 39: { if ( ResearchSettings.HasSpell( from, 40 ) ) { new ResearchFrostStrike( from, null ).Cast(); } break; }
+				case 40: { if ( ResearchSettings.HasSpell( from, 41 ) ) { new ResearchMagicSteed( from, null ).Cast(); } break; }
+				case 41: { if ( ResearchSettings.HasSpell( from, 42 ) ) { new ResearchCreateGolem( from, null ).Cast(); } break; }
+				case 42: { if ( ResearchSettings.HasSpell( from, 43 ) ) { new ResearchSleepField( from, null ).Cast(); } break; }
+				case 43: { if ( ResearchSettings.HasSpell( from, 44 ) ) { new ResearchConflagration( from, null ).Cast(); } break; }
+				case 44: { if ( ResearchSettings.HasSpell( from, 45 ) ) { new ResearchSummonAcidElemental( from, null ).Cast(); } break; }
+				case 45: { if ( ResearchSettings.HasSpell( from, 46 ) ) { new ResearchMeteorShower( from, null ).Cast(); } break; }
+				case 46: { if ( ResearchSettings.HasSpell( from, 47 ) ) { new ResearchIntervention( from, null ).Cast(); } break; }
+				case 47: { if ( ResearchSettings.HasSpell( from, 48 ) ) { new ResearchHailStorm( from, null ).Cast(); } break; }
+				case 48: { if ( ResearchSettings.HasSpell( from, 49 ) ) { new ResearchAerialServant( from, null ).Cast(); } break; }
+				case 49: { if ( ResearchSettings.HasSpell( from, 50 ) ) { new ResearchOpenGround( from, null ).Cast(); } break; }
+				case 50: { if ( ResearchSettings.HasSpell( from, 51 ) ) { new ResearchCharm( from, null ).Cast(); } break; }
+				case 51: { if ( ResearchSettings.HasSpell( from, 52 ) ) { new ResearchExplosion( from, null ).Cast(); } break; }
+				case 52: { if ( ResearchSettings.HasSpell( from, 53 ) ) { new ResearchSummonPoisonElemental( from, null ).Cast(); } break; }
+				case 53: { if ( ResearchSettings.HasSpell( from, 54 ) ) { new ResearchSummonDevil( from, null ).Cast(); } break; }
+				case 54: { if ( ResearchSettings.HasSpell( from, 55 ) ) { new ResearchAirWalk( from, null ).Cast(); } break; }
+				case 55: { if ( ResearchSettings.HasSpell( from, 56 ) ) { new ResearchAvalanche( from, null ).Cast(); } break; }
+				case 56: { if ( ResearchSettings.HasSpell( from, 57 ) ) { new ResearchDeathVortex( from, null ).Cast(); } break; }
+				case 57: { if ( ResearchSettings.HasSpell( from, 58 ) ) { new ResearchWithstandDeath( from, null ).Cast(); } break; }
+				case 58: { if ( ResearchSettings.HasSpell( from, 59 ) ) { new ResearchMassSleep( from, null ).Cast(); } break; }
+				case 59: { if ( ResearchSettings.HasSpell( from, 60 ) ) { new ResearchRingofFire( from, null ).Cast(); } break; }
+				case 60: { if ( ResearchSettings.HasSpell( from, 61 ) ) { new ResearchSummonBloodElemental( from, null ).Cast(); } break; }
+				case 61: { if ( ResearchSettings.HasSpell( from, 62 ) ) { new ResearchDevastation( from, null ).Cast(); } break; }
+				case 62: { if ( ResearchSettings.HasSpell( from, 63 ) ) { new ResearchRestoration( from, null ).Cast(); } break; }
+				case 63: { if ( ResearchSettings.HasSpell( from, 64 ) ) { new ResearchMassDeath( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsArch4( from ) );
 		}
     }
 }
@@ -1096,7 +1104,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsMage1 : Gump
     {
@@ -1278,76 +1286,78 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsMage1 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 99: { if ( HasSpell( from, 0 ) ) { new ClumsySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 1: { if ( HasSpell( from, 1 ) ) { new CreateFoodSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 2 ) ) { new FeeblemindSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 3 ) ) { new HealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 4 ) ) { new MagicArrowSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 5 ) ) { new NightSightSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 6 ) ) { new ReactiveArmorSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 7 ) ) { new WeakenSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 8 ) ) { new AgilitySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 9 ) ) { new CunningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 10 ) ) { new CureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 11 ) ) { new HarmSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 12 ) ) { new MagicTrapSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 13 ) ) { new RemoveTrapSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 14 ) ) { new ProtectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 15: { if ( HasSpell( from, 15 ) ) { new StrengthSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 16: { if ( HasSpell( from, 16 ) ) { new BlessSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 17: { if ( HasSpell( from, 17 ) ) { new FireballSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 18: { if ( HasSpell( from, 18 ) ) { new MagicLockSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 19: { if ( HasSpell( from, 19 ) ) { new PoisonSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 20: { if ( HasSpell( from, 20 ) ) { new TelekinesisSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 21: { if ( HasSpell( from, 21 ) ) { new TeleportSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 22: { if ( HasSpell( from, 22 ) ) { new UnlockSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 23: { if ( HasSpell( from, 23 ) ) { new WallOfStoneSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 24: { if ( HasSpell( from, 24 ) ) { new ArchCureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 25: { if ( HasSpell( from, 25 ) ) { new ArchProtectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 26: { if ( HasSpell( from, 26 ) ) { new CurseSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 27: { if ( HasSpell( from, 27 ) ) { new FireFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 28: { if ( HasSpell( from, 28 ) ) { new GreaterHealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 29: { if ( HasSpell( from, 29 ) ) { new LightningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 30: { if ( HasSpell( from, 30 ) ) { new ManaDrainSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 31: { if ( HasSpell( from, 31 ) ) { new RecallSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 32: { if ( HasSpell( from, 32 ) ) { new BladeSpiritsSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 33: { if ( HasSpell( from, 33 ) ) { new DispelFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 34: { if ( HasSpell( from, 34 ) ) { new IncognitoSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 35: { if ( HasSpell( from, 35 ) ) { new MagicReflectSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 36: { if ( HasSpell( from, 36 ) ) { new MindBlastSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 37: { if ( HasSpell( from, 37 ) ) { new ParalyzeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 38: { if ( HasSpell( from, 38 ) ) { new PoisonFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 39: { if ( HasSpell( from, 39 ) ) { new SummonCreatureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 40: { if ( HasSpell( from, 40 ) ) { new DispelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 41: { if ( HasSpell( from, 41 ) ) { new EnergyBoltSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 42: { if ( HasSpell( from, 42 ) ) { new ExplosionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 43: { if ( HasSpell( from, 43 ) ) { new InvisibilitySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 44: { if ( HasSpell( from, 44 ) ) { new MarkSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 45: { if ( HasSpell( from, 45 ) ) { new MassCurseSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 46: { if ( HasSpell( from, 46 ) ) { new ParalyzeFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 47: { if ( HasSpell( from, 47 ) ) { new RevealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 48: { if ( HasSpell( from, 48 ) ) { new ChainLightningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 49: { if ( HasSpell( from, 49 ) ) { new EnergyFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 50: { if ( HasSpell( from, 50 ) ) { new FlameStrikeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 51: { if ( HasSpell( from, 51 ) ) { new GateTravelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 52: { if ( HasSpell( from, 52 ) ) { new ManaVampireSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 53: { if ( HasSpell( from, 53 ) ) { new MassDispelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 54: { if ( HasSpell( from, 54 ) ) { new MeteorSwarmSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 55: { if ( HasSpell( from, 55 ) ) { new PolymorphSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 56: { if ( HasSpell( from, 56 ) ) { new EarthquakeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 57: { if ( HasSpell( from, 57 ) ) { new EnergyVortexSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 58: { if ( HasSpell( from, 58 ) ) { new ResurrectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 59: { if ( HasSpell( from, 59 ) ) { new AirElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 60: { if ( HasSpell( from, 60 ) ) { new SummonDaemonSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 61: { if ( HasSpell( from, 61 ) ) { new EarthElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 62: { if ( HasSpell( from, 62 ) ) { new FireElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
-				case 63: { if ( HasSpell( from, 63 ) ) { new WaterElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage1( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 99: { if ( HasSpell( from, 0 ) ) { new ClumsySpell( from, null ).Cast(); } break; }
+				case 1: { if ( HasSpell( from, 1 ) ) { new CreateFoodSpell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 2 ) ) { new FeeblemindSpell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 3 ) ) { new HealSpell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 4 ) ) { new MagicArrowSpell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 5 ) ) { new NightSightSpell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 6 ) ) { new ReactiveArmorSpell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 7 ) ) { new WeakenSpell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 8 ) ) { new AgilitySpell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 9 ) ) { new CunningSpell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 10 ) ) { new CureSpell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 11 ) ) { new HarmSpell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 12 ) ) { new MagicTrapSpell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 13 ) ) { new RemoveTrapSpell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 14 ) ) { new ProtectionSpell( from, null ).Cast(); } break; }
+				case 15: { if ( HasSpell( from, 15 ) ) { new StrengthSpell( from, null ).Cast(); } break; }
+				case 16: { if ( HasSpell( from, 16 ) ) { new BlessSpell( from, null ).Cast(); } break; }
+				case 17: { if ( HasSpell( from, 17 ) ) { new FireballSpell( from, null ).Cast(); } break; }
+				case 18: { if ( HasSpell( from, 18 ) ) { new MagicLockSpell( from, null ).Cast(); } break; }
+				case 19: { if ( HasSpell( from, 19 ) ) { new PoisonSpell( from, null ).Cast(); } break; }
+				case 20: { if ( HasSpell( from, 20 ) ) { new TelekinesisSpell( from, null ).Cast(); } break; }
+				case 21: { if ( HasSpell( from, 21 ) ) { new TeleportSpell( from, null ).Cast(); } break; }
+				case 22: { if ( HasSpell( from, 22 ) ) { new UnlockSpell( from, null ).Cast(); } break; }
+				case 23: { if ( HasSpell( from, 23 ) ) { new WallOfStoneSpell( from, null ).Cast(); } break; }
+				case 24: { if ( HasSpell( from, 24 ) ) { new ArchCureSpell( from, null ).Cast(); } break; }
+				case 25: { if ( HasSpell( from, 25 ) ) { new ArchProtectionSpell( from, null ).Cast(); } break; }
+				case 26: { if ( HasSpell( from, 26 ) ) { new CurseSpell( from, null ).Cast(); } break; }
+				case 27: { if ( HasSpell( from, 27 ) ) { new FireFieldSpell( from, null ).Cast(); } break; }
+				case 28: { if ( HasSpell( from, 28 ) ) { new GreaterHealSpell( from, null ).Cast(); } break; }
+				case 29: { if ( HasSpell( from, 29 ) ) { new LightningSpell( from, null ).Cast(); } break; }
+				case 30: { if ( HasSpell( from, 30 ) ) { new ManaDrainSpell( from, null ).Cast(); } break; }
+				case 31: { if ( HasSpell( from, 31 ) ) { new RecallSpell( from, null ).Cast(); } break; }
+				case 32: { if ( HasSpell( from, 32 ) ) { new BladeSpiritsSpell( from, null ).Cast(); } break; }
+				case 33: { if ( HasSpell( from, 33 ) ) { new DispelFieldSpell( from, null ).Cast(); } break; }
+				case 34: { if ( HasSpell( from, 34 ) ) { new IncognitoSpell( from, null ).Cast(); } break; }
+				case 35: { if ( HasSpell( from, 35 ) ) { new MagicReflectSpell( from, null ).Cast(); } break; }
+				case 36: { if ( HasSpell( from, 36 ) ) { new MindBlastSpell( from, null ).Cast(); } break; }
+				case 37: { if ( HasSpell( from, 37 ) ) { new ParalyzeSpell( from, null ).Cast(); } break; }
+				case 38: { if ( HasSpell( from, 38 ) ) { new PoisonFieldSpell( from, null ).Cast(); } break; }
+				case 39: { if ( HasSpell( from, 39 ) ) { new SummonCreatureSpell( from, null ).Cast(); } break; }
+				case 40: { if ( HasSpell( from, 40 ) ) { new DispelSpell( from, null ).Cast(); } break; }
+				case 41: { if ( HasSpell( from, 41 ) ) { new EnergyBoltSpell( from, null ).Cast(); } break; }
+				case 42: { if ( HasSpell( from, 42 ) ) { new ExplosionSpell( from, null ).Cast(); } break; }
+				case 43: { if ( HasSpell( from, 43 ) ) { new InvisibilitySpell( from, null ).Cast(); } break; }
+				case 44: { if ( HasSpell( from, 44 ) ) { new MarkSpell( from, null ).Cast(); } break; }
+				case 45: { if ( HasSpell( from, 45 ) ) { new MassCurseSpell( from, null ).Cast(); } break; }
+				case 46: { if ( HasSpell( from, 46 ) ) { new ParalyzeFieldSpell( from, null ).Cast(); } break; }
+				case 47: { if ( HasSpell( from, 47 ) ) { new RevealSpell( from, null ).Cast(); } break; }
+				case 48: { if ( HasSpell( from, 48 ) ) { new ChainLightningSpell( from, null ).Cast(); } break; }
+				case 49: { if ( HasSpell( from, 49 ) ) { new EnergyFieldSpell( from, null ).Cast(); } break; }
+				case 50: { if ( HasSpell( from, 50 ) ) { new FlameStrikeSpell( from, null ).Cast(); } break; }
+				case 51: { if ( HasSpell( from, 51 ) ) { new GateTravelSpell( from, null ).Cast(); } break; }
+				case 52: { if ( HasSpell( from, 52 ) ) { new ManaVampireSpell( from, null ).Cast(); } break; }
+				case 53: { if ( HasSpell( from, 53 ) ) { new MassDispelSpell( from, null ).Cast(); } break; }
+				case 54: { if ( HasSpell( from, 54 ) ) { new MeteorSwarmSpell( from, null ).Cast(); } break; }
+				case 55: { if ( HasSpell( from, 55 ) ) { new PolymorphSpell( from, null ).Cast(); } break; }
+				case 56: { if ( HasSpell( from, 56 ) ) { new EarthquakeSpell( from, null ).Cast(); } break; }
+				case 57: { if ( HasSpell( from, 57 ) ) { new EnergyVortexSpell( from, null ).Cast(); } break; }
+				case 58: { if ( HasSpell( from, 58 ) ) { new ResurrectionSpell( from, null ).Cast(); } break; }
+				case 59: { if ( HasSpell( from, 59 ) ) { new AirElementalSpell( from, null ).Cast(); } break; }
+				case 60: { if ( HasSpell( from, 60 ) ) { new SummonDaemonSpell( from, null ).Cast(); } break; }
+				case 61: { if ( HasSpell( from, 61 ) ) { new EarthElementalSpell( from, null ).Cast(); } break; }
+				case 62: { if ( HasSpell( from, 62 ) ) { new FireElementalSpell( from, null ).Cast(); } break; }
+				case 63: { if ( HasSpell( from, 63 ) ) { new WaterElementalSpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsMage1( from ) );
 		}
     }
 }
@@ -1360,7 +1370,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsMage2 : Gump
     {
@@ -1542,76 +1552,78 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsMage2 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 99: { if ( HasSpell( from, 0 ) ) { new ClumsySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 1: { if ( HasSpell( from, 1 ) ) { new CreateFoodSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 2 ) ) { new FeeblemindSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 3 ) ) { new HealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 4 ) ) { new MagicArrowSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 5 ) ) { new NightSightSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 6 ) ) { new ReactiveArmorSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 7 ) ) { new WeakenSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 8 ) ) { new AgilitySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 9 ) ) { new CunningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 10 ) ) { new CureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 11 ) ) { new HarmSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 12 ) ) { new MagicTrapSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 13 ) ) { new RemoveTrapSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 14 ) ) { new ProtectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 15: { if ( HasSpell( from, 15 ) ) { new StrengthSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 16: { if ( HasSpell( from, 16 ) ) { new BlessSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 17: { if ( HasSpell( from, 17 ) ) { new FireballSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 18: { if ( HasSpell( from, 18 ) ) { new MagicLockSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 19: { if ( HasSpell( from, 19 ) ) { new PoisonSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 20: { if ( HasSpell( from, 20 ) ) { new TelekinesisSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 21: { if ( HasSpell( from, 21 ) ) { new TeleportSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 22: { if ( HasSpell( from, 22 ) ) { new UnlockSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 23: { if ( HasSpell( from, 23 ) ) { new WallOfStoneSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 24: { if ( HasSpell( from, 24 ) ) { new ArchCureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 25: { if ( HasSpell( from, 25 ) ) { new ArchProtectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 26: { if ( HasSpell( from, 26 ) ) { new CurseSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 27: { if ( HasSpell( from, 27 ) ) { new FireFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 28: { if ( HasSpell( from, 28 ) ) { new GreaterHealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 29: { if ( HasSpell( from, 29 ) ) { new LightningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 30: { if ( HasSpell( from, 30 ) ) { new ManaDrainSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 31: { if ( HasSpell( from, 31 ) ) { new RecallSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 32: { if ( HasSpell( from, 32 ) ) { new BladeSpiritsSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 33: { if ( HasSpell( from, 33 ) ) { new DispelFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 34: { if ( HasSpell( from, 34 ) ) { new IncognitoSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 35: { if ( HasSpell( from, 35 ) ) { new MagicReflectSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 36: { if ( HasSpell( from, 36 ) ) { new MindBlastSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 37: { if ( HasSpell( from, 37 ) ) { new ParalyzeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 38: { if ( HasSpell( from, 38 ) ) { new PoisonFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 39: { if ( HasSpell( from, 39 ) ) { new SummonCreatureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 40: { if ( HasSpell( from, 40 ) ) { new DispelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 41: { if ( HasSpell( from, 41 ) ) { new EnergyBoltSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 42: { if ( HasSpell( from, 42 ) ) { new ExplosionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 43: { if ( HasSpell( from, 43 ) ) { new InvisibilitySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 44: { if ( HasSpell( from, 44 ) ) { new MarkSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 45: { if ( HasSpell( from, 45 ) ) { new MassCurseSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 46: { if ( HasSpell( from, 46 ) ) { new ParalyzeFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 47: { if ( HasSpell( from, 47 ) ) { new RevealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 48: { if ( HasSpell( from, 48 ) ) { new ChainLightningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 49: { if ( HasSpell( from, 49 ) ) { new EnergyFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 50: { if ( HasSpell( from, 50 ) ) { new FlameStrikeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 51: { if ( HasSpell( from, 51 ) ) { new GateTravelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 52: { if ( HasSpell( from, 52 ) ) { new ManaVampireSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 53: { if ( HasSpell( from, 53 ) ) { new MassDispelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 54: { if ( HasSpell( from, 54 ) ) { new MeteorSwarmSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 55: { if ( HasSpell( from, 55 ) ) { new PolymorphSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 56: { if ( HasSpell( from, 56 ) ) { new EarthquakeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 57: { if ( HasSpell( from, 57 ) ) { new EnergyVortexSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 58: { if ( HasSpell( from, 58 ) ) { new ResurrectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 59: { if ( HasSpell( from, 59 ) ) { new AirElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 60: { if ( HasSpell( from, 60 ) ) { new SummonDaemonSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 61: { if ( HasSpell( from, 61 ) ) { new EarthElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 62: { if ( HasSpell( from, 62 ) ) { new FireElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
-				case 63: { if ( HasSpell( from, 63 ) ) { new WaterElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage2( from ) ); } break; }
+				default:
+				case 0: { return; }
+				
+				case 99: { if ( HasSpell( from, 0 ) ) { new ClumsySpell( from, null ).Cast(); } break; }
+				case 1: { if ( HasSpell( from, 1 ) ) { new CreateFoodSpell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 2 ) ) { new FeeblemindSpell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 3 ) ) { new HealSpell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 4 ) ) { new MagicArrowSpell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 5 ) ) { new NightSightSpell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 6 ) ) { new ReactiveArmorSpell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 7 ) ) { new WeakenSpell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 8 ) ) { new AgilitySpell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 9 ) ) { new CunningSpell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 10 ) ) { new CureSpell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 11 ) ) { new HarmSpell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 12 ) ) { new MagicTrapSpell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 13 ) ) { new RemoveTrapSpell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 14 ) ) { new ProtectionSpell( from, null ).Cast(); } break; }
+				case 15: { if ( HasSpell( from, 15 ) ) { new StrengthSpell( from, null ).Cast(); } break; }
+				case 16: { if ( HasSpell( from, 16 ) ) { new BlessSpell( from, null ).Cast(); } break; }
+				case 17: { if ( HasSpell( from, 17 ) ) { new FireballSpell( from, null ).Cast(); } break; }
+				case 18: { if ( HasSpell( from, 18 ) ) { new MagicLockSpell( from, null ).Cast(); } break; }
+				case 19: { if ( HasSpell( from, 19 ) ) { new PoisonSpell( from, null ).Cast(); } break; }
+				case 20: { if ( HasSpell( from, 20 ) ) { new TelekinesisSpell( from, null ).Cast(); } break; }
+				case 21: { if ( HasSpell( from, 21 ) ) { new TeleportSpell( from, null ).Cast(); } break; }
+				case 22: { if ( HasSpell( from, 22 ) ) { new UnlockSpell( from, null ).Cast(); } break; }
+				case 23: { if ( HasSpell( from, 23 ) ) { new WallOfStoneSpell( from, null ).Cast(); } break; }
+				case 24: { if ( HasSpell( from, 24 ) ) { new ArchCureSpell( from, null ).Cast(); } break; }
+				case 25: { if ( HasSpell( from, 25 ) ) { new ArchProtectionSpell( from, null ).Cast(); } break; }
+				case 26: { if ( HasSpell( from, 26 ) ) { new CurseSpell( from, null ).Cast(); } break; }
+				case 27: { if ( HasSpell( from, 27 ) ) { new FireFieldSpell( from, null ).Cast(); } break; }
+				case 28: { if ( HasSpell( from, 28 ) ) { new GreaterHealSpell( from, null ).Cast(); } break; }
+				case 29: { if ( HasSpell( from, 29 ) ) { new LightningSpell( from, null ).Cast(); } break; }
+				case 30: { if ( HasSpell( from, 30 ) ) { new ManaDrainSpell( from, null ).Cast(); } break; }
+				case 31: { if ( HasSpell( from, 31 ) ) { new RecallSpell( from, null ).Cast(); } break; }
+				case 32: { if ( HasSpell( from, 32 ) ) { new BladeSpiritsSpell( from, null ).Cast(); } break; }
+				case 33: { if ( HasSpell( from, 33 ) ) { new DispelFieldSpell( from, null ).Cast(); } break; }
+				case 34: { if ( HasSpell( from, 34 ) ) { new IncognitoSpell( from, null ).Cast(); } break; }
+				case 35: { if ( HasSpell( from, 35 ) ) { new MagicReflectSpell( from, null ).Cast(); } break; }
+				case 36: { if ( HasSpell( from, 36 ) ) { new MindBlastSpell( from, null ).Cast(); } break; }
+				case 37: { if ( HasSpell( from, 37 ) ) { new ParalyzeSpell( from, null ).Cast(); } break; }
+				case 38: { if ( HasSpell( from, 38 ) ) { new PoisonFieldSpell( from, null ).Cast(); } break; }
+				case 39: { if ( HasSpell( from, 39 ) ) { new SummonCreatureSpell( from, null ).Cast(); } break; }
+				case 40: { if ( HasSpell( from, 40 ) ) { new DispelSpell( from, null ).Cast(); } break; }
+				case 41: { if ( HasSpell( from, 41 ) ) { new EnergyBoltSpell( from, null ).Cast(); } break; }
+				case 42: { if ( HasSpell( from, 42 ) ) { new ExplosionSpell( from, null ).Cast(); } break; }
+				case 43: { if ( HasSpell( from, 43 ) ) { new InvisibilitySpell( from, null ).Cast(); } break; }
+				case 44: { if ( HasSpell( from, 44 ) ) { new MarkSpell( from, null ).Cast(); } break; }
+				case 45: { if ( HasSpell( from, 45 ) ) { new MassCurseSpell( from, null ).Cast(); } break; }
+				case 46: { if ( HasSpell( from, 46 ) ) { new ParalyzeFieldSpell( from, null ).Cast(); } break; }
+				case 47: { if ( HasSpell( from, 47 ) ) { new RevealSpell( from, null ).Cast(); } break; }
+				case 48: { if ( HasSpell( from, 48 ) ) { new ChainLightningSpell( from, null ).Cast(); } break; }
+				case 49: { if ( HasSpell( from, 49 ) ) { new EnergyFieldSpell( from, null ).Cast(); } break; }
+				case 50: { if ( HasSpell( from, 50 ) ) { new FlameStrikeSpell( from, null ).Cast(); } break; }
+				case 51: { if ( HasSpell( from, 51 ) ) { new GateTravelSpell( from, null ).Cast(); } break; }
+				case 52: { if ( HasSpell( from, 52 ) ) { new ManaVampireSpell( from, null ).Cast(); } break; }
+				case 53: { if ( HasSpell( from, 53 ) ) { new MassDispelSpell( from, null ).Cast(); } break; }
+				case 54: { if ( HasSpell( from, 54 ) ) { new MeteorSwarmSpell( from, null ).Cast(); } break; }
+				case 55: { if ( HasSpell( from, 55 ) ) { new PolymorphSpell( from, null ).Cast(); } break; }
+				case 56: { if ( HasSpell( from, 56 ) ) { new EarthquakeSpell( from, null ).Cast(); } break; }
+				case 57: { if ( HasSpell( from, 57 ) ) { new EnergyVortexSpell( from, null ).Cast(); } break; }
+				case 58: { if ( HasSpell( from, 58 ) ) { new ResurrectionSpell( from, null ).Cast(); } break; }
+				case 59: { if ( HasSpell( from, 59 ) ) { new AirElementalSpell( from, null ).Cast(); } break; }
+				case 60: { if ( HasSpell( from, 60 ) ) { new SummonDaemonSpell( from, null ).Cast(); } break; }
+				case 61: { if ( HasSpell( from, 61 ) ) { new EarthElementalSpell( from, null ).Cast(); } break; }
+				case 62: { if ( HasSpell( from, 62 ) ) { new FireElementalSpell( from, null ).Cast(); } break; }
+				case 63: { if ( HasSpell( from, 63 ) ) { new WaterElementalSpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsMage2( from ) );
 		}
     }
 }
@@ -1624,7 +1636,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars 
 {
     public class SpellBarsMage3 : Gump
     {
@@ -1806,76 +1818,78 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsMage3 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 99: { if ( HasSpell( from, 0 ) ) { new ClumsySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 1: { if ( HasSpell( from, 1 ) ) { new CreateFoodSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 2 ) ) { new FeeblemindSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 3 ) ) { new HealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 4 ) ) { new MagicArrowSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 5 ) ) { new NightSightSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 6 ) ) { new ReactiveArmorSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 7 ) ) { new WeakenSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 8 ) ) { new AgilitySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 9 ) ) { new CunningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 10 ) ) { new CureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 11 ) ) { new HarmSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 12 ) ) { new MagicTrapSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 13 ) ) { new RemoveTrapSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 14 ) ) { new ProtectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 15: { if ( HasSpell( from, 15 ) ) { new StrengthSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 16: { if ( HasSpell( from, 16 ) ) { new BlessSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 17: { if ( HasSpell( from, 17 ) ) { new FireballSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 18: { if ( HasSpell( from, 18 ) ) { new MagicLockSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 19: { if ( HasSpell( from, 19 ) ) { new PoisonSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 20: { if ( HasSpell( from, 20 ) ) { new TelekinesisSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 21: { if ( HasSpell( from, 21 ) ) { new TeleportSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 22: { if ( HasSpell( from, 22 ) ) { new UnlockSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 23: { if ( HasSpell( from, 23 ) ) { new WallOfStoneSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 24: { if ( HasSpell( from, 24 ) ) { new ArchCureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 25: { if ( HasSpell( from, 25 ) ) { new ArchProtectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 26: { if ( HasSpell( from, 26 ) ) { new CurseSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 27: { if ( HasSpell( from, 27 ) ) { new FireFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 28: { if ( HasSpell( from, 28 ) ) { new GreaterHealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 29: { if ( HasSpell( from, 29 ) ) { new LightningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 30: { if ( HasSpell( from, 30 ) ) { new ManaDrainSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 31: { if ( HasSpell( from, 31 ) ) { new RecallSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 32: { if ( HasSpell( from, 32 ) ) { new BladeSpiritsSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 33: { if ( HasSpell( from, 33 ) ) { new DispelFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 34: { if ( HasSpell( from, 34 ) ) { new IncognitoSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 35: { if ( HasSpell( from, 35 ) ) { new MagicReflectSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 36: { if ( HasSpell( from, 36 ) ) { new MindBlastSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 37: { if ( HasSpell( from, 37 ) ) { new ParalyzeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 38: { if ( HasSpell( from, 38 ) ) { new PoisonFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 39: { if ( HasSpell( from, 39 ) ) { new SummonCreatureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 40: { if ( HasSpell( from, 40 ) ) { new DispelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 41: { if ( HasSpell( from, 41 ) ) { new EnergyBoltSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 42: { if ( HasSpell( from, 42 ) ) { new ExplosionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 43: { if ( HasSpell( from, 43 ) ) { new InvisibilitySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 44: { if ( HasSpell( from, 44 ) ) { new MarkSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 45: { if ( HasSpell( from, 45 ) ) { new MassCurseSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 46: { if ( HasSpell( from, 46 ) ) { new ParalyzeFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 47: { if ( HasSpell( from, 47 ) ) { new RevealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 48: { if ( HasSpell( from, 48 ) ) { new ChainLightningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 49: { if ( HasSpell( from, 49 ) ) { new EnergyFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 50: { if ( HasSpell( from, 50 ) ) { new FlameStrikeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 51: { if ( HasSpell( from, 51 ) ) { new GateTravelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 52: { if ( HasSpell( from, 52 ) ) { new ManaVampireSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 53: { if ( HasSpell( from, 53 ) ) { new MassDispelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 54: { if ( HasSpell( from, 54 ) ) { new MeteorSwarmSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 55: { if ( HasSpell( from, 55 ) ) { new PolymorphSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 56: { if ( HasSpell( from, 56 ) ) { new EarthquakeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 57: { if ( HasSpell( from, 57 ) ) { new EnergyVortexSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 58: { if ( HasSpell( from, 58 ) ) { new ResurrectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 59: { if ( HasSpell( from, 59 ) ) { new AirElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 60: { if ( HasSpell( from, 60 ) ) { new SummonDaemonSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 61: { if ( HasSpell( from, 61 ) ) { new EarthElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 62: { if ( HasSpell( from, 62 ) ) { new FireElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
-				case 63: { if ( HasSpell( from, 63 ) ) { new WaterElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage3( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 99: { if ( HasSpell( from, 0 ) ) { new ClumsySpell( from, null ).Cast(); } break; }
+				case 1: { if ( HasSpell( from, 1 ) ) { new CreateFoodSpell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 2 ) ) { new FeeblemindSpell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 3 ) ) { new HealSpell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 4 ) ) { new MagicArrowSpell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 5 ) ) { new NightSightSpell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 6 ) ) { new ReactiveArmorSpell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 7 ) ) { new WeakenSpell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 8 ) ) { new AgilitySpell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 9 ) ) { new CunningSpell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 10 ) ) { new CureSpell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 11 ) ) { new HarmSpell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 12 ) ) { new MagicTrapSpell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 13 ) ) { new RemoveTrapSpell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 14 ) ) { new ProtectionSpell( from, null ).Cast(); } break; }
+				case 15: { if ( HasSpell( from, 15 ) ) { new StrengthSpell( from, null ).Cast(); } break; }
+				case 16: { if ( HasSpell( from, 16 ) ) { new BlessSpell( from, null ).Cast(); } break; }
+				case 17: { if ( HasSpell( from, 17 ) ) { new FireballSpell( from, null ).Cast(); } break; }
+				case 18: { if ( HasSpell( from, 18 ) ) { new MagicLockSpell( from, null ).Cast(); } break; }
+				case 19: { if ( HasSpell( from, 19 ) ) { new PoisonSpell( from, null ).Cast(); } break; }
+				case 20: { if ( HasSpell( from, 20 ) ) { new TelekinesisSpell( from, null ).Cast(); } break; }
+				case 21: { if ( HasSpell( from, 21 ) ) { new TeleportSpell( from, null ).Cast(); } break; }
+				case 22: { if ( HasSpell( from, 22 ) ) { new UnlockSpell( from, null ).Cast(); } break; }
+				case 23: { if ( HasSpell( from, 23 ) ) { new WallOfStoneSpell( from, null ).Cast(); } break; }
+				case 24: { if ( HasSpell( from, 24 ) ) { new ArchCureSpell( from, null ).Cast(); } break; }
+				case 25: { if ( HasSpell( from, 25 ) ) { new ArchProtectionSpell( from, null ).Cast(); } break; }
+				case 26: { if ( HasSpell( from, 26 ) ) { new CurseSpell( from, null ).Cast(); } break; }
+				case 27: { if ( HasSpell( from, 27 ) ) { new FireFieldSpell( from, null ).Cast(); } break; }
+				case 28: { if ( HasSpell( from, 28 ) ) { new GreaterHealSpell( from, null ).Cast(); } break; }
+				case 29: { if ( HasSpell( from, 29 ) ) { new LightningSpell( from, null ).Cast(); } break; }
+				case 30: { if ( HasSpell( from, 30 ) ) { new ManaDrainSpell( from, null ).Cast(); } break; }
+				case 31: { if ( HasSpell( from, 31 ) ) { new RecallSpell( from, null ).Cast(); } break; }
+				case 32: { if ( HasSpell( from, 32 ) ) { new BladeSpiritsSpell( from, null ).Cast(); } break; }
+				case 33: { if ( HasSpell( from, 33 ) ) { new DispelFieldSpell( from, null ).Cast(); } break; }
+				case 34: { if ( HasSpell( from, 34 ) ) { new IncognitoSpell( from, null ).Cast(); } break; }
+				case 35: { if ( HasSpell( from, 35 ) ) { new MagicReflectSpell( from, null ).Cast(); } break; }
+				case 36: { if ( HasSpell( from, 36 ) ) { new MindBlastSpell( from, null ).Cast(); } break; }
+				case 37: { if ( HasSpell( from, 37 ) ) { new ParalyzeSpell( from, null ).Cast(); } break; }
+				case 38: { if ( HasSpell( from, 38 ) ) { new PoisonFieldSpell( from, null ).Cast(); } break; }
+				case 39: { if ( HasSpell( from, 39 ) ) { new SummonCreatureSpell( from, null ).Cast(); } break; }
+				case 40: { if ( HasSpell( from, 40 ) ) { new DispelSpell( from, null ).Cast(); } break; }
+				case 41: { if ( HasSpell( from, 41 ) ) { new EnergyBoltSpell( from, null ).Cast(); } break; }
+				case 42: { if ( HasSpell( from, 42 ) ) { new ExplosionSpell( from, null ).Cast(); } break; }
+				case 43: { if ( HasSpell( from, 43 ) ) { new InvisibilitySpell( from, null ).Cast(); } break; }
+				case 44: { if ( HasSpell( from, 44 ) ) { new MarkSpell( from, null ).Cast(); } break; }
+				case 45: { if ( HasSpell( from, 45 ) ) { new MassCurseSpell( from, null ).Cast(); } break; }
+				case 46: { if ( HasSpell( from, 46 ) ) { new ParalyzeFieldSpell( from, null ).Cast(); } break; }
+				case 47: { if ( HasSpell( from, 47 ) ) { new RevealSpell( from, null ).Cast(); } break; }
+				case 48: { if ( HasSpell( from, 48 ) ) { new ChainLightningSpell( from, null ).Cast(); } break; }
+				case 49: { if ( HasSpell( from, 49 ) ) { new EnergyFieldSpell( from, null ).Cast(); } break; }
+				case 50: { if ( HasSpell( from, 50 ) ) { new FlameStrikeSpell( from, null ).Cast(); } break; }
+				case 51: { if ( HasSpell( from, 51 ) ) { new GateTravelSpell( from, null ).Cast(); } break; }
+				case 52: { if ( HasSpell( from, 52 ) ) { new ManaVampireSpell( from, null ).Cast(); } break; }
+				case 53: { if ( HasSpell( from, 53 ) ) { new MassDispelSpell( from, null ).Cast(); } break; }
+				case 54: { if ( HasSpell( from, 54 ) ) { new MeteorSwarmSpell( from, null ).Cast(); } break; }
+				case 55: { if ( HasSpell( from, 55 ) ) { new PolymorphSpell( from, null ).Cast(); } break; }
+				case 56: { if ( HasSpell( from, 56 ) ) { new EarthquakeSpell( from, null ).Cast(); } break; }
+				case 57: { if ( HasSpell( from, 57 ) ) { new EnergyVortexSpell( from, null ).Cast(); } break; }
+				case 58: { if ( HasSpell( from, 58 ) ) { new ResurrectionSpell( from, null ).Cast(); } break; }
+				case 59: { if ( HasSpell( from, 59 ) ) { new AirElementalSpell( from, null ).Cast(); } break; }
+				case 60: { if ( HasSpell( from, 60 ) ) { new SummonDaemonSpell( from, null ).Cast(); } break; }
+				case 61: { if ( HasSpell( from, 61 ) ) { new EarthElementalSpell( from, null ).Cast(); } break; }
+				case 62: { if ( HasSpell( from, 62 ) ) { new FireElementalSpell( from, null ).Cast(); } break; }
+				case 63: { if ( HasSpell( from, 63 ) ) { new WaterElementalSpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsMage3( from ) );
 		}
     }
 }
@@ -1888,7 +1902,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsMage4 : Gump
     {
@@ -2070,76 +2084,78 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsMage4 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 99: { if ( HasSpell( from, 0 ) ) { new ClumsySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 1: { if ( HasSpell( from, 1 ) ) { new CreateFoodSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 2 ) ) { new FeeblemindSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 3 ) ) { new HealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 4 ) ) { new MagicArrowSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 5 ) ) { new NightSightSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 6 ) ) { new ReactiveArmorSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 7 ) ) { new WeakenSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 8 ) ) { new AgilitySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 9 ) ) { new CunningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 10 ) ) { new CureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 11 ) ) { new HarmSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 12 ) ) { new MagicTrapSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 13 ) ) { new RemoveTrapSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 14 ) ) { new ProtectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 15: { if ( HasSpell( from, 15 ) ) { new StrengthSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 16: { if ( HasSpell( from, 16 ) ) { new BlessSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 17: { if ( HasSpell( from, 17 ) ) { new FireballSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 18: { if ( HasSpell( from, 18 ) ) { new MagicLockSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 19: { if ( HasSpell( from, 19 ) ) { new PoisonSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 20: { if ( HasSpell( from, 20 ) ) { new TelekinesisSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 21: { if ( HasSpell( from, 21 ) ) { new TeleportSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 22: { if ( HasSpell( from, 22 ) ) { new UnlockSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 23: { if ( HasSpell( from, 23 ) ) { new WallOfStoneSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 24: { if ( HasSpell( from, 24 ) ) { new ArchCureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 25: { if ( HasSpell( from, 25 ) ) { new ArchProtectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 26: { if ( HasSpell( from, 26 ) ) { new CurseSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 27: { if ( HasSpell( from, 27 ) ) { new FireFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 28: { if ( HasSpell( from, 28 ) ) { new GreaterHealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 29: { if ( HasSpell( from, 29 ) ) { new LightningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 30: { if ( HasSpell( from, 30 ) ) { new ManaDrainSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 31: { if ( HasSpell( from, 31 ) ) { new RecallSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 32: { if ( HasSpell( from, 32 ) ) { new BladeSpiritsSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 33: { if ( HasSpell( from, 33 ) ) { new DispelFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 34: { if ( HasSpell( from, 34 ) ) { new IncognitoSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 35: { if ( HasSpell( from, 35 ) ) { new MagicReflectSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 36: { if ( HasSpell( from, 36 ) ) { new MindBlastSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 37: { if ( HasSpell( from, 37 ) ) { new ParalyzeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 38: { if ( HasSpell( from, 38 ) ) { new PoisonFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 39: { if ( HasSpell( from, 39 ) ) { new SummonCreatureSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 40: { if ( HasSpell( from, 40 ) ) { new DispelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 41: { if ( HasSpell( from, 41 ) ) { new EnergyBoltSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 42: { if ( HasSpell( from, 42 ) ) { new ExplosionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 43: { if ( HasSpell( from, 43 ) ) { new InvisibilitySpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 44: { if ( HasSpell( from, 44 ) ) { new MarkSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 45: { if ( HasSpell( from, 45 ) ) { new MassCurseSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 46: { if ( HasSpell( from, 46 ) ) { new ParalyzeFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 47: { if ( HasSpell( from, 47 ) ) { new RevealSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 48: { if ( HasSpell( from, 48 ) ) { new ChainLightningSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 49: { if ( HasSpell( from, 49 ) ) { new EnergyFieldSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 50: { if ( HasSpell( from, 50 ) ) { new FlameStrikeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 51: { if ( HasSpell( from, 51 ) ) { new GateTravelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 52: { if ( HasSpell( from, 52 ) ) { new ManaVampireSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 53: { if ( HasSpell( from, 53 ) ) { new MassDispelSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 54: { if ( HasSpell( from, 54 ) ) { new MeteorSwarmSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 55: { if ( HasSpell( from, 55 ) ) { new PolymorphSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 56: { if ( HasSpell( from, 56 ) ) { new EarthquakeSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 57: { if ( HasSpell( from, 57 ) ) { new EnergyVortexSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 58: { if ( HasSpell( from, 58 ) ) { new ResurrectionSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 59: { if ( HasSpell( from, 59 ) ) { new AirElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 60: { if ( HasSpell( from, 60 ) ) { new SummonDaemonSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 61: { if ( HasSpell( from, 61 ) ) { new EarthElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 62: { if ( HasSpell( from, 62 ) ) { new FireElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
-				case 63: { if ( HasSpell( from, 63 ) ) { new WaterElementalSpell( from, null ).Cast(); from.SendGump( new SpellBarsMage4( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 99: { if ( HasSpell( from, 0 ) ) { new ClumsySpell( from, null ).Cast(); } break; }
+				case 1: { if ( HasSpell( from, 1 ) ) { new CreateFoodSpell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 2 ) ) { new FeeblemindSpell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 3 ) ) { new HealSpell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 4 ) ) { new MagicArrowSpell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 5 ) ) { new NightSightSpell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 6 ) ) { new ReactiveArmorSpell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 7 ) ) { new WeakenSpell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 8 ) ) { new AgilitySpell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 9 ) ) { new CunningSpell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 10 ) ) { new CureSpell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 11 ) ) { new HarmSpell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 12 ) ) { new MagicTrapSpell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 13 ) ) { new RemoveTrapSpell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 14 ) ) { new ProtectionSpell( from, null ).Cast(); } break; }
+				case 15: { if ( HasSpell( from, 15 ) ) { new StrengthSpell( from, null ).Cast(); } break; }
+				case 16: { if ( HasSpell( from, 16 ) ) { new BlessSpell( from, null ).Cast(); } break; }
+				case 17: { if ( HasSpell( from, 17 ) ) { new FireballSpell( from, null ).Cast(); } break; }
+				case 18: { if ( HasSpell( from, 18 ) ) { new MagicLockSpell( from, null ).Cast(); } break; }
+				case 19: { if ( HasSpell( from, 19 ) ) { new PoisonSpell( from, null ).Cast(); } break; }
+				case 20: { if ( HasSpell( from, 20 ) ) { new TelekinesisSpell( from, null ).Cast(); } break; }
+				case 21: { if ( HasSpell( from, 21 ) ) { new TeleportSpell( from, null ).Cast(); } break; }
+				case 22: { if ( HasSpell( from, 22 ) ) { new UnlockSpell( from, null ).Cast(); } break; }
+				case 23: { if ( HasSpell( from, 23 ) ) { new WallOfStoneSpell( from, null ).Cast(); } break; }
+				case 24: { if ( HasSpell( from, 24 ) ) { new ArchCureSpell( from, null ).Cast(); } break; }
+				case 25: { if ( HasSpell( from, 25 ) ) { new ArchProtectionSpell( from, null ).Cast(); } break; }
+				case 26: { if ( HasSpell( from, 26 ) ) { new CurseSpell( from, null ).Cast(); } break; }
+				case 27: { if ( HasSpell( from, 27 ) ) { new FireFieldSpell( from, null ).Cast(); } break; }
+				case 28: { if ( HasSpell( from, 28 ) ) { new GreaterHealSpell( from, null ).Cast(); } break; }
+				case 29: { if ( HasSpell( from, 29 ) ) { new LightningSpell( from, null ).Cast(); } break; }
+				case 30: { if ( HasSpell( from, 30 ) ) { new ManaDrainSpell( from, null ).Cast(); } break; }
+				case 31: { if ( HasSpell( from, 31 ) ) { new RecallSpell( from, null ).Cast(); } break; }
+				case 32: { if ( HasSpell( from, 32 ) ) { new BladeSpiritsSpell( from, null ).Cast(); } break; }
+				case 33: { if ( HasSpell( from, 33 ) ) { new DispelFieldSpell( from, null ).Cast(); } break; }
+				case 34: { if ( HasSpell( from, 34 ) ) { new IncognitoSpell( from, null ).Cast(); } break; }
+				case 35: { if ( HasSpell( from, 35 ) ) { new MagicReflectSpell( from, null ).Cast(); } break; }
+				case 36: { if ( HasSpell( from, 36 ) ) { new MindBlastSpell( from, null ).Cast(); } break; }
+				case 37: { if ( HasSpell( from, 37 ) ) { new ParalyzeSpell( from, null ).Cast(); } break; }
+				case 38: { if ( HasSpell( from, 38 ) ) { new PoisonFieldSpell( from, null ).Cast(); } break; }
+				case 39: { if ( HasSpell( from, 39 ) ) { new SummonCreatureSpell( from, null ).Cast(); } break; }
+				case 40: { if ( HasSpell( from, 40 ) ) { new DispelSpell( from, null ).Cast(); } break; }
+				case 41: { if ( HasSpell( from, 41 ) ) { new EnergyBoltSpell( from, null ).Cast(); } break; }
+				case 42: { if ( HasSpell( from, 42 ) ) { new ExplosionSpell( from, null ).Cast(); } break; }
+				case 43: { if ( HasSpell( from, 43 ) ) { new InvisibilitySpell( from, null ).Cast(); } break; }
+				case 44: { if ( HasSpell( from, 44 ) ) { new MarkSpell( from, null ).Cast(); } break; }
+				case 45: { if ( HasSpell( from, 45 ) ) { new MassCurseSpell( from, null ).Cast(); } break; }
+				case 46: { if ( HasSpell( from, 46 ) ) { new ParalyzeFieldSpell( from, null ).Cast(); } break; }
+				case 47: { if ( HasSpell( from, 47 ) ) { new RevealSpell( from, null ).Cast(); } break; }
+				case 48: { if ( HasSpell( from, 48 ) ) { new ChainLightningSpell( from, null ).Cast(); } break; }
+				case 49: { if ( HasSpell( from, 49 ) ) { new EnergyFieldSpell( from, null ).Cast(); } break; }
+				case 50: { if ( HasSpell( from, 50 ) ) { new FlameStrikeSpell( from, null ).Cast(); } break; }
+				case 51: { if ( HasSpell( from, 51 ) ) { new GateTravelSpell( from, null ).Cast(); } break; }
+				case 52: { if ( HasSpell( from, 52 ) ) { new ManaVampireSpell( from, null ).Cast(); } break; }
+				case 53: { if ( HasSpell( from, 53 ) ) { new MassDispelSpell( from, null ).Cast(); } break; }
+				case 54: { if ( HasSpell( from, 54 ) ) { new MeteorSwarmSpell( from, null ).Cast(); } break; }
+				case 55: { if ( HasSpell( from, 55 ) ) { new PolymorphSpell( from, null ).Cast(); } break; }
+				case 56: { if ( HasSpell( from, 56 ) ) { new EarthquakeSpell( from, null ).Cast(); } break; }
+				case 57: { if ( HasSpell( from, 57 ) ) { new EnergyVortexSpell( from, null ).Cast(); } break; }
+				case 58: { if ( HasSpell( from, 58 ) ) { new ResurrectionSpell( from, null ).Cast(); } break; }
+				case 59: { if ( HasSpell( from, 59 ) ) { new AirElementalSpell( from, null ).Cast(); } break; }
+				case 60: { if ( HasSpell( from, 60 ) ) { new SummonDaemonSpell( from, null ).Cast(); } break; }
+				case 61: { if ( HasSpell( from, 61 ) ) { new EarthElementalSpell( from, null ).Cast(); } break; }
+				case 62: { if ( HasSpell( from, 62 ) ) { new FireElementalSpell( from, null ).Cast(); } break; }
+				case 63: { if ( HasSpell( from, 63 ) ) { new WaterElementalSpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsMage4( from ) );
 		}
     }
 }
@@ -2152,7 +2168,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsElement1 : Gump
     {
@@ -2279,44 +2295,46 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsElement1 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 99: { if ( HasSpell( from, 300 ) ) { new Elemental_Armor_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 1: { if ( HasSpell( from, 301 ) ) { new Elemental_Bolt_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 302 ) ) { new Elemental_Mend_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 303 ) ) { new Elemental_Sanctuary_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 304 ) ) { new Elemental_Pain_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 305 ) ) { new Elemental_Protection_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 306 ) ) { new Elemental_Purge_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 307 ) ) { new Elemental_Steed_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 308 ) ) { new Elemental_Call_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 309 ) ) { new Elemental_Force_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 310 ) ) { new Elemental_Wall_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 311 ) ) { new Elemental_Warp_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 312 ) ) { new Elemental_Field_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 313 ) ) { new Elemental_Restoration_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 314 ) ) { new Elemental_Strike_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 15: { if ( HasSpell( from, 315 ) ) { new Elemental_Void_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 16: { if ( HasSpell( from, 316 ) ) { new Elemental_Blast_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 17: { if ( HasSpell( from, 317 ) ) { new Elemental_Echo_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 18: { if ( HasSpell( from, 318 ) ) { new Elemental_Fiend_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 19: { if ( HasSpell( from, 319 ) ) { new Elemental_Hold_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 20: { if ( HasSpell( from, 320 ) ) { new Elemental_Barrage_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 21: { if ( HasSpell( from, 321 ) ) { new Elemental_Rune_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 22: { if ( HasSpell( from, 322 ) ) { new Elemental_Storm_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 23: { if ( HasSpell( from, 323 ) ) { new Elemental_Summon_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 24: { if ( HasSpell( from, 324 ) ) { new Elemental_Devastation_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 25: { if ( HasSpell( from, 325 ) ) { new Elemental_Fall_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 26: { if ( HasSpell( from, 326 ) ) { new Elemental_Gate_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 27: { if ( HasSpell( from, 327 ) ) { new Elemental_Havoc_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 28: { if ( HasSpell( from, 328 ) ) { new Elemental_Apocalypse_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 29: { if ( HasSpell( from, 329 ) ) { new Elemental_Lord_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 30: { if ( HasSpell( from, 330 ) ) { new Elemental_Soul_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
-				case 31: { if ( HasSpell( from, 331 ) ) { new Elemental_Spirit_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement1( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 99: { if ( HasSpell( from, 300 ) ) { new Elemental_Armor_Spell( from, null ).Cast(); } break; }
+				case 1: { if ( HasSpell( from, 301 ) ) { new Elemental_Bolt_Spell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 302 ) ) { new Elemental_Mend_Spell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 303 ) ) { new Elemental_Sanctuary_Spell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 304 ) ) { new Elemental_Pain_Spell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 305 ) ) { new Elemental_Protection_Spell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 306 ) ) { new Elemental_Purge_Spell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 307 ) ) { new Elemental_Steed_Spell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 308 ) ) { new Elemental_Call_Spell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 309 ) ) { new Elemental_Force_Spell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 310 ) ) { new Elemental_Wall_Spell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 311 ) ) { new Elemental_Warp_Spell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 312 ) ) { new Elemental_Field_Spell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 313 ) ) { new Elemental_Restoration_Spell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 314 ) ) { new Elemental_Strike_Spell( from, null ).Cast(); } break; }
+				case 15: { if ( HasSpell( from, 315 ) ) { new Elemental_Void_Spell( from, null ).Cast(); } break; }
+				case 16: { if ( HasSpell( from, 316 ) ) { new Elemental_Blast_Spell( from, null ).Cast(); } break; }
+				case 17: { if ( HasSpell( from, 317 ) ) { new Elemental_Echo_Spell( from, null ).Cast(); } break; }
+				case 18: { if ( HasSpell( from, 318 ) ) { new Elemental_Fiend_Spell( from, null ).Cast(); } break; }
+				case 19: { if ( HasSpell( from, 319 ) ) { new Elemental_Hold_Spell( from, null ).Cast(); } break; }
+				case 20: { if ( HasSpell( from, 320 ) ) { new Elemental_Barrage_Spell( from, null ).Cast(); } break; }
+				case 21: { if ( HasSpell( from, 321 ) ) { new Elemental_Rune_Spell( from, null ).Cast(); } break; }
+				case 22: { if ( HasSpell( from, 322 ) ) { new Elemental_Storm_Spell( from, null ).Cast(); } break; }
+				case 23: { if ( HasSpell( from, 323 ) ) { new Elemental_Summon_Spell( from, null ).Cast(); } break; }
+				case 24: { if ( HasSpell( from, 324 ) ) { new Elemental_Devastation_Spell( from, null ).Cast(); } break; }
+				case 25: { if ( HasSpell( from, 325 ) ) { new Elemental_Fall_Spell( from, null ).Cast(); } break; }
+				case 26: { if ( HasSpell( from, 326 ) ) { new Elemental_Gate_Spell( from, null ).Cast(); } break; }
+				case 27: { if ( HasSpell( from, 327 ) ) { new Elemental_Havoc_Spell( from, null ).Cast(); } break; }
+				case 28: { if ( HasSpell( from, 328 ) ) { new Elemental_Apocalypse_Spell( from, null ).Cast(); } break; }
+				case 29: { if ( HasSpell( from, 329 ) ) { new Elemental_Lord_Spell( from, null ).Cast(); } break; }
+				case 30: { if ( HasSpell( from, 330 ) ) { new Elemental_Soul_Spell( from, null ).Cast(); } break; }
+				case 31: { if ( HasSpell( from, 331 ) ) { new Elemental_Spirit_Spell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsElement1( from ) );
 		}
     }
 }
@@ -2329,7 +2347,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsElement2 : Gump
     {
@@ -2456,44 +2474,46 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsElement2 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 99: { if ( HasSpell( from, 300 ) ) { new Elemental_Armor_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 1: { if ( HasSpell( from, 301 ) ) { new Elemental_Bolt_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 302 ) ) { new Elemental_Mend_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 303 ) ) { new Elemental_Sanctuary_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 304 ) ) { new Elemental_Pain_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 305 ) ) { new Elemental_Protection_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 306 ) ) { new Elemental_Purge_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 307 ) ) { new Elemental_Steed_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 308 ) ) { new Elemental_Call_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 309 ) ) { new Elemental_Force_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 310 ) ) { new Elemental_Wall_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 311 ) ) { new Elemental_Warp_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 312 ) ) { new Elemental_Field_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 313 ) ) { new Elemental_Restoration_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 314 ) ) { new Elemental_Strike_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 15: { if ( HasSpell( from, 315 ) ) { new Elemental_Void_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 16: { if ( HasSpell( from, 316 ) ) { new Elemental_Blast_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 17: { if ( HasSpell( from, 317 ) ) { new Elemental_Echo_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 18: { if ( HasSpell( from, 318 ) ) { new Elemental_Fiend_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 19: { if ( HasSpell( from, 319 ) ) { new Elemental_Hold_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 20: { if ( HasSpell( from, 320 ) ) { new Elemental_Barrage_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 21: { if ( HasSpell( from, 321 ) ) { new Elemental_Rune_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 22: { if ( HasSpell( from, 322 ) ) { new Elemental_Storm_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 23: { if ( HasSpell( from, 323 ) ) { new Elemental_Summon_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 24: { if ( HasSpell( from, 324 ) ) { new Elemental_Devastation_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 25: { if ( HasSpell( from, 325 ) ) { new Elemental_Fall_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 26: { if ( HasSpell( from, 326 ) ) { new Elemental_Gate_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 27: { if ( HasSpell( from, 327 ) ) { new Elemental_Havoc_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 28: { if ( HasSpell( from, 328 ) ) { new Elemental_Apocalypse_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 29: { if ( HasSpell( from, 329 ) ) { new Elemental_Lord_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 30: { if ( HasSpell( from, 330 ) ) { new Elemental_Soul_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
-				case 31: { if ( HasSpell( from, 331 ) ) { new Elemental_Spirit_Spell( from, null ).Cast(); from.SendGump( new SpellBarsElement2( from ) ); } break; }
+				default:
+				case 0: { return; }
+				
+				case 99: { if ( HasSpell( from, 300 ) ) { new Elemental_Armor_Spell( from, null ).Cast(); } break; }
+				case 1: { if ( HasSpell( from, 301 ) ) { new Elemental_Bolt_Spell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 302 ) ) { new Elemental_Mend_Spell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 303 ) ) { new Elemental_Sanctuary_Spell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 304 ) ) { new Elemental_Pain_Spell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 305 ) ) { new Elemental_Protection_Spell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 306 ) ) { new Elemental_Purge_Spell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 307 ) ) { new Elemental_Steed_Spell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 308 ) ) { new Elemental_Call_Spell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 309 ) ) { new Elemental_Force_Spell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 310 ) ) { new Elemental_Wall_Spell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 311 ) ) { new Elemental_Warp_Spell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 312 ) ) { new Elemental_Field_Spell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 313 ) ) { new Elemental_Restoration_Spell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 314 ) ) { new Elemental_Strike_Spell( from, null ).Cast(); } break; }
+				case 15: { if ( HasSpell( from, 315 ) ) { new Elemental_Void_Spell( from, null ).Cast(); } break; }
+				case 16: { if ( HasSpell( from, 316 ) ) { new Elemental_Blast_Spell( from, null ).Cast(); } break; }
+				case 17: { if ( HasSpell( from, 317 ) ) { new Elemental_Echo_Spell( from, null ).Cast(); } break; }
+				case 18: { if ( HasSpell( from, 318 ) ) { new Elemental_Fiend_Spell( from, null ).Cast(); } break; }
+				case 19: { if ( HasSpell( from, 319 ) ) { new Elemental_Hold_Spell( from, null ).Cast(); } break; }
+				case 20: { if ( HasSpell( from, 320 ) ) { new Elemental_Barrage_Spell( from, null ).Cast(); } break; }
+				case 21: { if ( HasSpell( from, 321 ) ) { new Elemental_Rune_Spell( from, null ).Cast(); } break; }
+				case 22: { if ( HasSpell( from, 322 ) ) { new Elemental_Storm_Spell( from, null ).Cast(); } break; }
+				case 23: { if ( HasSpell( from, 323 ) ) { new Elemental_Summon_Spell( from, null ).Cast(); } break; }
+				case 24: { if ( HasSpell( from, 324 ) ) { new Elemental_Devastation_Spell( from, null ).Cast(); } break; }
+				case 25: { if ( HasSpell( from, 325 ) ) { new Elemental_Fall_Spell( from, null ).Cast(); } break; }
+				case 26: { if ( HasSpell( from, 326 ) ) { new Elemental_Gate_Spell( from, null ).Cast(); } break; }
+				case 27: { if ( HasSpell( from, 327 ) ) { new Elemental_Havoc_Spell( from, null ).Cast(); } break; }
+				case 28: { if ( HasSpell( from, 328 ) ) { new Elemental_Apocalypse_Spell( from, null ).Cast(); } break; }
+				case 29: { if ( HasSpell( from, 329 ) ) { new Elemental_Lord_Spell( from, null ).Cast(); } break; }
+				case 30: { if ( HasSpell( from, 330 ) ) { new Elemental_Soul_Spell( from, null ).Cast(); } break; }
+				case 31: { if ( HasSpell( from, 331 ) ) { new Elemental_Spirit_Spell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsElement2( from ) );
 		}
     }
 }
@@ -2506,7 +2526,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsNecro1 : Gump
     {
@@ -2595,29 +2615,31 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsNecro1 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 1: { if ( HasSpell( from, 100 ) ) { new AnimateDeadSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 101 ) ) { new BloodOathSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 102 ) ) { new CorpseSkinSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 103 ) ) { new CurseWeaponSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 104 ) ) { new EvilOmenSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 105 ) ) { new HorrificBeastSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 106 ) ) { new LichFormSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 107 ) ) { new MindRotSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 108 ) ) { new PainSpikeSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 109 ) ) { new PoisonStrikeSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 110 ) ) { new StrangleSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 111 ) ) { new SummonFamiliarSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 112 ) ) { new VampiricEmbraceSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 113 ) ) { new VengefulSpiritSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 15: { if ( HasSpell( from, 114 ) ) { new WitherSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 16: { if ( HasSpell( from, 115 ) ) { new WraithFormSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
-				case 17: { if ( HasSpell( from, 116 ) ) { new ExorcismSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro1( from ) ); } break; }
+				default:
+				case 0: { return; }
+				
+				case 1: { if ( HasSpell( from, 100 ) ) { new AnimateDeadSpell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 101 ) ) { new BloodOathSpell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 102 ) ) { new CorpseSkinSpell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 103 ) ) { new CurseWeaponSpell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 104 ) ) { new EvilOmenSpell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 105 ) ) { new HorrificBeastSpell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 106 ) ) { new LichFormSpell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 107 ) ) { new MindRotSpell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 108 ) ) { new PainSpikeSpell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 109 ) ) { new PoisonStrikeSpell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 110 ) ) { new StrangleSpell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 111 ) ) { new SummonFamiliarSpell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 112 ) ) { new VampiricEmbraceSpell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 113 ) ) { new VengefulSpiritSpell( from, null ).Cast(); } break; }
+				case 15: { if ( HasSpell( from, 114 ) ) { new WitherSpell( from, null ).Cast(); } break; }
+				case 16: { if ( HasSpell( from, 115 ) ) { new WraithFormSpell( from, null ).Cast(); } break; }
+				case 17: { if ( HasSpell( from, 116 ) ) { new ExorcismSpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsNecro1( from ) );
 		}
     }
 }
@@ -2630,7 +2652,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsNecro2 : Gump
     {
@@ -2719,29 +2741,31 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsNecro2 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 1: { if ( HasSpell( from, 100 ) ) { new AnimateDeadSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 101 ) ) { new BloodOathSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 102 ) ) { new CorpseSkinSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 103 ) ) { new CurseWeaponSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 104 ) ) { new EvilOmenSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 105 ) ) { new HorrificBeastSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 106 ) ) { new LichFormSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 107 ) ) { new MindRotSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 108 ) ) { new PainSpikeSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 109 ) ) { new PoisonStrikeSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 110 ) ) { new StrangleSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 111 ) ) { new SummonFamiliarSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 112 ) ) { new VampiricEmbraceSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 113 ) ) { new VengefulSpiritSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 15: { if ( HasSpell( from, 114 ) ) { new WitherSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 16: { if ( HasSpell( from, 115 ) ) { new WraithFormSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
-				case 17: { if ( HasSpell( from, 116 ) ) { new ExorcismSpell( from, null ).Cast(); from.SendGump( new SpellBarsNecro2( from ) ); } break; }
+				default:
+				case 0: { return; }
+				
+				case 1: { if ( HasSpell( from, 100 ) ) { new AnimateDeadSpell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 101 ) ) { new BloodOathSpell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 102 ) ) { new CorpseSkinSpell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 103 ) ) { new CurseWeaponSpell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 104 ) ) { new EvilOmenSpell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 105 ) ) { new HorrificBeastSpell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 106 ) ) { new LichFormSpell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 107 ) ) { new MindRotSpell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 108 ) ) { new PainSpikeSpell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 109 ) ) { new PoisonStrikeSpell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 110 ) ) { new StrangleSpell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 111 ) ) { new SummonFamiliarSpell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 112 ) ) { new VampiricEmbraceSpell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 113 ) ) { new VengefulSpiritSpell( from, null ).Cast(); } break; }
+				case 15: { if ( HasSpell( from, 114 ) ) { new WitherSpell( from, null ).Cast(); } break; }
+				case 16: { if ( HasSpell( from, 115 ) ) { new WraithFormSpell( from, null ).Cast(); } break; }
+				case 17: { if ( HasSpell( from, 116 ) ) { new ExorcismSpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsNecro2( from ) );
 		}
     }
 }
@@ -2754,7 +2778,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsKnight1 : Gump
     {
@@ -2829,22 +2853,24 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsKnight1 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 1 : { if ( HasSpell( from, 200 ) ) { new CleanseByFireSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight1( from ) ); } break; }
-				case 2 : { if ( HasSpell( from, 201 ) ) { new CloseWoundsSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight1( from ) ); } break; }
-				case 3 : { if ( HasSpell( from, 202 ) ) { new ConsecrateWeaponSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight1( from ) ); } break; }
-				case 4 : { if ( HasSpell( from, 203 ) ) { new DispelEvilSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight1( from ) ); } break; }
-				case 5 : { if ( HasSpell( from, 204 ) ) { new DivineFurySpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight1( from ) ); } break; }
-				case 6 : { if ( HasSpell( from, 205 ) ) { new EnemyOfOneSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight1( from ) ); } break; }
-				case 7 : { if ( HasSpell( from, 206 ) ) { new HolyLightSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight1( from ) ); } break; }
-				case 8 : { if ( HasSpell( from, 207 ) ) { new NobleSacrificeSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight1( from ) ); } break; }
-				case 9 : { if ( HasSpell( from, 208 ) ) { new RemoveCurseSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight1( from ) ); } break; }
-				case 10 : { if ( HasSpell( from, 209 ) ) { new SacredJourneySpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight1( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 1 : { if ( HasSpell( from, 200 ) ) { new CleanseByFireSpell( from, null ).Cast(); } break; }
+				case 2 : { if ( HasSpell( from, 201 ) ) { new CloseWoundsSpell( from, null ).Cast(); } break; }
+				case 3 : { if ( HasSpell( from, 202 ) ) { new ConsecrateWeaponSpell( from, null ).Cast(); } break; }
+				case 4 : { if ( HasSpell( from, 203 ) ) { new DispelEvilSpell( from, null ).Cast(); } break; }
+				case 5 : { if ( HasSpell( from, 204 ) ) { new DivineFurySpell( from, null ).Cast(); } break; }
+				case 6 : { if ( HasSpell( from, 205 ) ) { new EnemyOfOneSpell( from, null ).Cast(); } break; }
+				case 7 : { if ( HasSpell( from, 206 ) ) { new HolyLightSpell( from, null ).Cast(); } break; }
+				case 8 : { if ( HasSpell( from, 207 ) ) { new NobleSacrificeSpell( from, null ).Cast(); } break; }
+				case 9 : { if ( HasSpell( from, 208 ) ) { new RemoveCurseSpell( from, null ).Cast(); } break; }
+				case 10 : { if ( HasSpell( from, 209 ) ) { new SacredJourneySpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsKnight1( from ) );
 		}
     }
 }
@@ -2857,7 +2883,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsKnight2 : Gump
     {
@@ -2932,22 +2958,24 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsKnight2 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 1 : { if ( HasSpell( from, 200 ) ) { new CleanseByFireSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight2( from ) ); } break; }
-				case 2 : { if ( HasSpell( from, 201 ) ) { new CloseWoundsSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight2( from ) ); } break; }
-				case 3 : { if ( HasSpell( from, 202 ) ) { new ConsecrateWeaponSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight2( from ) ); } break; }
-				case 4 : { if ( HasSpell( from, 203 ) ) { new DispelEvilSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight2( from ) ); } break; }
-				case 5 : { if ( HasSpell( from, 204 ) ) { new DivineFurySpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight2( from ) ); } break; }
-				case 6 : { if ( HasSpell( from, 205 ) ) { new EnemyOfOneSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight2( from ) ); } break; }
-				case 7 : { if ( HasSpell( from, 206 ) ) { new HolyLightSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight2( from ) ); } break; }
-				case 8 : { if ( HasSpell( from, 207 ) ) { new NobleSacrificeSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight2( from ) ); } break; }
-				case 9 : { if ( HasSpell( from, 208 ) ) { new RemoveCurseSpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight2( from ) ); } break; }
-				case 10 : { if ( HasSpell( from, 209 ) ) { new SacredJourneySpell( from, null ).Cast(); from.SendGump( new SpellBarsKnight2( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 1 : { if ( HasSpell( from, 200 ) ) { new CleanseByFireSpell( from, null ).Cast(); } break; }
+				case 2 : { if ( HasSpell( from, 201 ) ) { new CloseWoundsSpell( from, null ).Cast(); } break; }
+				case 3 : { if ( HasSpell( from, 202 ) ) { new ConsecrateWeaponSpell( from, null ).Cast(); } break; }
+				case 4 : { if ( HasSpell( from, 203 ) ) { new DispelEvilSpell( from, null ).Cast(); } break; }
+				case 5 : { if ( HasSpell( from, 204 ) ) { new DivineFurySpell( from, null ).Cast(); } break; }
+				case 6 : { if ( HasSpell( from, 205 ) ) { new EnemyOfOneSpell( from, null ).Cast(); } break; }
+				case 7 : { if ( HasSpell( from, 206 ) ) { new HolyLightSpell( from, null ).Cast(); } break; }
+				case 8 : { if ( HasSpell( from, 207 ) ) { new NobleSacrificeSpell( from, null ).Cast(); } break; }
+				case 9 : { if ( HasSpell( from, 208 ) ) { new RemoveCurseSpell( from, null ).Cast(); } break; }
+				case 10 : { if ( HasSpell( from, 209 ) ) { new SacredJourneySpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsKnight2( from ) );
 		}
     }
 }
@@ -2960,7 +2988,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsBard1 : Gump
     {
@@ -3047,28 +3075,30 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsBard1 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 1: { if ( HasSpell( from, 351 ) ) { new ArmysPaeonSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 352 ) ) { new EnchantingEtudeSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 353 ) ) { new EnergyCarolSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 354 ) ) { new EnergyThrenodySong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 355 ) ) { new FireCarolSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 356 ) ) { new FireThrenodySong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 357 ) ) { new FoeRequiemSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 358 ) ) { new IceCarolSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 359 ) ) { new IceThrenodySong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 360 ) ) { new KnightsMinneSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 361 ) ) { new MagesBalladSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 362 ) ) { new MagicFinaleSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 363 ) ) { new PoisonCarolSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 364 ) ) { new PoisonThrenodySong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 15: { if ( HasSpell( from, 365 ) ) { new SheepfoeMamboSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
-				case 16: { if ( HasSpell( from, 366 ) ) { new SinewyEtudeSong( from, null ).Cast(); from.SendGump( new SpellBarsBard1( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 1: { if ( HasSpell( from, 351 ) ) { new ArmysPaeonSong( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 352 ) ) { new EnchantingEtudeSong( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 353 ) ) { new EnergyCarolSong( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 354 ) ) { new EnergyThrenodySong( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 355 ) ) { new FireCarolSong( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 356 ) ) { new FireThrenodySong( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 357 ) ) { new FoeRequiemSong( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 358 ) ) { new IceCarolSong( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 359 ) ) { new IceThrenodySong( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 360 ) ) { new KnightsMinneSong( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 361 ) ) { new MagesBalladSong( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 362 ) ) { new MagicFinaleSong( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 363 ) ) { new PoisonCarolSong( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 364 ) ) { new PoisonThrenodySong( from, null ).Cast(); } break; }
+				case 15: { if ( HasSpell( from, 365 ) ) { new SheepfoeMamboSong( from, null ).Cast(); } break; }
+				case 16: { if ( HasSpell( from, 366 ) ) { new SinewyEtudeSong( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsBard1( from ) );
 		}
     }
 }
@@ -3081,7 +3111,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsBard2 : Gump
     {
@@ -3168,28 +3198,30 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsBard2 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 1: { if ( HasSpell( from, 351 ) ) { new ArmysPaeonSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 352 ) ) { new EnchantingEtudeSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 353 ) ) { new EnergyCarolSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 354 ) ) { new EnergyThrenodySong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 355 ) ) { new FireCarolSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 356 ) ) { new FireThrenodySong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 357 ) ) { new FoeRequiemSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 358 ) ) { new IceCarolSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 359 ) ) { new IceThrenodySong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 360 ) ) { new KnightsMinneSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 361 ) ) { new MagesBalladSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 362 ) ) { new MagicFinaleSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 363 ) ) { new PoisonCarolSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 364 ) ) { new PoisonThrenodySong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 15: { if ( HasSpell( from, 365 ) ) { new SheepfoeMamboSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
-				case 16: { if ( HasSpell( from, 366 ) ) { new SinewyEtudeSong( from, null ).Cast(); from.SendGump( new SpellBarsBard2( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 1: { if ( HasSpell( from, 351 ) ) { new ArmysPaeonSong( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 352 ) ) { new EnchantingEtudeSong( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 353 ) ) { new EnergyCarolSong( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 354 ) ) { new EnergyThrenodySong( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 355 ) ) { new FireCarolSong( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 356 ) ) { new FireThrenodySong( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 357 ) ) { new FoeRequiemSong( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 358 ) ) { new IceCarolSong( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 359 ) ) { new IceThrenodySong( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 360 ) ) { new KnightsMinneSong( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 361 ) ) { new MagesBalladSong( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 362 ) ) { new MagicFinaleSong( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 363 ) ) { new PoisonCarolSong( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 364 ) ) { new PoisonThrenodySong( from, null ).Cast(); } break; }
+				case 15: { if ( HasSpell( from, 365 ) ) { new SheepfoeMamboSong( from, null ).Cast(); } break; }
+				case 16: { if ( HasSpell( from, 366 ) ) { new SinewyEtudeSong( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsBard2( from ) );
 		}
     }
 }
@@ -3202,7 +3234,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsDeath1 : Gump
     {
@@ -3294,27 +3326,28 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsDeath2 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
+				default:
+				case 0: { return; }
 
-				case 1: { if ( HasSpell( from, 750 ) ) { new BanishSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 751 ) ) { new DemonicTouchSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 752 ) ) { new DevilPactSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 753 ) ) { new GrimReaperSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 754 ) ) { new HagHandSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 755 ) ) { new HellfireSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 756 ) ) { new LucifersBoltSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 757 ) ) { new OrbOfOrcusSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 758 ) ) { new ShieldOfHateSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 759 ) ) { new SoulReaperSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 760 ) ) { new StrengthOfSteelSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 761 ) ) { new StrikeSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 762 ) ) { new SuccubusSkinSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 763 ) ) { new WrathSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath1( from ) ); } break; }
+				case 1: { if ( HasSpell( from, 750 ) ) { new BanishSpell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 751 ) ) { new DemonicTouchSpell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 752 ) ) { new DevilPactSpell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 753 ) ) { new GrimReaperSpell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 754 ) ) { new HagHandSpell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 755 ) ) { new HellfireSpell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 756 ) ) { new LucifersBoltSpell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 757 ) ) { new OrbOfOrcusSpell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 758 ) ) { new ShieldOfHateSpell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 759 ) ) { new SoulReaperSpell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 760 ) ) { new StrengthOfSteelSpell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 761 ) ) { new StrikeSpell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 762 ) ) { new SuccubusSkinSpell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 763 ) ) { new WrathSpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsDeath1( from ) );
 		}
     }
 }
@@ -3327,7 +3360,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsDeath2 : Gump
     {
@@ -3419,27 +3452,28 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsDeath2 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
+				default:
+				case 0: { return; }
 
-				case 1: { if ( HasSpell( from, 750 ) ) { new BanishSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 751 ) ) { new DemonicTouchSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 752 ) ) { new DevilPactSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 753 ) ) { new GrimReaperSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 754 ) ) { new HagHandSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 755 ) ) { new HellfireSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 756 ) ) { new LucifersBoltSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 757 ) ) { new OrbOfOrcusSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 758 ) ) { new ShieldOfHateSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 759 ) ) { new SoulReaperSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 760 ) ) { new StrengthOfSteelSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 761 ) ) { new StrikeSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 762 ) ) { new SuccubusSkinSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 763 ) ) { new WrathSpell( from, null ).Cast(); from.SendGump( new SpellBarsDeath2( from ) ); } break; }
+				case 1: { if ( HasSpell( from, 750 ) ) { new BanishSpell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 751 ) ) { new DemonicTouchSpell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 752 ) ) { new DevilPactSpell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 753 ) ) { new GrimReaperSpell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 754 ) ) { new HagHandSpell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 755 ) ) { new HellfireSpell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 756 ) ) { new LucifersBoltSpell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 757 ) ) { new OrbOfOrcusSpell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 758 ) ) { new ShieldOfHateSpell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 759 ) ) { new SoulReaperSpell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 760 ) ) { new StrengthOfSteelSpell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 761 ) ) { new StrikeSpell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 762 ) ) { new SuccubusSkinSpell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 763 ) ) { new WrathSpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsDeath2( from ) );
 		}
     }
 }
@@ -3452,7 +3486,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsPriest1 : Gump
     {
@@ -3544,27 +3578,28 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsPriest1 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
+				default:
+				case 0: { return; }
 
-				case 1: { if ( HasSpell( from, 770 ) ) { new BanishEvilSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 771 ) ) { new DampenSpiritSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 772 ) ) { new EnchantSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 773 ) ) { new HammerOfFaithSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 774 ) ) { new HeavenlyLightSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 775 ) ) { new NourishSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 776 ) ) { new PurgeSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 777 ) ) { new RebirthSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 778 ) ) { new SacredBoonSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 779 ) ) { new SanctifySpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 780 ) ) { new SeanceSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 781 ) ) { new SmiteSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 782 ) ) { new TouchOfLifeSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 783 ) ) { new TrialByFireSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest1( from ) ); } break; }
+				case 1: { if ( HasSpell( from, 770 ) ) { new BanishEvilSpell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 771 ) ) { new DampenSpiritSpell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 772 ) ) { new EnchantSpell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 773 ) ) { new HammerOfFaithSpell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 774 ) ) { new HeavenlyLightSpell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 775 ) ) { new NourishSpell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 776 ) ) { new PurgeSpell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 777 ) ) { new RebirthSpell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 778 ) ) { new SacredBoonSpell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 779 ) ) { new SanctifySpell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 780 ) ) { new SeanceSpell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 781 ) ) { new SmiteSpell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 782 ) ) { new TouchOfLifeSpell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 783 ) ) { new TrialByFireSpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsPriest1( from ) );
 		}
     }
 }
@@ -3577,7 +3612,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsPriest2 : Gump
     {
@@ -3669,27 +3704,28 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsPriest2 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
+				default:
+				case 0: { return; }
 
-				case 1: { if ( HasSpell( from, 770 ) ) { new BanishEvilSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 2: { if ( HasSpell( from, 771 ) ) { new DampenSpiritSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 3: { if ( HasSpell( from, 772 ) ) { new EnchantSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 4: { if ( HasSpell( from, 773 ) ) { new HammerOfFaithSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 5: { if ( HasSpell( from, 774 ) ) { new HeavenlyLightSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 6: { if ( HasSpell( from, 775 ) ) { new NourishSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 7: { if ( HasSpell( from, 776 ) ) { new PurgeSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 8: { if ( HasSpell( from, 777 ) ) { new RebirthSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 9: { if ( HasSpell( from, 778 ) ) { new SacredBoonSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 10: { if ( HasSpell( from, 779 ) ) { new SanctifySpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 11: { if ( HasSpell( from, 780 ) ) { new SeanceSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 12: { if ( HasSpell( from, 781 ) ) { new SmiteSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 13: { if ( HasSpell( from, 782 ) ) { new TouchOfLifeSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
-				case 14: { if ( HasSpell( from, 783 ) ) { new TrialByFireSpell( from, null ).Cast(); from.SendGump( new SpellBarsPriest2( from ) ); } break; }
+				case 1: { if ( HasSpell( from, 770 ) ) { new BanishEvilSpell( from, null ).Cast(); } break; }
+				case 2: { if ( HasSpell( from, 771 ) ) { new DampenSpiritSpell( from, null ).Cast(); } break; }
+				case 3: { if ( HasSpell( from, 772 ) ) { new EnchantSpell( from, null ).Cast(); } break; }
+				case 4: { if ( HasSpell( from, 773 ) ) { new HammerOfFaithSpell( from, null ).Cast(); } break; }
+				case 5: { if ( HasSpell( from, 774 ) ) { new HeavenlyLightSpell( from, null ).Cast(); } break; }
+				case 6: { if ( HasSpell( from, 775 ) ) { new NourishSpell( from, null ).Cast(); } break; }
+				case 7: { if ( HasSpell( from, 776 ) ) { new PurgeSpell( from, null ).Cast(); } break; }
+				case 8: { if ( HasSpell( from, 777 ) ) { new RebirthSpell( from, null ).Cast(); } break; }
+				case 9: { if ( HasSpell( from, 778 ) ) { new SacredBoonSpell( from, null ).Cast(); } break; }
+				case 10: { if ( HasSpell( from, 779 ) ) { new SanctifySpell( from, null ).Cast(); } break; }
+				case 11: { if ( HasSpell( from, 780 ) ) { new SeanceSpell( from, null ).Cast(); } break; }
+				case 12: { if ( HasSpell( from, 781 ) ) { new SmiteSpell( from, null ).Cast(); } break; }
+				case 13: { if ( HasSpell( from, 782 ) ) { new TouchOfLifeSpell( from, null ).Cast(); } break; }
+				case 14: { if ( HasSpell( from, 783 ) ) { new TrialByFireSpell( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsPriest2( from ) );
 		}
     }
 }
@@ -3702,7 +3738,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsMonk1 : Gump
     {
@@ -3777,22 +3813,24 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsMonk1 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 1 : { if ( HasSpell( from, 250 ) ) { new AstralProjection( from, null ).Cast(); from.SendGump( new SpellBarsMonk1( from ) ); } break; }
-				case 2 : { if ( HasSpell( from, 251 ) ) { new AstralTravel( from, null ).Cast(); from.SendGump( new SpellBarsMonk1( from ) ); } break; }
-				case 3 : { if ( HasSpell( from, 252 ) ) { new CreateRobe( from, null ).Cast(); from.SendGump( new SpellBarsMonk1( from ) ); } break; }
-				case 4 : { if ( HasSpell( from, 253 ) ) { new GentleTouch( from, null ).Cast(); from.SendGump( new SpellBarsMonk1( from ) ); } break; }
-				case 5 : { if ( HasSpell( from, 254 ) ) { new Leap( from, null ).Cast(); from.SendGump( new SpellBarsMonk1( from ) ); } break; }
-				case 6 : { if ( HasSpell( from, 255 ) ) { new PsionicBlast( from, null ).Cast(); from.SendGump( new SpellBarsMonk1( from ) ); } break; }
-				case 7 : { if ( HasSpell( from, 256 ) ) { new PsychicWall( from, null ).Cast(); from.SendGump( new SpellBarsMonk1( from ) ); } break; }
-				case 8 : { if ( HasSpell( from, 257 ) ) { new PurityOfBody( from, null ).Cast(); from.SendGump( new SpellBarsMonk1( from ) ); } break; }
-				case 9 : { if ( HasSpell( from, 258 ) ) { new QuiveringPalm( from, null ).Cast(); from.SendGump( new SpellBarsMonk1( from ) ); } break; }
-				case 10 : { if ( HasSpell( from, 259 ) ) { new WindRunner( from, null ).Cast(); from.SendGump( new SpellBarsMonk1( from ) ); } break; }
+				default:
+				case 0: { return; }
+
+				case 1 : { if ( HasSpell( from, 250 ) ) { new AstralProjection( from, null ).Cast(); } break; }
+				case 2 : { if ( HasSpell( from, 251 ) ) { new AstralTravel( from, null ).Cast(); } break; }
+				case 3 : { if ( HasSpell( from, 252 ) ) { new CreateRobe( from, null ).Cast(); } break; }
+				case 4 : { if ( HasSpell( from, 253 ) ) { new GentleTouch( from, null ).Cast(); } break; }
+				case 5 : { if ( HasSpell( from, 254 ) ) { new Leap( from, null ).Cast(); } break; }
+				case 6 : { if ( HasSpell( from, 255 ) ) { new PsionicBlast( from, null ).Cast(); } break; }
+				case 7 : { if ( HasSpell( from, 256 ) ) { new PsychicWall( from, null ).Cast(); } break; }
+				case 8 : { if ( HasSpell( from, 257 ) ) { new PurityOfBody( from, null ).Cast(); } break; }
+				case 9 : { if ( HasSpell( from, 258 ) ) { new QuiveringPalm( from, null ).Cast(); } break; }
+				case 10 : { if ( HasSpell( from, 259 ) ) { new WindRunner( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsMonk1( from ) );
 		}
     }
 }
@@ -3805,7 +3843,7 @@ namespace Server.Gumps
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Server.Gumps 
+namespace Server.SpellBars
 {
     public class SpellBarsMonk2 : Gump
     {
@@ -3880,22 +3918,24 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			from.CloseGump( typeof( SpellBarsMonk2 ) );
-
 			switch ( info.ButtonID ) 
 			{
-				case 0: { break; }
-				case 1 : { if ( HasSpell( from, 250 ) ) { new AstralProjection( from, null ).Cast(); from.SendGump( new SpellBarsMonk2( from ) ); } break; }
-				case 2 : { if ( HasSpell( from, 251 ) ) { new AstralTravel( from, null ).Cast(); from.SendGump( new SpellBarsMonk2( from ) ); } break; }
-				case 3 : { if ( HasSpell( from, 252 ) ) { new CreateRobe( from, null ).Cast(); from.SendGump( new SpellBarsMonk2( from ) ); } break; }
-				case 4 : { if ( HasSpell( from, 253 ) ) { new GentleTouch( from, null ).Cast(); from.SendGump( new SpellBarsMonk2( from ) ); } break; }
-				case 5 : { if ( HasSpell( from, 254 ) ) { new Leap( from, null ).Cast(); from.SendGump( new SpellBarsMonk2( from ) ); } break; }
-				case 6 : { if ( HasSpell( from, 255 ) ) { new PsionicBlast( from, null ).Cast(); from.SendGump( new SpellBarsMonk2( from ) ); } break; }
-				case 7 : { if ( HasSpell( from, 256 ) ) { new PsychicWall( from, null ).Cast(); from.SendGump( new SpellBarsMonk2( from ) ); } break; }
-				case 8 : { if ( HasSpell( from, 257 ) ) { new PurityOfBody( from, null ).Cast(); from.SendGump( new SpellBarsMonk2( from ) ); } break; }
-				case 9 : { if ( HasSpell( from, 258 ) ) { new QuiveringPalm( from, null ).Cast(); from.SendGump( new SpellBarsMonk2( from ) ); } break; }
-				case 10 : { if ( HasSpell( from, 259 ) ) { new WindRunner( from, null ).Cast(); from.SendGump( new SpellBarsMonk2( from ) ); } break; }
+				default:
+				case 0: { return; }
+				
+				case 1 : { if ( HasSpell( from, 250 ) ) { new AstralProjection( from, null ).Cast(); } break; }
+				case 2 : { if ( HasSpell( from, 251 ) ) { new AstralTravel( from, null ).Cast(); } break; }
+				case 3 : { if ( HasSpell( from, 252 ) ) { new CreateRobe( from, null ).Cast(); } break; }
+				case 4 : { if ( HasSpell( from, 253 ) ) { new GentleTouch( from, null ).Cast(); } break; }
+				case 5 : { if ( HasSpell( from, 254 ) ) { new Leap( from, null ).Cast(); } break; }
+				case 6 : { if ( HasSpell( from, 255 ) ) { new PsionicBlast( from, null ).Cast(); } break; }
+				case 7 : { if ( HasSpell( from, 256 ) ) { new PsychicWall( from, null ).Cast(); } break; }
+				case 8 : { if ( HasSpell( from, 257 ) ) { new PurityOfBody( from, null ).Cast(); } break; }
+				case 9 : { if ( HasSpell( from, 258 ) ) { new QuiveringPalm( from, null ).Cast(); } break; }
+				case 10 : { if ( HasSpell( from, 259 ) ) { new WindRunner( from, null ).Cast(); } break; }
 			}
+
+			from.SendGump( new SpellBarsMonk2( from ) );
 		}
     }
 }

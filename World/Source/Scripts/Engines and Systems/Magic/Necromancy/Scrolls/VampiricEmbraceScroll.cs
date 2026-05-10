@@ -1,7 +1,3 @@
-using System;
-using Server;
-using Server.Items;
-
 namespace Server.Items
 {
 	public class VampiricEmbraceScroll : SpellScroll
@@ -16,7 +12,7 @@ namespace Server.Items
 		[Constructable]
 		public VampiricEmbraceScroll( int amount ) : base( 112, 0x226C, amount )
 		{
-			Name = "vampric embrace scroll";
+			Name = "vampiric embrace scroll";
 		}
 
 		public VampiricEmbraceScroll( Serial serial ) : base( serial )
@@ -26,14 +22,14 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 0 ); // version
+			writer.Write( (int) 1 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-			Name = "vampiric embrace scroll";
+			if ( version < 1 ) Name = "vampiric embrace scroll";
 		}
 	}
 }

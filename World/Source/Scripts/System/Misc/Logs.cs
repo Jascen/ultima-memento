@@ -101,7 +101,10 @@ namespace Server.Misc
 			if ( prependNameAndTitle )
 			{
 				string sTitle = mobile.Title != null ? mobile.Title : "the " + GetPlayerInfo.GetSkillTitle( mobile );
-				sEvent = mobile.Name + sTitle + sEvent;
+				if (0 < sEvent.Length && sEvent.StartsWith(" "))
+					sEvent = sEvent.Substring(1);
+
+				sEvent = mobile.Name + " " + sTitle + " " + sEvent;
 			}
 
 			LogEvent( sEvent, sLog, includeDate );
@@ -1135,7 +1138,7 @@ namespace Server.Misc
 						}
 						else if ( ( mob != null ) && ( mob is PlayerMobile ) )
 						{
-							string kTitle = "the " + GetPlayerInfo.GetSkillTitle( mob );
+							string kTitle = " the " + GetPlayerInfo.GetSkillTitle( mob );
 							if ( mob.Title != null ){ kTitle = mob.Title; }
 							sEvent = " had been killed by " + sKiller + " " + kTitle;
 						}

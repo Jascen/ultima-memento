@@ -26,7 +26,7 @@ namespace Server.Items
 
 		public override void OnDoubleClick( Mobile from )
 		{
-			if ( from is PlayerMobile && ((PlayerMobile)from).DoubleClickID && from.InRange( this.GetWorldLocation(), 3 ) )
+			if ( from is PlayerMobile && ((PlayerMobile)from).Preferences.DoubleClickID && from.InRange( this.GetWorldLocation(), 3 ) )
 				IDCommand( from );
 		}
 

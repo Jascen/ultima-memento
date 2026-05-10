@@ -14,6 +14,31 @@ namespace Server.Commands
 			CommandSystem.Register( "SetSkill", AccessLevel.GameMaster, new CommandEventHandler( SetSkill_OnCommand ) );
 			CommandSystem.Register( "GetSkill", AccessLevel.GameMaster, new CommandEventHandler( GetSkill_OnCommand ) );
 			CommandSystem.Register( "SetAllSkills", AccessLevel.GameMaster, new CommandEventHandler( SetAllSkills_OnCommand ) );
+			CommandSystem.Register( "UseSkill", AccessLevel.Player, new CommandEventHandler( UseSkill_OnCommand ) );
+		}
+
+		[Usage( "UseSkill <skill name>" )]
+		[Description( "Uses a skill by name." )]
+		private static void UseSkill_OnCommand(CommandEventArgs e)
+		{
+			if (e.Length != 1)
+			{
+				e.Mobile.SendMessage("Usage: [UseSkill <skill name>");
+				return;
+			}
+
+			SkillName skill;
+			try
+			{
+				skill = (SkillName)Enum.Parse( typeof( SkillName ), e.GetString( 0 ), true );
+			}
+			catch
+			{
+				e.Mobile.SendMessage( "Invalid skill name." );
+				return;
+			}
+
+			e.Mobile.UseSkill(skill);
 		}
 
 		[Usage( "SetSkill <name> <value>" )]

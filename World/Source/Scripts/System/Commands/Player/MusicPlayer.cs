@@ -23,16 +23,16 @@ namespace Server.Gumps
         {
             Mobile m = e.Mobile;
 
-			string tunes = ((PlayerMobile)m).CharMusical;
+			string tunes = ((PlayerMobile)m).Preferences.CharMusical;
 
             if ( tunes == "Forest" )
             {
-				((PlayerMobile)m).CharMusical = "Dungeon";
+				((PlayerMobile)m).Preferences.CharMusical = "Dungeon";
                 m.SendMessage(68, "Your dungeon music preference has been set to normal.");
             }
             else
             {
-				((PlayerMobile)m).CharMusical = "Forest";
+				((PlayerMobile)m).Preferences.CharMusical = "Forest";
                 m.SendMessage(68, "Your dungeon music preference has been set to casual.");
             }
         }

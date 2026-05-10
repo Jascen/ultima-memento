@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using Server.Network;
 using Server.Items;
-using Server.Mobiles;
-using Server.Targeting;
 
 namespace Server.Spells.Ninjitsu
 {
@@ -20,23 +15,13 @@ namespace Server.Spells.Ninjitsu
 
 		public override bool Validate( Mobile from )
 		{
-			if ( from.FindItemOnLayer( Layer.TwoHanded ) as BaseShield != null )
-			{
-				from.SendLocalizedMessage( 1063096 ); // You cannot use this ability while holding a shield.
-				return false;
-			}
-
 			Item handOne = from.FindItemOnLayer( Layer.OneHanded ) as BaseWeapon;
-
-			if ( handOne != null && !(handOne is BaseRanged) )
-				return base.Validate( from );
+			if ( handOne != null ) return base.Validate( from );
 
 			Item handTwo = from.FindItemOnLayer( Layer.TwoHanded ) as BaseWeapon;
+			if ( handTwo != null ) return base.Validate( from );
 
-			if ( handTwo != null && !(handTwo is BaseRanged) )
-				return base.Validate( from );
-
-			from.SendLocalizedMessage( 1063097 ); // You must be wielding a melee weapon without a shield to use this ability.
+			from.SendMessage("You must be wielding a weapon to use this ability.");
 			return false;
 		}
 

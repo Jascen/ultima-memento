@@ -1,11 +1,4 @@
-using Server;
-using System;
-using System.Collections;
-using Server.Network;
 using Server.Targeting;
-using Server.Prompts;
-using Server.Misc;
-using Server.Mobiles;
 using Server.Spells;
 
 namespace Server.Items
@@ -61,7 +54,7 @@ namespace Server.Items
 			}
 			else
 			{
-				from.SendMessage( "Where do you want to dump the poison?" );
+				from.SendMessage( "Where do you want to dump the liquid?" );
 				ThrowTarget targ = from.Target as ThrowTarget;
 
 				if ( targ != null && targ.Potion == this )
@@ -69,7 +62,6 @@ namespace Server.Items
 
 				from.RevealingAction();
 				from.Target = new ThrowTarget( this );
-				Misc.Titles.AwardKarma( from, -40, true );
 			}
 		}
 

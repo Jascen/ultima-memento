@@ -482,7 +482,7 @@ namespace Server.Items
 
 			if ( book.HaveDarkCore > 0 ){ ball.PorterExodus = ExodusBoost; PortColor = 2118; QuestLog = QuestLog + " with the dark core of Exodus"; }
 
-			ball.PorterOwner = m.Serial;
+			ball.PorterOwner = m;
 			ball.PorterHue = PortColor;
 			ball.PorterType = FighterGolem;
 			ball.Resource = dropped.Resource;

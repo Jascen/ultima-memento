@@ -1,11 +1,4 @@
-using System;
-using Server;
-using System.Collections;
-using Server.Items;
 using Server.Network;
-using Server.Mobiles;
-using System.Collections.Generic;
-using Server.Misc;
 
 namespace Server.Items
 {
@@ -17,7 +10,12 @@ namespace Server.Items
 		public Mobile Item_Owner { get{ return ItemOwner; } set{ ItemOwner = value; } }
 
 		[Constructable]
-		public SavageTalisman()
+		public SavageTalisman() : this(80, 50)
+		{
+		}
+
+		[Constructable]
+		public SavageTalisman(int campingBonus, int cookingBonus)
 		{
 			Name = "barbaric talisman";
 			ItemID = 0x2F5A;
@@ -25,8 +23,8 @@ namespace Server.Items
 			Layer = Layer.Trinket;
 			Weight = 1.0;
 			Hue = 0;
-			SkillBonuses.SetValues(0, SkillName.Camping, 80);
-			SkillBonuses.SetValues(1, SkillName.Cooking, 50);
+			SkillBonuses.SetValues(0, SkillName.Camping, campingBonus);
+			SkillBonuses.SetValues(1, SkillName.Cooking, cookingBonus);
 		}
 
         public override void AddNameProperties(ObjectPropertyList list)

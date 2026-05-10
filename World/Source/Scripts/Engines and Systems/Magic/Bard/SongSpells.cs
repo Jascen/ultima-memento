@@ -1,15 +1,7 @@
 using System;
-using Server;
-using System.Collections;
 using System.Collections.Generic;
-using Server.Misc;
 using Server.Items;
 using Server.Network;
-using Server.Commands;
-using Server.Commands.Generic;
-using Server.Mobiles;
-using Server.Accounting;
-using Server.Regions;
 
 namespace Server.Misc
 {
@@ -52,6 +44,7 @@ namespace Server.Spells.Song
 	{
 		public SongBook m_Book;
 
+		public virtual bool UseDefaultInstrument{ get{ return true; } } 
 		public abstract double RequiredSkill{ get; } 
 		public abstract int RequiredMana{ get; } 
 
@@ -59,6 +52,7 @@ namespace Server.Spells.Song
 		public override SkillName DamageSkill{ get{ return SkillName.Musicianship; } } 
 
 		public override bool ClearHandsOnCast{ get{ return false; } } 
+		public override bool BlocksMovement{ get{ return false; } }
 
 		public Song( Mobile caster, Item scroll, SpellInfo info ) : base( caster, scroll, info ) 
 		{ 
@@ -78,6 +72,12 @@ namespace Server.Spells.Song
 			{
 				string args = String.Format( "{0}\t{1}\t ", RequiredSkill.ToString( "F1" ), CastSkill.ToString() );
 				Caster.SendLocalizedMessage( 1063013, args ); // You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that ability.
+				return false;
+			}
+			
+			if ( UseDefaultInstrument && BaseInstrument.GetInstrument( Caster) == null )
+			{
+				BaseInstrument.PickInstrument( Caster, null );
 				return false;
 			}
 
@@ -148,6 +148,29 @@ namespace Server.Spells.Song
 		public override int GetMana() 
 		{ 
 			return RequiredMana; 
+		}
+
+		public override TimeSpan GetCastDelay()
+		{
+			// Not affected by FC
+			return CastDelayBase;
+		}
+
+		protected List<Mobile> GetNearbyFriends(int range = 10)
+		{
+			var enumerable = Caster.GetMobilesInRange(range);
+
+			var targets = new List<Mobile>();
+
+			foreach (Mobile m in enumerable)
+			{
+				if (isFriendly(Caster, m))
+					targets.Add(m);
+			}
+
+			enumerable.Free();
+
+			return targets;
 		}
 	} 
 }

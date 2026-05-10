@@ -19,15 +19,15 @@ namespace Server.Items
         {
             Mobile m = e.Mobile;
 
-			if ( ((PlayerMobile)m).ClassicPoisoning == 1 )
+			if ( ((PlayerMobile)m).Preferences.ClassicPoisoning )
 			{
 				m.SendMessage(38, "Poisons are now set for precision with special weapon infectious strikes.");
-				((PlayerMobile)m).ClassicPoisoning = 0;
+				((PlayerMobile)m).Preferences.ClassicPoisoning = false;
 			}
 			else
 			{
 				m.SendMessage(68, "Poisons are now set with hits from one-handed slashing or piercing weapons.");
-				((PlayerMobile)m).ClassicPoisoning = 1;
+				((PlayerMobile)m).Preferences.ClassicPoisoning = true;
 			}
         }
     }

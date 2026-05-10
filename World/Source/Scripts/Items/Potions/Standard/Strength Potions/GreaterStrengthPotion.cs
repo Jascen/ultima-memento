@@ -5,7 +5,7 @@ namespace Server.Items
 {
 	public class GreaterStrengthPotion : BaseStrengthPotion
 	{
-		public override int StrOffset{ get{ return 20; } }
+		public override int StrOffset{ get{ return 15; } }
 		public override TimeSpan Duration{ get{ return TimeSpan.FromMinutes( 2.0 ); } }
 
 		[Constructable]

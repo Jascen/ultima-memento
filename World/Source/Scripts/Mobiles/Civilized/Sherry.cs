@@ -32,6 +32,9 @@ namespace Server.Mobiles
 			}
 		}
 
+		[CommandProperty( AccessLevel.GameMaster )]
+		public DateTime NextFeed { get; set; }
+
 		[Constructable]
 		public SherryTheMouse() : base( )
 		{
@@ -130,6 +133,17 @@ namespace Server.Mobiles
 		{
 			if ( dropped is CheeseWheel || dropped is CheeseWedge || dropped is CheeseSlice )
 			{
+				if ( DateTime.Now < NextFeed )
+				{
+					PrivateOverheadMessage(MessageType.Regular, 1153, false, "My tummy hurts..." , from.NetState);
+					return false;
+				}
+
+				if ( Utility.RandomDouble() < 0.1 )
+				{
+					NextFeed = DateTime.Now.AddMinutes(Utility.RandomMinMax( 13, 30 ));
+				}
+
 				this.PlaySound( 0x0CD );
 
 				string sMessage = "Squeak";

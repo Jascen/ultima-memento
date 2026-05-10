@@ -12,5 +12,6 @@ namespace Server.Temptation
 		I_can_take_it					= 0x00000008,
 		This_is_just_a_tribute			= 0x00000010, // Incomplete
 		Deathwish						= 0x00000020,
+		Aggressive_nerfs				= 0x00000040, // Aggressive nerfs to skills and stats
 	}
 }

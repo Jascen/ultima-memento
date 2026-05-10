@@ -1,11 +1,9 @@
 using System;
-using Server;
 using Server.Gumps;
 using Server.Network;
 using Server.Accounting;
 using Server.Multis;
 using Server.Mobiles;
-using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -159,8 +157,6 @@ namespace Server.Items
 
 		protected virtual bool CheckUse( Mobile from )
 		{
-			DateTime now = DateTime.Now;
-
 			PlayerMobile pm = from as PlayerMobile;
 
 			if ( this.Deleted || !this.IsAccessibleTo( from ) )
@@ -229,8 +225,9 @@ namespace Server.Items
 
 		public override void OnDoubleClick( Mobile from )
 		{
-			if ( !CheckUse( from ) )
-				return;
+			var player = from as PlayerMobile;
+			if ( player == null ) return;
+			if ( !CheckUse( from ) ) return;
 
 			from.CloseGump( typeof( SelectSkillGump ) );
 			from.CloseGump( typeof( ConfirmSkillGump ) );
@@ -238,10 +235,18 @@ namespace Server.Items
 			from.CloseGump( typeof( ConfirmRemovalGump ) );
 			from.CloseGump( typeof( ErrorGump ) );
 
-			if ( this.IsEmpty )
-				from.SendGump( new SelectSkillGump( this, from ) );
-			else
-				from.SendGump( new ConfirmTransferGump( this, from ) );
+			ConfirmationGump.PromptIfFalse(
+				player,
+				player.Avatar.Active && string.IsNullOrWhiteSpace(Account),
+				() =>
+				{
+					if ( IsEmpty )
+						player.SendGump( new SelectSkillGump( this, player ) );
+					else					
+						player.SendGump( new ConfirmTransferGump( this, player ) );
+				},
+				onConfirmed => new ConfirmationGump(from, "Avatar Limitation Warning", "The soul of the Avatar is too weak to absorb the power from a Soulstone." + TextDefinition.GetColorizedText(" Unless your soul is strengthened, you may only use this to remove skills.", HtmlColors.RED), onConfirmed )
+			);
 		}
 
 		private class SelectSkillGump : Gump
@@ -502,7 +507,9 @@ namespace Server.Items
 				if ( info.ButtonID == 0 || m_Stone.IsEmpty )
 					return;
 
-				Mobile from = sender.Mobile;
+				PlayerMobile from = sender.Mobile as PlayerMobile;
+				if ( from == null )
+					return;
 
 				if ( !m_Stone.CheckUse( from ) )
 					return;
@@ -559,6 +566,12 @@ namespace Server.Items
 					 */
 
 					from.SendGump( new ErrorGump( m_Stone, 1070717, 1070716 ) );
+					return;
+				}
+
+				if ( from.Avatar.Active )
+				{
+					from.SendMessage( "You would explode if you tried to absorb this skill." );
 					return;
 				}
 

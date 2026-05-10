@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Server.Spells.Elementalism;
 using Server.Gumps;
+using Server.SpellBars;
 
 namespace Server.Items
 {

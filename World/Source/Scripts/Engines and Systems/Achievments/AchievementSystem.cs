@@ -45,7 +45,8 @@ namespace Scripts.Mythik.Systems.Achievements
 
 			var username = player.Account.Username.Replace("$", "");
 			var id = username;
-			if (player.Temptations.HasPermanentDeath) id += "-$HC";
+			if (player.Avatar.Active) id += "-$AV";
+			else if (player.Temptations.HasPermanentDeath) id += "-$HC";
 
 			return id;
 		}

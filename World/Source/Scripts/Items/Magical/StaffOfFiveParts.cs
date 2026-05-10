@@ -58,8 +58,8 @@ namespace Server.Items
 				Attributes.SpellDamage = 50;
 				Attributes.CastRecovery = 2;
 				Attributes.CastSpeed = 2;
-				Attributes.LowerManaCost = 40;
-				Attributes.LowerRegCost = 100;
+				Attributes.LowerManaCost = 10;
+				Attributes.LowerRegCost = 20;
 				LootType = LootType.Blessed;
 				WeaponAttributes.LowerStatReq = 50;
 				AccuracyLevel = WeaponAccuracyLevel.Supremely;
@@ -116,7 +116,7 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 0 );
+			writer.Write( (int) 1 );
 			writer.Write( (Mobile)StaffOwner );
             writer.Write( StaffName );
             writer.Write( StaffMagic );
@@ -131,6 +131,12 @@ namespace Server.Items
 			StaffMagic = reader.ReadInt();
 			EngravedText = StaffName;
 			LootType = LootType.Blessed;
+
+			if ( version < 1 )
+			{
+				Attributes.LowerManaCost = 10;
+				Attributes.LowerRegCost = 20;
+			}
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////

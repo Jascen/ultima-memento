@@ -3190,14 +3190,25 @@ namespace Server.Multis
 
 		public static bool HasAccountHouse( Mobile m )
 		{
+			var player = m as PlayerMobile;
+			if ( player == null )
+				return true; // Should never happen...?
+
 			Account a = m.Account as Account;
 
 			if ( a == null )
 				return false;
 
 			for ( int i = 0; i < a.Length; ++i )
-				if ( a[i] != null && HasHouse( a[i] ) )
+			{
+				var otherPlayer = a[i] as PlayerMobile;
+				if (
+					otherPlayer != null 
+					&& ( otherPlayer.Avatar.Active == player.Avatar.Active || otherPlayer.Temptations.HasPermanentDeath == player.Temptations.HasPermanentDeath )
+					&& HasHouse( otherPlayer )
+				)
 					return true;
+			}
 
 			return false;
 		}

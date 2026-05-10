@@ -268,7 +268,7 @@ namespace Server.Mobiles
 				{
 					sMessage = "Ahhh...this is generous of you. Here...have this as a token of the guild's gratitude.";
 					HenchmanFamiliarItem ball = new HenchmanFamiliarItem();
-					ball.FamiliarOwner = from.Serial;
+					ball.FamiliarOwner = from;
 					from.AddToBackpack ( ball );
 				}
 				else

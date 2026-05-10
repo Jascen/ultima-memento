@@ -814,6 +814,7 @@ namespace Server.Items
 				player.SendMessage( "You receive " + gold + " gold." );
 				player.AddToBackpack ( new Gold( gold ) );
 				cargo.Delete();
+				CustomEventSink.InvokeCombatQuestCompleted( player, gold );
 				Misc.Titles.AwardKarma( player, cargo.CargoKarma, true );
 				int fame = cargo.CargoKarma; if ( fame < 0 ){ fame = fame * -1; }
 				Misc.Titles.AwardFame( player, fame, true );

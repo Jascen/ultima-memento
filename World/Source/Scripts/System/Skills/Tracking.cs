@@ -64,7 +64,7 @@ namespace Server.SkillHandlers
 			int xDelta = info.m_Location.X - target.X;
 			int yDelta = info.m_Location.Y - target.Y;
 
-			double bonus = Math.Sqrt( (xDelta * xDelta) + (yDelta * yDelta) );
+			double bonus = 2 * Math.Sqrt( (xDelta * xDelta) + (yDelta * yDelta) );
 
 			m_Table.Remove( tracker );	//Reset as of Pub 40, counting it as bug for Core.SE.
 

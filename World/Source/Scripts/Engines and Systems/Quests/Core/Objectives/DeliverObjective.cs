@@ -53,19 +53,30 @@ namespace Server.Engines.MLQuests.Objectives
 			foreach (Item item in delivery)
 			{
 				item.QuestItem = true;
+				if (string.IsNullOrWhiteSpace(item.InfoText1)) item.InfoText1 = GetDeliveryInstructions();
+				else if (string.IsNullOrWhiteSpace(item.InfoText2)) item.InfoText2 = GetDeliveryInstructions();
+				else if (string.IsNullOrWhiteSpace(item.InfoText3)) item.InfoText3 = GetDeliveryInstructions();
+				else if (string.IsNullOrWhiteSpace(item.InfoText4)) item.InfoText4 = GetDeliveryInstructions();
+				else if (string.IsNullOrWhiteSpace(item.InfoText5)) item.InfoText5 = GetDeliveryInstructions();
+
 				pack.DropItem(item); // Confirmed: on OSI items are added even if your pack is full
 			}
 		}
 
 		public override void WriteToGump(Gump g, ref int y)
 		{
-			TextDefinition.AddHtmlText(g, 98, y, 366 - 5, 16, string.Format("Deliver to {0}", QuesterNameAttribute.GetQuesterNameFor(Destination)), false, false, BaseQuestGump.COLOR_LOCALIZED, BaseQuestGump.COLOR_HTML);
+			TextDefinition.AddHtmlText(g, 98, y, 366 - 5, 16, GetDeliveryInstructions(), false, false, BaseQuestGump.COLOR_LOCALIZED, BaseQuestGump.COLOR_HTML);
 			y += 16;
 		}
 
 		public override BaseObjectiveInstance CreateInstance(MLQuestInstance instance)
 		{
 			return new DeliverObjectiveInstance(this, instance);
+		}
+
+		private string GetDeliveryInstructions()
+		{
+			return string.Format("Deliver to {0}", QuesterNameAttribute.GetQuesterNameFor(Destination));
 		}
 	}
 

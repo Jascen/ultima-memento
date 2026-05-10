@@ -330,6 +330,7 @@ namespace Server.Engines.CannedEvil
 
 			m_DamageEntries.Clear();
 
+			m_ExpireTime = DateTime.UtcNow + m_ExpireDelay;
 			m_Timer = new SliceTimer(this);
 			m_Timer.Start();
 
@@ -706,6 +707,13 @@ namespace Server.Engines.CannedEvil
 		public void Expire()
 		{
 			m_Kills = 0;
+
+			if (Level == 0 && m_WhiteSkulls.Count == 0)
+			{
+				Stop();
+				Cleanup();
+				return;
+			}
 
 			if (m_WhiteSkulls.Count == 0)
 			{

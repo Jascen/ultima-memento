@@ -15,8 +15,8 @@ namespace Server.Items
 			Hue = 0x556;
 			ItemID = 0x13cd;
 			Attributes.NightSight = 1;
-			Attributes.DefendChance = 10;
-			Attributes.CastSpeed = 5;
+			Attributes.DefendChance = 8;
+			Attributes.CastSpeed = 1;
 			Attributes.LowerManaCost = 5;
 			Attributes.LowerRegCost = 5;
 			Attributes.SpellDamage = 5;
@@ -31,13 +31,19 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 0 );
+			writer.Write( (int) 1 );
 		}
 		
 		public override void Deserialize(GenericReader reader)
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
+
+			if (version < 1)
+			{
+				Attributes.DefendChance = 8;
+				Attributes.CastSpeed = 1;
+			}
 		}
 	}
 }

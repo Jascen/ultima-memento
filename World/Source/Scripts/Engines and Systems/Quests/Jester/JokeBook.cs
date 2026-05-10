@@ -1,7 +1,3 @@
-using Server;
-using System;
-using System.Collections;
-using Server.Network;
 using Server.Misc;
 using Server.Mobiles;
 
@@ -9,6 +5,8 @@ namespace Server.Items
 {
 	public class JokeBook : Item
 	{
+		public override string DefaultDescription { get { return "These books are said to be cursed, and anyone who reads them will be cursed to tell jokes for the rest of their life. You see a note on the inside cover: 'Chuckles, may you laugh until your sides split!'"; } }
+
 		[Constructable]
 		public JokeBook() : base( 0x1A98 )
 		{

@@ -2,6 +2,7 @@ namespace Server.Engines.Messaging
 {
 	public class Icons
 	{
+		public const string Dagger = ":dagger:";
 		public const string Imp = ":imp:";
 		public const string Jeans = ":jeans:";
 		public const string Jigsaw = ":jigsaw:";

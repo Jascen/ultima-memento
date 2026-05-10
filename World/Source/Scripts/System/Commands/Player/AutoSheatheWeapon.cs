@@ -48,15 +48,15 @@ namespace Server.Items
         {
             Mobile m = e.Mobile;
 
-			if ( ((PlayerMobile)m).CharacterSheath == 1 )
+			if ( ((PlayerMobile)m).Preferences.CharacterSheath )
 			{
 				m.SendMessage(38, "You have disabled the weapon auto-sheathe feature.");
-				((PlayerMobile)m).CharacterSheath = 0;
+				((PlayerMobile)m).Preferences.CharacterSheath = false;
 			}
 			else
 			{
 				m.SendMessage(68, "You have enabled the weapon auto-sheathe feature.");
-				((PlayerMobile)m).CharacterSheath = 1;
+				((PlayerMobile)m).Preferences.CharacterSheath = true;
 			}
         }
 
@@ -86,7 +86,7 @@ namespace Server.Items
 
             int key = m.Serial.Value;
 
-            if ( Config.AllowPlayerToggle && ((PlayerMobile)m).CharacterSheath != 1 )
+            if ( Config.AllowPlayerToggle && !((PlayerMobile)m).Preferences.CharacterSheath )
                 return;
 
             Item weapon = m.FindItemOnLayer(Layer.OneHanded);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Server;
 using Server.Network;
 using Server.Regions;
 using Server.Mobiles;
@@ -9,6 +8,8 @@ namespace Server.Items
 {
 	public class Kindling : Item
 	{
+		private const int CAMPFIRE_COOLDOWN_MINUTES = 3;
+
 		public override string DefaultDescription{ get{ return "Kindling can be used by proficient campers, to make a campfire. The fire can then be used by adventurers, to recovery health and stamina much quicker. There cannot be any enemies nearby for anyone to benefit from the effects."; } }
 
 		[Constructable]
@@ -154,12 +155,12 @@ namespace Server.Items
 							from.PlaceInBackpack( this );
 
 						new Campfire().MoveToWorld( fireLocation, from.Map );
-						pm.Camp = DateTime.Now + TimeSpan.FromMinutes( 10.0 );
+						pm.Camp = DateTime.Now + TimeSpan.FromMinutes( CAMPFIRE_COOLDOWN_MINUTES );
 					}
 				}
 				else
 				{
-					from.SendMessage( "You can only build a campfire every 10 minutes!" );
+					from.SendMessage( "You can only build a campfire every {0} minutes!", CAMPFIRE_COOLDOWN_MINUTES);
 				}
 			}
 		}

@@ -17,9 +17,10 @@ namespace Server.Items
 			Hue = 0x47E;
 			ItemID = 0x1415;
 			ArmorAttributes.SelfRepair = 5;
-			Attributes.ReflectPhysical = 18;
-			Attributes.DefendChance = 18;
+			Attributes.ReflectPhysical = 15;
+			Attributes.DefendChance = 15;
 			Attributes.LowerManaCost = 10;
+			SkillBonuses.SetValues( 0, SkillName.Parry, 10 );
 			ArtifactLevel = ArtifactLevel.StandardArtefact;
 			Server.Misc.Arty.ArtySetup( this, 8, "" );
 		}
@@ -31,13 +32,20 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 1 );
+			writer.Write( (int) 2 );
 		}
 		
 		public override void Deserialize(GenericReader reader)
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
+
+			if (version < 2)
+			{
+				Attributes.ReflectPhysical = 15;
+				Attributes.DefendChance = 15;
+				SkillBonuses.SetValues( 0, SkillName.Parry, 10 );
+			}
 		}
 	}
 }

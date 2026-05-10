@@ -387,7 +387,7 @@ namespace Server.Engines.Craft
 			AddCraftRecipe( 114, typeof( Mace ), "Bashing", 1023932, 14.5, 64.5, typeof( IronIngot ), 1044036, 6, 1044037 );
 			AddCraftRecipe( 115, typeof( Maul ), "Bashing", 1025179, 19.4, 69.4, typeof( IronIngot ), 1044036, 10, 1044037 );
 			AddCraftRecipe( 116, typeof( Scepter ), "Bashing", 1029916, 21.4, 71.4, typeof( IronIngot ), 1044036, 10, 1044037 );
-			AddCraftRecipe( 117, typeof( SpikedClub ), "Bashing", "spiked mace", 14.5, 64.5, typeof( IronIngot ), 1044036, 6, 1044037 );
+			AddCraftRecipe( 117, typeof( SpikedClub ), "Bashing", "spiked club", 14.5, 64.5, typeof( IronIngot ), 1044036, 6, 1044037 );
 			AddCraftRecipe( 118, typeof( WarMace ), "Bashing", 1025127, 28.0, 78.0, typeof( IronIngot ), 1044036, 14, 1044037 );
 			AddCraftRecipe( 119, typeof( WarHammer ), "Bashing", 1025177, 34.2, 84.2, typeof( IronIngot ), 1044036, 16, 1044037 );
 			index = AddCraftRecipe( 120, typeof( Tessen ), "Bashing", 1030222, 85.0, 135.0, typeof( IronIngot ), 1044036, 16, 1044037 );

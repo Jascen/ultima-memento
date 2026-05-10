@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using Server.Network;
-using Server.Items;
 using Server.Mobiles;
-using Server.Targeting;
 
 namespace Server.Spells.Bushido
 {
@@ -20,20 +16,40 @@ namespace Server.Spells.Bushido
 
 		public override bool DelayedContext{ get{ return true; } }
 
+		public override void CheckGain(Mobile m)
+		{
+            if (m.Skills[MoveSkill].Value >= RequiredSkill + 37.5)
+            {
+                if (0.25 > Utility.RandomDouble())
+                {
+                    m.CheckSkillExplicit(MoveSkill, 0, m.Skills[MoveSkill].Cap);
+                }
+            }
+            else
+            {
+                base.CheckGain(m);
+            }
+		}
+
 		public override int GetAccuracyBonus( Mobile attacker )
 		{
-			return 50;
+			var bushido = attacker.Skills[SkillName.Bushido].Value;
+			var bonus = (int)Math.Max(0, (bushido - 50) / 2);
+
+			return Math.Min(50, 25 + bonus);
 		}
 
 		public override bool Validate(Mobile from)
 		{
-			bool isValid=base.Validate(from);
-			if (isValid)
-			{
-				PlayerMobile ThePlayer = from as PlayerMobile;
-				ThePlayer.ExecutesLightningStrike = BaseMana;
-			}
-			return isValid;
+			bool isValid = base.Validate(from);
+			if (!isValid) return false;
+
+			var player = from as PlayerMobile;
+			if (player == null) return true;
+
+			player.ExecutesLightningStrike = BaseMana;
+
+			return true;
 		}
 
 		public override bool IgnoreArmor( Mobile attacker )
@@ -68,8 +84,10 @@ namespace Server.Spells.Bushido
 
 		public override void OnClearMove( Mobile attacker )
 		{
-			PlayerMobile ThePlayer = attacker as PlayerMobile; // this can be deletet if the PlayerMobile parts are moved to Server.Mobile 
-			ThePlayer.ExecutesLightningStrike = 0;
+			PlayerMobile player = attacker as PlayerMobile; // this can be deletet if the PlayerMobile parts are moved to Server.Mobile 
+			if (player == null) return;
+
+			player.ExecutesLightningStrike = 0;
 		}
 	}
 }

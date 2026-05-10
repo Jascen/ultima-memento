@@ -526,7 +526,7 @@ namespace Server
 				LootPackItem item = m_Items[i];
 
 				if ( rnd < item.Chance )
-					return Mutate( from, luckChance, item.Construct( playOrient( from ) ), level, dungeonLevelBonus );
+					return Mutate( from, luckChance, item.Construct( playOrient( from ), from ), level, dungeonLevelBonus );
 
 				rnd -= item.Chance;
 			}
@@ -579,9 +579,6 @@ namespace Server
 						case 9: min = 70; break;
 						case 10: min = 70; max = 100; break;
 					}
-
-					if (0 < levelNormalized && from != null)
-						Console.WriteLine("({4}) Loot from {3} was boosted due to level '{0}'. ({1}/2 + {2})", levelNormalized, level, dungeonLevelBonus, from.Fame, from.Name, from.GetType());
 
 					if ( bonusProps < m_MaxProps && LootPack.CheckLuck( luckChance ) )
 						++bonusProps;
@@ -779,75 +776,91 @@ namespace Server
 		private Type m_Type;
 		private int m_Chance;
 
-		public Type Type
-		{
-			get{ return m_Type; }
-			set{ m_Type = value; }
-		}
-
 		public int Chance
 		{
 			get{ return m_Chance; }
 			set{ m_Chance = value; }
 		}
 
-		public Item Construct( bool playOrient )
+		public Item Construct( bool playOrient, Mobile creator )
 		{
 			try
 			{
 				Item item;
+				Type type = m_Type;
 
-				if ( m_Type == typeof( BaseRanged ) )
+				creator = creator != null ? MobileUtilities.TryGetMasterPlayer(creator) : null;
+				if (creator is PlayerMobile)
+				{
+					var player = (PlayerMobile)creator;
+					var tasting = (int)player.Skills[SkillName.Tasting].Value;
+					if (30 <= tasting && Utility.RandomMinMax(0, 125) < tasting)
+					{
+						// Chance to increase potion tier
+						if ( type == typeof( LesserHealPotion ) )
+							type = Utility.RandomMinMax(0, 60) < tasting ? typeof( HealPotion ) : type;
+						else if ( type == typeof( HealPotion ) )
+							type = Utility.RandomMinMax(60, 125) < tasting ? typeof( GreaterHealPotion ) : type;
+					}
+				}
+
+				if ( type == typeof( BaseRanged ) )
 					item = Loot.RandomRangedWeapon( playOrient );
-				else if ( m_Type == typeof( BaseWeapon ) )
+				else if ( type == typeof( BaseWeapon ) )
 					item = Loot.RandomWeapon( playOrient );
-				else if ( m_Type == typeof( BaseArmor ) )
+				else if ( type == typeof( BaseArmor ) )
 					item = Loot.RandomArmor( playOrient );
-				else if ( m_Type == typeof( BaseHat ) )
+				else if ( type == typeof( BaseHat ) )
 					item = Loot.RandomHats( playOrient );
-				else if ( m_Type == typeof( BaseClothing ) )
+				else if ( type == typeof( BaseClothing ) )
 				{
 					if ( Utility.Random( 4 ) == 0 )
 						item = Loot.RandomHats( playOrient );
 					else
 						item = Loot.RandomClothing( playOrient );
 				}
-				else if ( m_Type == typeof( BaseShield ) )
+				else if ( type == typeof( BaseShield ) )
 					item = Loot.RandomShield();
-				else if ( m_Type == typeof( BaseTrinket ) )
+				else if ( type == typeof( BaseTrinket ) )
 					item = Loot.RandomJewelry();
-				else if ( m_Type == typeof( BaseQuiver ) )
+				else if ( type == typeof( BaseQuiver ) )
 					item = Loot.RandomQuiver();
-				else if ( m_Type == typeof( BaseInstrument ) )
+				else if ( type == typeof( BaseInstrument ) )
 					item = Loot.RandomInstrument();
-				else if ( m_Type == typeof( Spellbook ) )
+				else if ( type == typeof( Spellbook ) )
 					item = Loot.RandomSpellbook( playOrient );
-				else if ( m_Type == typeof( Amber ) ) // gem
+				else if ( type == typeof( Amber ) ) // gem
 					item = Loot.RandomGem();
-				else if ( m_Type == typeof( Artifact_YashimotosHatsuburi ) )
+				else if ( type == typeof( Artifact_YashimotosHatsuburi ) )
 					item = Loot.RandomArty();
-				else if ( m_Type == typeof( LesserHealPotion ) )
+				else if ( type == typeof( LesserHealPotion ) )
 					item = Loot.RandomPotion( 4, false );
-				else if ( m_Type == typeof( HealPotion ) )
+				else if ( type == typeof( HealPotion ) )
 					item = Loot.RandomPotion( 8, false );
-				else if ( m_Type == typeof( GreaterHealPotion ) )
+				else if ( type == typeof( GreaterHealPotion ) )
 					item = Loot.RandomPotion( 12, false );
-				else if ( m_Type == typeof( BlackPearl ) )
+				else if ( type == typeof( BlackPearl ) )
+				{
 					item = Loot.RandomPossibleReagent();
-				else if ( m_Type == typeof( GoldBricks ) )
+
+					var cooking = creator != null ? (int)creator.Skills[SkillName.Cooking].Value : 0;
+					if (creator is PlayerMobile && item.Stackable && 30 <= cooking && Utility.RandomMinMax(0, 125) < cooking)
+						item.Amount += (int)(0.2 * item.Amount);
+				}
+				else if ( type == typeof( GoldBricks ) )
 					item = Loot.RandomSArty( playOrient, null );
-				else if ( m_Type == typeof( ClumsyScroll ) ) // low scroll
+				else if ( type == typeof( ClumsyScroll ) ) // low scroll
 					item = Loot.RandomScroll( 4 );
-				else if ( m_Type == typeof( ArchCureScroll ) ) // med scroll
+				else if ( type == typeof( ArchCureScroll ) ) // med scroll
 					item = Loot.RandomScroll( 8 );
-				else if ( m_Type == typeof( ChainLightningScroll ) ) // high scroll
+				else if ( type == typeof( ChainLightningScroll ) ) // high scroll
 					item = Loot.RandomScroll( 12 );
-				else if ( m_Type == typeof( FoeRequiemScroll ) )
+				else if ( type == typeof( FoeRequiemScroll ) )
 					item = Loot.RandomSong();
-				else if ( m_Type == typeof( Lute ) )
+				else if ( type == typeof( Lute ) )
 					item = Loot.RandomInstrument();
 				else
-					item = Activator.CreateInstance( m_Type ) as Item;
+					item = Activator.CreateInstance( type ) as Item;
 
 				return item;
 			}

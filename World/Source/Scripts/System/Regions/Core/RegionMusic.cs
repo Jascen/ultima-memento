@@ -13,7 +13,7 @@ namespace Server.Misc
 		{
 			if ( from is PlayerMobile )
 			{
-				string tunes = ((PlayerMobile)from).CharMusical;
+				string tunes = ((PlayerMobile)from).Preferences.CharMusical;
 				MusicName toPlay = LandMusic[Utility.Random(LandMusic.Length)];
 
 				bool switchSongs = false;

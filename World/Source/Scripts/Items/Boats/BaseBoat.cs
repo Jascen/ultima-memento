@@ -547,7 +547,7 @@ namespace Server.Multis
 
 			if ( Utility.RandomMinMax( 1, 4 ) == 1 ){ Item i1 = new RawFishSteak( Utility.RandomMinMax( 1, 8 ) ); 	ShipWreck.DropItem( i1 ); }
 			if ( Utility.RandomMinMax( 1, 4 ) == 1 ){ Item i2 = new Fish( Utility.RandomMinMax( 1, 8 ) ); 			ShipWreck.DropItem( i2 ); }
-			if ( Utility.RandomMinMax( 1, 4 ) == 1 ){ Item i3 = new FishingPole(); 									ShipWreck.DropItem( i3 ); }
+			if ( Utility.RandomMinMax( 1, 4 ) == 1 ){ Item i3 = new FishingPole() { Resource = CraftResources.GetRandomNonBasicResource( CraftResourceType.Wood ) }; ShipWreck.DropItem( i3 ); }
 			if ( Utility.RandomMinMax( 1, 4 ) == 1 ){ Item i4 = new NewFish(); 										ShipWreck.DropItem( i4 ); }
 			if ( Utility.RandomMinMax( 1, 4 ) == 1 ){ Item i5 = new Sextant(); 										ShipWreck.DropItem( i5 ); }
 			if ( Utility.RandomMinMax( 1, 10 ) == 1 )
@@ -908,17 +908,24 @@ namespace Server.Multis
 		 */
 
 		// Legacy clients will continue to see the old-style movement, but speeds are adjusted
-		private static bool NewBoatMovement = true;
+		private int m_SlowSpeedDelay = 500;
+		private int m_FastSpeedDelay = 250;
 
-		private static TimeSpan SlowInterval = TimeSpan.FromSeconds( NewBoatMovement ? 0.50 : 0.75 );
-		private static TimeSpan FastInterval = TimeSpan.FromSeconds( NewBoatMovement ? 0.25 : 0.75 );
+		[CommandProperty( AccessLevel.GameMaster )]
+		public int SlowSpeedDelay { get { return m_SlowSpeedDelay; } set { m_SlowSpeedDelay = Math.Max(0, value); } }
+
+		[CommandProperty( AccessLevel.GameMaster )]
+		public int FastSpeedDelay { get { return m_FastSpeedDelay; } set { m_FastSpeedDelay = Math.Max(0, value); } }
+
+		private static bool NewBoatMovement = true;
 
 		private static int SlowSpeed = 1;
 		private static int FastSpeed = NewBoatMovement ? 1 : 3;
 
-		private static TimeSpan SlowDriftInterval = TimeSpan.FromSeconds( NewBoatMovement ? 0.50 : 1.50 );
-		private static TimeSpan FastDriftInterval = TimeSpan.FromSeconds( NewBoatMovement ? 0.25 : 0.75 );
-
+		private TimeSpan GetSlowInterval() { return TimeSpan.FromMilliseconds( NewBoatMovement ? SlowSpeedDelay : 750 ); }
+		private TimeSpan GetFastInterval() { return TimeSpan.FromMilliseconds( NewBoatMovement ? FastSpeedDelay : 750 ); }
+		private TimeSpan GetSlowDriftInterval() { return TimeSpan.FromMilliseconds( NewBoatMovement ? SlowSpeedDelay : 1500 ); }
+		private TimeSpan GetFastDriftInterval() { return TimeSpan.FromMilliseconds( NewBoatMovement ? FastSpeedDelay : 750 ); }
 		private static int SlowDriftSpeed = 1;
 		private static int FastDriftSpeed = 1;
 
@@ -1041,7 +1048,7 @@ namespace Server.Multis
 				return false;
 
 			bool drift = ( dir != Forward && dir != ForwardLeft && dir != ForwardRight );
-			TimeSpan interval = (fast ? (drift ? FastDriftInterval : FastInterval) : (drift ? SlowDriftInterval : SlowInterval));
+			TimeSpan interval = (fast ? (drift ? GetFastDriftInterval() : GetFastInterval()) : (drift ? GetSlowDriftInterval() : GetSlowInterval()));
 			int speed = (fast ? (drift ? FastDriftSpeed : FastSpeed) : (drift ? SlowDriftSpeed : SlowSpeed));
 			int clientSpeed = fast ? 0x4 : 0x3;
 
@@ -1062,7 +1069,7 @@ namespace Server.Multis
 				return false;
 
 			bool drift = ( dir != Forward );
-			TimeSpan interval = drift ? FastDriftInterval : FastInterval;
+			TimeSpan interval = drift ? GetFastDriftInterval() : GetFastInterval();
 			int speed = drift ? FastDriftSpeed : FastSpeed;
 
 			if ( StartMove( dir, speed, 0x1, interval, true, true ) )
@@ -1478,7 +1485,7 @@ namespace Server.Multis
 			if ( m_MoveTimer != null )
 				m_MoveTimer.Stop();
 
-			m_MoveTimer = new MoveTimer( this, FastInterval, false );
+			m_MoveTimer = new MoveTimer( this, GetFastInterval(), false );
 			m_MoveTimer.Start();
 
 			if ( message && TillerMan != null )
@@ -2076,7 +2083,9 @@ namespace Server.Multis
 
 						item.NoMoveHS = true;
 
-						if ( !( item is TillerMan || item is Hold || item is Plank ) )
+						if ( item is Corpse ) // This makes it look like it changes it's location because the boat moves
+							item.Location = new Point3D( item.X, item.Y, item.Z );
+						else if ( !( item is TillerMan || item is Hold || item is Plank ) )
 							item.Location = new Point3D( item.X + xOffset, item.Y + yOffset, item.Z );
 					}
 					else if ( e is Mobile )
@@ -2155,7 +2164,7 @@ namespace Server.Multis
 				if ( o is Item )
 				{
 					Item item = (Item)o;
-					if ( !item.Movable )
+					if ( !item.Movable && false == (item is Corpse) )
 						continue;
 
 					if ( Contains( item ) && item.Visible && item.Z >= Z )

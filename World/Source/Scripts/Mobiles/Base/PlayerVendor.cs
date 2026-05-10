@@ -502,7 +502,11 @@ namespace Server.Mobiles
 		public Mobile Owner
 		{
 			get{ return m_Owner; }
-			set{ m_Owner = value; }
+			set
+			{
+				m_Owner = value;
+				InvalidateProperties();
+			}
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
@@ -721,6 +725,14 @@ namespace Server.Mobiles
 		public override void GetProperties( ObjectPropertyList list )
 		{
 			base.GetProperties( list );
+
+			if (Owner != null && Owner is PlayerMobile)
+			{
+				var player = (PlayerMobile)Owner;
+				if (player.Avatar.Active) list.Add("Player Type: Avatar");
+				else if (player.Temptations.HasPermanentDeath) list.Add("Player Type: Permanent Death");
+				else list.Add("Player Type: Standard");
+			}
 
 			if ( BaseHouse.NewVendorSystem )
 			{

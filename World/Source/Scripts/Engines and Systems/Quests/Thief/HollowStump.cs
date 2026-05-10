@@ -58,6 +58,7 @@ namespace Server.Items
 					{
 						LoggingFunctions.LogStandard( from, "has stolen " + envelope.NoteItem + "." );
 						from.AddToBackpack ( new Gold( envelope.NoteReward ) );
+						CustomEventSink.InvokeCombatQuestCompleted( from, envelope.NoteReward );
 						Titles.AwardFame( from, ((int)(envelope.NoteReward/100)), true );
 						Titles.AwardKarma( from, -((int)(envelope.NoteReward/100)), true );
 						Server.Items.ThiefNote.SetupNote( envelope, from );

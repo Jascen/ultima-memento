@@ -11,6 +11,7 @@ namespace Server
 	public delegate void BeginJourneyHandler(BeginJourneyArgs e);
 	public delegate void AchievementObtainedHandler(AchievementObtainedArgs e);
 	public delegate void PlayerVendorSaleEventHandler(PlayerVendorSaleEventArgs e);
+	public delegate void CombatQuestCompletedEventHandler(CombatQuestCompletedArgs e);
 
 	public class LandChangedArgs
 	{
@@ -102,6 +103,18 @@ namespace Server
 		}
 	}
 
+	public class CombatQuestCompletedArgs
+	{
+		public readonly Mobile Mobile;
+		public readonly int Award;
+
+		public CombatQuestCompletedArgs(Mobile mobile, int award)
+		{
+			Mobile = mobile;
+			Award = award;
+		}
+	}
+
 	public class CustomEventSink
 	{
 		public static event LandChangedEventHandler LandChanged;
@@ -111,6 +124,7 @@ namespace Server
 		public static event BeginJourneyHandler BeginJourney;
 		public static event AchievementObtainedHandler AchievementObtained;
 		public static event PlayerVendorSaleEventHandler PlayerVendorSale;
+		public static event CombatQuestCompletedEventHandler CombatQuestCompleted;
 
 		public static void InvokeLandChanged(LandChangedArgs e)
 		{
@@ -153,6 +167,12 @@ namespace Server
 		{
 			if (PlayerVendorSale != null)
 				PlayerVendorSale(new PlayerVendorSaleEventArgs(mobile, item, vendorName));
+		}
+
+        public static void InvokeCombatQuestCompleted( Mobile from, int award )
+		{
+			if (CombatQuestCompleted != null)
+				CombatQuestCompleted( new CombatQuestCompletedArgs( from, award ) );
 		}
 	}
 }

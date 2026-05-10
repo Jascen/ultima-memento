@@ -22,7 +22,7 @@ namespace Server.Spells.Elementalism
 
 		public override TimeSpan GetCastDelay()
 		{
-			return TimeSpan.FromTicks( base.GetCastDelay().Ticks * ((Core.SE) ? 3 : 5) );
+			return TimeSpan.FromTicks( base.GetCastDelay().Ticks * 2 );
 		}
 
 		public override bool CheckCast()

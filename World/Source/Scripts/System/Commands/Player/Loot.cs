@@ -1,14 +1,9 @@
-using System;
-using Server;
-using System.Collections;
 using Server.Network;
 using Server.Mobiles;
 using Server.Items;
 using Server.Misc;
 using Server.Commands;
 using Server.Commands.Generic;
-using Server.Prompts;
-using Server.Gumps;
 
 namespace Server.Misc
 {
@@ -18,7 +13,7 @@ namespace Server.Misc
 		{
 			LootChoiceUpdates.InitializeLootChoice( m );
 
-			string LootChoiceSetting = ((PlayerMobile)m).CharacterLoot;
+			string LootChoiceSetting = ((PlayerMobile)m).Preferences.CharacterLoot;
 
 			string[] eachSetting = LootChoiceSetting.Split('#');
 			int nLine = 1;
@@ -42,12 +37,12 @@ namespace Server.Misc
 				nLine++;
 			}
 
-			((PlayerMobile)m).CharacterLoot = newSettings; 
+			((PlayerMobile)m).Preferences.CharacterLoot = newSettings; 
 		}
 
 		public static void InitializeLootChoice( Mobile m )
 		{
-			if ( ((PlayerMobile)m).CharacterLoot == "" || ((PlayerMobile)m).CharacterLoot == null ){ ((PlayerMobile)m).CharacterLoot = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#"; }
+			if ( ((PlayerMobile)m).Preferences.CharacterLoot == "" || ((PlayerMobile)m).Preferences.CharacterLoot == null ){((PlayerMobile)m).Preferences.CharacterLoot = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#"; }
 		}
 	}
 }
@@ -83,7 +78,7 @@ namespace Server.Gumps
 			string color = "#efd290";
 
 			LootChoiceUpdates.InitializeLootChoice( from );
-			string MyServerSettings = ((PlayerMobile)from).CharacterLoot;
+			string MyServerSettings = ((PlayerMobile)from).Preferences.CharacterLoot;
 
 			this.Closable=true;
 			this.Disposable=false;

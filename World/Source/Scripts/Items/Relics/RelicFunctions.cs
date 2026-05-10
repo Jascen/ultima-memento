@@ -86,7 +86,7 @@ namespace Server
 				else
 				{
 					attempts = 1;
-					if ( examine is NotIdentified && ((PlayerMobile)from).SingleAttemptID )
+					if ( examine is NotIdentified && ((PlayerMobile)from).Preferences.SingleAttemptID )
 						attempts = Math.Max( 1, Item.MAX_ID_ATTEMPTS - examine.NotIDAttempts );
 				}
 			}

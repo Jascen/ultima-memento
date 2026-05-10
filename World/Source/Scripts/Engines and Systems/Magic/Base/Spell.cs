@@ -207,7 +207,10 @@ namespace Server.Spells
 			int inscribeBonus = (inscribeSkill + (1000 * (inscribeSkill / 1000))) / 200;
 			damageBonus += inscribeBonus;
 
-			int intBonus = Caster.Int / 10;
+			if ( inscribeSkill >= 1000 )
+				damageBonus += 10;
+
+			int intBonus = Caster.Int / 3;
 			damageBonus += intBonus;
 
 			int sdiBonus = AosAttributes.GetValue( m_Caster, AosAttribute.SpellDamage );

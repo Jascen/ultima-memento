@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using Server.Network;
 using Server.Items;
-using Server.Mobiles;
-using Server.Targeting;
 using Server.SkillHandlers;
 
 namespace Server.Spells.Ninjitsu
@@ -61,7 +57,12 @@ namespace Server.Spells.Ninjitsu
 
 			attacker.SendLocalizedMessage( 1063090 ); // You quickly stab your opponent as you come out of hiding!
 
-			defender.FixedParticles( 0x37B9, 1, 5, 0x251D, 0x651, 0, EffectLayer.Waist );						
+			defender.FixedParticles( 0x37B9, 1, 5, 0x251D, 0x651, 0, EffectLayer.Waist );
+
+			if( !ParalyzingBlow.IsImmune( defender ) )
+			{
+				ParalyzingBlow.DoEffect( attacker, defender );
+			}
 
 			attacker.RevealingAction();
 

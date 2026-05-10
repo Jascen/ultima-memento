@@ -1,13 +1,12 @@
 using System;
-using Server;
 using Server.Mobiles;
-using Server.Misc;
 using Server.Network;
 
 namespace Server.Items
 {
 	public class SetTrap : Item
 	{
+		private const int RANGE = 1;
 		public Mobile owner;
 
 		[CommandProperty( AccessLevel.GameMaster )]
@@ -17,6 +16,8 @@ namespace Server.Items
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int Power { get{ return power; } set{ power = value; } }
+
+		public override bool HandlesOnMovement{ get{ return true; } }
 
 		private DateTime m_DecayTime;
 		private Timer m_DecayTimer;
@@ -37,9 +38,21 @@ namespace Server.Items
 		{
 		}
 
+		public override void OnMovement( Mobile m, Point3D oldLocation )
+		{
+			if ( m is PlayerMobile ) return; // Players must walk over it directly
+
+			if ( m.InRange( this, RANGE ) )
+			{
+				OnMoveOver( m );
+			}
+		}
+
 		public override bool OnMoveOver( Mobile m )
 		{
-			if ( owner != m )
+			if ( owner == m ) return true;
+
+			if ( m.Region.AllowHarmful( owner, m ) )
 			{
 				int StrMax = power;
 				int StrMin = (int)(power/2);
@@ -66,6 +79,8 @@ namespace Server.Items
 						if ( m is PlayerMobile ){ m.LocalOverheadMessage(MessageType.Emote, 0x916, true, "You triggered a trap!"); }
 						int itHurts = (int)( (Utility.RandomMinMax(StrMin,StrMax) * ( 100 - m.PhysicalResistance ) ) / 100 ) + 10;
 						m.Damage( itHurts, owner );
+						if ( m is BaseCreature )
+							owner.DoHarmful( m );
 					}
 					else
 					{

@@ -1,16 +1,9 @@
-using Server.Accounting;
-using Server.Commands.Generic;
 using Server.Commands;
-using Server.ContextMenus;
 using Server.Gumps;
 using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
 using Server.Network;
-using Server.Targeting;
-using Server; 
-using System.Collections.Generic;
-using System.Collections;
 using System;
 using Server.Spells.Seventh;
 using System.Linq;
@@ -450,8 +443,11 @@ namespace Server.Misc
 			return difficulty;
 		}
 
-		public static int GetResurrectCost( Mobile m )
+		public static int GetResurrectCost( Mobile m, bool force = false )
 		{
+			if ( !force && ( m.SkillsTotal <= 200 || (m.RawDex + m.RawInt + m.RawStr) <= 90 ) )
+				return 0;
+
 			int fame = m.Fame;
 				if ( fame > 15000){ fame = 15000; }
 			int karma = m.Karma * -1;
@@ -685,13 +681,13 @@ namespace Server.Misc
 		{
 			if ( m != null && m is PlayerMobile )
 			{
-				return ((PlayerMobile)m).CharacterOriental == 1;
+				return ((PlayerMobile)m).Preferences.CharacterOriental;
 			}
 			else if ( m != null && m is BaseCreature )
 			{
 				PlayerMobile killer = MobileUtilities.TryGetKillingPlayer( m );
 
-				return killer != null && killer.CharacterOriental == 1;
+				return killer != null && killer.Preferences.CharacterOriental;
 			}
 
 			return false;
@@ -701,8 +697,8 @@ namespace Server.Misc
 		{
 			if ( m != null && m is PlayerMobile )
 			{
-				if ( ((PlayerMobile)m).CharacterBarbaric > 0 )
-					return ((PlayerMobile)m).CharacterBarbaric;
+				if ( ((PlayerMobile)m).Preferences.CharacterBarbaric > 0 )
+					return ((PlayerMobile)m).Preferences.CharacterBarbaric;
 			}
 
 			return 0;
@@ -712,7 +708,7 @@ namespace Server.Misc
 		{
 			if ( m != null && m is PlayerMobile )
 			{
-				if ( ((PlayerMobile)m).CharacterEvil == 1 )
+				if ( ((PlayerMobile)m).Preferences.CharacterEvil )
 					return true;
 			}
 			else if ( m != null && m is BaseCreature )
@@ -740,7 +736,7 @@ namespace Server.Misc
 
 				if ( killer != null && killer is PlayerMobile )
 				{
-					if ( ((PlayerMobile)killer).CharacterEvil == 1 )
+					if ( ((PlayerMobile)killer).Preferences.CharacterEvil )
 						return true;
 				}
 				else
@@ -768,7 +764,7 @@ namespace Server.Misc
 
 					if ( hitter != null && hitter is PlayerMobile )
 					{
-						if ( ((PlayerMobile)hitter).CharacterEvil == 1 )
+						if ( ((PlayerMobile)hitter).Preferences.CharacterEvil )
 							return true;
 					}
 				}
@@ -938,7 +934,7 @@ namespace Server.Gumps
             AddStatLine(20, 135, 80, "Tithe", string.Format("{0}", from.TithingPoints), string.Format("Maximum Tithe: {0}", TithingGump.MaxTithingPoints), color, colAB);
             AddStatLine(20, 135, 80, "Hunger", string.Format("{0}", from.Hunger), "Maximum Hunger: 20.", color, colAB);
             AddStatLine(20, 135, 80, "Thirst", string.Format("{0}", from.Thirst), "Maximum Thirst: 20.", color, colAB);
-            AddStatLine(20, 135, 80, "Potion Enhance", string.Format("{0}/50%", BasePotion.EnhancePotions(from)), "Increases effect when consuming potions.", color, colAB);
+            AddStatLine(20, 135, 80, "Potion Enhance", string.Format("{0}/{1}%", Math.Min(BasePotion.MAX_ENHANCED_POTIONS, AosAttributes.GetValue( m, AosAttribute.EnhancePotions )), BasePotion.MAX_ENHANCED_POTIONS), "Increases effect when consuming potions.", color, colAB);
             AddStatLine(20, 135, 80, "Bank Gold", Banker.GetBalance(from).ToString(), null, color, colAB);
 
             ///////////////////////////////////////////////////////////////////////////////////
@@ -953,12 +949,12 @@ namespace Server.Gumps
             AddStatLine(260, 375, 80, "Mana Regen", string.Format("{0}", AosAttributes.GetValue(from, AosAttribute.RegenMana)), null, color, colCD);
 
             if (MyServerSettings.LowerReg() > 0)
-                AddStatLine(260, 375, 80, "Low Reagent", string.Format("{0}/{1}%", AosAttributes.GetValue(from, AosAttribute.LowerRegCost), MyServerSettings.LowerReg()), "Increases chance to not use reagents when casting", color, colCD);
+                AddStatLine(260, 375, 80, "Low Reagent", string.Format("{0}/{1}%", AosAttributes.GetValue(from, AosAttribute.LowerRegCost, false), MyServerSettings.LowerReg()), "Increases chance to not use reagents when casting", color, colCD);
             if (MyServerSettings.LowerMana() > 0)
-                AddStatLine(260, 375, 80, "Low Mana", string.Format("{0}/{1}%", AosAttributes.GetValue(from, AosAttribute.LowerManaCost), MyServerSettings.LowerMana()), "Reduces mana cost of casting spells and using abilities", color, colCD);
+                AddStatLine(260, 375, 80, "Low Mana", string.Format("{0}/{1}%", AosAttributes.GetValue(from, AosAttribute.LowerManaCost, false), MyServerSettings.LowerMana()), "Reduces mana cost of casting spells and using abilities", color, colCD);
 
             AddStatLine(260, 375, 80, "Spell Damage +", string.Format("{0}/{1}%", AosAttributes.GetValue(from, AosAttribute.SpellDamage), SDICap), "Increases damage done by spells", color, colCD);
-            AddStatLine(260, 375, 80, "Resurrect Cost", string.Format("{0}", GetPlayerInfo.GetResurrectCost(from)), null, color, colCD);
+            AddStatLine(260, 375, 80, "Resurrect Cost", string.Format("{0}", GetPlayerInfo.GetResurrectCost(from, true)), null, color, colCD);
             AddStatLine(260, 375, 80, "Murders", string.Format("{0}", from.Kills), null, color, colCD);
 
             ///////////////////////////////////////////////////////////////////////////////////

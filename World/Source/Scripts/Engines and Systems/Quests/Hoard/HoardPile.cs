@@ -1,15 +1,13 @@
-using Server;
 using System;
-using System.Collections;
-using Server.Network;
-using Server.Targeting;
-using Server.Prompts;
+using System.Globalization;
 using Server.Misc;
 
 namespace Server.Items
 {
 	public class HoardPiles : Item
 	{
+		private static readonly TextInfo m_TextInfo = new CultureInfo("en-US", false).TextInfo;
+
 		private int m_Uses;
 
 		[CommandProperty( AccessLevel.GameMaster )]
@@ -93,15 +91,6 @@ namespace Server.Items
 			}
 			else if ( m_Uses < 5 )
 			{
-				m_Uses++;
-				if ( Server.Misc.GetPlayerInfo.LuckyPlayer( from.Luck ) && Utility.RandomBool() )
-				{
-					m_Uses--;
-				}
-
-				from.PlaySound( 0x2E5 );
-				from.SendMessage( "You pull something from the treasure hoard!" );
-
 				Item item = null;
 
 				switch ( Utility.Random( 17 ) )
@@ -166,8 +155,6 @@ namespace Server.Items
 						item.ItemID = Utility.RandomList( 0x9AB, 0xE40, 0xE41, 0xE7C );
 						item.Hue = Utility.RandomList( 0x961, 0x962, 0x963, 0x964, 0x965, 0x966, 0x967, 0x968, 0x969, 0x96A, 0x96B, 0x96C, 0x96D, 0x96E, 0x96F, 0x970, 0x971, 0x972, 0x973, 0x974, 0x975, 0x976, 0x977, 0x978, 0x979, 0x97A, 0x97B, 0x97C, 0x97D, 0x97E, 0x4AA );
 
-						Region reg = Region.Find( from.Location, from.Map );
-
 						string box = "hoard chest";
 						switch ( Utility.RandomMinMax( 0, 7 ) )
 						{
@@ -216,8 +203,35 @@ namespace Server.Items
 
 					if ( item != null ){ from.AddToBackpack( item ); }
 				}
+
+				if ( item != null )
+				{
+					m_Uses++;
+					if ( Server.Misc.GetPlayerInfo.LuckyPlayer( from.Luck ) && Utility.RandomBool() )
+					{
+						m_Uses--;
+					}
+
+					string name = "";
+					if ( item.ColorText1 != null ) name = item.ColorText1;
+					if ( item.ColorText2 != null ) name = name + " " + item.ColorText2;
+					if ( string.IsNullOrWhiteSpace( name ) ) name = item.Name;
+
+					from.PlaySound( 0x2E5 );
+					if ( string.IsNullOrWhiteSpace( name ) )
+						from.SendMessage( "You pull something from the treasure hoard!" );
+					else
+					{
+						from.LocalOverheadMessage( Network.MessageType.Regular, 1150, false, string.Format( "{0} !", m_TextInfo.ToTitleCase( name ) ) );
+					}
+				}
+				else
+				{
+					from.SendMessage( "The item slipped out of your hand!" );
+				}
 			}
-			else
+			
+			if ( 5 <= m_Uses )
 			{
 				from.SendMessage( "There is nothing else worth taking from this pile!" );
 				this.Delete();

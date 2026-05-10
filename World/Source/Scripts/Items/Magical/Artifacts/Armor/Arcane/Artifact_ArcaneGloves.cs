@@ -15,11 +15,11 @@ namespace Server.Items
 			Hue = 0x556;
 			ItemID = 0x13C6;
 			Attributes.NightSight = 1;
-			Attributes.DefendChance = 10;
+			Attributes.DefendChance = 8;
 			Attributes.CastSpeed = 1;
-			Attributes.LowerManaCost = 3;
-			Attributes.LowerRegCost = 3;
-			Attributes.SpellDamage = 3;
+			Attributes.LowerManaCost = 5;
+			Attributes.LowerRegCost = 5;
+			Attributes.SpellDamage = 5;
 			ArtifactLevel = ArtifactLevel.StandardArtefact;
 			Server.Misc.Arty.ArtySetup( this, 6, "" );
 		}
@@ -31,13 +31,21 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 0 );
+			writer.Write( (int) 1 );
 		}
 		
 		public override void Deserialize(GenericReader reader)
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
+
+			if (version < 1)
+			{
+				Attributes.DefendChance = 8;
+				Attributes.LowerManaCost = 5;
+				Attributes.LowerRegCost = 5;
+				Attributes.SpellDamage = 5;
+			}
 		}
 	}
 }

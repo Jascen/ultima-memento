@@ -227,7 +227,7 @@ namespace Server.Items
 
 						string QuestLog = "has reanimated a flesh golem";
 
-						flesh.PorterOwner = m_From.Serial;
+						flesh.PorterOwner = m_From;
 						flesh.PorterLevel = m_Journal.HasBrain;
 						flesh.PorterType = Fighter;
 

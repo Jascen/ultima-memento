@@ -1,15 +1,9 @@
 using System;
-using Server;
 using System.Collections;
-using System.Collections.Generic;
-using Server.Misc;
 using Server.Items;
 using Server.Network;
 using Server.Commands;
-using Server.Commands.Generic;
 using Server.Mobiles;
-using Server.Accounting;
-using Server.Regions;
 using System.Globalization;
 
 namespace Server.Misc
@@ -19,7 +13,7 @@ namespace Server.Misc
 		public static bool BookCaster( Mobile m )
 		{
 			if ( m is PlayerMobile )
-				return ((PlayerMobile)m).UsingAncientBook;
+				return ((PlayerMobile)m).Preferences.UsingAncientBook;
 
 			return false;
 		}

@@ -74,6 +74,7 @@ namespace Server.Engines.Harvest
             _Counter counter;
             foreach (var item in World.Items.Values)
             {
+				if (item.Map == null) continue;
                 if (item.Map == Map.Internal) continue;
                 if (item.Deleted) continue;
 

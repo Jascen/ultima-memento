@@ -65,6 +65,11 @@ namespace Server.Temptation
 
 			// Skill cap could have changed (Titan or some other bonus could be reduced)
 			player.RefreshSkillCap();
+
+			if (context.HasPermanentDeath)
+				SoulOrb.Create(player, SoulOrbType.PermadeathPlaceholder);
+			else if (!player.Avatar.Active)
+				WorldUtilities.DeleteAllItems<SoulOrb>(item => item.Owner == player);
 		}
 
 		public PlayerContext GetContextOrDefault(Mobile mobile)
@@ -81,6 +86,23 @@ namespace Server.Temptation
 			if (m_Context.TryGetValue(serial, out context)) return context;
 
 			return m_Context[serial] = new PlayerContext();
+		}
+
+		public void MigrateContext(Mobile oldMobile, Mobile newMobile)
+		{
+			var context = GetContextOrDefault(oldMobile);
+			if (context == PlayerContext.Default) return;
+
+			m_Context.Remove(oldMobile.Serial);
+			m_Context.Add(newMobile.Serial, context);
+		}
+
+		public void ReplaceContext(Mobile mobile, PlayerContext context)
+		{
+			m_Context.Remove(mobile.Serial);
+			if (context == PlayerContext.Default) return;
+
+			m_Context.Add(mobile.Serial, context);
 		}
 
 		private static void LoadData()

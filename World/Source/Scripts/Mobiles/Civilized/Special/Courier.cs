@@ -218,7 +218,7 @@ namespace Server.Mobiles
             if ( Deleted || !m.Alive )
                 return;
 
-			string msgQuest = ((PlayerMobile)m).MessageQuest;
+			string msgQuest = ((PlayerMobile)m).Quests.MessageQuest;
 
 			string myHomeWorld = "the Land of Sosaria";
 
@@ -327,7 +327,7 @@ namespace Server.Mobiles
 							envelope.ForWhere = my_location;
 							envelope.ForAlignment = dude.MyAlignment;
 							alignment = dude.MyAlignment;
-							((PlayerMobile)m).MessageQuest = dude.Name;
+							((PlayerMobile)m).Quests.MessageQuest = dude.Name;
 
 							if ( dude.MyX > 0 )
 								foundNPC = true;

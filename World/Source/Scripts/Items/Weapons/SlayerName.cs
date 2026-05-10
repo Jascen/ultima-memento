@@ -5,24 +5,24 @@ namespace Server.Items
 	public enum SlayerName
 	{
 		None,
-		Silver,
+		Silver, // Supernatural Vanquishing
 		OrcSlaying,
 		TrollSlaughter,
 		OgreTrashing,
-		Repond,
+		Repond, // Humanoid Assassination
 		DragonSlaying,
 		Terathan,
 		SnakesBane,
 		LizardmanSlaughter,
-		ReptilianDeath,
+		ReptilianDeath, // "reptile slayer"
 		DaemonDismissal,
 		GargoylesFoe,
 		BalronDamnation,
-		Exorcism,
+		Exorcism, // "abysmal banishment"
 		Ophidian,
 		SpidersDeath,
 		ScorpionsBane,
-		ArachnidDoom,
+		ArachnidDoom, // "arachnid doom"
 		FlameDousing,
 		WaterDissipation,
 		Vacuum,
@@ -30,15 +30,15 @@ namespace Server.Items
 		EarthShatter,
 		BloodDrinking,
 		SummerWind,
-		ElementalBan,
-		WizardSlayer,
-		AvianHunter,
-		SlimyScourge,
-		AnimalHunter,
-		GiantKiller,
-		GolemDestruction,
-		WeedRuin,
-		NeptunesBane,
-		Fey
+		ElementalBan, // "elemental ban"
+		WizardSlayer, // "wizard slayer"
+		AvianHunter, // "avian hunter"
+		SlimyScourge, // "slimy scourge"
+		AnimalHunter, // "animal hunter"
+		GiantKiller, // "giant killer"
+		GolemDestruction, // "golem destruction"
+		WeedRuin, // "weed ruin"
+		NeptunesBane, // "neptune's bane"
+		Fey // "fey slayer"
 	}
 }

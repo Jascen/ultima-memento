@@ -1,18 +1,7 @@
-using Server.Accounting;
-using Server.Commands.Generic;
-using Server.Commands;
-using Server.ContextMenus;
-using Server.Gumps;
 using Server.Items;
-using Server.Misc;
 using Server.Mobiles;
-using Server.Network;
-using Server.Targeting;
-using Server; 
 using System.Collections.Generic;
-using System.Collections;
 using System;
-using Server.Spells.Seventh;
 using System.Linq;
 
 namespace Server.Misc
@@ -23,14 +12,12 @@ namespace Server.Misc
 		{
 			if ( m is PlayerMobile )
 			{
-				if ( ((PlayerMobile)m).MagerySpellHue > 0 )
+				var from = (PlayerMobile)m;
+				if ( from.Preferences.MagerySpellHue > 0 )
 				{
-					hue = ((PlayerMobile)m).MagerySpellHue;
-						if ( mod )
-							hue = hue -1;
+					return mod ? from.Preferences.MagerySpellHue - 1 : from.Preferences.MagerySpellHue;
 				}
 			}
-
 			return hue;
 		}
 
@@ -47,21 +34,24 @@ namespace Server.Misc
 
 		public static void SetSavage( Mobile m ) // -------------------------------------------------------------------------------------------------
 		{
+			var player = m as PlayerMobile;
+			if (player == null) return;
+
 			PlayerSettings.SetDiscovered( m, "the Savaged Empire", true );
-			((PlayerMobile)m).SetCharacterType( CharacterType.Savage );
+			player.SetCharacterType( CharacterType.Savage );
 			Server.Misc.MorphingTime.RemoveMyClothes( m );
 
 			if ( m.Female )
 			{
-				((PlayerMobile)m).CharacterEvil = 0;
-				((PlayerMobile)m).CharacterOriental = 0;
-				((PlayerMobile)m).CharacterBarbaric = 2;
+				player.Preferences.CharacterEvil = false;
+				player.Preferences.CharacterOriental = false;
+				player.Preferences.CharacterBarbaric = 2;
 			}
 			else
 			{
-				((PlayerMobile)m).CharacterEvil = 0;
-				((PlayerMobile)m).CharacterOriental = 0;
-				((PlayerMobile)m).CharacterBarbaric = 1;
+				player.Preferences.CharacterEvil = false;
+				player.Preferences.CharacterOriental = false;
+				player.Preferences.CharacterBarbaric = 1;
 			}
 			Server.Items.BarbaricSatchel.GivePack( m );
 
@@ -113,8 +103,9 @@ namespace Server.Misc
 			bracers.ItemID = 0x564D;
 			m.AddItem( bracers );
 
-			SavageTalisman talisman = new SavageTalisman();
+			SavageTalisman talisman = player.Avatar.Active ? new SavageTalisman(50, 50) : new SavageTalisman();
 			talisman.ItemOwner = m;
+
 			m.AddItem( talisman );
 
 			BaseWeapon dagger = new Dagger();
@@ -251,13 +242,14 @@ namespace Server.Misc
 		{
 			PlayerSettings.MarkQuestInfo( m );
 
-			string goal = ((PlayerMobile)m).StandardQuest;	
+			var quests = ((PlayerMobile)m).Quests;
+			string goal = quests.StandardQuest;	
 
-			if ( quest == "StandardQuest" ){ goal = ((PlayerMobile)m).StandardQuest; }
-			else if ( quest == "FishingQuest" ){ goal = ((PlayerMobile)m).FishingQuest; }
-			else if ( quest == "AssassinQuest" ){ goal = ((PlayerMobile)m).AssassinQuest; }
-			else if ( quest == "MessageQuest" ){ goal = ((PlayerMobile)m).MessageQuest; }
-			else if ( quest == "ThiefQuest" ){ goal = ((PlayerMobile)m).ThiefQuest; }
+			if ( quest == "StandardQuest" ){ goal = quests.StandardQuest; }
+			else if ( quest == "FishingQuest" ){ goal = quests.FishingQuest; }
+			else if ( quest == "AssassinQuest" ){ goal = quests.AssassinQuest; }
+			else if ( quest == "MessageQuest" ){ goal = quests.MessageQuest; }
+			else if ( quest == "ThiefQuest" ){ goal = quests.ThiefQuest; }
 
 			int nEntry = 1;
 
@@ -281,7 +273,7 @@ namespace Server.Misc
 			{
 				PlayerSettings.MarkQuestInfo( m );
 
-				if ( ((PlayerMobile)m).GumpHue > 0 ){ return 0; }
+				if ( ((PlayerMobile)m).Preferences.GumpHue > 0 ){ return 0; }
 			}
 
 			return 2999;
@@ -293,7 +285,7 @@ namespace Server.Misc
 			{
 				PlayerSettings.MarkQuestInfo( m );
 
-				if ( ((PlayerMobile)m).WeaponBarOpen > 0 ){ return true; }
+				if ( ((PlayerMobile)m).Preferences.WeaponBarOpen ){ return true; }
 			}
 
 			return false;
@@ -303,13 +295,14 @@ namespace Server.Misc
 		{
 			PlayerSettings.MarkQuestInfo( m );
 
-			string goal = ((PlayerMobile)m).StandardQuest;	
+			var quests = ((PlayerMobile)m).Quests;
+			string goal = quests.StandardQuest;	
 
-			if ( quest == "StandardQuest" ){ goal = ((PlayerMobile)m).StandardQuest; }
-			else if ( quest == "FishingQuest" ){ goal = ((PlayerMobile)m).FishingQuest; }
-			else if ( quest == "AssassinQuest" ){ goal = ((PlayerMobile)m).AssassinQuest; }
-			else if ( quest == "MessageQuest" ){ goal = ((PlayerMobile)m).MessageQuest; }
-			else if ( quest == "ThiefQuest" ){ goal = ((PlayerMobile)m).ThiefQuest; }
+			if ( quest == "StandardQuest" ){ goal = quests.StandardQuest; }
+			else if ( quest == "FishingQuest" ){ goal = quests.FishingQuest; }
+			else if ( quest == "AssassinQuest" ){ goal = quests.AssassinQuest; }
+			else if ( quest == "MessageQuest" ){ goal = quests.MessageQuest; }
+			else if ( quest == "ThiefQuest" ){ goal = quests.ThiefQuest; }
 
 			return goal;
 		}
@@ -318,33 +311,36 @@ namespace Server.Misc
 		{
 			PlayerSettings.MarkQuestInfo( m );
 
-			if ( quest == "StandardQuest" ){ ((PlayerMobile)m).StandardQuest = setting; }
-			else if ( quest == "FishingQuest" ){ ((PlayerMobile)m).FishingQuest = setting; }
-			else if ( quest == "AssassinQuest" ){ ((PlayerMobile)m).AssassinQuest = setting; }
-			else if ( quest == "MessageQuest" ){ ((PlayerMobile)m).MessageQuest = setting; }
-			else if ( quest == "ThiefQuest" ){ ((PlayerMobile)m).ThiefQuest = setting; }
+			var quests = ((PlayerMobile)m).Quests;
+			if ( quest == "StandardQuest" ){ quests.StandardQuest = setting; }
+			else if ( quest == "FishingQuest" ){ quests.FishingQuest = setting; }
+			else if ( quest == "AssassinQuest" ){ quests.AssassinQuest = setting; }
+			else if ( quest == "MessageQuest" ){ quests.MessageQuest = setting; }
+			else if ( quest == "ThiefQuest" ){ quests.ThiefQuest = setting; }
 		}
 
 		public static void ClearQuestInfo( Mobile m, string quest ) // ------------------------------------------------------------------------------
 		{
 			PlayerSettings.MarkQuestInfo( m );
 
-			if ( quest == "StandardQuest" ){ ((PlayerMobile)m).StandardQuest = ""; }
-			else if ( quest == "FishingQuest" ){ ((PlayerMobile)m).FishingQuest = ""; }
-			else if ( quest == "AssassinQuest" ){ ((PlayerMobile)m).AssassinQuest = ""; }
-			else if ( quest == "MessageQuest" ){ ((PlayerMobile)m).MessageQuest = ""; }
-			else if ( quest == "ThiefQuest" ){ ((PlayerMobile)m).ThiefQuest = ""; }
+			var quests = ((PlayerMobile)m).Quests;
+			if ( quest == "StandardQuest" ){ quests.StandardQuest = ""; }
+			else if ( quest == "FishingQuest" ){ quests.FishingQuest = ""; }
+			else if ( quest == "AssassinQuest" ){ quests.AssassinQuest = ""; }
+			else if ( quest == "MessageQuest" ){ quests.MessageQuest = ""; }
+			else if ( quest == "ThiefQuest" ){ quests.ThiefQuest = ""; }
 		}
 
 		public static void MarkQuestInfo( Mobile m ) // ---------------------------------------------------------------------------------------------
 		{
 			if (m is PlayerMobile == false) return;
 			
-			if ( ((PlayerMobile)m).StandardQuest == null ){ ((PlayerMobile)m).StandardQuest = ""; }
-			if ( ((PlayerMobile)m).FishingQuest == null ){ ((PlayerMobile)m).FishingQuest = ""; }
-			if ( ((PlayerMobile)m).AssassinQuest == null ){ ((PlayerMobile)m).AssassinQuest = ""; }
-			if ( ((PlayerMobile)m).MessageQuest == null ){ ((PlayerMobile)m).MessageQuest = ""; }
-			if ( ((PlayerMobile)m).ThiefQuest == null ){ ((PlayerMobile)m).ThiefQuest = ""; }
+			var quests = ((PlayerMobile)m).Quests;
+			if ( quests.StandardQuest == null ){ quests.StandardQuest = ""; }
+			if ( quests.FishingQuest == null ){ quests.FishingQuest = ""; }
+			if ( quests.AssassinQuest == null ){ quests.AssassinQuest = ""; }
+			if ( quests.MessageQuest == null ){ quests.MessageQuest = ""; }
+			if ( quests.ThiefQuest == null ){ quests.ThiefQuest = ""; }
 		}
 
 		public static Land GetRandomDiscoveredLand( PlayerMobile m, List<Land> options, Func<Land, bool> predicate )
@@ -527,10 +523,10 @@ namespace Server.Misc
 			if ( m is PlayerMobile )
 			{
 				PlayerMobile pm = (PlayerMobile)m;
-				val = pm.RegBar;
+				val = pm.Preferences.RegBar;
 
 				if ( val == null || val == "" )
-					pm.RegBar = val = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
+					pm.Preferences.RegBar = val = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
 			}
 			return val;
 		}
@@ -597,7 +593,7 @@ namespace Server.Misc
 					records--;
 				}
 
-				pm.RegBar = entry;
+				pm.Preferences.RegBar = entry;
 			}
 		}
 
@@ -608,10 +604,10 @@ namespace Server.Misc
 			if ( m is PlayerMobile )
 			{
 				PlayerMobile pm = (PlayerMobile)m;
-				val = pm.QuickBar;
+				val = pm.Preferences.QuickBar;
 
 				if ( val == null || val == "" )
-					pm.QuickBar = val = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
+					pm.Preferences.QuickBar = val = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
 			}
 			return val;
 		}
@@ -677,7 +673,7 @@ namespace Server.Misc
 					records--;
 				}
 
-				pm.QuickBar = entry;
+				pm.Preferences.QuickBar = entry;
 			}
 		}
 
@@ -688,10 +684,10 @@ namespace Server.Misc
 			if ( m is PlayerMobile )
 			{
 				PlayerMobile pm = (PlayerMobile)m;
-				val = pm.MyLibrary;
+				val = pm.Preferences.MyLibrary;
 
 				if ( val == null || val == "" )
-					pm.MyLibrary = val = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
+					pm.Preferences.MyLibrary = val = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
 			}
 			return val;
 		}
@@ -756,7 +752,7 @@ namespace Server.Misc
 					records--;
 				}
 
-				pm.MyLibrary = entry;
+				pm.Preferences.MyLibrary = entry;
 			}
 		}
 
@@ -768,10 +764,10 @@ namespace Server.Misc
 			if ( m is PlayerMobile )
 			{
 				PlayerMobile pm = (PlayerMobile)m;
-				val = pm.MyChat;
+				val = pm.Preferences.MyChat;
 
 				if ( val == null || val == "" )
-					pm.MyChat = val = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
+					pm.Preferences.MyChat = val = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
 			}
 			return val;
 		}
@@ -836,7 +832,7 @@ namespace Server.Misc
 					records--;
 				}
 
-				pm.MyChat = entry;
+				pm.Preferences.MyChat = entry;
 			}
 		}
 
@@ -1063,7 +1059,7 @@ namespace Server.Misc
 		public static bool GetBardsTaleQuest( Mobile m, string part ) // -----------------------------------------------------------------------------
 		{
 			SetBardsTaleQuest( m, "none", false );
-			string quest = ((PlayerMobile)m).BardsTaleQuest;
+			string quest = ((PlayerMobile)m).Quests.BardsTaleQuest;
 
 			string[] quests = quest.Split('#');
 			int nEntry = 1;
@@ -1093,7 +1089,7 @@ namespace Server.Misc
 
 		public static void SetBardsTaleQuest( Mobile m, string part, bool repeat ) // ---------------------------------------------------------------
 		{
-			string quest = ((PlayerMobile)m).BardsTaleQuest;
+			string quest = ((PlayerMobile)m).Quests.BardsTaleQuest;
 			int records = 15; // TOTAL ENTRIES
 
 			if ( quest == null ){ quest = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#"; }
@@ -1148,9 +1144,9 @@ namespace Server.Misc
 					nEntry++;
 				}
 
-				((PlayerMobile)m).BardsTaleQuest = entry;
+				((PlayerMobile)m).Quests.BardsTaleQuest = entry;
 
-				if ( Finished > 0 ){ ((PlayerMobile)m).BardsTaleQuest = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#"; }
+				if ( Finished > 0 ){ ((PlayerMobile)m).Quests.BardsTaleQuest = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#"; }
 
 				if ( repeat ){ SetBardsTaleQuest( m, part, false ); }
 			}
@@ -1158,9 +1154,12 @@ namespace Server.Misc
 
 		public static void LootContainer( Mobile m, Container box ) // -------------------------------------------------------------------------------------
 		{
-			string looting = ((PlayerMobile)m).CharacterLoot;
+			var player = m as PlayerMobile;
+			if (player == null) return;
 
-			if ( looting == null ){ Server.Misc.LootChoiceUpdates.InitializeLootChoice( m ); looting = ((PlayerMobile)m).CharacterLoot; }
+			string looting = player.Preferences.CharacterLoot;
+
+			if ( looting == null ){ Server.Misc.LootChoiceUpdates.InitializeLootChoice( m ); looting = player.Preferences.CharacterLoot; }
 
 			if ( looting.Length > 0 )
 			{

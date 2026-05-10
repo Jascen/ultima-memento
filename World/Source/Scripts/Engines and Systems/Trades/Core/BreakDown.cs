@@ -100,7 +100,7 @@ namespace Server.Engines.Craft
 						return BreakDownResult.BadAmnt;
 					}
 
-					if ( from is PlayerMobile && false == ( (PlayerMobile)from ).ColorlessFabricBreakdown && CraftResources.GetType( resc.Resource ) == CraftResourceType.Fabric )
+					if ( from is PlayerMobile && false == ( (PlayerMobile)from ).Preferences.ColorlessFabricBreakdown && CraftResources.GetType( resc.Resource ) == CraftResourceType.Fabric )
 						resc.Hue = item.Hue;
 
 					resc.Amount = ( int )( resc.Amount / 2 );

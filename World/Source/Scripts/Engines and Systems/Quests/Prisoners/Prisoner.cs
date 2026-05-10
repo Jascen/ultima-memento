@@ -304,6 +304,7 @@ namespace Server.Items
 					from.SendMessage( "You free " + m_Jail.PrisonerName + " from their prison." );
 					LoggingFunctions.LogStandard( from, "has freed " + m_Jail.PrisonerName + " " + m_Jail.PrisonerTitle + "." );
 
+					CustomEventSink.InvokeCombatQuestCompleted( from, m_Jail.PrisonerReward );
 					Titles.AwardFame( from, ((int)((m_Jail.PrisonerReward)/100)), true );
 					if ( ((PlayerMobile)from).KarmaLocked == true ){ Titles.AwardKarma( from, -((int)((m_Jail.PrisonerReward)/100)), true ); }
 					else { Titles.AwardKarma( from, ((int)((m_Jail.PrisonerReward)/100)), true ); }

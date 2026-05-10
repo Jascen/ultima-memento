@@ -18,9 +18,12 @@ using Server.Spells.Bushido;
 using Server.Targeting;
 using Server.Regions;
 using Server.Accounting;
+using Server.Engines.Avatar;
 using Server.Engines.Craft;
 using Server.Engines.PartySystem;
 using Server.Engines.MLQuests;
+using Server.SpellBars;
+using Server.Utilities;
 
 namespace Server.Mobiles
 {
@@ -83,6 +86,54 @@ namespace Server.Mobiles
 
 	public class PlayerMobile : Mobile
 	{
+		private SpellBarsContext _spellBars;
+
+		[CommandProperty(AccessLevel.GameMaster)]
+		public SpellBarsContext SpellBars
+		{
+			get
+			{
+				if (_spellBars == null) _spellBars = new SpellBarsContext();
+
+				return _spellBars;
+			}
+			set
+			{
+			}
+		}
+
+		private PlayerPreferenceContext _preferences;
+
+		[CommandProperty(AccessLevel.GameMaster)]
+		public PlayerPreferenceContext Preferences
+		{
+			get
+			{
+				if (_preferences == null) _preferences = new PlayerPreferenceContext();
+
+				return _preferences;
+			}
+			set
+			{
+			}
+		}
+
+		private PlayerQuestContext _quests;
+
+		[CommandProperty(AccessLevel.GameMaster)]
+		public PlayerQuestContext Quests
+		{
+			get
+			{
+				if (_quests == null) _quests = new PlayerQuestContext();
+
+				return _quests;
+			}
+			set
+			{
+			}
+		}
+
 		public bool WarnedSkaraBrae;
 		public bool WarnedBottleCity;
 
@@ -106,25 +157,20 @@ namespace Server.Mobiles
 		}
 
 	  /* Begin Captcha Mod */////////////////////////////////////////
-		private DateTime _NextCaptchaTime;
 	 
-		public DateTime NextCaptchaTime
-		{
-			get { return _NextCaptchaTime;}
-			set { _NextCaptchaTime = value; }
-		}
+		public DateTime NextCaptchaTime { get; set; }
 	 
 		[CommandProperty(AccessLevel.Seer)]
 		public TimeSpan CaptchaDelay
 		{
 			get
 			{
-				if (DateTime.Now >= _NextCaptchaTime)
-					return TimeSpan.FromSeconds(0);
+				if (DateTime.Now >= NextCaptchaTime)
+					return TimeSpan.Zero;
 	 
-				return (_NextCaptchaTime - DateTime.Now);
+				return NextCaptchaTime - DateTime.Now;
 			}
-			set { _NextCaptchaTime = DateTime.Now + value; }
+			set { NextCaptchaTime = DateTime.Now + value; }
 		}
 	  /* End Captcha Mod *///////////////////////////////////////////
 
@@ -137,7 +183,7 @@ namespace Server.Mobiles
 			{
 			}
 
-			public DateTime TimeStamp { get{ return m_Stamp; } }
+			public DateTime TimeStamp { get { return m_Stamp; } }
 			public int Count
 			{
 				get { return m_Count; }
@@ -145,66 +191,27 @@ namespace Server.Mobiles
 			}
 		}
 
-		private DesignContext m_DesignContext;
-
-		private NpcGuild m_NpcGuild;
-		private DateTime m_NpcGuildJoinTime;
-		private TimeSpan m_NpcGuildGameTime;
-		private DateTime m_Camp;
-		private DateTime m_Bedroll;
-		private DateTime m_InnTime;
-		private bool m_DoubleClickID;
-		private bool m_PauseDoor;
-		private bool m_SneakDamage;
 		private PlayerFlag m_Flags;
-		private int m_StepsTaken;
 		private bool m_InnocentFugitive;
-		private bool m_IsStealthing; // IsStealthing should be moved to Server.Mobiles
 		private bool m_IgnoreMobiles; // IgnoreMobiles should be moved to Server.Mobiles
 		private int m_NonAutoreinsuredItems; // number of items that could not be automaitically reinsured because gold in bank was not enough
-		private bool m_NinjaWepCooldown;
 		/*
 		 * a value of zero means, that the mobile is not executing the spell. Otherwise,
 		 * the value should match the BaseMana required
 		*/
-		private int m_ExecutesLightningStrike; // move to Server.Mobiles??
 
-		private DateTime m_LastOnline;
 		private Server.Guilds.RankDefinition m_GuildRank;
-
-		private int m_GuildMessageHue, m_AllianceMessageHue;
 
 		private List<Mobile> m_AutoStabled;
 		private List<Mobile> m_AllFollowers;
-		private List<Mobile> m_RecentlyReported;
 
 		#region Getters & Setters
 
-		public List<Mobile> RecentlyReported
-		{
-			get
-			{
-				return m_RecentlyReported;
-			}
-			set
-			{
-				m_RecentlyReported = value;
-			}
-		}
+		public List<Mobile> RecentlyReported { get; set; }
 
 		public List<Mobile> AutoStabled { get { return m_AutoStabled; } }
 
-		public bool NinjaWepCooldown
-		{
-			get
-			{
-				return m_NinjaWepCooldown;
-			}
-			set
-			{
-				m_NinjaWepCooldown = value;
-			}
-		}
+		public bool NinjaWepCooldown { get; set; }
 
 		public List<Mobile> AllFollowers
 		{
@@ -225,22 +232,14 @@ namespace Server.Mobiles
 				else
 					return m_GuildRank;
 			}
-			set{ m_GuildRank = value; }
+			set { m_GuildRank = value; }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public int GuildMessageHue
-		{
-			get{ return m_GuildMessageHue; }
-			set{ m_GuildMessageHue = value; }
-		}
+		public int GuildMessageHue { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public int AllianceMessageHue
-		{
-			get { return m_AllianceMessageHue; }
-			set { m_AllianceMessageHue = value; }
-		}
+		public int AllianceMessageHue { get; set; }
 
 		/// <summary>
 		/// 1 = Fugitive + not redeemed
@@ -248,22 +247,14 @@ namespace Server.Mobiles
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int Fugitive
 		{
-			get{ return CharacterType != CharacterType.Fugitive || m_InnocentFugitive ? 0 : 1; }
-			set{ m_InnocentFugitive = value == 0; }
+			get { return CharacterType != CharacterType.Fugitive || m_InnocentFugitive ? 0 : 1; }
+			set { m_InnocentFugitive = value == 0; }
 		}
 
-		public int StepsTaken
-		{
-			get{ return m_StepsTaken; }
-			set{ m_StepsTaken = value; }
-		}
+		public int StepsTaken { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public bool IsStealthing // IsStealthing should be moved to Server.Mobiles
-		{
-			get { return m_IsStealthing; }
-			set { m_IsStealthing = value; }
-		}
+		public bool IsStealthing { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool IgnoreMobiles // IgnoreMobiles should be moved to Server.Mobiles
@@ -283,181 +274,120 @@ namespace Server.Mobiles
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public NpcGuild NpcGuild
-		{
-			get{ return m_NpcGuild; }
-			set{ m_NpcGuild = value; }
-		}
+		public NpcGuild NpcGuild { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public DateTime NpcGuildJoinTime
-		{
-			get{ return m_NpcGuildJoinTime; }
-			set{ m_NpcGuildJoinTime = value; }
-		}
+		public DateTime NpcGuildJoinTime { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public DateTime LastOnline
-		{
-			get{ return m_LastOnline; }
-			set{ m_LastOnline = value; }
-		}
+		public DateTime LastOnline { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public TimeSpan NpcGuildGameTime
-		{
-			get{ return m_NpcGuildGameTime; }
-			set{ m_NpcGuildGameTime = value; }
-		}
+		public TimeSpan NpcGuildGameTime { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public DateTime Camp
-		{
-			get{ return m_Camp; }
-			set{ m_Camp = value; }
-		}
+		public DateTime Camp { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public DateTime Bedroll
-		{
-			get{ return m_Bedroll; }
-			set{ m_Bedroll = value; }
-		}
+		public DateTime Bedroll { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public DateTime InnTime
-		{
-			get{ return m_InnTime; }
-			set{ m_InnTime = value; }
-		}
+		public DateTime InnTime { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public bool PauseDoor
-		{
-			get{ return m_PauseDoor; }
-			set{ m_PauseDoor = value; }
-		}
+		public bool PauseDoor { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public bool SneakDamage
-		{
-			get{ return m_SneakDamage; }
-			set{ m_SneakDamage = value; }
-		}
+		public bool SneakDamage { get; set; }
 
-		[CommandProperty( AccessLevel.GameMaster )]
-		public bool DoubleClickID
-		{
-			get{ return m_DoubleClickID; }
-			set{ m_DoubleClickID = value; }
-		}
-
-		public int ExecutesLightningStrike
-		{
-			get { return m_ExecutesLightningStrike; }
-			set { m_ExecutesLightningStrike = value; }
-		}
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public bool SuppressVendorTooltip { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public bool SingleAttemptID { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public bool ColorlessFabricBreakdown { get; set; }
+		public int ExecutesLightningStrike { get; set; }
 
 		#endregion
 
 		#region PlayerFlags
-		public PlayerFlag Flags
-		{
-			get{ return m_Flags; }
-			set{ m_Flags = value; }
-		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool PagingSquelched
 		{
-			get{ return GetFlag( PlayerFlag.PagingSquelched ); }
-			set{ SetFlag( PlayerFlag.PagingSquelched, value ); }
+			get { return GetFlag( PlayerFlag.PagingSquelched ); }
+			set { SetFlag( PlayerFlag.PagingSquelched, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool Glassblowing
 		{
-			get{ return GetFlag( PlayerFlag.Glassblowing ); }
-			set{ SetFlag( PlayerFlag.Glassblowing, value ); }
+			get { return GetFlag( PlayerFlag.Glassblowing ); }
+			set { SetFlag( PlayerFlag.Glassblowing, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool Masonry
 		{
-			get{ return GetFlag( PlayerFlag.Masonry ); }
-			set{ SetFlag( PlayerFlag.Masonry, value ); }
+			get { return GetFlag( PlayerFlag.Masonry ); }
+			set { SetFlag( PlayerFlag.Masonry, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool SandMining
 		{
-			get{ return GetFlag( PlayerFlag.SandMining ); }
-			set{ SetFlag( PlayerFlag.SandMining, value ); }
+			get { return GetFlag( PlayerFlag.SandMining ); }
+			set { SetFlag( PlayerFlag.SandMining, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool StoneMining
 		{
-			get{ return GetFlag( PlayerFlag.StoneMining ); }
-			set{ SetFlag( PlayerFlag.StoneMining, value ); }
+			get { return GetFlag( PlayerFlag.StoneMining ); }
+			set { SetFlag( PlayerFlag.StoneMining, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool ToggleMiningStone
 		{
-			get{ return GetFlag( PlayerFlag.ToggleMiningStone ); }
-			set{ SetFlag( PlayerFlag.ToggleMiningStone, value ); }
+			get { return GetFlag( PlayerFlag.ToggleMiningStone ); }
+			set { SetFlag( PlayerFlag.ToggleMiningStone, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool KarmaLocked
 		{
-			get{ return GetFlag( PlayerFlag.KarmaLocked ); }
-			set{ SetFlag( PlayerFlag.KarmaLocked, value ); }
+			get { return GetFlag( PlayerFlag.KarmaLocked ); }
+			set { SetFlag( PlayerFlag.KarmaLocked, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool AutoRenewInsurance
 		{
-			get{ return GetFlag( PlayerFlag.AutoRenewInsurance ); }
-			set{ SetFlag( PlayerFlag.AutoRenewInsurance, value ); }
+			get { return GetFlag( PlayerFlag.AutoRenewInsurance ); }
+			set { SetFlag( PlayerFlag.AutoRenewInsurance, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool UseOwnFilter
 		{
-			get{ return GetFlag( PlayerFlag.UseOwnFilter ); }
-			set{ SetFlag( PlayerFlag.UseOwnFilter, value ); }
+			get { return GetFlag( PlayerFlag.UseOwnFilter ); }
+			set { SetFlag( PlayerFlag.UseOwnFilter, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool PublicInfo
 		{
-			get{ return GetFlag( PlayerFlag.PublicInfo ); }
-			set{ SetFlag( PlayerFlag.PublicInfo, value ); }
+			get { return GetFlag( PlayerFlag.PublicInfo ); }
+			set { SetFlag( PlayerFlag.PublicInfo, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool AcceptGuildInvites
 		{
-			get{ return GetFlag( PlayerFlag.AcceptGuildInvites ); }
-			set{ SetFlag( PlayerFlag.AcceptGuildInvites, value ); }
+			get { return GetFlag( PlayerFlag.AcceptGuildInvites ); }
+			set { SetFlag( PlayerFlag.AcceptGuildInvites, value ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool HasStatReward
 		{
-			get{ return GetFlag( PlayerFlag.HasStatReward ); }
-			set{ SetFlag( PlayerFlag.HasStatReward, value ); }
+			get { return GetFlag( PlayerFlag.HasStatReward ); }
+			set { SetFlag( PlayerFlag.HasStatReward, value ); }
 		}
 		#endregion
 
@@ -519,48 +449,26 @@ namespace Server.Mobiles
 
 		#endregion
 
-		private DateTime m_AnkhNextUse;
-
 		[CommandProperty( AccessLevel.GameMaster )]
-		public DateTime AnkhNextUse
-		{
-			get{ return m_AnkhNextUse; }
-			set{ m_AnkhNextUse = value; }
-		}
+		public DateTime AnkhNextUse { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public TimeSpan DisguiseTimeLeft
 		{
-			get{ return DisguiseTimers.TimeRemaining( this ); }
+			get { return DisguiseTimers.TimeRemaining( this ); }
 		}
-
-		private DateTime m_PeacedUntil;
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public DateTime PeacedUntil
-		{
-			get { return m_PeacedUntil; }
-			set { m_PeacedUntil = value; }
-		}
+		public DateTime PeacedUntil { get; set; }
 
 		#region Scroll of Alacrity
-		private DateTime m_AcceleratedStart;
 
 		[CommandProperty(AccessLevel.GameMaster)]
-		public DateTime AcceleratedStart
-		{
-			get { return m_AcceleratedStart; }
-			set { m_AcceleratedStart = value; }
-		}
-
-		private SkillName m_AcceleratedSkill;
+		public DateTime AcceleratedStart { get; set; }
 
 		[CommandProperty(AccessLevel.GameMaster)]
-		public SkillName AcceleratedSkill
-		{
-			get { return m_AcceleratedSkill; }
-			set { m_AcceleratedSkill = value; }
-		}
+		public SkillName AcceleratedSkill { get; set; }
+
 		#endregion
 
 		public static Direction GetDirection4( Point3D from, Point3D to )
@@ -690,11 +598,7 @@ namespace Server.Mobiles
 				m_Flags &= ~flag;
 		}
 
-		public DesignContext DesignContext
-		{
-			get{ return m_DesignContext; }
-			set{ m_DesignContext = value; }
-		}
+		public DesignContext DesignContext { get; set; }
 
 		public static void Initialize()
 		{
@@ -865,9 +769,9 @@ namespace Server.Mobiles
 		public override void OnManaChange(int oldValue)
 		{
 			base.OnManaChange(oldValue);
-			if (m_ExecutesLightningStrike > 0)
+			if (ExecutesLightningStrike > 0)
 			{
-				if (Mana < m_ExecutesLightningStrike)
+				if (Mana < ExecutesLightningStrike)
 				{
 					LightningStrike.ClearCurrentMove(this);
 				}
@@ -1192,14 +1096,14 @@ namespace Server.Mobiles
 
 		public override void RevealingAction()
 		{
-			if ( m_DesignContext != null )
+			if ( DesignContext != null )
 				return;
 
 			Spells.Sixth.InvisibilitySpell.RemoveTimer( this );
 
 			base.RevealingAction();
 
-			m_IsStealthing = false; // IsStealthing should be moved to Server.Mobiles
+			IsStealthing = false; // IsStealthing should be moved to Server.Mobiles
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
@@ -1245,7 +1149,7 @@ namespace Server.Mobiles
 
 		public override bool CanBeHarmful( Mobile target, bool message, bool ignoreOurBlessedness )
 		{
-			if ( m_DesignContext != null || (target is PlayerMobile && ((PlayerMobile)target).m_DesignContext != null) )
+			if ( DesignContext != null || (target is PlayerMobile && ((PlayerMobile)target).DesignContext != null) )
 				return false;
 
 			if ( (target is BaseVendor && ((BaseVendor)target).IsInvulnerable) || target is PlayerVendor || target is PlayerBarkeeper )
@@ -1266,7 +1170,7 @@ namespace Server.Mobiles
 
 		public override bool CanBeBeneficial( Mobile target, bool message, bool allowDead )
 		{
-			if ( m_DesignContext != null || (target is PlayerMobile && ((PlayerMobile)target).m_DesignContext != null) )
+			if ( DesignContext != null || (target is PlayerMobile && ((PlayerMobile)target).DesignContext != null) )
 				return false;
 
 			return base.CanBeBeneficial( target, message, allowDead );
@@ -1274,7 +1178,7 @@ namespace Server.Mobiles
 
 		public override bool CheckContextMenuDisplay( IEntity target )
 		{
-			return ( m_DesignContext == null );
+			return ( DesignContext == null );
 		}
 
 		public override void OnItemAdded( Item item )
@@ -1382,13 +1286,13 @@ namespace Server.Mobiles
 		[CommandProperty( AccessLevel.GameMaster )]
 		public override int StamMax
 		{
-			get{ return Math.Max( 10, MyServerSettings.PlayerLevelMod( base.StamMax, this ) + AosAttributes.GetValue( this, AosAttribute.BonusStam ) ); }
+			get { return Math.Max( 10, MyServerSettings.PlayerLevelMod( base.StamMax, this ) + AosAttributes.GetValue( this, AosAttribute.BonusStam ) ); }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public override int ManaMax
 		{
-			get{ return Math.Max( 10, MyServerSettings.PlayerLevelMod( base.ManaMax, this ) + AosAttributes.GetValue( this, AosAttribute.BonusMana ) ); }
+			get { return Math.Max( 10, MyServerSettings.PlayerLevelMod( base.ManaMax, this ) + AosAttributes.GetValue( this, AosAttribute.BonusMana ) ); }
 		}
 		#endregion
 
@@ -1487,12 +1391,21 @@ namespace Server.Mobiles
 
 			m_NextMovementTime += speed;
 
+			if ( Avatar.Active && Avatar.HasSafetyDepositBox )
+			{
+				var box = Avatar.GetOrCreateSafetyDepositBox( this );
+				if ( box.Opened )
+				{
+					box.Close();
+				}
+			}
+
 			return true;
 		}
 
 		public override bool CheckMovement( Direction d, out int newZ )
 		{
-			DesignContext context = m_DesignContext;
+			DesignContext context = DesignContext;
 
 			if ( context == null )
 				return base.CheckMovement( d, out newZ );
@@ -1517,7 +1430,7 @@ namespace Server.Mobiles
 			return DesignContext.Check( this );
 		}
 
-		public SkillName[] AnimalFormRestrictedSkills{ get{ return m_AnimalFormRestrictedSkills; } }
+		public SkillName[] AnimalFormRestrictedSkills{ get { return m_AnimalFormRestrictedSkills; } }
 
 		private SkillName[] m_AnimalFormRestrictedSkills = new SkillName[]
 		{
@@ -2167,7 +2080,7 @@ namespace Server.Mobiles
 
 			CheckLightLevels( false );
 
-			DesignContext context = m_DesignContext;
+			DesignContext context = DesignContext;
 
 			if ( context == null || m_NoRecursion )
 				return;
@@ -2223,7 +2136,7 @@ namespace Server.Mobiles
 				Server.Misc.RegionMusic.MusicRegion( this, this.Region );
 			}
 
-			DesignContext context = m_DesignContext;
+			DesignContext context = DesignContext;
 
 			if ( context == null || m_NoRecursion )
 				return;
@@ -2268,14 +2181,65 @@ namespace Server.Mobiles
 			base.OnDamage( amount, from, willKill );
 		}
 
+		public PlayerMobile CreateCopy(bool includeRecipes)
+		{
+			var newPlayer = new PlayerMobile
+			{
+				Name = Name,
+				StatCap = StatCap,
+
+				_spellBars = SpellBars,
+				_preferences = Preferences,
+				PublicInfo = PublicInfo,
+			};
+
+			if (includeRecipes) newPlayer.m_AcquiredRecipes = m_AcquiredRecipes;
+
+			AvatarEngine.Instance.MigrateContext(this, newPlayer);
+
+			// Only copy Temptations if they're unlocked
+			if (Avatar.Active && Avatar.UnlockTemptations)
+				Temptation.TemptationEngine.Instance.MigrateContext(this, newPlayer);
+
+			return newPlayer;
+		}
+
 		public override void Resurrect()
 		{
-			if (Temptations.HasPermanentDeath)
+			if (Temptations.HasPermanentDeath || Avatar.Active)
 			{
-				SendMessage("We warned you it was dangerous. You cannot be resurrected.");
+				var confirmation = new ConfirmationGump(
+					this,
+					"Permanent Death",
+					"Your character has died and cannot resurrect. Would you like to return to the Gypsy encampment to start over?",
+					() =>
+					{
+						SendMessage("Your character will be recreated and you will be disconnected shortly...");
+
+						Timer.DelayCall(TimeSpan.FromSeconds(1), () => {
+
+							if (Avatar.Active)
+							{
+								var newPlayer = CharacterCreation.ResetCharacter( this, true, false );
+								AvatarEngine.InitializePlayer(newPlayer);
+								AvatarEngine.Instance.ApplyContext(newPlayer, newPlayer.Avatar);
+							}
+							else
+							{
+								CharacterCreation.ResetCharacter( this, false, true);
+							}
+						});
+					}
+				);
+				SendGump(confirmation);
 				return;
 			}
 
+			DoResurrect();
+		}
+
+		private void DoResurrect()
+		{
 			bool wasAlive = this.Alive;
 
 			base.Resurrect();
@@ -2574,6 +2538,35 @@ namespace Server.Mobiles
 			return res;
 		}
 
+		private bool _recursiveDeleteBlock;
+		public override void OnDelete()
+		{
+			base.OnDelete();
+
+			if (!_recursiveDeleteBlock)
+			{
+				_recursiveDeleteBlock = true;
+
+				foreach (var pet in WorldUtilities.ForEachMobile<Mobile>(mobile => mobile != this && mobile != null && !mobile.Deleted && MobileUtilities.TryGetMasterPlayer(mobile) == this))
+				{
+					pet.Delete();
+				}
+
+				foreach (var corpse in WorldUtilities.ForEachItem<Corpse>(item => item != null && !item.Deleted && item.Owner == this))
+				{
+					corpse.Delete();
+				}
+
+				var party = Party as Party;
+				if (party != null)
+				{
+					party.Remove(this);
+				}
+
+				_recursiveDeleteBlock = false;
+			}
+		}
+
 		public override DeathMoveResult GetInventoryMoveResultFor( Item item )
 		{
 			if ( CheckInsuranceOnDeath( item ) )
@@ -2595,6 +2588,9 @@ namespace Server.Mobiles
 			}
 
 			base.OnDeath(c);
+
+			var context = Engines.MobileEnhancement.Engine.Instance.GetContextOrDefault(this);
+			context.Validate(true);
 
 			RevertMods();
 
@@ -2666,15 +2662,14 @@ namespace Server.Mobiles
 		private TimeSpan m_ShortTermElapse;
 		private TimeSpan m_LongTermElapse;
 		private DateTime m_SessionStart;
-		private DateTime m_LastEscortTime;
 		private DateTime m_LastPetBallTime;
 		private DateTime m_SavagePaintExpiration;
 		private SkillName m_Learning = (SkillName)(-1);
 
 		public SkillName Learning
 		{
-			get{ return m_Learning; }
-			set{ m_Learning = value; }
+			get { return m_Learning; }
+			set { m_Learning = value; }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
@@ -2696,18 +2691,7 @@ namespace Server.Mobiles
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public DateTime LastEscortTime
-		{
-			get{ return m_LastEscortTime; }
-			set{ m_LastEscortTime = value; }
-		}
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public DateTime LastPetBallTime
-		{
-			get{ return m_LastPetBallTime; }
-			set{ m_LastPetBallTime = value; }
-		}
+		public DateTime LastPetBallTime { get; set; }
 
 		public PlayerMobile()
 		{
@@ -2716,14 +2700,13 @@ namespace Server.Mobiles
 			m_VisList = new List<Mobile>();
 			m_PermaFlags = new List<Mobile>();
 			m_AntiMacroTable = new Hashtable();
-			m_RecentlyReported = new List<Mobile>();
+			RecentlyReported = new List<Mobile>();
 
 			m_GameTime = TimeSpan.Zero;
 			m_ShortTermElapse = TimeSpan.FromHours( 8.0 );
 			m_LongTermElapse = TimeSpan.FromHours( 40.0 );
 
 			m_GuildRank = Guilds.RankDefinition.Lowest;
-			ColorlessFabricBreakdown = true;
 		}
 
 		public override bool MutateSpeech( List<Mobile> hears, ref string text, ref object context )
@@ -2765,7 +2748,7 @@ namespace Server.Mobiles
 						g.Alliance.AllianceChat( this, text );
 						SendToStaffMessage( this, "[Alliance]: {0}", text );
 
-						m_AllianceMessageHue = hue;
+						AllianceMessageHue = hue;
 					}
 					else
 					{
@@ -2774,7 +2757,7 @@ namespace Server.Mobiles
 				}
 				else	//Type == MessageType.Guild
 				{
-					m_GuildMessageHue = hue;
+					GuildMessageHue = hue;
 
 					g.GuildChat( this, text );
 					SendToStaffMessage( this, "[Guild]: {0}", text );
@@ -2888,12 +2871,12 @@ namespace Server.Mobiles
 
 		public List<Mobile> VisibilityList
 		{
-			get{ return m_VisList; }
+			get { return m_VisList; }
 		}
 
 		public List<Mobile> PermaFlags
 		{
-			get{ return m_PermaFlags; }
+			get { return m_PermaFlags; }
 		}
 
 		public override int Luck
@@ -2998,9 +2981,6 @@ namespace Server.Mobiles
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public int CharacterMOTD { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
 		public int CharacterSkill { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
@@ -3008,9 +2988,6 @@ namespace Server.Mobiles
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public string CharacterDiscovered { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public int CharacterSheath { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int CharacterGuilds { get; set; }
@@ -3025,28 +3002,7 @@ namespace Server.Mobiles
 		public int CharacterBegging { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public int CharacterWepAbNames { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public int GumpHue { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public int WeaponBarOpen { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string CharMusical { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string CharacterLoot { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
 		public string CharacterWanted { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public int CharacterOriental { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public int CharacterEvil { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int CharacterElement { get; set; }
@@ -3054,143 +3010,10 @@ namespace Server.Mobiles
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public string MessageQuest { get; set; }
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string StandardQuest { get; set; }
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string FishingQuest { get; set; }
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string AssassinQuest { get; set; }
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string BardsTaleQuest { get; set; }
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string EpicQuestName { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public int EpicQuestNumber { get; set; }
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public bool UsingAncientBook { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsMage1 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsMage2 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsMage3 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsMage4 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsNecro1 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsNecro2 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsKnight1 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsKnight2 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsDeath1 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsDeath2 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsBard1 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsBard2 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsPriest1 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsPriest2 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsMonk1 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsMonk2 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsArch1 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsArch2 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsArch3 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsArch4 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsElly1 { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string SpellBarsElly2 { get; set; }
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string ThiefQuest { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
 		public string KilledSpecialMonsters { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public string MusicPlaylist { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public int CharacterBarbaric { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
 		public int SkillDisplay { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public int MagerySpellHue { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public int ClassicPoisoning { get; set; }
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string QuickBar { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string RegBar { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string MyLibrary { get; set; }
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public string MyChat { get; set; }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -3211,20 +3034,33 @@ namespace Server.Mobiles
 			var baseAmount = 1000 * MyServerSettings.DEFAULT_SKILL_COUNT;
 			var boostAmount = 1000 * MyServerSettings.SkillBoostCount();
 			var typeAmount = 1000 * MyServerSettings.StartTypeBonusSkillCount( CharacterType );
+			if (CharacterType == CharacterType.Fugitive && Temptations.ReduceFugitiveSkillCap) typeAmount -= 1000;
 
+			var avatarAmount = 0;
 			var titanAmount = IsTitanOfEther
 				? Temptations.LimitTitanBonus
 					? 2000
 					: 5000
 				: 0;
+			
+			if ( Avatar.Active )
+			{
+				baseAmount = Constants.SKILL_CAP_BASE;
+				avatarAmount = Avatar.SkillCapLevel > 0 ? Avatar.SkillCapLevel * Constants.SKILL_CAP_PER_LEVEL * 10: 0;
+				titanAmount =  IsTitanOfEther ? Constants.TITAN_SKILL_BONUS : 0;
+			}
 
-			Skills.Cap = baseAmount + boostAmount + typeAmount + titanAmount;
+			Skills.Cap = baseAmount + boostAmount + typeAmount + avatarAmount + titanAmount;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public bool IgnoreVendorGoldSafeguard { get; set; }
+		public Engines.Avatar.PlayerContext Avatar
+		{
+			get { return Engines.Avatar.AvatarEngine.Instance.GetContextOrDefault(this); }
+			set { }
+		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public Temptation.PlayerContext Temptations
@@ -3252,13 +3088,22 @@ namespace Server.Mobiles
 
 			switch ( version )
 			{
+				case 51:
+				case 50:
+					_quests = new PlayerQuestContext( reader );	
+					if (version < 51) PublicInfo = true;
+					goto case 49;
+				case 49:
+					_spellBars = new SpellBarsContext( reader );
+					_preferences = new PlayerPreferenceContext( reader );
+					goto case 48;
 				case 48:
-					ColorlessFabricBreakdown = reader.ReadBool();
+					if (version < 49) Preferences.ColorlessFabricBreakdown = reader.ReadBool();
 					goto case 47;
 				case 47:
-					if (version == 47) ColorlessFabricBreakdown = true;
+					if (version == 47) Preferences.ColorlessFabricBreakdown = true;
 
-					SingleAttemptID = reader.ReadBool();
+					if (version < 49) Preferences.SingleAttemptID = reader.ReadBool();
 					goto case 46;
 				case 46:
 					IsTitanOfEther = reader.ReadBool();
@@ -3270,12 +3115,12 @@ namespace Server.Mobiles
 					goto case 44;
 				case 44:
 					if ( version == 44 ) m_NeedRemoveIDSkills = true;
-					SuppressVendorTooltip = reader.ReadBool();
+					if (version < 49) Preferences.SuppressVendorTooltip = reader.ReadBool();
 					goto case 43;
 
 				case 43:
 				case 42:
-					IgnoreVendorGoldSafeguard = reader.ReadBool();
+					if (version < 49) Preferences.IgnoreVendorGoldSafeguard = reader.ReadBool();
 					goto case 41;
 				case 41:
 				case 40:
@@ -3297,12 +3142,12 @@ namespace Server.Mobiles
 				case 38:
 				case 37:
 				{
-					DoubleClickID = reader.ReadBool();
+					if (version < 49) Preferences.DoubleClickID = reader.ReadBool();
 					goto case 36;
 				}
 				case 36:
 				{
-					m_InnTime = reader.ReadDateTime();
+					InnTime = reader.ReadDateTime();
 					goto case 35;
 				}
 				case 35:
@@ -3322,8 +3167,8 @@ namespace Server.Mobiles
 				}
 				case 34:
 				{
-					UsingAncientBook = reader.ReadBool();
-					SpellBarsArch4 = reader.ReadString();
+					if (version < 50) Preferences.UsingAncientBook = reader.ReadBool();
+					if ( version < 49 ) SpellBars.Arch4 = reader.ReadString();
 
 					goto case 33;
 				}
@@ -3347,99 +3192,102 @@ namespace Server.Mobiles
 				}
 				case 32:
 				{
-					m_Camp = reader.ReadDateTime();
-					m_Bedroll = reader.ReadDateTime();
+					Camp = reader.ReadDateTime();
+					Bedroll = reader.ReadDateTime();
 
 					goto case 31;
 				}
 				case 31:
 				{
-					MyChat = reader.ReadString();
+					if (version < 50) Preferences.MyChat = reader.ReadString();
 
 					goto case 30;
 				}
 				case 30:
 				{
-					RegBar = reader.ReadString();
-					MyLibrary = reader.ReadString();
+					if (version < 50) Preferences.RegBar = reader.ReadString();
+					if (version < 50) Preferences.MyLibrary = reader.ReadString();
 
 					goto case 29;
 				}
 				case 29:
 				{
-					CharacterMOTD = reader.ReadInt();
+					if (version < 50) Preferences.MessageOfTheDay = reader.ReadInt() == 1;
 					CharacterSkill = reader.ReadInt();
 					CharacterKeys = reader.ReadString();
 					CharacterDiscovered = reader.ReadString();
-					CharacterSheath = reader.ReadInt();
+					if (version < 49) Preferences.CharacterSheath = reader.ReadInt() == 1;
 					CharacterGuilds = reader.ReadInt();
 					CharacterBoatDoor = reader.ReadString();
 					CharacterPublicDoor = reader.ReadString();
 					CharacterBegging = reader.ReadInt();
-					CharacterWepAbNames = reader.ReadInt();
+					if (version < 49) Preferences.CharacterWepAbNames = reader.ReadInt() == 1;
 					CharacterElement = reader.ReadInt();
 
 					if (version < 39) // Property was removed
 					{
 						var ArtifactQuestTime = reader.ReadString();
 					}
-					StandardQuest = reader.ReadString();
-					FishingQuest = reader.ReadString();
-					AssassinQuest = reader.ReadString();
-					MessageQuest = reader.ReadString();
-					BardsTaleQuest = reader.ReadString();
+					if (version < 50) Quests.StandardQuest = reader.ReadString();
+					if (version < 50) Quests.FishingQuest = reader.ReadString();
+					if (version < 50) Quests.AssassinQuest = reader.ReadString();
+					if (version < 50) Quests.MessageQuest = reader.ReadString();
+					if (version < 50) Quests.BardsTaleQuest = reader.ReadString();
 
-					SpellBarsMage1 = reader.ReadString();
-					SpellBarsMage2 = reader.ReadString();
-					SpellBarsMage3 = reader.ReadString();
-					SpellBarsMage4 = reader.ReadString();
-					SpellBarsNecro1 = reader.ReadString();
-					SpellBarsNecro2 = reader.ReadString();
-					SpellBarsKnight1 = reader.ReadString();
-					SpellBarsKnight2 = reader.ReadString();
-					SpellBarsDeath1 = reader.ReadString();
-					SpellBarsDeath2 = reader.ReadString();
-					SpellBarsBard1 = reader.ReadString();
-					SpellBarsBard2 = reader.ReadString();
-					SpellBarsPriest1 = reader.ReadString();
-					SpellBarsPriest2 = reader.ReadString();
-					SpellBarsArch1 = reader.ReadString();
-					SpellBarsArch2 = reader.ReadString();
-					SpellBarsArch3 = reader.ReadString();
-					SpellBarsMonk1 = reader.ReadString();
-					SpellBarsMonk2 = reader.ReadString();
-					SpellBarsElly1 = reader.ReadString();
-					SpellBarsElly2 = reader.ReadString();
+					if ( version < 49 )
+					{
+						SpellBars.Mage1 = reader.ReadString();
+						SpellBars.Mage2 = reader.ReadString();
+						SpellBars.Mage3 = reader.ReadString();
+						SpellBars.Mage4 = reader.ReadString();
+						SpellBars.Necro1 = reader.ReadString();
+						SpellBars.Necro2 = reader.ReadString();
+						SpellBars.Knight1 = reader.ReadString();
+						SpellBars.Knight2 = reader.ReadString();
+						SpellBars.Death1 = reader.ReadString();
+						SpellBars.Death2 = reader.ReadString();
+						SpellBars.Bard1 = reader.ReadString();
+						SpellBars.Bard2 = reader.ReadString();
+						SpellBars.Priest1 = reader.ReadString();
+						SpellBars.Priest2 = reader.ReadString();
+						SpellBars.Arch1 = reader.ReadString();
+						SpellBars.Arch2 = reader.ReadString();
+						SpellBars.Arch3 = reader.ReadString();
+						SpellBars.Monk1 = reader.ReadString();
+						SpellBars.Monk2 = reader.ReadString();
+						SpellBars.Elly1 = reader.ReadString();
+						SpellBars.Elly2 = reader.ReadString();
+					}
 
-					QuickBar = reader.ReadString();
-					ThiefQuest = reader.ReadString();
+					if (version < 50) Preferences.QuickBar = reader.ReadString();
+					if (version < 50) Quests.ThiefQuest = reader.ReadString();
 					KilledSpecialMonsters = reader.ReadString();
-					MusicPlaylist = reader.ReadString();
+					if (version < 50) Preferences.MusicPlaylist = reader.ReadString();
 					CharacterWanted = reader.ReadString();
-					CharacterLoot = reader.ReadString();
-					CharMusical = reader.ReadString();
-					EpicQuestName = reader.ReadString();
-					CharacterBarbaric = reader.ReadInt();
+					if (version < 50) Preferences.CharacterLoot = reader.ReadString();
+					if (version < 49) Preferences.CharMusical = reader.ReadString();
+					if (version < 50) Quests.EpicQuestName = reader.ReadString();
+					if (version < 50) Preferences.CharacterBarbaric = reader.ReadInt();
 					SkillDisplay = reader.ReadInt();
-					MagerySpellHue = reader.ReadInt();
-					ClassicPoisoning = reader.ReadInt();
-					CharacterEvil = reader.ReadInt();
-					CharacterOriental = reader.ReadInt();
-					GumpHue = reader.ReadInt();
-					WeaponBarOpen = reader.ReadInt();
-					EpicQuestNumber = reader.ReadInt();
+					if (version < 50) Preferences.MagerySpellHue = reader.ReadInt();
+					if (version < 49) Preferences.ClassicPoisoning = reader.ReadInt() == 1;
+					if (version < 50) Preferences.CharacterEvil = reader.ReadInt() == 1;
+					if (version < 50) Preferences.CharacterOriental = reader.ReadInt() == 1;
+					if (version < 50) Preferences.GumpHue = reader.ReadInt();
+					if (version < 49) Preferences.WeaponBarOpen = reader.ReadInt() == 1;
+					if (version < 50) Quests.EpicQuestNumber = reader.ReadInt();
 
 					goto case 28;
 				}
 				case 28:
 				{
-					m_PeacedUntil = reader.ReadDateTime();
+					PeacedUntil = reader.ReadDateTime();
 
 					goto case 27;
 				}
 				case 27:
 				{
-					m_AnkhNextUse = reader.ReadDateTime();
+					AnkhNextUse = reader.ReadDateTime();
 
 					goto case 26;
 				}
@@ -3451,34 +3299,28 @@ namespace Server.Mobiles
 				}
 				case 25:
 				{
-					if ( version < 36 ){ int NotUsed2 = reader.ReadInt(); }
 					goto case 24;
 				}
 				case 24:
 				{
-					if ( version < 36 ){ DateTime NotUsed3 = reader.ReadDeltaTime(); }
 					goto case 23;
 				}
 				case 23:
 				{
-					if ( version < 36 ){ m_NoLongUsedDatas = new NoLongUsedDataInfo( reader ); }
 					goto case 22;
 				}
 				case 22:
 				{
-					if ( version < 36 ){ DateTime NotUsed4 = reader.ReadDateTime(); }
 					goto case 21;
 				}
 				case 21:
 				{
-					if ( version < 36 ){ int NotUsed5 = reader.ReadEncodedInt(); }
-					if ( version < 36 ){ int NotUsed6 = reader.ReadInt(); }
 					goto case 20;
 				}
 				case 20:
 				{
-					m_AllianceMessageHue = reader.ReadEncodedInt();
-					m_GuildMessageHue = reader.ReadEncodedInt();
+					AllianceMessageHue = reader.ReadEncodedInt();
+					GuildMessageHue = reader.ReadEncodedInt();
 
 					goto case 19;
 				}
@@ -3490,31 +3332,25 @@ namespace Server.Mobiles
 						rank = maxRank;
 
 					m_GuildRank = Guilds.RankDefinition.Ranks[rank];
-					m_LastOnline = reader.ReadDateTime();
+					LastOnline = reader.ReadDateTime();
 					goto case 18;
 				}
 				case 18:
 				{
-					if ( version < 36 ){ int NotUsed7 = reader.ReadEncodedInt(); }
-
 					goto case 17;
 				}
 				case 17: // changed how DoneQuests is serialized
 				case 16:
 				{
-					if ( version < 36 ){ int NotUsed8 = reader.ReadEncodedInt(); }
-					if ( version < 36 ){ int NotUsed9 = reader.ReadEncodedInt(); }
 					if ( version < 46 ) { Fugitive = reader.ReadEncodedInt(); }
 					goto case 15;
 				}
 				case 15:
 				{
-					if ( version < 36 ){ DateTime NotUsed10 = reader.ReadDeltaTime(); }
 					goto case 14;
 				}
 				case 14:
 				{
-					if ( version < 36 ){ int NotUsed11 = reader.ReadEncodedInt(); }
 					goto case 13;
 				}
 				case 13: // just removed m_PayedInsurance list
@@ -3556,9 +3392,9 @@ namespace Server.Mobiles
 				}
 				case 8:
 				{
-					m_NpcGuild = (NpcGuild)reader.ReadInt();
-					m_NpcGuildJoinTime = reader.ReadDateTime();
-					m_NpcGuildGameTime = reader.ReadTimeSpan();
+					NpcGuild = (NpcGuild)reader.ReadInt();
+					NpcGuildJoinTime = reader.ReadDateTime();
+					NpcGuildGameTime = reader.ReadTimeSpan();
 					goto case 7;
 				}
 				case 7:
@@ -3584,15 +3420,10 @@ namespace Server.Mobiles
 				}
 				case 4:
 				{
-					if ( version < 36 ){ DateTime NotUsed12 = reader.ReadDeltaTime(); }
-					if ( version < 36 ){ List<Mobile> NotUsed13 = reader.ReadStrongMobileList(); }
 					goto case 3;
 				}
 				case 3:
 				{
-					if ( version < 36 ){ DateTime NotUsed14 = reader.ReadDeltaTime(); }
-					if ( version < 36 ){ DateTime NotUsed15 = reader.ReadDeltaTime(); }
-					if ( version < 36 ){ int NotUsed16 = reader.ReadInt(); }
 					goto case 2;
 				}
 				case 2:
@@ -3613,8 +3444,8 @@ namespace Server.Mobiles
 				}
 			}
 
-			if (m_RecentlyReported == null)
-				m_RecentlyReported = new List<Mobile>();
+			if (RecentlyReported == null)
+				RecentlyReported = new List<Mobile>();
 
 			if ( m_PermaFlags == null )
 				m_PermaFlags = new List<Mobile>();
@@ -3622,8 +3453,8 @@ namespace Server.Mobiles
 			if( m_GuildRank == null )
 				m_GuildRank = Guilds.RankDefinition.Member;	//Default to member if going from older verstion to new version (only time it should be null)
 
-			if( m_LastOnline == DateTime.MinValue && Account != null )
-				m_LastOnline = ((Account)Account).LastLogin;
+			if( LastOnline == DateTime.MinValue && Account != null )
+				LastOnline = ((Account)Account).LastLogin;
 
 			if ( AccessLevel > AccessLevel.Player )
 				m_IgnoreMobiles = true;
@@ -3644,7 +3475,7 @@ namespace Server.Mobiles
 			if ( !MyServerSettings.MonstersAllowed() && RaceID > 0 )
 				BaseRace.BackToHuman( this );
 
-			if ( m_NpcGuild != NpcGuild.None && version < 38 )
+			if ( NpcGuild != NpcGuild.None && version < 38 )
 				CharacterGuilds = 1;
 			else if ( version < 38 )
 				CharacterGuilds = 0;
@@ -3681,18 +3512,17 @@ namespace Server.Mobiles
 
 			base.Serialize( writer );
 
-			writer.Write( (int) 48 ); // version
+			writer.Write( (int) 51 ); // version
 
-			writer.Write( ColorlessFabricBreakdown );
-			writer.Write( SingleAttemptID );
+			Quests.Serialize( writer );
+			SpellBars.Serialize( writer );
+			Preferences.Serialize( writer );
 
 			writer.Write( IsTitanOfEther );
 			writer.Write( (int)CharacterType );
 			writer.Write( m_InnocentFugitive );
 
 			writer.Write(m_NeedRemoveIDSkills);
-			writer.Write(SuppressVendorTooltip);
-			writer.Write(IgnoreVendorGoldSafeguard);
 
 			if( m_AcquiredRecipes == null )
 			{
@@ -3708,88 +3538,33 @@ namespace Server.Mobiles
 				}
 			}
 
-			writer.Write( m_DoubleClickID );
+			writer.Write( InnTime );
 
-			writer.Write( m_InnTime );
+			writer.Write( Camp );
+			writer.Write( Bedroll );
 
-			writer.Write( UsingAncientBook );
-			writer.Write( SpellBarsArch4 );
-
-			writer.Write( m_Camp );
-			writer.Write( m_Bedroll );
-
-			writer.Write( MyChat );
-
-			writer.Write( RegBar );
-			writer.Write( MyLibrary );
-
-			writer.Write( CharacterMOTD );
 			writer.Write( CharacterSkill );
 			writer.Write( CharacterKeys );
 			writer.Write( CharacterDiscovered );
-			writer.Write( CharacterSheath );
 			writer.Write( CharacterGuilds );
 			writer.Write( CharacterBoatDoor );
 			writer.Write( CharacterPublicDoor );
 			writer.Write( CharacterBegging );
-			writer.Write( CharacterWepAbNames );
 			writer.Write( CharacterElement );
 
-			writer.Write( StandardQuest );
-			writer.Write( FishingQuest );
-			writer.Write( AssassinQuest );
-			writer.Write( MessageQuest );
-			writer.Write( BardsTaleQuest );
-
-			writer.Write( SpellBarsMage1 );
-			writer.Write( SpellBarsMage2 );
-			writer.Write( SpellBarsMage3 );
-			writer.Write( SpellBarsMage4 );
-			writer.Write( SpellBarsNecro1 );
-			writer.Write( SpellBarsNecro2 );
-			writer.Write( SpellBarsKnight1 );
-			writer.Write( SpellBarsKnight2 );
-			writer.Write( SpellBarsDeath1 );
-			writer.Write( SpellBarsDeath2 );
-			writer.Write( SpellBarsBard1 );
-			writer.Write( SpellBarsBard2 );
-			writer.Write( SpellBarsPriest1 );
-			writer.Write( SpellBarsPriest2 );
-			writer.Write( SpellBarsArch1 );
-			writer.Write( SpellBarsArch2 );
-			writer.Write( SpellBarsArch3 );
-			writer.Write( SpellBarsMonk1 );
-			writer.Write( SpellBarsMonk2 );
-			writer.Write( SpellBarsElly1 );
-			writer.Write( SpellBarsElly2 );
-
-			writer.Write( QuickBar );
-			writer.Write( ThiefQuest );
 			writer.Write( KilledSpecialMonsters );
-			writer.Write( MusicPlaylist );
 			writer.Write( CharacterWanted );
-			writer.Write( CharacterLoot );
-			writer.Write( CharMusical );
-			writer.Write( EpicQuestName );
-			writer.Write( CharacterBarbaric );
 			writer.Write( SkillDisplay );
-			writer.Write( MagerySpellHue );
-			writer.Write( ClassicPoisoning );
-			writer.Write( CharacterEvil );
-			writer.Write( CharacterOriental );
-			writer.Write( GumpHue );
-			writer.Write( WeaponBarOpen );
-			writer.Write( EpicQuestNumber );
 
-			writer.Write( (DateTime) m_PeacedUntil );
-			writer.Write( (DateTime) m_AnkhNextUse );
+			writer.Write( (DateTime) PeacedUntil );
+			writer.Write( (DateTime) AnkhNextUse );
 			writer.Write( m_AutoStabled, true );
 
-			writer.WriteEncodedInt( m_AllianceMessageHue );
-			writer.WriteEncodedInt( m_GuildMessageHue );
+			writer.WriteEncodedInt( AllianceMessageHue );
+			writer.WriteEncodedInt( GuildMessageHue );
 
 			writer.WriteEncodedInt( m_GuildRank.Rank );
-			writer.Write( m_LastOnline );
+			writer.Write( LastOnline );
 
 			bool useMods = ( m_HairModID != -1 || m_BeardModID != -1 );
 
@@ -3805,9 +3580,9 @@ namespace Server.Mobiles
 
 			writer.Write( SavagePaintExpiration );
 
-			writer.Write( (int) m_NpcGuild );
-			writer.Write( (DateTime) m_NpcGuildJoinTime );
-			writer.Write( (TimeSpan) m_NpcGuildGameTime );
+			writer.Write( (int) NpcGuild );
+			writer.Write( (DateTime) NpcGuildJoinTime );
+			writer.Write( (TimeSpan) NpcGuildGameTime );
 
 			writer.Write( m_PermaFlags, true );
 
@@ -3844,7 +3619,7 @@ namespace Server.Mobiles
 		[CommandProperty( AccessLevel.GameMaster )]
 		public DateTime SessionStart
 		{
-			get{ return m_SessionStart; }
+			get { return m_SessionStart; }
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
@@ -3875,7 +3650,7 @@ namespace Server.Mobiles
 
 		public override bool CanSee( Item item )
 		{
-			if ( m_DesignContext != null && m_DesignContext.Foundation.IsHiddenToCustomizer( item ) )
+			if ( DesignContext != null && DesignContext.Foundation.IsHiddenToCustomizer( item ) )
 				return false;
 
 			return base.CanSee( item );
@@ -3954,13 +3729,7 @@ namespace Server.Mobiles
 			return true;
 		}
 
-		private bool m_BedrollLogout;
-
-		public bool BedrollLogout
-		{
-			get{ return m_BedrollLogout; }
-			set{ m_BedrollLogout = value; }
-		}
+		public bool BedrollLogout { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public override bool Paralyzed
@@ -4018,7 +3787,7 @@ namespace Server.Mobiles
 
 		private DateTime m_NextMovementTime;
 
-		public virtual bool UsesFastwalkPrevention{ get{ return ( AccessLevel < AccessLevel.Counselor ); } }
+		public virtual bool UsesFastwalkPrevention{ get { return ( AccessLevel < AccessLevel.Counselor ); } }
 
 		public override TimeSpan ComputeMovementSpeed( Direction dir, bool checkTurning )
 		{
@@ -4077,11 +3846,10 @@ namespace Server.Mobiles
 
 		#region Enemy of One
 		private Type m_EnemyOfOneType;
-		private bool m_WaitingForEnemy;
 
 		public Type EnemyOfOneType
 		{
-			get{ return m_EnemyOfOneType; }
+			get { return m_EnemyOfOneType; }
 			set
 			{
 				Type oldType = m_EnemyOfOneType;
@@ -4096,11 +3864,7 @@ namespace Server.Mobiles
 			}
 		}
 
-		public bool WaitingForEnemy
-		{
-			get{ return m_WaitingForEnemy; }
-			set{ m_WaitingForEnemy = value; }
-		}
+		public bool WaitingForEnemy { get; set; }
 
 		private void DeltaEnemies( Type oldType, Type newType )
 		{
@@ -4195,8 +3959,8 @@ namespace Server.Mobiles
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool Young
 		{
-			get{ return GetFlag( PlayerFlag.Young ); }
-			set{ SetFlag( PlayerFlag.Young, value ); InvalidateProperties(); }
+			get { return GetFlag( PlayerFlag.Young ); }
+			set { SetFlag( PlayerFlag.Young, value ); InvalidateProperties(); }
 		}
 
 		public override string ApplyNameSuffix( string suffix )
@@ -4359,7 +4123,7 @@ namespace Server.Mobiles
 		#region Speech log
 		private SpeechLog m_SpeechLog;
 
-		public SpeechLog SpeechLog{ get{ return m_SpeechLog; } }
+		public SpeechLog SpeechLog { get {  return m_SpeechLog; } }
 
 		public override void OnSpeech( SpeechEventArgs e )
 		{
@@ -4369,86 +4133,6 @@ namespace Server.Mobiles
 					m_SpeechLog = new SpeechLog();
 
 				m_SpeechLog.Add( e.Mobile, e.Speech );
-			}
-		}
-
-		#endregion
-
-		#region NoLongerUsed
-
-		private NoLongUsedDataInfo m_NoLongUsedDatas;
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public NoLongUsedDataInfo NoLongUsedDatas { get { return m_NoLongUsedDatas; } set { } }
-
-		[PropertyObject]
-		public class NoLongUsedDataInfo
-		{
-			private class TitleInfo
-			{
-				private int m_Value;
-				private DateTime m_LastDecay;
-
-				public int Value { get { return m_Value; } set { m_Value = value; } }
-				public DateTime LastDecay { get { return m_LastDecay; } set { m_LastDecay = value; } }
-
-				public TitleInfo()
-				{
-				}
-
-				public TitleInfo( GenericReader reader )
-				{
-					int version = reader.ReadEncodedInt();
-
-					switch( version )
-					{
-						case 0:
-						{
-							m_Value = reader.ReadEncodedInt();
-							m_LastDecay = reader.ReadDateTime();
-							break;
-						}
-					}
-				}
-			}
-
-			private TitleInfo[] m_Values;
-
-			public NoLongUsedDataInfo()
-			{
-			}
-
-			public NoLongUsedDataInfo( GenericReader reader )
-			{
-				int version = reader.ReadEncodedInt();
-
-				switch( version )
-				{
-					case 0:
-					{
-						int cs = reader.ReadEncodedInt();
-
-						int length = reader.ReadEncodedInt();
-						m_Values = new TitleInfo[length];
-
-						for( int i = 0; i < length; i++ )
-						{
-							m_Values[i] = new TitleInfo( reader );
-						}
-
-						if( m_Values.Length != NoLongUsedTable.Table.Length )
-						{
-							TitleInfo[] oldValues = m_Values;
-							m_Values = new TitleInfo[NoLongUsedTable.Table.Length];
-
-							for( int i = 0; i < m_Values.Length && i < oldValues.Length; i++ )
-							{
-								m_Values[i] = oldValues[i];
-							}
-						}
-						break;
-					}
-				}
 			}
 		}
 
@@ -4695,49 +4379,4 @@ namespace Server.Mobiles
 			EventSink.InvokeOnEnterRegion(new OnEnterRegionArgs(this, Old, New));
         }
     }
-
-	public enum NoLongUsedCellType
-	{
-		Abyss
-	}
-
-	public class NoLongUsedTable
-	{
-		private string m_Name;
-		private Type m_Data;
-		private Type[][] m_DataTypes;
-		private string[] m_LevelNames;
-
-		public string Name { get { return m_Name; } }
-		public Type Datas { get { return m_Data; } }
-		public Type[][] SpawnTypes { get { return m_DataTypes; } }
-		public string[] LevelNames { get { return m_LevelNames; } }
-
-		public NoLongUsedTable( string name, Type data, string[] levelNames, Type[][] dataTypes )
-		{
-			m_Name = name;
-			m_Data = data;
-			m_LevelNames = levelNames;
-			m_DataTypes = dataTypes;
-		}
-
-		public static NoLongUsedTable[] Table{ get { return m_Table; } }
-
-		private static readonly NoLongUsedTable[] m_Table = new NoLongUsedTable[]
-			{
-				new NoLongUsedTable( "Abyss", typeof( Imp ), new string[]{ "Foe", "Assassin", "Conqueror" }, new Type[][]	// Abyss
-				{																											// Abyss
-					new Type[]{ typeof( Imp ) }		} )
-			};
-
-		public static NoLongUsedTable GetInfo( NoLongUsedCellType type )
-		{
-			int v = (int)type;
-
-			if( v < 0 || v >= m_Table.Length )
-				v = 0;
-
-			return m_Table[v];
-		}
-	}
 }

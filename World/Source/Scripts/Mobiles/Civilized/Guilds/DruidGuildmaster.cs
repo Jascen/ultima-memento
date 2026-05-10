@@ -203,7 +203,7 @@ namespace Server.Mobiles
 				{
 					sMessage = "Ahhh...this is generous of you. Here...have this as a token of the guild's gratitude.";
 					PackBeastItem ball = new PackBeastItem();
-					ball.PorterOwner = from.Serial;
+					ball.PorterOwner = from;
 					from.AddToBackpack ( ball );
 				}
 				else

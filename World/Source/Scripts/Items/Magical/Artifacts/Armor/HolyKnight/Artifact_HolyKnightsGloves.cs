@@ -8,7 +8,7 @@ namespace Server.Items
 		public override int InitMinHits{ get{ return 80; } }
 		public override int InitMaxHits{ get{ return 160; } }
 
-		public override int BasePhysicalResistance{ get{ return 5; } }
+		public override int BasePhysicalResistance{ get{ return 16; } }
 
 		[Constructable]
 		public Artifact_HolyKnightsGloves()
@@ -17,6 +17,8 @@ namespace Server.Items
 			Hue = 0x47E;
 			Attributes.BonusHits = 10;
 			Attributes.ReflectPhysical = 15;
+			SkillBonuses.SetValues( 0, SkillName.Knightship, 5 );
+			SkillBonuses.SetValues( 1, SkillName.Focus, 5 );
 			ArtifactLevel = ArtifactLevel.StandardArtefact;
 			Server.Misc.Arty.ArtySetup( this, 5, "" );
 		}
@@ -28,13 +30,19 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 1 );
+			writer.Write( (int) 2 );
 		}
 		
 		public override void Deserialize(GenericReader reader)
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
+
+			if (version < 2)
+			{
+				SkillBonuses.SetValues( 0, SkillName.Knightship, 5 );
+				SkillBonuses.SetValues( 1, SkillName.Focus, 5 );
+			}
 		}
 	}
 }

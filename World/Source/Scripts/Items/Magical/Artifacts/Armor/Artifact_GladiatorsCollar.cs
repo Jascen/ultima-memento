@@ -1,6 +1,3 @@
-using System;
-using Server;
-
 namespace Server.Items
 {
 	public class Artifact_GladiatorsCollar : GiftPlateGorget
@@ -8,11 +5,13 @@ namespace Server.Items
 		public override int InitMinHits{ get{ return 80; } }
 		public override int InitMaxHits{ get{ return 160; } }
 
-		public override int BasePhysicalResistance{ get{ return 18; } }
-		public override int BaseFireResistance{ get{ return 18; } }
-		public override int BaseColdResistance{ get{ return 17; } }
-		public override int BasePoisonResistance{ get{ return 18; } }
-		public override int BaseEnergyResistance{ get{ return 16; } }
+		public override int BasePhysicalResistance{ get{ return 12; } }
+		public override int BaseFireResistance{ get{ return 12; } }
+		public override int BaseColdResistance{ get{ return 12; } }
+		public override int BasePoisonResistance{ get{ return 12; } }
+		public override int BaseEnergyResistance{ get{ return 12; } }
+
+		public override int AosStrReq{ get{ return 60; } }
 
 		public override bool CanFortify{ get{ return false; } }
 

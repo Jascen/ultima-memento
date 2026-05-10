@@ -1,18 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Server.Items;
-using Server.ContextMenus;
 using Server.Misc;
-using Server.Network;
-using System.Text;
-using Server;
-using Server.Commands;
-using Server.Commands.Generic;
-using System.IO;
 using Server.Mobiles;
-using Server.Gumps;
-using Server.Accounting;
 
 namespace Server
 {
@@ -30,24 +18,17 @@ namespace Server
         {
             Mobile m = args.Mobile;
 			PlayerMobile pm = (PlayerMobile)m;
-			PlayerMobile z = (PlayerMobile)m;
-			Mobile s = args.Mobile;
 
 			if ( m.Hue >= 33770 ){ m.Hue = m.Hue - 32768; }
 
 			m.RaceBody();
 
-			if ( ((PlayerMobile)m).GumpHue > 0 && m.RecordSkinColor == 0 )
+			if ( pm.Preferences.GumpHue > 0 && m.RecordSkinColor == 0 )
 			{
 				m.RecordsHair( true );
 
-				// THESE 3 LINES CAN BE REMOVED...MAYBE BY 1-JAN-2022. STORAGE VALUES REPLACED.
-				m.RecordHairColor = ((PlayerMobile)m).WeaponBarOpen;
-				m.RecordBeardColor = ((PlayerMobile)m).WeaponBarOpen;
-				m.RecordSkinColor = ((PlayerMobile)m).GumpHue;
-
-				((PlayerMobile)m).WeaponBarOpen = 1;
-				((PlayerMobile)m).GumpHue = 1;
+				pm.Preferences.WeaponBarOpen = true;
+				pm.Preferences.GumpHue = pm.RecordSkinColor = 1;
 			}
 
 			if ( m.RecordSkinColor >= 33770 ){ m.RecordSkinColor = m.RecordSkinColor - 32768; m.Hue = m.RecordSkinColor; }

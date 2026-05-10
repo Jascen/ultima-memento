@@ -1,14 +1,9 @@
 using System;
-using Server;
-using System.Collections.Generic;
 using System.Collections;
 using Server.Network;
 using Server.Mobiles;
-using Server.Items;
 using Server.Misc;
 using Server.Commands;
-using Server.Commands.Generic;
-using Server.Gumps;
 
 namespace Server.Gumps 
 {
@@ -53,7 +48,7 @@ namespace Server.Gumps
 			AddButton(737, 11, 4017, 4017, 0, GumpButtonType.Reply, 0);
 
 			MusicPlaylistFunctions.InitializePlaylist( from );
-			string MyServerSettings = ((PlayerMobile)from).MusicPlaylist;
+			string MyServerSettings = ((PlayerMobile)from).Preferences.MusicPlaylist;
 
 			int btn = button( 59, MyServerSettings );
 
@@ -191,7 +186,7 @@ namespace Server.Misc
 
 			MusicPlaylistFunctions.InitializePlaylist( m );
 
-			string PlaylistSetting = ((PlayerMobile)m).MusicPlaylist;
+			string PlaylistSetting = ((PlayerMobile)m).Preferences.MusicPlaylist;
 
 			string[] eachSetting = PlaylistSetting.Split('#');
 			int nLine = 1;
@@ -215,20 +210,20 @@ namespace Server.Misc
 				nLine++;
 			}
 
-			((PlayerMobile)m).MusicPlaylist = newSettings; 
+			((PlayerMobile)m).Preferences.MusicPlaylist = newSettings; 
 		}
 
 		public static void InitializePlaylist( Mobile m )
 		{
-			if ( ((PlayerMobile)m).MusicPlaylist == "" || ((PlayerMobile)m).MusicPlaylist == null )
-				((PlayerMobile)m).MusicPlaylist = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
+			if ( ((PlayerMobile)m).Preferences.MusicPlaylist == "" || ((PlayerMobile)m).Preferences.MusicPlaylist == null )
+				((PlayerMobile)m).Preferences.MusicPlaylist = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
 		}
 
 		public static void PickRandomSong( Mobile m )
 		{
 			MusicPlaylistFunctions.InitializePlaylist( m );
 
-			string PlaylistSetting = ((PlayerMobile)m).MusicPlaylist;
+			string PlaylistSetting = ((PlayerMobile)m).Preferences.MusicPlaylist;
 
 			string[] eachSetting = PlaylistSetting.Split('#');
 			int c = 0;
@@ -324,12 +319,14 @@ namespace Server.Misc
 
 		public static int GetPlaylistSetting( Mobile m, int nSetting )
 		{
-			PlayerMobile pm = (PlayerMobile)m;
+			var player = m as PlayerMobile;
+			if (player == null) return 0;
+
 			string sSetting = "0";
 
 			MusicPlaylistFunctions.InitializePlaylist( m );
 
-			string PlaylistSetting = ((PlayerMobile)m).MusicPlaylist;
+			string PlaylistSetting = player.Preferences.MusicPlaylist;
 
 			string[] eachSetting = PlaylistSetting.Split('#');
 			int nLine = 1;

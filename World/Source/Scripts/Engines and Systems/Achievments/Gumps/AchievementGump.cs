@@ -71,24 +71,18 @@ namespace Scripts.Mythik.Systems.Achievements.Gumps
             for (int index = 0; index < categoryList.Count; index++)
             {
                 int x = 27;
-                int bgID = 3600;
                 var category = categoryList[index];
 
                 const int CATEGORY_WIDTH = 209;
                 if (category.Parent == 0)
                 {
-                    AddBackground(x, 78 + (i * 56), CATEGORY_WIDTH, 50, bgID);
+					AddCategoryButton(x, 78 + (i * 56), CATEGORY_WIDTH, category.ID, selectedCategoryId);
                 }
                 else
                 {
                     x += 20;
-                    AddBackground(x, 78 + (i * 56), CATEGORY_WIDTH - 40, 50, bgID);
+					AddCategoryButton(x, 78 + (i * 56), CATEGORY_WIDTH - 40, category.ID, selectedCategoryId);
                 }
-
-                if (category.ID == selectedCategoryId) // selected
-                    AddImage(x + 17, 96 + (i * 56), 1210, 1152);
-                else
-                    AddButton(x + 17, 96 + (i * 56), 1209, 1210, 5000 + category.ID, GumpButtonType.Reply, 0);
 
                 TextDefinition.AddHtmlText(this, x + 37, 93 + (i * 56), CATEGORY_WIDTH, 16, category.Name, false, false, COLOR_LOCALIZED, COLOR_HTML);
                 ++i;
@@ -188,6 +182,32 @@ namespace Scripts.Mythik.Systems.Achievements.Gumps
             if (acheiveData != null && acheiveData.IsComplete)
                 TextDefinition.AddHtmlText(this, 806, 12 + CARD_HEIGHT + CARD_Y_OFFSET + (index * HEIGHT_PER_CARD), 185, 16, string.Format("<RIGHT>Completed {0}</RIGHT>", acheiveData.CompletedOn.ToShortDateString()), false, false, COLOR_LOCALIZED, 0x148506);
         }
+
+		private void AddCategoryButton(int x, int y, int width, int categoryID, int selectedCategoryId)
+		{
+			const int bgID = 3600;
+			const int BUTTON_WIDTH = 29;
+			const int BUTTON_GRAPHIC = 2151;
+
+			if (categoryID != selectedCategoryId)
+			{
+				for (var i = 0; x + (i * BUTTON_WIDTH) <= width; i++)
+				{
+					AddButton(x + (i * BUTTON_WIDTH), y + 10, BUTTON_GRAPHIC, BUTTON_GRAPHIC, 5000 + categoryID, GumpButtonType.Reply, 0);
+				}
+			}
+
+			AddBackground(x, y, width, 50, bgID);
+
+			if (categoryID == selectedCategoryId)
+			{
+				AddImage(x + 17, y + 18, 1210, 1152);
+			}
+			else
+			{
+				AddImage(x + 17, y + 18, 1210);
+			}
+		}
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {

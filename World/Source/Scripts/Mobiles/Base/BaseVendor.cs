@@ -2077,7 +2077,7 @@ namespace Server.Mobiles
 			var coins = TryGetCoinPurse( seller );
 			if ( coins == null ) return false; // Guard
 
-			if ( !MySettings.S_RichMerchants && !MySettings.S_UseRemainingGold && !pm.IgnoreVendorGoldSafeguard && SoldPrice > coins )
+			if ( !MySettings.S_RichMerchants && !MySettings.S_UseRemainingGold && !pm.Preferences.IgnoreVendorGoldSafeguard && SoldPrice > coins )
 			{
 				SayTo( seller, true, "Sorry, but I only have {0} gold to barter with.", coins );
 				return false;
@@ -2203,7 +2203,7 @@ namespace Server.Mobiles
 
 		public override void SendPropertiesTo( Mobile from )
 		{
-			if ( from is PlayerMobile && ((PlayerMobile)from).SuppressVendorTooltip )
+			if ( from is PlayerMobile && ((PlayerMobile)from).Preferences.SuppressVendorTooltip )
 				return;
 
 			from.Send( PropertyList );

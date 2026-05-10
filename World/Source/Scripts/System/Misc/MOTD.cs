@@ -31,7 +31,7 @@ namespace Joeku.MOTD
 			this.Index = index;
 
 			int button = 4018;
-			if( ((PlayerMobile)user).CharacterMOTD == 1 )
+			if( ((PlayerMobile)user).Preferences.MessageOfTheDay )
 				button = 3609;
 
             this.Closable=true;
@@ -66,15 +66,12 @@ namespace Joeku.MOTD
 
 		public override void OnResponse( NetState sender, RelayInfo info )
 		{
-			Mobile from = sender.Mobile;
-			int button = info.ButtonID;
+			var from = sender.Mobile as PlayerMobile;
+			if (from == null) return;
 
 			if ( info.ButtonID == 1 )
 			{
-				if( ((PlayerMobile)from).CharacterMOTD == 1 )
-					((PlayerMobile)from).CharacterMOTD = 0;
-				else
-					((PlayerMobile)from).CharacterMOTD = 1;
+				from.Preferences.MessageOfTheDay = !from.Preferences.MessageOfTheDay;
 
 				MOTD_Utility.SendGump( from, false, this.Index, m_Origin );
 
@@ -185,7 +182,7 @@ namespace Joeku.MOTD
 			if ( m.Region != null && m.Region is StartRegion )
 				return false;
 
-			if( ((PlayerMobile)m).CharacterMOTD == 1 )
+			if( ((PlayerMobile)m).Preferences.MessageOfTheDay )
 				return false;
 
 			return true;

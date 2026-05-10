@@ -766,6 +766,19 @@ namespace Server.Engines.Craft
 		private int m_ResAmount;
 		private CraftSystem m_System;
 
+		private void AttemptCompleted( Mobile from, CraftSystem craftSystem, BaseTool tool, BulkCraftContext bulkCraftContext, object message, bool canSendGump = true )
+		{
+			if ( bulkCraftContext != null )
+			{
+				bulkCraftContext.LastMessage = message;
+				return;
+			}
+
+			if ( canSendGump ) from.SendGump( new CraftGump( from, craftSystem, tool, message ) );
+			else if ( message is int && (int)message > 0 ) from.SendLocalizedMessage( (int)message );
+			else if ( message is string ) from.SendMessage( (string)message );
+		}
+
 		private void OnResourceConsumed( Item item, int amount )
 		{
 			if ( !RetainsColorFrom( m_System, item.GetType() ) )
@@ -974,29 +987,25 @@ namespace Server.Engines.Craft
 							else
 							{
 								from.EndAction( typeof( CraftSystem ) );
-								if ( bulkCraftContext == null)
-									from.SendGump( new CraftGump( from, craftSystem, tool, message ) );
+								AttemptCompleted( from, craftSystem, tool, bulkCraftContext, message );
 							}
 						}
 						else
 						{
 							from.EndAction( typeof( CraftSystem ) );
-							if ( bulkCraftContext == null)
-								from.SendGump( new CraftGump( from, craftSystem, tool, message ) );
+							AttemptCompleted( from, craftSystem, tool, bulkCraftContext, message );
 						}
 					}
 					else
 					{
 						from.EndAction( typeof( CraftSystem ) );
-						if ( bulkCraftContext == null)
-							from.SendGump( new CraftGump( from, craftSystem, tool, badCraft ) );
+						AttemptCompleted( from, craftSystem, tool, bulkCraftContext, badCraft );
 					}
 				}
 				else
 				{
 					from.EndAction( typeof( CraftSystem ) );
-					if ( bulkCraftContext == null)
-						from.SendGump( new CraftGump( from, craftSystem, tool, 1044153 ) ); // You don't have the required skills to attempt this item.
+					AttemptCompleted( from, craftSystem, tool, bulkCraftContext, 1044153 ); // You don't have the required skills to attempt this item.
 				}
 			}
 			else
@@ -1037,17 +1046,12 @@ namespace Server.Engines.Craft
 				bulkCraftContext.Current++;
 				
 			CraftContext context = craftSystem.GetContext( from );
+			var canSendGump = tool != null && !tool.Deleted && tool.UsesRemaining > 0;
 
 			int badCraft = craftSystem.CanCraft( from, tool, m_Type );
-
 			if ( badCraft > 0 )
 			{
-				if ( bulkCraftContext != null) return;
-
-				if ( tool != null && !tool.Deleted && tool.UsesRemaining > 0 )
-					from.SendGump( new CraftGump( from, craftSystem, tool, badCraft ) );
-				else
-					from.SendLocalizedMessage( badCraft );
+				AttemptCompleted( from, craftSystem, tool, bulkCraftContext, badCraft, canSendGump );
 
 				return;
 			}
@@ -1058,27 +1062,13 @@ namespace Server.Engines.Craft
 			// Not enough resource to craft it
 			if ( !ConsumeRes( from, typeRes, craftSystem, ref checkResHue, ref checkMaxAmount, ConsumeType.None, ref checkMessage ) )
 			{
-				if ( bulkCraftContext != null) return;
-
-				if ( tool != null && !tool.Deleted && tool.UsesRemaining > 0 )
-					from.SendGump( new CraftGump( from, craftSystem, tool, checkMessage ) );
-				else if ( checkMessage is int && (int)checkMessage > 0 )
-					from.SendLocalizedMessage( (int)checkMessage );
-				else if ( checkMessage is string )
-					from.SendMessage( (string)checkMessage );
+				AttemptCompleted( from, craftSystem, tool, bulkCraftContext, badCraft, canSendGump );
 
 				return;
 			}
 			else if ( !ConsumeAttributes( from, ref checkMessage, false ) )
 			{
-				if ( bulkCraftContext != null) return;
-
-				if ( tool != null && !tool.Deleted && tool.UsesRemaining > 0 )
-					from.SendGump( new CraftGump( from, craftSystem, tool, checkMessage ) );
-				else if ( checkMessage is int && (int)checkMessage > 0 )
-					from.SendLocalizedMessage( (int)checkMessage );
-				else if ( checkMessage is string )
-					from.SendMessage( (string)checkMessage );
+				AttemptCompleted( from, craftSystem, tool, bulkCraftContext, badCraft, canSendGump );
 
 				return;
 			}
@@ -1101,28 +1091,13 @@ namespace Server.Engines.Craft
 				// Not enough resource to craft it
 				if ( !ConsumeRes( from, typeRes, craftSystem, ref resHue, ref maxAmount, ConsumeType.All, ref message ) )
 				{
-					if ( bulkCraftContext != null) return;
-
-					if ( tool != null && !tool.Deleted && tool.UsesRemaining > 0 )
-						from.SendGump( new CraftGump( from, craftSystem, tool, message ) );
-					else if ( message is int && (int)message > 0 )
-						from.SendLocalizedMessage( (int)message );
-					else if ( message is string )
-						from.SendMessage( (string)message );
+					AttemptCompleted( from, craftSystem, tool, bulkCraftContext, message, canSendGump );
 
 					return;
 				}
 				else if ( !ConsumeAttributes( from, ref message, true ) )
 				{
-					if ( bulkCraftContext != null) return;
-
-					if ( tool != null && !tool.Deleted && tool.UsesRemaining > 0 )
-						from.SendGump( new CraftGump( from, craftSystem, tool, message ) );
-					else if ( message is int && (int)message > 0 )
-						from.SendLocalizedMessage( (int)message );
-					else if ( message is string )
-						from.SendMessage( (string)message );
-
+					AttemptCompleted( from, craftSystem, tool, bulkCraftContext, badCraft, canSendGump );
 					return;
 				}
 
@@ -1290,22 +1265,19 @@ namespace Server.Engines.Craft
 					num = craftSystem.PlayEndingEffect( from, false, true, toolBroken, endquality, this );
 				
 				if ( bulkCraftContext != null )
-				{
-					bulkCraftContext.Success++;
+                {
+                    bulkCraftContext.LastMessage = null;
+                    bulkCraftContext.Success++;
 					if ( IsExceptional(item) )
 						bulkCraftContext.Exceptional++;
 				}
-				else if ( tool != null && !tool.Deleted && tool.UsesRemaining > 0 )
-					from.SendGump( new CraftGump( from, craftSystem, tool, num ) );
-				else if ( num > 0 )
-					from.SendLocalizedMessage( num );
+				else
+					AttemptCompleted( from, craftSystem, tool, bulkCraftContext, num, canSendGump );
 			}
 			else if ( !allRequiredSkills )
 			{
-				if ( tool != null && !tool.Deleted && tool.UsesRemaining > 0 )
-					from.SendGump( new CraftGump( from, craftSystem, tool, 1044153 ) );
-				else
-					from.SendLocalizedMessage( 1044153 ); // You don't have the required skills to attempt this item.
+				// You don't have the required skills to attempt this item.
+				AttemptCompleted( from, craftSystem, tool, bulkCraftContext, 1044153, canSendGump );
 			}
 			else
 			{
@@ -1318,14 +1290,7 @@ namespace Server.Engines.Craft
 				// Not enough resource to craft it
 				if ( !ConsumeRes( from, typeRes, craftSystem, ref resHue, ref maxAmount, consumeType, ref message, true ) )
 				{
-					if ( bulkCraftContext != null) return;
-
-					if ( tool != null && !tool.Deleted && tool.UsesRemaining > 0 )
-						from.SendGump( new CraftGump( from, craftSystem, tool, message ) );
-					else if ( message is int && (int)message > 0 )
-						from.SendLocalizedMessage( (int)message );
-					else if ( message is string )
-						from.SendMessage( (string)message );
+					AttemptCompleted( from, craftSystem, tool, bulkCraftContext, message, canSendGump );
 
 					return;
 				}
@@ -1346,10 +1311,7 @@ namespace Server.Engines.Craft
 					return;
 				}
 			
-				if ( tool != null && !tool.Deleted && tool.UsesRemaining > 0 )
-					from.SendGump( new CraftGump( from, craftSystem, tool, num ) );
-				else if ( num > 0 )
-					from.SendLocalizedMessage( num );
+				AttemptCompleted( from, craftSystem, tool, bulkCraftContext, num, canSendGump );
 			}
 		}
 
@@ -1359,16 +1321,13 @@ namespace Server.Engines.Craft
 			m_CraftSystem.PlayCraftEffect( m_From );
 			m_From.EndAction( typeof( CraftSystem ) );
 
+			bool canSendGump = m_Tool != null && !m_Tool.Deleted && m_Tool.UsesRemaining > 0;
+
 			int badCraft = m_CraftSystem.CanCraft( m_From, m_Tool, m_CraftItem.m_Type );
 
 			if ( badCraft > 0 )
 			{
-				if ( bulkCraftContext != null ) return;
-
-				if ( m_Tool != null && !m_Tool.Deleted && m_Tool.UsesRemaining > 0 )
-					m_From.SendGump( new CraftGump( m_From, m_CraftSystem, m_Tool, badCraft ) );
-				else
-					m_From.SendLocalizedMessage( badCraft );
+				AttemptCompleted( m_From, m_CraftSystem, m_Tool, bulkCraftContext, badCraft, canSendGump );
 
 				return;
 			}

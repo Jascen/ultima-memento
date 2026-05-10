@@ -10,5 +10,6 @@ namespace Server.Engines.Craft
         public bool Cancelled { get; set; }
         public bool Suppressed { get; set; }
         public bool Paused { get; set; }
+		public object LastMessage { get; set; }
     }
 }

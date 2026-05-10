@@ -215,7 +215,9 @@ namespace Server.Temptation
 			AddOption(x, ref y, ActionButtonType.I_can_take_it, canEdit, context);
 			AddOption(x, ref y, ActionButtonType.Strongest_Avenger, canEdit, context);
 			// AddOption(x, ref y, ActionButtonType.This_is_just_a_tribute, canEdit, context); // Incomplete
-			AddOption(x, ref y, ActionButtonType.Deathwish, canEdit, context);
+
+			if (!m_Target.Avatar.Active || !canEdit)
+				AddOption(x, ref y, ActionButtonType.Deathwish, canEdit, context);
 		}
 
 		private string GetDescription(ActionButtonType actionButtonType)

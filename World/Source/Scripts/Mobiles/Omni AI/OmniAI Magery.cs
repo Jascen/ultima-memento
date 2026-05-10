@@ -67,10 +67,12 @@ namespace Server.Mobiles
 				return spell;
 			}
 
+			var checkSelf = m_Mobile.Combatant != null && 0 < m_Mobile.Combatant.MagicDamageAbsorb;
+
 			// 25% chance to cast Curse
 			if ( Utility.RandomDouble() > 0.75 )
 			{
-				spell = CheckCurse();
+				spell = CheckCurse(checkSelf);
 
 				if ( spell != null )
 				{
@@ -82,7 +84,8 @@ namespace Server.Mobiles
 			}
 
 			// 25% chance to cast poison if needed
-			if ( m_Mobile.Combatant != null && !m_Mobile.Combatant.Poisoned && Utility.RandomDouble() > 0.75 )
+			var canPoison = checkSelf ? m_Mobile.Poisoned : m_Mobile.Combatant != null && !m_Mobile.Combatant.Poisoned;
+			if ( canPoison && Utility.RandomDouble() > 0.75 )
 			{
 				if ( m_Mobile.Debug )
 					m_Mobile.SayHued( 1156, "Casting Poison" );
@@ -93,7 +96,7 @@ namespace Server.Mobiles
 			}
 
 			// scaling chance to drain mana based on how much of a caster the opponent is
-			if ( CheckManaDrain() > 0.75 )
+			if ( CheckManaDrain(checkSelf) > 0.75 )
 			{
 				if ( m_Mobile.Skills[SkillName.Magery].Value > 80.0 )
 					spell = new ManaVampireSpell( m_Mobile, null );
@@ -149,9 +152,9 @@ namespace Server.Mobiles
 			return new StrengthSpell( m_Mobile, null );
 		}
 
-		public Spell CheckCurse()
+		public Spell CheckCurse(bool checkSelf)
 		{
-			Mobile foe = m_Mobile.Combatant;
+			Mobile foe = checkSelf ? m_Mobile : m_Mobile.Combatant;
 
 			if ( foe == null )
 				return null;
@@ -186,9 +189,9 @@ namespace Server.Mobiles
 			return spell;
 		}
 
-		public double CheckManaDrain()
+		public double CheckManaDrain(bool checkSelf)
 		{
-			Mobile foe = m_Mobile.Combatant;
+			Mobile foe = checkSelf ? m_Mobile : m_Mobile.Combatant;
 
 			if ( foe == null || foe.Mana < 10 )
 				return 0.0;

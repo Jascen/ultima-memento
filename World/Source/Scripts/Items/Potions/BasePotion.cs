@@ -118,6 +118,8 @@ namespace Server.Items
 
 	public abstract class BasePotion : Item, ICraftable
 	{
+		public const int MAX_ENHANCED_POTIONS = 50;
+
 		public override Catalogs DefaultCatalog{ get{ return Catalogs.Potion; } }
 
 		private PotionEffect m_PotionEffect;
@@ -268,16 +270,9 @@ namespace Server.Items
 
 		public static int EnhancePotions( Mobile m )
 		{
-			int EP = AosAttributes.GetValue( m, AosAttribute.EnhancePotions );
-			int skillBonus = 0; // m.Skills.Alchemy.Fixed / 330 * 10;
-			if ( m.Skills.Alchemy.Fixed >= 99 ){ skillBonus = 30; }
-			else if ( m.Skills.Alchemy.Fixed >= 66 ){ skillBonus = 20; }
-			else if ( m.Skills.Alchemy.Fixed >= 33 ){ skillBonus = 10; }
-
-			if ( EP > 50 )
-				EP = 50;
-
-			return ( EP + skillBonus );
+			int EP = Math.Min(MAX_ENHANCED_POTIONS, AosAttributes.GetValue( m, AosAttribute.EnhancePotions ));
+			int skillBonus = m.Skills.Alchemy.Fixed / 30;
+			return EP + skillBonus;
 		}
 
 		public static TimeSpan Scale( Mobile m, TimeSpan v )

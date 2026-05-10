@@ -1,9 +1,4 @@
-using System;
-using Server.Network;
 using Server.Gumps;
-using Server.Spells;
-using Server.Misc;
-using Server.Mobiles;
 
 namespace Server.Items
 {
@@ -15,8 +10,6 @@ namespace Server.Items
 		public override SpellbookType SpellbookType{ get{ return SpellbookType.Song; } }
 		public override int BookOffset{ get{ return 351; } }
 		public override int BookCount{ get{ return 16; } }
-
-		public BaseInstrument Instrument;
 
 		[Constructable]
 		public SongBook() : this( (ulong)0 )
@@ -74,8 +67,7 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 0 ); // version
-			writer.Write( (Item)Instrument );
+			writer.Write( (int) 1 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
@@ -86,7 +78,7 @@ namespace Server.Items
 			{
 				case 0:
 				{
-					Instrument = reader.ReadItem() as BaseInstrument;
+					var Instrument = version < 1 ? reader.ReadItem() as BaseInstrument : null;
 					break;
 				}
 			}

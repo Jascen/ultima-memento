@@ -22,9 +22,9 @@ namespace Server.Commands
 			var player = e.Mobile as PlayerMobile;
 			if (player == null) return;
 
-			player.SuppressVendorTooltip = !player.SuppressVendorTooltip;
+			player.Preferences.SuppressVendorTooltip = !player.Preferences.SuppressVendorTooltip;
 
-			var message = player.SuppressVendorTooltip
+			var message = player.Preferences.SuppressVendorTooltip
 				? "Vendor tooltips disabled. Vendor tooltips will no longer be sent to the Client."
 				: "Vendor tooltips have been enabled.";
 			player.SendMessage(68, message);

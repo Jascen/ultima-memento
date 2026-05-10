@@ -13,9 +13,10 @@ namespace Server.Items
 			Name = "Aegis";
 			Hue = 0x47E;
 			ArmorAttributes.SelfRepair = 5;
-			Attributes.ReflectPhysical = 15;
-			Attributes.DefendChance = 15;
-			Attributes.LowerManaCost = 8;
+			Attributes.ReflectPhysical = 20;
+			Attributes.DefendChance = 20;
+			Attributes.LowerManaCost = 10;
+			SkillBonuses.SetValues( 0, SkillName.Parry, 10 );
 			ArtifactLevel = ArtifactLevel.StandardArtefact;
 			Server.Misc.Arty.ArtySetup( this, 8, "" );
 		}
@@ -27,13 +28,21 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 1 );
+			writer.Write( (int) 2 );
 		}
 		
 		public override void Deserialize(GenericReader reader)
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
+
+			if (version < 2)
+			{
+				Attributes.ReflectPhysical = 20;
+				Attributes.DefendChance = 20;
+				Attributes.LowerManaCost = 10;
+				SkillBonuses.SetValues( 0, SkillName.Parry, 10 );
+			}
 		}
 	}
 }

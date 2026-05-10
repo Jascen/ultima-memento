@@ -798,6 +798,11 @@ namespace Server
 			return list[m_Random.Next( list.Count )];
 		}
 
+		public static T Random<T>( T[] array )
+		{
+			return array[m_Random.Next( array.Length )];
+		}
+
 		public static int Random( int from, int count )
 		{
 			if ( count == 0 )

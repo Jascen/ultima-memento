@@ -133,8 +133,10 @@ namespace Server.Mobiles
 
 		public static void SetSpecialItemRequirement( Mobile m )
 		{
-			string epicName = ((PlayerMobile)m).EpicQuestName;
-			int epicNumber = ((PlayerMobile)m).EpicQuestNumber;
+			var player = (PlayerMobile)m;
+
+			string epicName = player.Quests.EpicQuestName;
+			int epicNumber = player.Quests.EpicQuestNumber;
 
 			if ( epicName == "NEW" || epicName == "" || epicName == null )
 			{
@@ -143,19 +145,19 @@ namespace Server.Mobiles
 				string KeepTrack = "_" + epicNumber.ToString() + "_";
 
 				while ( Server.Items.SummonPrison.UsedNumberCheck( KeepTrack, choice ) == true ){ choice = Utility.RandomMinMax( 1, 59 ); }
-					((PlayerMobile)m).EpicQuestName = Server.Items.SummonPrison.GetItemNeeded( choice, 3 );
-					((PlayerMobile)m).EpicQuestNumber = choice;
+					player.Quests.EpicQuestName = Server.Items.SummonPrison.GetItemNeeded( choice, 3 );
+					player.Quests.EpicQuestNumber = choice;
 			}
 		}
 
 		public static string GetSpecialItemRequirement( Mobile m )
 		{
-			return ((PlayerMobile)m).EpicQuestName;
+			return ((PlayerMobile)m).Quests.EpicQuestName;
 		}
 
 		public static void ClearSpecialItemRequirement( Mobile m )
 		{
-			string rare = ((PlayerMobile)m).EpicQuestName;
+			string rare = ((PlayerMobile)m).Quests.EpicQuestName;
 
 			ArrayList targets = new ArrayList();
 			foreach ( Item item in World.Items.Values )
@@ -169,12 +171,12 @@ namespace Server.Mobiles
 				Item item = ( Item )targets[ i ];
 				item.Delete();
 			}
-			((PlayerMobile)m).EpicQuestName = "NEW";
+			((PlayerMobile)m).Quests.EpicQuestName = "NEW";
 		}
 
 		public static bool HaveSpecialItemRequirement( Mobile m )
 		{
-			string item = ((PlayerMobile)m).EpicQuestName;
+			string item = ((PlayerMobile)m).Quests.EpicQuestName;
 
 			bool HasItem = false;
 
@@ -1475,6 +1477,8 @@ namespace Server.Mobiles
 
 					int GoldReward = scroll.MsgReward * 1000;
 						if ( scroll.ForAlignment == "neutral" ){ GoldReward = scroll.MsgReward * 1500; }
+
+					CustomEventSink.InvokeCombatQuestCompleted( from, GoldReward );
 
 					from.AddToBackpack( new Gold( GoldReward ) );
 

@@ -814,14 +814,20 @@ namespace Server
 
 	public class OnKilledByArgs
 	{
-		public OnKilledByArgs(Mobile killed, Mobile killedBy)
+		public OnKilledByArgs(Mobile killed, Mobile killedBy, Container corpse = null, int damagerCount = 0, int totalDamage = 0)
 		{
 			Killed = killed;
 			KilledBy = killedBy;
+			Corpse = corpse;
+			DamagerCount = damagerCount;
+			TotalDamage = totalDamage;
 		}
 
 		public Mobile Killed { get; private set; }
 		public Mobile KilledBy { get; private set; }
+		public Container Corpse { get; private set; }
+		public int DamagerCount { get; private set; }
+		public int TotalDamage { get; private set; }
 	}
 
 	public class CraftSuccessArgs
@@ -1180,10 +1186,10 @@ namespace Server
 				ResourceHarvestSuccess( e );
 		}
 
-        public static void InvokeOnKilledBy(OnKilledByArgs e)
+        public static void InvokeOnKilledBy( Mobile killed, Mobile killedBy, Container corpse, int damagerCount, int totalDamage )
 		{
 			if (OnKilledBy != null)
-				OnKilledBy( e );
+				OnKilledBy( new OnKilledByArgs( killed, killedBy, corpse, damagerCount, totalDamage ) );
 		}
 
 		public static void InvokeCraftSuccess( CraftSuccessArgs e )

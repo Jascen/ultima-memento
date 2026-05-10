@@ -1,15 +1,14 @@
 using System;
 using System.Collections;
-using Server.Network;
 using Server.Items;
-using Server.Mobiles;
-using Server.Targeting;
 using Server.SkillHandlers;
 
 namespace Server.Spells.Ninjitsu
 {
 	public class DeathStrike : NinjaMove
 	{
+		private const int TRIGGER_STEPS = 3;
+
 		public DeathStrike()
 		{
 		}
@@ -44,6 +43,8 @@ namespace Server.Spells.Ninjitsu
 			else
 				chance = 63 + (ninjitsu - 100) * 1.1;
 
+			CheckGain( attacker );
+
 			if( (chance / 100) < Utility.RandomDouble() )
 			{
 				attacker.SendLocalizedMessage( 1070779 ); // You missed your opponent with a Death Strike.
@@ -51,17 +52,11 @@ namespace Server.Spells.Ninjitsu
 			}
 
 			DeathStrikeInfo info;
-
-			int damageBonus = 0;
-
 			if( m_Table.Contains( defender ) )
 			{
 				defender.SendLocalizedMessage( 1063092 ); // Your opponent lands another Death Strike!
 
 				info = (DeathStrikeInfo)m_Table[defender];
-
-				if( info.m_Steps > 0 )
-					damageBonus = attacker.Skills[SkillName.Ninjitsu].Fixed / 150;
 
 				if( info.m_Timer != null )
 					info.m_Timer.Stop();
@@ -78,12 +73,10 @@ namespace Server.Spells.Ninjitsu
 			defender.FixedParticles( 0x374A, 1, 17, 0x26BC, EffectLayer.Waist );
 			attacker.PlaySound( attacker.Female ? 0x50D : 0x50E );
 
-			info = new DeathStrikeInfo( defender, attacker, damageBonus, isRanged );
+			info = new DeathStrikeInfo( defender, attacker, isRanged );
 			info.m_Timer = Timer.DelayCall( TimeSpan.FromSeconds( 5.0 ), new TimerStateCallback( ProcessDeathStrike ), defender );
 
 			m_Table[defender] = info;
-
-			CheckGain( attacker );
 		}
 
 		private static Hashtable m_Table = new Hashtable();
@@ -93,15 +86,13 @@ namespace Server.Spells.Ninjitsu
 			public Mobile m_Target;
 			public Mobile m_Attacker;
 			public int m_Steps;
-			public int m_DamageBonus;
-			public Timer m_Timer;
+			public int m_DamageBonus;			public Timer m_Timer;
 			public bool m_isRanged;
 
-			public DeathStrikeInfo( Mobile target, Mobile attacker, int damageBonus, bool isRanged )
+			public DeathStrikeInfo( Mobile target, Mobile attacker, bool isRanged )
 			{
 				m_Target = target;
 				m_Attacker = attacker;
-				m_DamageBonus = damageBonus;
 				m_isRanged = isRanged;
 			}
 		}
@@ -113,7 +104,7 @@ namespace Server.Spells.Ninjitsu
 			if( info == null )
 				return;
 
-			if( ++info.m_Steps >= 5 )
+			if( ++info.m_Steps >= TRIGGER_STEPS )
 				ProcessDeathStrike( m );
 		}
 
@@ -131,35 +122,25 @@ namespace Server.Spells.Ninjitsu
 			double ninjitsu = info.m_Attacker.Skills[SkillName.Ninjitsu].Value;
 			double stalkingBonus = Tracking.GetStalkingBonus( info.m_Attacker, info.m_Target );
 
-			if ( Core.ML )
-			{
-				double scalar = ( info.m_Attacker.Skills[SkillName.Hiding].Value + info.m_Attacker.Skills[SkillName.Stealth].Value ) / 220;
+			double scalar = ( info.m_Attacker.Skills[SkillName.Hiding].Value + info.m_Attacker.Skills[SkillName.Stealth].Value ) / 220;
+			if ( scalar > 1 )
+				scalar = 1;
 
-				if ( scalar > 1 )
-					scalar = 1;
-
-				// New formula doesn't apply DamageBonus anymore, caps must be, directly, 60/30.
-				if ( info.m_Steps >= 5 )
-					damage = (int)Math.Floor( Math.Min( 60, ( ninjitsu / 3 ) * ( 0.3 + 0.7 * scalar ) + stalkingBonus ) );
-				else
-					damage = (int)Math.Floor( Math.Min( 30, ( ninjitsu / 9 ) * ( 0.3 + 0.7 * scalar ) + stalkingBonus ) );
-
-				if ( info.m_isRanged )
-					damage /= 2;
-			}
+			if ( info.m_Steps >= TRIGGER_STEPS )
+				damage = (int)Math.Floor( ( ninjitsu ) * ( 0.3 + 0.7 * scalar ) + stalkingBonus );
 			else
-			{
-				int divisor = (info.m_Steps >= 5) ? 30 : 80;
-                        	double baseDamage = ninjitsu / divisor * 10;
+				damage = (int)Math.Floor( ( ninjitsu / 3 ) * ( 0.3 + 0.7 * scalar ) + stalkingBonus );
 
-				maxDamage = (info.m_Steps >= 5) ? 62 : 22; // DamageBonus is 8 at most. That brings the cap up to 70/30.
-				damage = Math.Max( 0, Math.Min( maxDamage, (int)( baseDamage + stalkingBonus ) ) ) + info.m_DamageBonus;
-			}
+			if ( info.m_isRanged )
+				damage /= 2;
 
-			if ( Core.ML )
-				info.m_Target.Damage( damage, info.m_Attacker ); // Damage is direct.
-			else
-				AOS.Damage( info.m_Target, info.m_Attacker, damage, true, 100, 0, 0, 0, 0, 0, 0, false, false, true ); // Damage is physical.
+			// Mortally wound target
+			MortalStrike.BeginWound( info.m_Target, MortalStrike.NPCDuration );
+
+			info.m_Target.Damage( damage, info.m_Attacker ); // Damage is direct.
+
+			// Paralyze the target
+			WeaponStrikes.AchillesStrike( info.m_Target, TimeSpan.FromSeconds( Utility.RandomMinMax(2, 4 ) ) );
 
 			if( info.m_Timer != null )
 				info.m_Timer.Stop();

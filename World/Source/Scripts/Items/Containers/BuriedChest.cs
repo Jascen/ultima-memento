@@ -1,11 +1,4 @@
 using System;
-using System.Collections;
-using Server;
-using Server.Gumps;
-using Server.Multis;
-using Server.Network;
-using Server.ContextMenus;
-using Server.Engines.PartySystem;
 using Server.Misc;
 
 namespace Server.Items
@@ -24,18 +17,19 @@ namespace Server.Items
 			string sAdj = vAdj[Utility.RandomMinMax( 0, (vAdj.Length-1) )];
 
 			ContainerFunctions.BuildContainer( this, 0, Utility.RandomList( 1, 2 ), 0, 0 );
-			ContainerFunctions.FillTheContainer( level, this, digger );
-			if ( GetPlayerInfo.LuckyPlayer( digger.Luck ) ){ ContainerFunctions.FillTheContainer( level, this, digger ); }
 
-			if ( level > 4 ){ ContainerFunctions.FillTheContainer( level, this, digger ); }
-			if ( level > 8 ){ ContainerFunctions.FillTheContainer( level, this, digger ); }
+			ContainerFunctions.FillTheContainer( level, this, digger );
+			if ( level > 3 ){ ContainerFunctions.FillTheContainer( level, this, digger ); }
+			if ( level > 7 ){ ContainerFunctions.FillTheContainer( level, this, digger ); }
+			if ( GetPlayerInfo.LuckyPlayer( digger.Luck ) ){ ContainerFunctions.FillTheContainer( level, this, digger ); }
 
 			ContainerFunctions.LockTheContainer( level, this, 1 );
 
 			int xTraCash = Utility.RandomMinMax( (level*300), (level*500) );
 			LootPackChange.AddGoldToContainer( xTraCash, this, digger, level );
 
-            if (  Utility.Random( 500 ) < ( level ) )
+			int artychance = GetPlayerInfo.LuckyPlayerArtifacts( digger.Luck ) + (level * 10);
+			if ( Utility.Random( 100 ) < artychance )
 			{
 				Item arty = Loot.RandomArty();
 				DropItem( arty );

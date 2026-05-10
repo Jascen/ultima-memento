@@ -91,7 +91,6 @@ namespace Server.Mobiles
 					robe.Hue = this.Hue;
 					robe.Attributes.CastRecovery = Speed;
 					robe.Attributes.CastSpeed = Speed;
-					robe.Attributes.LowerManaCost = 5 + Magic;
 					robe.Attributes.LowerRegCost = 5 + Magic;
 					robe.Attributes.SpellDamage = 5 + Magic;
 					c.DropItem( robe );

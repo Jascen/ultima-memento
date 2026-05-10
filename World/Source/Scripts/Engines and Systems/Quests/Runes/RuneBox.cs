@@ -138,7 +138,7 @@ namespace Server.Items
 					{
 						((PlayerMobile)from).Fugitive = 0;
 						from.Profile = "";
-						((PlayerMobile)from).BardsTaleQuest = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
+						((PlayerMobile)from).Quests.BardsTaleQuest = "0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#";
 					}
 					from.SendMessage( "You have gained a really large amount of fame and karma." );
 				}

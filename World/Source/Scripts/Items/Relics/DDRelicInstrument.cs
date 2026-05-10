@@ -76,9 +76,9 @@ namespace Server.Items
 
 		public override void OnDoubleClick( Mobile from )
 		{
-			if ( !IsChildOf( from.Backpack ) && MySettings.S_IdentifyItemsOnlyInPack && from is PlayerMobile && ((PlayerMobile)from).DoubleClickID && NotIdentified ) 
+			if ( !IsChildOf( from.Backpack ) && MySettings.S_IdentifyItemsOnlyInPack && from is PlayerMobile && ((PlayerMobile)from).Preferences.DoubleClickID && NotIdentified ) 
 				from.SendMessage( "This must be in your backpack to identify." );
-			else if ( from is PlayerMobile && ((PlayerMobile)from).DoubleClickID && NotIdentified )
+			else if ( from is PlayerMobile && ((PlayerMobile)from).Preferences.DoubleClickID && NotIdentified )
 				IDCommand( from );
 			else if ( !IsChildOf( from.Backpack ) )
 				from.SendMessage( "This must be in your backpack to flip." );

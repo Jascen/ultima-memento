@@ -52,10 +52,12 @@ namespace Server.Spells.Ninjitsu
 
 			ClearCurrentMove( attacker );
 
+			const int DURATION_SECONDS = 30;
+
 			attacker.SendLocalizedMessage( 1063129 ); // You catch your opponent off guard with your Surprise Attack!
 			defender.SendLocalizedMessage( 1063130 ); // Your defenses are lowered as your opponent surprises you!
 
-			defender.FixedParticles( 0x37B9, 1, 5, 0x26DA, 0, 3, EffectLayer.Head );
+			defender.FixedParticles( 0x37B9, 1, DURATION_SECONDS, 0x26DA, 0, 3, EffectLayer.Head );
 
 			attacker.RevealingAction();
 
@@ -76,7 +78,7 @@ namespace Server.Spells.Ninjitsu
 			int malus = ninjitsu / 60 + (int)Tracking.GetStalkingBonus( attacker, defender );
 
 			info = new SurpriseAttackInfo( defender, malus );
-			info.m_Timer = Timer.DelayCall( TimeSpan.FromSeconds( 8.0 ), new TimerStateCallback( EndSurprise ), info );
+			info.m_Timer = Timer.DelayCall( TimeSpan.FromSeconds( DURATION_SECONDS ), new TimerStateCallback( EndSurprise ), info );
 
 			m_Table[defender] = info;
 

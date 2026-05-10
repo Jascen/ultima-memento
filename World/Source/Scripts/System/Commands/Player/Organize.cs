@@ -314,11 +314,6 @@ namespace Server.Commands
 			public override int MaxWeight
 			{ get { return 0; } }
 
-			public override bool CheckHold(Mobile m, Item item, bool message, bool checkItems, int plusItems, int plusWeight)
-			{
-				return AcceptItems || item.Parent == this || AccessLevel.Player < m.AccessLevel;
-			}
-
 			public override bool CheckLift(Mobile from, Item item, ref LRReason reject)
 			{
 				if (Items.Count < 1)

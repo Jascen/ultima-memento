@@ -24,14 +24,16 @@ namespace Server.Items
 		{
 			if ( false == ( mobile is PlayerMobile ) ) return true;
 
-			var tip = mobile.Backpack.FindItemByType( typeof( ObeliskTip ) ) as ObeliskTip;
+			var m = (PlayerMobile)mobile;
+			if ( m.IsTitanOfEther ) return true;
+
+			var tip = m.Backpack.FindItemByType<ObeliskTip>();
 			if ( tip == null ) return true;
 			if ( tip.ObeliskOwner != mobile ) return true;
 			if ( tip.WonAir + tip.WonFire + tip.WonEarth + tip.WonWater < 4 ) return true;
 
 			WorldUtilities.DeleteAllItems<ObeliskTip>( item => item.ObeliskOwner == mobile );
 
-			var m = (PlayerMobile)mobile;
 			TitanRiches(m);
 
 			m.IsTitanOfEther = true;

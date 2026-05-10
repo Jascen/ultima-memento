@@ -960,7 +960,7 @@ namespace Server.Items
 
 			for ( int i = 0; i < attributeCount; ++i )
 			{
-				int random = GetUniqueRandom( 32 );
+				int random = GetUniqueRandom( 33 );
 
 				if ( random == -1 )
 					break;
@@ -999,6 +999,7 @@ namespace Server.Items
 					case 29: ApplySkillBonus( skills,	min, max, 2,									1, 15 ); break;
 					case 30: ApplySkillBonus( skills,	min, max, 3,									1, 15 ); break;
 					case 31: ApplySkillBonus( skills,	min, max, 4,									1, 15 ); break;
+					case 32: lute.Slayer = SlayerDeed.GetRandomSlayer(); break;
 				}
 			}
 		}
@@ -1017,7 +1018,7 @@ namespace Server.Items
 				if ( random == -1 )
 					break;
 
-				if ( random == 15 && !spellbook.MageryBook() )
+				if ( random == 15 && !spellbook.AllowSlayers() )
 					random = GetUniqueRandom( 15 );
 
 				switch ( random )

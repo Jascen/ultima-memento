@@ -16,7 +16,7 @@ namespace Server.Items
 		{
 			Name = "jar";
 			Stackable = true;
-			Weight = 1.0;
+			Weight = 0.5;
 			Amount = amount;
 			Built = true;
 		}
@@ -28,15 +28,15 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 0 ); // version
+			writer.Write( (int) 1 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-			ItemID = 0x10B4;
-			Built = true;
+
+			if (version < 1) Weight = 0.5;
 		}
 	}
 }

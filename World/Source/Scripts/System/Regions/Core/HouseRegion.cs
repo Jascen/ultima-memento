@@ -10,6 +10,8 @@ using Server.Gumps;
 using System.Text;
 using System.IO;
 using Server.Misc;
+using Server.Network;
+using System.Linq;
 
 namespace Server.Regions
 {
@@ -66,6 +68,21 @@ namespace Server.Regions
 		{
 			base.OnExit( m );
 			//LoggingFunctions.LogRegions( m, "a Home", "exit" );
+
+            if (m != null && House != null && m.AccessLevel == AccessLevel.Player && House.IsFriend(m))
+            {
+                var unsecuredStuff = House.GetItems().Where(item => !item.Deleted && item.Map != Map.Internal && !(item.IsLockedDown || item.IsSecure)).ToList();
+                if (unsecuredStuff.Count > 0)
+                {
+                    int unsecuredContainers = unsecuredStuff.Count(i => i is BaseContainer);
+                    int unsecuredItems = unsecuredStuff.Count - unsecuredContainers;
+                    m.PrivateOverheadMessage(MessageType.Regular, 38, false, "=====WARNING=====", m.NetState);
+                    m.PrivateOverheadMessage(MessageType.Regular, 38, false, string.Format("{0} containers & {1} items", unsecuredContainers, unsecuredItems), m.NetState);
+                    m.PrivateOverheadMessage(MessageType.Regular, 38, false, "UNSECURED", m.NetState);
+                    m.PrivateOverheadMessage(MessageType.Regular, 38, false, "in the house you just exited!", m.NetState);
+                    m.PrivateOverheadMessage(MessageType.Regular, 38, false, "=================", m.NetState);
+                }
+            }
 		}
 
 		public override void AlterLightLevel( Mobile m, ref int global, ref int personal )

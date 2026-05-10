@@ -3,19 +3,28 @@ using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
 using Server.Network;
-using Server;
-using System.Collections.Generic;
 using System.Collections;
 using System;
-using Server.Commands;
-using Server.Commands.Generic;
-using Server.Accounting;
 using Server.Regions;
 
 namespace Server.Gumps
 {
 	public class ResurrectCostGump : Gump
 	{
+		private string GetLossMessage( Mobile owner )
+		{
+			string c1 = "5";
+			string c2 = "10";
+
+			if ( GetPlayerInfo.isFromSpace( owner ) )
+			{
+				c1 = "10";
+				c2 = "20";
+			}
+
+			return "You will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+		}
+
 		private int m_Price;
 		private int m_Healer;
 		private int m_Bank;
@@ -33,70 +42,63 @@ namespace Server.Gumps
 			m_Tithe = owner.TithingPoints;
 			m_ResurrectType = 0;
 
-			string sText = "";
-
-			string c1 = "5";
-			string c2 = "10";
-			string loss = "";
-
-			if ( GetPlayerInfo.isFromSpace( owner ) )
-			{
-				loss = " If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
-				c1 = "10";
-				c2 = "20";
-			}
+			string sText;
 
 			if ( m_Price > 0 )
 			{
+				bool appendLossText = GetPlayerInfo.isFromSpace( owner );
+
 				if ( m_Price > m_Bank && m_Price > m_Tithe )
 				{
+					appendLossText = true;
+
 					if ( m_Healer < 2 )
 					{
-						sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the healer. Do you wish to plead to the healer for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+						sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the healer. Do you wish to plead to the healer for your life back now, without providing tribute?";
 					}
 					else
 					{
-						sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the shrine. Do you wish to plead to the gods for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+						sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the shrine. Do you wish to plead to the gods for your life back now, without providing tribute?";
 
 						if ( m_Healer == 3 )
 						{
-							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to Azrael. Do you wish to plead to him for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to Azrael. Do you wish to plead to him for your life back now, without providing tribute?";
 						}
 						else if ( m_Healer == 4 )
 						{
-							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the Reaper. Do you wish to plead to him for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the Reaper. Do you wish to plead to him for your life back now, without providing tribute?";
 						}
 						else if ( m_Healer == 5 )
 						{
-							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the goddess of the sea. Do you wish to plead to Amphitrite for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the goddess of the sea. Do you wish to plead to Amphitrite for your life back now, without providing tribute?";
 						}
 						else if ( m_Healer == 6 )
 						{
-							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the Archmages. Do you wish to plead to the Archmages for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the Archmages. Do you wish to plead to the Archmages for your life back now, without providing tribute?";
 						}
 						else if ( m_Healer == 7 )
 						{
-							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to Sin'Vraal. Do you wish to plead to him for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to Sin'Vraal. Do you wish to plead to him for your life back now, without providing tribute?";
 						}
 						else if ( m_Healer == 8 )
 						{
-							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the god of the sea. Do you wish to plead to Neptune for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the god of the sea. Do you wish to plead to Neptune for your life back now, without providing tribute?";
 						}
 						else if ( m_Healer == 9 )
 						{
-							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the lord of the sea. Do you wish to plead to Poseidon for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the lord of the sea. Do you wish to plead to Poseidon for your life back now, without providing tribute?";
 						}
 						else if ( m_Healer == 10 )
 						{
-							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to Ktulu. Do you wish to plead to him for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to Ktulu. Do you wish to plead to him for your life back now, without providing tribute?";
 						}
 						else if ( m_Healer == 11 )
 						{
-							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to Durama. Do you wish to plead for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to Durama. Do you wish to plead for your life back now, without providing tribute?";
 						}
 						else if ( m_Healer == 12 )
 						{
-							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the Ancient Dryad. Do you wish to plead for your life back now, without providing tribute? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+							sText = "You currently do not have enough gold in the bank or tithed to provide an offering to the Ancient Dryad. Do you wish to plead for your life back now, without providing tribute?";
 						}
 					}
 					m_ResurrectType = 1;
@@ -108,54 +110,59 @@ namespace Server.Gumps
 
 					if ( m_Healer < 2 )
 					{
-						sText = "You currently have enough " + tribute + " to provide an offering to the healer. Do you wish to offer the tribute to the healer for your life back?" + loss;
+						sText = "You currently have enough " + tribute + " to provide an offering to the healer. Do you wish to offer the tribute to the healer for your life back?";
 					}
 					else
 					{
-						sText = "You currently have enough " + tribute + " to provide an offering to the shrine. Do you wish to offer the tribute to the gods for your life back?" + loss;
+						sText = "You currently have enough " + tribute + " to provide an offering to the shrine. Do you wish to offer the tribute to the gods for your life back?";
 
 						if ( m_Healer == 3 )
 						{
-							sText = "Azrael is not ready for your soul just yet, and you currently have enough " + tribute + " to provide an offering to him. Do you wish to offer the tribute to Azrael for your life back?" + loss;
+							sText = "Azrael is not ready for your soul just yet, and you currently have enough " + tribute + " to provide an offering to him. Do you wish to offer the tribute to Azrael for your life back?";
 						}
 						else if ( m_Healer == 4 )
 						{
-							sText = "Although the Reaper would gladly take your soul, he thinks your time has come to an end too soon. You currently have enough " + tribute + " to provide an offering to the Reaper. Do you wish to offer the tribute to him for your life back?" + loss;
+							sText = "Although the Reaper would gladly take your soul, he thinks your time has come to an end too soon. You currently have enough " + tribute + " to provide an offering to the Reaper. Do you wish to offer the tribute to him for your life back?";
 						}
 						else if ( m_Healer == 5 )
 						{
-							sText = "You currently have enough " + tribute + " to provide an offering to the goddess of the sea. Do you wish to offer the tribute to Amphitrite for your life back?" + loss;
+							sText = "You currently have enough " + tribute + " to provide an offering to the goddess of the sea. Do you wish to offer the tribute to Amphitrite for your life back?";
 						}
 						else if ( m_Healer == 6 )
 						{
-							sText = "You currently have enough " + tribute + " to provide an offering to the Archmages. Do you wish to offer the tribute to the Archmages for your life back?" + loss;
+							sText = "You currently have enough " + tribute + " to provide an offering to the Archmages. Do you wish to offer the tribute to the Archmages for your life back?";
 						}
 						else if ( m_Healer == 7 )
 						{
-							sText = "You currently have enough " + tribute + " to provide an offering to Sin'Vraal. Do you wish to offer the tribute to Sin'Vraal for your life back?" + loss;
+							sText = "You currently have enough " + tribute + " to provide an offering to Sin'Vraal. Do you wish to offer the tribute to Sin'Vraal for your life back?";
 						}
 						else if ( m_Healer == 8 )
 						{
-							sText = "You currently have enough " + tribute + " to provide an offering to the god of the sea. Do you wish to offer the tribute to Neptune for your life back?" + loss;
+							sText = "You currently have enough " + tribute + " to provide an offering to the god of the sea. Do you wish to offer the tribute to Neptune for your life back?";
 						}
 						else if ( m_Healer == 9 )
 						{
-							sText = "You currently have enough " + tribute + " to provide an offering to the lord of the sea. Do you wish to offer the tribute to Poseidon for your life back?" + loss;
+							sText = "You currently have enough " + tribute + " to provide an offering to the lord of the sea. Do you wish to offer the tribute to Poseidon for your life back?";
 						}
 						else if ( m_Healer == 10 )
 						{
-							sText = "Ktulu is not ready for your soul just yet, and you currently have enough " + tribute + " to provide an offering to him. Do you wish to offer the tribute to Ktulu for your life back?" + loss;
+							sText = "Ktulu is not ready for your soul just yet, and you currently have enough " + tribute + " to provide an offering to him. Do you wish to offer the tribute to Ktulu for your life back?";
 						}
 						else if ( m_Healer == 11 )
 						{
-							sText = "You currently have enough " + tribute + " to provide an offering to Durama. Do you wish to offer the tribute for your life back?" + loss;
+							sText = "You currently have enough " + tribute + " to provide an offering to Durama. Do you wish to offer the tribute for your life back?";
 						}
 						else if ( m_Healer == 12 )
 						{
-							sText = "You currently have enough " + tribute + " to provide an offering to the Ancient Dryad. Do you wish to offer the tribute for your life back?" + loss;
+							sText = "You currently have enough " + tribute + " to provide an offering to the Ancient Dryad. Do you wish to offer the tribute for your life back?";
 						}
 					}
 					m_ResurrectType = 2;
+				}
+
+				if ( appendLossText )
+				{
+					sText += " " + GetLossMessage( owner );
 				}
 			}
 			else
@@ -257,13 +264,6 @@ namespace Server.Gumps
 			}
 		}
 
-		private static void ResurrectNow( object state )
-		{
-			Mobile m = state as Mobile;
-			m.CloseGump( typeof( ResurrectNowGump ) );
-			if ( GetPlayerInfo.GetResurrectCost( m ) > 0 ){ m.SendGump( new ResurrectNowGump( m ) ); }
-		}
-
 		public override void OnResponse( NetState state, RelayInfo info )
 		{
 			Mobile from = state.Mobile;
@@ -279,40 +279,53 @@ namespace Server.Gumps
 					return;
 				}
 
-				if ( m_ResurrectType == 2 && m_Bank >= m_Price )
-				{
-					Banker.Withdraw( from, m_Price );
-					from.SendLocalizedMessage( 1060398, m_Price.ToString() ); // ~1_AMOUNT~ gold has been withdrawn from your bank box.
-					from.SendLocalizedMessage( 1060022, Banker.GetBalance( from ).ToString() ); // You have ~1_AMOUNT~ gold in cash remaining in your bank box.
-					Server.Misc.Death.Penalty( from, false );
-				}
-				else if ( m_ResurrectType == 2 && m_Tithe >= m_Price )
-				{
-					from.TithingPoints = from.TithingPoints - m_Price;
-					from.SendMessage( "" + m_Price.ToString() + " tithing has been offered to the gods." );
-					from.SendMessage( "" + (from.TithingPoints).ToString() + " tithing remains." );
-					Server.Misc.Death.Penalty( from, false );
-				}
-				else if ( m_ResurrectType == 1 && from.SkillsTotal > 200 && ( from.RawDex + from.RawInt + from.RawStr ) > 90 )
-				{
-					Server.Misc.Death.Penalty( from, true );
-				}
+				var shouldPrompt = m_ResurrectType == 1 && from.SkillsTotal > 200 && ( from.RawDex + from.RawInt + from.RawStr ) > 90;
 
-				from.PlaySound( 0x214 );
-				from.FixedEffect( 0x376A, 10, 16 );
+				ConfirmationGump.PromptIfFalse(
+					from,
+					shouldPrompt,
+					() =>
+					{
+						if ( m_ResurrectType == 2 && m_Bank >= m_Price )
+						{
+							Banker.Withdraw( from, m_Price );
+							from.SendLocalizedMessage( 1060398, m_Price.ToString() ); // ~1_AMOUNT~ gold has been withdrawn from your bank box.
+							from.SendLocalizedMessage( 1060022, Banker.GetBalance( from ).ToString() ); // You have ~1_AMOUNT~ gold in cash remaining in your bank box.
+							Server.Misc.Death.Penalty( from, false );
+						}
+						else if ( m_ResurrectType == 2 && m_Tithe >= m_Price )
+						{
+							from.TithingPoints = from.TithingPoints - m_Price;
+							from.SendMessage( "" + m_Price.ToString() + " tithing has been offered to the gods." );
+							from.SendMessage( "" + (from.TithingPoints).ToString() + " tithing remains." );
+							Server.Misc.Death.Penalty( from, false );
+						}
+						else if ( shouldPrompt )
+						{
+							Server.Misc.Death.Penalty( from, true );
+						}
 
-				from.Resurrect();
+						from.PlaySound( 0x214 );
+						from.FixedEffect( 0x376A, 10, 16 );
 
-				from.Hits = from.HitsMax;
-				from.Stam = from.StamMax;
-				from.Mana = from.ManaMax;
-				from.Hidden = true;
+						from.Resurrect();
+
+						from.Hits = from.HitsMax;
+						from.Stam = from.StamMax;
+						from.Mana = from.ManaMax;
+						from.Hidden = true;
+					},
+					onConfirmed => new ConfirmationGump(
+						from,
+						"Accept Penalty?",
+						"Are you sure you wish to accept the resurrection penalty? " + GetLossMessage( from ),
+						onConfirmed
+					)
+				);
 			}
 			else
 			{
 				from.SendMessage( "You decide to remain in the spirit realm." );
-				Timer.DelayCall( TimeSpan.FromSeconds( 5.0 ), ResurrectNow, from );
-				return;
 			}
 		}
 	}
@@ -324,13 +337,12 @@ namespace Server
 	{ 
 		public static void Initialize()
 		{
-			EventSink.PlayerDeath += new PlayerDeathEventHandler(EventSink_PlayerDeath);
+			EventSink.PlayerDeath += e => QueueResurrect(e.Mobile);
+			EventSink.Login += e => QueueResurrect(e.Mobile);
 		}
 
-		private static void EventSink_PlayerDeath(PlayerDeathEventArgs e)
+		private static void QueueResurrect(Mobile m)
 		{
-			Mobile m = e.Mobile;
-
 			if ( m != null && !m.Alive && GetPlayerInfo.GetResurrectCost( m ) > 0 )
 			{
 				Timer.DelayCall( TimeSpan.FromSeconds( 5.0 ), ResurrectNow, m );
@@ -356,6 +368,20 @@ namespace Server.Gumps
 {
 	public class ResurrectNowGump : Gump
 	{
+		private string GetLossMessage( Mobile owner )
+		{
+			string c1 = "5";
+			string c2 = "10";
+
+			if ( GetPlayerInfo.isFromSpace( owner ) )
+			{
+				c1 = "10";
+				c2 = "20";
+			}
+
+			return "You will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
+		}
+
 		public ResurrectNowGump( Mobile from ): base( 250, 50 )
 		{
             int HealCost = GetPlayerInfo.GetResurrectCost( from );
@@ -365,32 +391,22 @@ namespace Server.Gumps
 			string sText = "Do you wish to plead to the gods for your life back now? You may also continue on in your spirit form and seek out a shrine or healer.";
 			bool ResPenalty = false;
 
-			string c1 = "5";
-			string c2 = "10";
-			string loss = "";
-
-			if ( GetPlayerInfo.isFromSpace( from ) )
-			{
-				loss = " If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills.";
-				c1 = "10";
-				c2 = "20";
-			}
-
 			if ( from.SkillsTotal > 200 && ( from.RawDex + from.RawInt + from.RawStr ) > 90 )
 			{
 				ResPenalty = true;
 
 				if ( BankGold >= HealCost )
-					sText = "Do you wish to plead to the gods for your life back now? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills. You have enough gold in the bank to offer the resurrection tribute, so perhaps you may want to find a shrine or healer instead of suffering the penalties.";
+					sText = "Do you wish to plead to the gods for your life back now? " + GetLossMessage( from ) + " You have enough gold in the bank to offer the resurrection tribute, so perhaps you may want to find a shrine or healer instead of suffering the penalties.";
 				else if ( TithePoints >= HealCost )
-					sText = "Do you wish to plead to the gods for your life back now? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills. You have enough tithe to offer the resurrection tribute, so perhaps you may want to find a shrine or healer instead of suffering the penalties.";
+					sText = "Do you wish to plead to the gods for your life back now? " + GetLossMessage( from ) + " You have enough tithe to offer the resurrection tribute, so perhaps you may want to find a shrine or healer instead of suffering the penalties.";
 				else
-					sText = "Do you wish to plead to the gods for your life back now? If you do, you will suffer a " + c2 + "% loss to your fame and karma. You will also lose " + c1 + "% of your statistics and skills. You cannot afford the resurrection tribute due to the lack of gold in the bank or tithed, so perhaps you may want to do this.";
+					sText = "Do you wish to plead to the gods for your life back now? " + GetLossMessage( from ) + " You cannot afford the resurrection tribute due to the lack of gold in the bank or tithed, so perhaps you may want to do this.";
 			}
 
-			string sGrave = "YOU HAVE DIED!";
+			string sGrave;
 			switch ( Utility.RandomMinMax( 0, 3 ) )
 			{
+				default:
 				case 0:	sGrave = "YOU HAVE DIED!";			break;
 				case 1:	sGrave = "YOU HAVE PERISHED!";		break;
 				case 2:	sGrave = "YOU MET YOUR END!";		break;
@@ -447,20 +463,35 @@ namespace Server.Gumps
 
 			if ( info.ButtonID == 1 && !from.Alive )
 			{
-				from.PlaySound( 0x214 );
-				from.FixedEffect( 0x376A, 10, 16 );
+				bool shouldPrompt = from.SkillsTotal > 200 && ( from.RawDex + from.RawInt + from.RawStr ) > 90;
 
-				from.Resurrect();
+				ConfirmationGump.PromptIfFalse(
+					from,
+					shouldPrompt,
+					() =>
+					{
+						from.PlaySound( 0x214 );
+						from.FixedEffect( 0x376A, 10, 16 );
 
-				if ( from.SkillsTotal > 200 && ( from.RawDex + from.RawInt + from.RawStr ) > 90 )
-				{
-					Server.Misc.Death.Penalty( from, true );
-				}
+						from.Resurrect();
 
-				from.Hits = from.HitsMax;
-				from.Stam = from.StamMax;
-				from.Mana = from.ManaMax;
-				from.Hidden = true;
+						if ( shouldPrompt )
+						{
+							Server.Misc.Death.Penalty( from, true );
+						}
+
+						from.Hits = from.HitsMax;
+						from.Stam = from.StamMax;
+						from.Mana = from.ManaMax;
+						from.Hidden = true;
+					},
+					onConfirmed => new ConfirmationGump(
+						from,
+						"Accept Penalty?",
+						"Are you sure you wish to accept the resurrection penalty? " + GetLossMessage( from ),
+						onConfirmed
+					)
+				);
 			}
 			else { return; }
 		}
