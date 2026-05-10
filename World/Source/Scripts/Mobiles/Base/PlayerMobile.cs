@@ -401,50 +401,40 @@ namespace Server.Mobiles
 
 		public void RecoverAmmo()
 		{
-			if ( Alive )
+			if ( !Alive ) return;
+
+			foreach ( var kvp in m_RecoverableAmmo )
 			{
-				foreach ( KeyValuePair<Type, int> kvp in m_RecoverableAmmo )
+				if (kvp.Value < 1) continue;
+
+				try
 				{
-					if ( kvp.Value > 0 )
+					var ammo = Activator.CreateInstance( kvp.Key ) as Item;
+					ammo.Amount = kvp.Value;
+
+					string name = ammo.Name;
+					if (name == null)
 					{
-						Item ammo = null;
-
-						try
-						{
-							ammo = Activator.CreateInstance( kvp.Key ) as Item;
-						}
-						catch
-						{
-						}
-
-						if ( ammo != null )
-						{
-							string name = ammo.Name;
-							ammo.Amount = kvp.Value;
-
-							if ( name == null )
-							{
-								if ( ammo is Arrow )
-									name = "arrow";
-								else if ( ammo is Bolt )
-									name = "bolt";
-							}
-
-							if ( name != null && ammo.Amount > 1 )
-								name = String.Format( "{0}s", name );
-
-							if ( name == null )
-								name = String.Format( "#{0}", ammo.LabelNumber );
-
-							PlaceInBackpack( ammo );
-							Server.Gumps.QuickBar.RefreshQuickBar( this );
-							SendLocalizedMessage( 1073504, String.Format( "{0}\t{1}", ammo.Amount, name ) ); // You recover ~1_NUM~ ~2_AMMO~.
-						}
+						if (ammo is Arrow) name = "arrow";
+						else if (ammo is Bolt) name = "bolt";
 					}
-				}
 
-				m_RecoverableAmmo.Clear();
+					if (name != null && ammo.Amount > 1)
+						name = String.Format("{0}s", name);
+
+					if (name == null)
+						name = String.Format("#{0}", ammo.LabelNumber);
+
+					PlaceInBackpack(ammo);
+					Server.Gumps.QuickBar.RefreshQuickBar(this);
+					SendLocalizedMessage(1073504, String.Format("{0}\t{1}", ammo.Amount, name)); // You recover ~1_NUM~ ~2_AMMO~.
+				}
+				catch
+				{
+				}
 			}
+
+			m_RecoverableAmmo.Clear();
 		}
 
 		#endregion
