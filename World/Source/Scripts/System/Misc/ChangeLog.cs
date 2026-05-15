@@ -19,6 +19,7 @@ namespace Server.Misc
 			builder.Append("- Housekeeping - The following spells had a minor change that should not impact anything:<br>");
 			builder.Append("               - Elemental Blast/Storm, Mindblast, Explosion, Psionic Blast, Hail Storm<br>");
 			builder.Append("- Mobs - Can now teleport in more places (Boats, Dungeon Time, etc)<br>");
+			builder.Append("- Misc - Autoloot and ammo recovery will now try to place ammo in an equipped quiver<br>");
 			builder.Append("- Spell - Mages Ballad, Army's Paeon, and Foe Requiem now grant musicianship checks every tick<br>");
 
 			builder.Append("<br>");

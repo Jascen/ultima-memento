@@ -1478,6 +1478,11 @@ namespace Server.Misc
 				foreach ( Item stuff in belongings )
 				{
 					sound = 1;
+					if ( stuff is Arrow || stuff is Bolt )
+					{
+						if ( player.TryAddAmmoToQuiver( stuff ) ) continue;
+					}
+
 					BaseContainer.PutStuffInContainer( m, 1, stuff );
 					//m.AddToBackpack( stuff );
 				}

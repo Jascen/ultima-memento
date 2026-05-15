@@ -399,9 +399,50 @@ namespace Server.Mobiles
 			get { return m_RecoverableAmmo; }
 		}
 
+		public bool TryAddAmmoToQuiver( Item ammo )
+		{
+			if ( ammo is Arrow || ammo is Bolt )
+			{
+				string name = ammo.Name;
+				if (name == null)
+				{
+					if (ammo is Arrow) name = "arrow";
+					else if (ammo is Bolt) name = "bolt";
+				}
+
+				if (name != null && ammo.Amount > 1)
+					name = String.Format("{0}s", name);
+
+				if (name == null)
+					name = String.Format("#{0}", ammo.LabelNumber);
+
+				var destination = Backpack;
+				var quiver = FindItemOnLayer( Layer.Cloak ) as BaseQuiver;
+				if ( quiver != null )
+				{
+					// If equipped quiver is empty or the ammo type matches, restock it
+					if ( quiver.Items.Count < 1 || quiver.FindItemByType( ammo.GetType() ) != null )
+					{
+						destination = quiver;
+					}
+				}
+
+				if ( destination != null && destination.TryDropItem( this, ammo, false ))
+				{
+					Server.Gumps.QuickBar.RefreshQuickBar(this);
+					SendLocalizedMessage(1073504, String.Format("{0}\t{1}", ammo.Amount, name)); // You recover ~1_NUM~ ~2_AMMO~.
+
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		public void RecoverAmmo()
 		{
 			if ( !Alive ) return;
+			if ( m_RecoverableAmmo.Count < 1 ) return;
 
 			foreach ( var kvp in m_RecoverableAmmo )
 			{
@@ -412,22 +453,10 @@ namespace Server.Mobiles
 					var ammo = Activator.CreateInstance( kvp.Key ) as Item;
 					ammo.Amount = kvp.Value;
 
-					string name = ammo.Name;
-					if (name == null)
+					if ( !TryAddAmmoToQuiver( ammo ) )
 					{
-						if (ammo is Arrow) name = "arrow";
-						else if (ammo is Bolt) name = "bolt";
+						ammo.Delete();
 					}
-
-					if (name != null && ammo.Amount > 1)
-						name = String.Format("{0}s", name);
-
-					if (name == null)
-						name = String.Format("#{0}", ammo.LabelNumber);
-
-					PlaceInBackpack(ammo);
-					Server.Gumps.QuickBar.RefreshQuickBar(this);
-					SendLocalizedMessage(1073504, String.Format("{0}\t{1}", ammo.Amount, name)); // You recover ~1_NUM~ ~2_AMMO~.
 				}
 				catch
 				{
