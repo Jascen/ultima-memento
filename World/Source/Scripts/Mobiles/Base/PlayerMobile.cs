@@ -3032,13 +3032,22 @@ namespace Server.Mobiles
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool IsTitanOfEther { get; set; }
 
-		[CommandProperty( AccessLevel.GameMaster )]
-		public CharacterType CharacterType { get; private set; }
+		private CharacterType _characterType;
+
+		[CommandProperty(AccessLevel.GameMaster, AccessLevel.Administrator)]
+		public CharacterType CharacterType
+		{
+			get { return _characterType; }
+			set
+			{
+				_characterType = value;
+				RefreshSkillCap();
+			}
+		}
 
 		public void SetCharacterType( CharacterType type )
 		{
 			CharacterType = type;
-			RefreshSkillCap();
 		}
 
 		public void RefreshSkillCap()
