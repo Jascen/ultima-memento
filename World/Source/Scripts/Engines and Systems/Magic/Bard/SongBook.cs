@@ -11,6 +11,11 @@ namespace Server.Items
 		public override int BookOffset{ get{ return 351; } }
 		public override int BookCount{ get{ return 16; } }
 
+		// Optional preferred instrument bound to this book. Main relaxed the global instrument
+		// requirement, but the dynamic song book lets a player pick a per-book instrument via
+		// its context menu, and SongSpells auto-detects an instrument when one isn't bound.
+		public BaseInstrument Instrument;
+
 		[Constructable]
 		public SongBook() : this( (ulong)0 )
 		{
@@ -67,7 +72,8 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 1 ); // version
+			writer.Write( (int) 2 ); // version
+			writer.Write( (Item)Instrument );
 		}
 
 		public override void Deserialize( GenericReader reader )
@@ -76,9 +82,19 @@ namespace Server.Items
 			int version = reader.ReadInt();
 			switch( version )
 			{
+				case 2:
+				{
+					Instrument = reader.ReadItem() as BaseInstrument;
+					break;
+				}
+				case 1:
+				{
+					// main's interim version: Instrument was removed, nothing to read
+					break;
+				}
 				case 0:
 				{
-					var Instrument = version < 1 ? reader.ReadItem() as BaseInstrument : null;
+					Instrument = reader.ReadItem() as BaseInstrument;
 					break;
 				}
 			}

@@ -10,9 +10,9 @@ using Server.Prompts;
 
 namespace Server.Gumps 
 { 
-	public class ElementalSpellbookGump : Gump 
+	public class ElementalSpellbookGump : Gump
 	{
-		private ElementalSpellbook m_Book; 
+		private ElementalSpellbook m_Book;
 
 		public bool HasSpell(Mobile from, int spellID)
 		{
@@ -22,9 +22,9 @@ namespace Server.Gumps
 				return false;
 		}
 
-		public ElementalSpellbookGump( Mobile from, ElementalSpellbook book, int page ) : base( 100, 100 ) 
+		public ElementalSpellbookGump( Mobile from, ElementalSpellbook book, int page ) : base( 100, 100 )
 		{
-			m_Book = book; 
+			m_Book = book;
 			m_Book.EllyPage = page;
 
             this.Closable=true;
@@ -228,11 +228,11 @@ namespace Server.Gumps
 
 	public class ElementalSpellHelp : Gump 
 	{
-		private ElementalSpellbook m_Book; 
+		private Spellbook m_Book;
 
-		public ElementalSpellHelp( Mobile from, ElementalSpellbook book, int page ) : base( 300, 200 ) 
+		public ElementalSpellHelp( Mobile from, Spellbook book, int page ) : base( 300, 200 )
 		{
-			m_Book = book; 
+			m_Book = book;
 
 			from.SendSound( 0x55 );
 

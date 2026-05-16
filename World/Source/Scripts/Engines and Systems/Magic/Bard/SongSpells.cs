@@ -92,6 +92,35 @@ namespace Server.Spells.Song
                 return false;
             }
 
+            if ( m_Book.Instrument == null || m_Book.Instrument.Parent != Caster )
+            {
+                // Auto-detect an equipped instrument if not already set
+                BaseInstrument found = null;
+                foreach ( Item item in Caster.Items )
+                {
+                    if ( item is BaseInstrument )
+                    {
+                        found = (BaseInstrument)item;
+                        break;
+                    }
+                }
+
+                if ( found == null && Caster.Backpack != null )
+                {
+                    found = Caster.Backpack.FindItemByType<BaseInstrument>();
+                }
+
+                if ( found != null )
+                {
+                    m_Book.Instrument = found;
+                }
+                else
+                {
+                    Caster.SendMessage("Your instrument is not equipped!");
+                    return false;
+                }
+            }
+
 			return true;
 		}
 

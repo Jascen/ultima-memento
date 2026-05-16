@@ -569,7 +569,7 @@ namespace Server.Spells.Elementalism
 		{
 			if ( item != null && from != null )
 			{
-				if ( item is ElementalSpellbook && from is PlayerMobile )
+				if ( ( item is ElementalSpellbook || item is Server.Items.DynamicElementalSpellbook ) && from is PlayerMobile )
 				{
 					int element = ((PlayerMobile)from).CharacterElement;
 
@@ -602,12 +602,13 @@ namespace Server.Spells.Elementalism
 		{
 			if ( from.FindItemOnLayer( Layer.Trinket ) != null )
 			{
-				if ( from.FindItemOnLayer( Layer.Trinket ) is ElementalSpellbook )
+				Item trinket = from.FindItemOnLayer( Layer.Trinket );
+				if ( trinket is ElementalSpellbook || trinket is Server.Items.DynamicElementalSpellbook )
 				{
-					if ( !CanUseBook( from.FindItemOnLayer( Layer.Trinket ), from, false ) )
+					if ( !CanUseBook( trinket, from, false ) )
 					{
 						Container pack = from.Backpack;
-						from.AddToBackpack( from.FindItemOnLayer( Layer.Trinket ) );
+						from.AddToBackpack( trinket );
 					}
 				}
 			}
