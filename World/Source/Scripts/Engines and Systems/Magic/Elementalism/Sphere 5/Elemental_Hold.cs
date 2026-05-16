@@ -36,6 +36,11 @@ namespace Server.Spells.Elementalism
 			{
 				Caster.SendLocalizedMessage( 1061923 ); // The target is already frozen.
 			}
+			else if ( BuffInfo.HasParalyzeImmunity( m ) )
+			{
+				Caster.SendLocalizedMessage( 1070804 ); // Your target resists paralysis.
+				m.SendLocalizedMessage( 1070813 ); // You resist paralysis.
+			}
 			else if ( CheckHSequence( m ) )
 			{
 				SpellHelper.Turn( Caster, m );

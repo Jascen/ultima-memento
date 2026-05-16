@@ -26,6 +26,13 @@ namespace Server.Items
 				attacker.SendLocalizedMessage( 1061923 ); // The target is already frozen.
 				return false;
 			}
+			
+			if( BuffInfo.HasParalyzeImmunity( defender ) )
+			{
+				attacker.SendLocalizedMessage( 1070804 ); // Your target resists paralysis.
+				defender.SendLocalizedMessage( 1070813 ); // You resist paralysis.
+				return false;
+			}
 
 			return true;
 		}

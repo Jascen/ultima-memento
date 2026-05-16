@@ -160,6 +160,34 @@ namespace Server
 				pm.RemoveBuff( b );
 		}
 
+		public static ParalyzeImmunityBuff GetParalyzeImmunity( Mobile m )
+		{
+			PlayerMobile pm = m as PlayerMobile;
+			if( pm != null )
+				return pm.GetParalyzeImmunity();
+			
+			return null;
+		}
+
+		public static bool HasParalyzeImmunity( Mobile m )
+		{
+			return GetParalyzeImmunity( m ) != null;
+		}
+
+		public static void AddParalyzeImmunity( Mobile m )
+		{
+			AddParalyzeImmunity( m, TimeSpan.FromSeconds( 5.0 ) );
+		}
+		
+		public static void AddParalyzeImmunity( Mobile m, TimeSpan duration )
+		{
+			if ( m is PlayerMobile )
+			{
+				BuffInfo.RemoveBuff( m, BuffIcon.Deflection );
+				BuffInfo.AddBuff( m, new ParalyzeImmunityBuff( m, duration ) );
+			}
+		}
+
 		public static void CleanupIcons( Mobile m, bool onlyParalyzed )
 		{
 			if ( !onlyParalyzed )
@@ -243,6 +271,7 @@ namespace Server
 		}
 		#endregion
 	}
+
 
 	public enum BuffIcon : short
 	{
