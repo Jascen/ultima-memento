@@ -306,12 +306,10 @@ namespace Server.Mobiles
 
 		public override void GetContextMenuEntries( Mobile from, List<ContextMenuEntry> list )
 		{
-			// Managers see only the management entry (which leads to the paperdoll among other options).
-			// Non-managers see the default mobile entries (view-only paperdoll).
+			base.GetContextMenuEntries( from, list );
+
 			if ( CanManage( from ) )
 				list.Add( new ManageMannequinEntry( this, from ) );
-			else
-				base.GetContextMenuEntries( from, list );
 		}
 
 		public bool IsEmptyForPackup()
@@ -546,7 +544,7 @@ namespace Server.Mobiles
 			private Mannequin m_Mannequin;
 			private Mobile m_From;
 
-			public ManageMannequinEntry( Mannequin mannequin, Mobile from ) : base( 1019069 ) // "Customize"
+			public ManageMannequinEntry( Mannequin mannequin, Mobile from ) : base( 6123 ) // "Open Paperdoll" — placeholder; needs a context-menu cliloc that won't overflow ushort
 			{
 				m_Mannequin = mannequin;
 				m_From = from;
