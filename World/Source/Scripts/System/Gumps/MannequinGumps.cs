@@ -107,9 +107,9 @@ namespace Server.Gumps
 					from.SendGump( new MannequinOwnerGump( m_Mannequin, from ) );
 					break;
 				}
-				case 5: // Customize Appearance
+				case 5: // Customize Appearance (hair/beard styles + colors + skin)
 				{
-					from.SendGump( new PlayerVendorCustomizeGump( m_Mannequin, from ) );
+					from.SendGump( new NewPlayerVendorCustomizeGump( m_Mannequin ) );
 					break;
 				}
 				case 6: // Pack Up
