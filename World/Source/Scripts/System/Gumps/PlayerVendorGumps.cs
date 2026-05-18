@@ -829,7 +829,14 @@ namespace Server.Gumps
 
 			// Skin color (applies to Mobile.Hue — works for vendors, barkeepers and mannequins alike)
 			AddButton( 10, 310, 0xFA5, 0xFA7, 6, GumpButtonType.Reply, 0 );
-			AddLabel( 45, 312, 0x480, "Skin Color" );
+			AddHtml( 45, 312, 110, 18, "<BASEFONT COLOR=#FFFFFF>Skin Color</BASEFONT>", false, false );
+
+			// Mannequin-only: Change Race (cosmetic). Placed near the Male/Female toggle.
+			if ( vendor is Mannequin )
+			{
+				AddButton( 160, 270, 0xFA5, 0xFA7, 7, GumpButtonType.Reply, 0 );
+				AddHtml( 195, 272, 160, 18, "<BASEFONT COLOR=#FFFFFF>Change Race</BASEFONT>", false, false );
+			}
 
 			AddButton( 10, 340, 0xFA5, 0xFA7, 0, GumpButtonType.Reply, 0 );
 			AddHtmlLocalized( 45, 342, 305, 18, 1060675, 0x7FFF, false, false ); // CLOSE
@@ -922,6 +929,15 @@ namespace Server.Gumps
 				case 6: // Skin color
 				{
 					new PVHuePicker( m_Vendor, PVHueTarget.Skin, from ).SendTo( from.NetState );
+					break;
+				}
+				case 7: // Change Race (mannequin only)
+				{
+					if ( m_Vendor is Mannequin )
+					{
+						from.CloseGump( typeof( MannequinRaceGump ) );
+						from.SendGump( new MannequinRaceGump( (Mannequin)m_Vendor, 0, from ) );
+					}
 					break;
 				}
 				default:

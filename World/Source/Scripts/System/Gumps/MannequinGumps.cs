@@ -10,7 +10,7 @@ namespace Server.Gumps
 	{
 		private Mannequin m_Mannequin;
 
-		public MannequinOwnerGump( Mannequin mannequin, Mobile from ) : base( 100, 100 )
+		public MannequinOwnerGump( Mannequin mannequin, Mobile from ) : base( 50, 50 )
 		{
 			m_Mannequin = mannequin;
 
@@ -23,45 +23,41 @@ namespace Server.Gumps
 			Resizable = false;
 
 			AddPage( 0 );
-			AddBackground( 0, 0, 350, 300, 0x1453 );
+			AddBackground( 0, 0, 280, 240, 0x1453 );
 
-			AddHtml( 10, 12, 330, 20, "<CENTER><BASEFONT COLOR=#FFFFFF>MANNEQUIN MANAGEMENT</BASEFONT></CENTER>", false, false );
+			AddImageTiled( 10, 10, 260, 20, 0xA40 );
+			AddImageTiled( 10, 40, 260, 160, 0xA40 );
+			AddImageTiled( 10, 210, 260, 20, 0xA40 );
 
-			int x = 40;
+			AddAlphaRegion( 10, 10, 260, 220 );
+
+			AddHtml( 10, 12, 260, 18, "<CENTER><BASEFONT COLOR=#FFFFFF>MANNEQUIN MANAGEMENT</BASEFONT></CENTER>", false, false );
+
+			int x = 20;
 			int y = 50;
-			int step = 30;
+			int step = 25;
 
-			AddButton( x, y, 4005, 4007, 1, GumpButtonType.Reply, 0 );
-			AddLabel( x + 35, y, 0x480, "Open Paperdoll" );
+			AddButton( x, y, 0xFA5, 0xFA7, 1, GumpButtonType.Reply, 0 );
+			AddHtml( x + 35, y + 2, 200, 18, "<BASEFONT COLOR=#FFFFFF>Open Paperdoll</BASEFONT>", false, false );
 			y += step;
 
-			AddButton( x, y, 4005, 4007, 2, GumpButtonType.Reply, 0 );
-			AddLabel( x + 35, y, 0x480, "Swap Gear" );
+			AddButton( x, y, 0xFA5, 0xFA7, 2, GumpButtonType.Reply, 0 );
+			AddHtml( x + 35, y + 2, 200, 18, "<BASEFONT COLOR=#FFFFFF>Swap Gear</BASEFONT>", false, false );
 			y += step;
 
-			AddButton( x, y, 4005, 4007, 3, GumpButtonType.Reply, 0 );
-			AddLabel( x + 35, y, 0x480, "Change Race" );
+			AddButton( x, y, 0xFA5, 0xFA7, 3, GumpButtonType.Reply, 0 );
+			AddHtml( x + 35, y + 2, 200, 18, "<BASEFONT COLOR=#FFFFFF>Customize Appearance</BASEFONT>", false, false );
 			y += step;
 
-			AddButton( x, y, 4005, 4007, 4, GumpButtonType.Reply, 0 );
-			AddLabel( x + 35, y, 0x480, mannequin.Female ? "Switch to Male" : "Switch to Female" );
+			AddButton( x, y, 0xFA5, 0xFA7, 4, GumpButtonType.Reply, 0 );
+			AddHtml( x + 35, y + 2, 200, 18, "<BASEFONT COLOR=#FFFFFF>Pack Up</BASEFONT>", false, false );
 			y += step;
 
-			AddButton( x, y, 4005, 4007, 5, GumpButtonType.Reply, 0 );
-			AddLabel( x + 35, y, 0x480, "Customize Appearance" );
-			y += step;
-
-			AddButton( x, y, 4005, 4007, 6, GumpButtonType.Reply, 0 );
-			AddLabel( x + 35, y, 0x480, "Pack Up" );
-			y += step;
-
-			// Roaming toggle
 			AddCheck( x, y, 0xD2, 0xD3, mannequin.Roaming, 99 );
-			AddLabel( x + 35, y, 0x480, "Roam house" );
-			y += step;
+			AddHtml( x + 35, y + 2, 200, 18, "<BASEFONT COLOR=#FFFFFF>Roam House</BASEFONT>", false, false );
 
-			AddButton( x, y, 4005, 4007, 0, GumpButtonType.Reply, 0 );
-			AddLabel( x + 35, y, 0x480, "Close" );
+			AddButton( 20, 210, 0xFA5, 0xFA7, 0, GumpButtonType.Reply, 0 );
+			AddHtmlLocalized( 55, 212, 200, 18, 1060675, 0x7FFF, false, false ); // CLOSE
 		}
 
 		public override void OnResponse( NetState state, RelayInfo info )
@@ -79,7 +75,6 @@ namespace Server.Gumps
 			if ( wantRoam != m_Mannequin.Roaming )
 				m_Mannequin.Roaming = wantRoam;
 
-			// Any response counts as interaction — refresh the pause window.
 			m_Mannequin.PauseFor( from );
 
 			switch ( info.ButtonID )
@@ -94,25 +89,12 @@ namespace Server.Gumps
 					m_Mannequin.SwapGear( from );
 					break;
 				}
-				case 3: // Change Race
-				{
-					from.CloseGump( typeof( MannequinRaceGump ) );
-					from.SendGump( new MannequinRaceGump( m_Mannequin, 0, from ) );
-					break;
-				}
-				case 4: // Toggle Male/Female
-				{
-					m_Mannequin.ToggleFemale( from );
-					from.CloseGump( typeof( MannequinOwnerGump ) );
-					from.SendGump( new MannequinOwnerGump( m_Mannequin, from ) );
-					break;
-				}
-				case 5: // Customize Appearance (hair/beard styles + colors + skin)
+				case 3: // Customize Appearance (hair/beard styles + colors + skin + race)
 				{
 					from.SendGump( new NewPlayerVendorCustomizeGump( m_Mannequin ) );
 					break;
 				}
-				case 6: // Pack Up
+				case 4: // Pack Up
 				{
 					m_Mannequin.PackUp( from );
 					break;
