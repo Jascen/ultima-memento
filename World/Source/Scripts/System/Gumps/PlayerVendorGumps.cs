@@ -532,6 +532,23 @@ namespace Server.Gumps
 			}
 		}
 
+		private static bool CanOwn( Mobile target, Mobile user )
+		{
+			if ( target == null || target.Deleted )
+				return false;
+
+			if ( target is PlayerVendor )
+				return ((PlayerVendor)target).CanInteractWith( user, true );
+
+			if ( target is PlayerBarkeeper )
+				return ((PlayerBarkeeper)target).IsOwner( user );
+
+			if ( target is Mannequin )
+				return ((Mannequin)target).CanManage( user );
+
+			return false;
+		}
+
 		public override void OnResponse( NetState state, RelayInfo info )
 		{
 			if ( m_Vendor.Deleted )
@@ -539,10 +556,7 @@ namespace Server.Gumps
 
 			Mobile from = state.Mobile;
 
-			if ( m_Vendor is PlayerVendor && !((PlayerVendor)m_Vendor).CanInteractWith( from, true ) )
-				return;
-
-			if ( m_Vendor is PlayerBarkeeper && !((PlayerBarkeeper)m_Vendor).IsOwner( from ) )
+			if ( !CanOwn( m_Vendor, from ) )
 				return;
 
 			if ( info.ButtonID == 0 )
@@ -690,10 +704,7 @@ namespace Server.Gumps
 				if ( m_Item.Deleted )
 					return;
 
-				if ( m_Vendor is PlayerVendor && !((PlayerVendor)m_Vendor).CanInteractWith( m_Mob, true ) )
-					return;
-
-				if ( m_Vendor is PlayerBarkeeper && !((PlayerBarkeeper)m_Vendor).IsOwner( m_Mob ) )
+				if ( !CanOwn( m_Vendor, m_Mob ) )
 					return;
 
 				m_Item.Hue = hue;

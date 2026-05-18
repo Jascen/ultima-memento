@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Server;
+using Server.Gumps;
 using Server.Items;
 using Server.Multis;
 using Server.Network;
@@ -11,8 +12,20 @@ namespace Server.Mobiles
 {
 	public class Mannequin : Mobile
 	{
+		// Worn layers swappable between a manager and the mannequin.
+		// Excludes Backpack, Bank, Mount, Hair, FacialHair, Special.
+		private static readonly Layer[] SwappableLayers = new Layer[]
+		{
+			Layer.OneHanded, Layer.TwoHanded, Layer.Shoes, Layer.Pants, Layer.Shirt,
+			Layer.Helm, Layer.Gloves, Layer.Ring, Layer.Trinket, Layer.Neck,
+			Layer.Waist, Layer.InnerTorso, Layer.Bracelet, Layer.MiddleTorso,
+			Layer.Earrings, Layer.Arms, Layer.Cloak, Layer.OuterTorso,
+			Layer.OuterLegs, Layer.InnerLegs
+		};
+
 		private BaseHouse m_House;
 		private bool m_Female;
+		private int m_CosmeticRaceID;
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public BaseHouse House
@@ -37,12 +50,20 @@ namespace Server.Mobiles
 			set { m_Female = value; Female = value; }
 		}
 
+		[CommandProperty( AccessLevel.GameMaster )]
+		public int CosmeticRaceID
+		{
+			get { return m_CosmeticRaceID; }
+			set { m_CosmeticRaceID = value; }
+		}
+
 		public Mannequin( BaseHouse house ) : base()
 		{
 			Name = "a mannequin";
 			Body = 0x190;
 			Female = false;
 			m_Female = false;
+			m_CosmeticRaceID = 0;
 
 			Blessed = true;
 			Frozen = true;
@@ -153,10 +174,7 @@ namespace Server.Mobiles
 			base.GetContextMenuEntries( from, list );
 
 			if ( CanManage( from ) )
-			{
-				list.Add( new ManagePaperdollEntry( this, from ) );
-				list.Add( new PackUpMannequinEntry( this, from ) );
-			}
+				list.Add( new ManageMannequinEntry( this, from ) );
 		}
 
 		public bool IsEmptyForPackup()
@@ -196,14 +214,130 @@ namespace Server.Mobiles
 			Delete();
 		}
 
+		public void SwapGear( Mobile from )
+		{
+			if ( !CanManage( from ) )
+				return;
+
+			if ( from.Deleted )
+				return;
+
+			if ( !from.InRange( this.Location, 2 ) )
+			{
+				from.SendMessage( "You are too far away." );
+				return;
+			}
+
+			Container playerPack = from.Backpack;
+			Container manPack = this.Backpack;
+
+			if ( playerPack == null || manPack == null )
+			{
+				from.SendMessage( "Both you and the mannequin need a backpack to swap gear." );
+				return;
+			}
+
+			List<Item> fromPlayer = new List<Item>();
+			List<Item> fromMannequin = new List<Item>();
+
+			foreach ( Layer layer in SwappableLayers )
+			{
+				Item it = from.FindItemOnLayer( layer );
+				if ( it != null )
+					fromPlayer.Add( it );
+
+				it = this.FindItemOnLayer( layer );
+				if ( it != null )
+					fromMannequin.Add( it );
+			}
+
+			// Phase 1: unequip everything into the *destination* owner's backpack.
+			// Items originally on the player will go to the mannequin's pack, and vice versa.
+			foreach ( Item it in fromPlayer )
+				manPack.DropItem( it );
+
+			foreach ( Item it in fromMannequin )
+				playerPack.DropItem( it );
+
+			// Phase 2: try to equip each onto the new owner. On failure, leave in destination pack.
+			int playerFails = 0;
+			int manFails = 0;
+
+			foreach ( Item it in fromMannequin )
+			{
+				if ( it.Deleted )
+					continue;
+
+				if ( !from.EquipItem( it ) )
+					playerFails++;
+			}
+
+			foreach ( Item it in fromPlayer )
+			{
+				if ( it.Deleted )
+					continue;
+
+				if ( !this.EquipItem( it ) )
+					manFails++;
+			}
+
+			from.SendMessage(
+				"Gear swapped. {0} item(s) on you and {1} on the mannequin could not be equipped and remain in the relevant backpack.",
+				playerFails, manFails );
+		}
+
+		public void ApplyRace( int raceID )
+		{
+			if ( raceID <= 80000 )
+			{
+				RevertToHuman();
+				return;
+			}
+
+			BaseRace costume = BaseRace.GetCostume( raceID );
+			if ( costume == null )
+				return;
+
+			if ( costume.SpeciesID <= 0 )
+			{
+				costume.Delete();
+				return;
+			}
+
+			m_CosmeticRaceID = raceID;
+			Body = costume.SpeciesID;
+
+			costume.Delete();
+		}
+
+		public void RevertToHuman()
+		{
+			m_CosmeticRaceID = 0;
+			Body = m_Female ? 0x191 : 0x190;
+		}
+
+		public void ToggleFemale( Mobile from )
+		{
+			if ( !CanManage( from ) )
+				return;
+
+			m_Female = !m_Female;
+			Female = m_Female;
+
+			// Only flip body if we're currently human. Race body remains.
+			if ( m_CosmeticRaceID == 0 )
+				Body = m_Female ? 0x191 : 0x190;
+		}
+
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
 
-			writer.Write( (int) 0 ); // version
+			writer.Write( (int) 1 ); // version
 
 			writer.Write( (Item) m_House );
 			writer.Write( (bool) m_Female );
+			writer.Write( (int) m_CosmeticRaceID );
 		}
 
 		public override void Deserialize( GenericReader reader )
@@ -214,11 +348,26 @@ namespace Server.Mobiles
 
 			switch ( version )
 			{
+				case 1:
 				case 0:
 				{
 					House = (BaseHouse) reader.ReadItem();
 					m_Female = reader.ReadBool();
 					Female = m_Female;
+
+					if ( version >= 1 )
+						m_CosmeticRaceID = reader.ReadInt();
+
+					if ( m_CosmeticRaceID > 0 )
+					{
+						BaseRace costume = BaseRace.GetCostume( m_CosmeticRaceID );
+						if ( costume != null )
+						{
+							if ( costume.SpeciesID > 0 )
+								Body = costume.SpeciesID;
+							costume.Delete();
+						}
+					}
 					break;
 				}
 			}
@@ -229,12 +378,12 @@ namespace Server.Mobiles
 			CantWalk = true;
 		}
 
-		private class ManagePaperdollEntry : ContextMenuEntry
+		private class ManageMannequinEntry : ContextMenuEntry
 		{
 			private Mannequin m_Mannequin;
 			private Mobile m_From;
 
-			public ManagePaperdollEntry( Mannequin mannequin, Mobile from ) : base( 6123 ) // "Edit"
+			public ManageMannequinEntry( Mannequin mannequin, Mobile from ) : base( 6123 ) // "Edit"
 			{
 				m_Mannequin = mannequin;
 				m_From = from;
@@ -248,27 +397,8 @@ namespace Server.Mobiles
 				if ( !m_Mannequin.CanManage( m_From ) )
 					return;
 
-				m_Mannequin.DisplayPaperdollTo( m_From );
-			}
-		}
-
-		private class PackUpMannequinEntry : ContextMenuEntry
-		{
-			private Mannequin m_Mannequin;
-			private Mobile m_From;
-
-			public PackUpMannequinEntry( Mannequin mannequin, Mobile from ) : base( 6249 ) // generic action label
-			{
-				m_Mannequin = mannequin;
-				m_From = from;
-			}
-
-			public override void OnClick()
-			{
-				if ( m_Mannequin == null || m_Mannequin.Deleted )
-					return;
-
-				m_Mannequin.PackUp( m_From );
+				m_From.CloseGump( typeof( MannequinOwnerGump ) );
+				m_From.SendGump( new MannequinOwnerGump( m_Mannequin ) );
 			}
 		}
 	}
