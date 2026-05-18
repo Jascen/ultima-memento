@@ -3008,7 +3008,6 @@ namespace Server
 			new ItemSalesInfo( typeof(	ManyArrows1000	),	2000	,	10	,	101	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Bow	),
 			new ItemSalesInfo( typeof(	ManyBolts100	),	200	,	10	,	80	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Bow	),
 			new ItemSalesInfo( typeof(	ManyBolts1000	),	2000	,	10	,	101	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Bow	),
-			new ItemSalesInfo( typeof(	MannequinDeed	),	175	,	1	,	87	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Carpenter	),
 			new ItemSalesInfo( typeof(	PlaceMap	),	100	,	0	,	0	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Cartographer	),
 			new ItemSalesInfo( typeof(	MapleArmoire	),	198	,	1	,	90	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Carpenter	),
 			new ItemSalesInfo( typeof(	MapmakersPen	),	8	,	15	,	0	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Cartographer	),
