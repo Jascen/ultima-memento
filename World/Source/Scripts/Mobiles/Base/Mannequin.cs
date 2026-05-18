@@ -462,7 +462,14 @@ namespace Server.Mobiles
 				return;
 			}
 
-			BaseRace costume = BaseRace.GetCostume( raceID );
+			// The gump emits button IDs of the form (MonsterRaceIDBase + SpeciesID), e.g.
+			// 80075 for Cyclops (body 75). GetCostume expects either a page index (which
+			// it converts via GetBody) when > MonsterRaceIDBase, or a raw body value
+			// otherwise. Pass the body value directly to skip the page-index translation;
+			// otherwise GetBody(75) returns the body for *index* 75, which is wrong.
+			int bodyValue = raceID - BaseRace.MonsterRaceIDBase;
+
+			BaseRace costume = BaseRace.GetCostume( bodyValue );
 			if ( costume == null )
 				return;
 
@@ -472,7 +479,7 @@ namespace Server.Mobiles
 				return;
 			}
 
-			CosmeticRaceID = raceID;
+			CosmeticRaceID = bodyValue;
 			Body = costume.SpeciesID;
 
 			costume.Delete();
@@ -541,6 +548,11 @@ namespace Server.Mobiles
 					break;
 				}
 			}
+
+			// Migrate any legacy saves that stored CosmeticRaceID in the gump button-ID
+			// form (MonsterRaceIDBase + body) — strip the prefix so it's a plain body value.
+			if ( CosmeticRaceID > BaseRace.MonsterRaceIDBase )
+				CosmeticRaceID -= BaseRace.MonsterRaceIDBase;
 
 			if ( CosmeticRaceID > 0 )
 			{
