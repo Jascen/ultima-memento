@@ -194,11 +194,10 @@ namespace Server.Mobiles
 			if ( from == null || from.Deleted || Deleted )
 				return false;
 
-			if ( from.AccessLevel >= AccessLevel.GameMaster )
+			if ( from.AccessLevel > AccessLevel.Player )
 				return true;
 
-			BaseHouse house = BaseHouse.FindHouseAt( this );
-			return house != null && house.IsCoOwner( from );
+			return m_House != null && !m_House.Deleted && m_House.IsCoOwner( from );
 		}
 
 		public override void OnDoubleClick( Mobile from )
@@ -228,39 +227,45 @@ namespace Server.Mobiles
 
 		public override bool AllowEquipFrom( Mobile mob )
 		{
-			return CanManage( mob );
+			return CanManage( mob ) && base.AllowEquipFrom( mob );
 		}
 
 		public override bool CheckNonlocalLift( Mobile from, Item item )
 		{
-			if ( CanManage( from ) )
-			{
-				PauseFor( from );
-				return true;
-			}
+			if ( !CanManage( from ) )
+				return false;
 
-			return false;
+			if ( !base.CheckNonlocalLift( from, item ) )
+				return false;
+
+			PauseFor( from );
+			return true;
 		}
 
 		public override bool CheckNonlocalDrop( Mobile from, Item item, Item target )
 		{
-			if ( CanManage( from ) )
-			{
-				PauseFor( from );
-				return true;
-			}
+			if ( !CanManage( from ) )
+				return false;
 
-			return false;
+			if ( !base.CheckNonlocalDrop( from, item, target ) )
+				return false;
+
+			PauseFor( from );
+			return true;
 		}
 
 		public override bool AllowItemUse( Item item )
 		{
+			// Mannequins are display-only; no item-use interactions of any kind.
 			return false;
 		}
 
 		public override bool CanBeRenamedBy( Mobile from )
 		{
-			return false;
+			if ( CanManage( from ) )
+				return true;
+
+			return base.CanBeRenamedBy( from );
 		}
 
 		public override bool CanBeDamaged()
