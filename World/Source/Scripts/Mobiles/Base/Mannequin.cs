@@ -25,11 +25,17 @@ namespace Server.Mobiles
 
 		private BaseHouse m_House;
 		private bool m_Roaming;
-		private DateTime m_PauseUntil;
 		private Mobile m_PauseTarget;
 		private Timer m_WanderTimer;
 
-		private static readonly TimeSpan PauseDuration = TimeSpan.FromSeconds( 45.0 );
+		// Config gumps whose open state should stop roaming and make the mannequin face the manager.
+		private static readonly Type[] m_ConfigGumpTypes = new Type[]
+		{
+			typeof( Server.Gumps.MannequinOwnerGump ),
+			typeof( Server.Gumps.MannequinRaceGump ),
+			typeof( Server.Gumps.NewPlayerVendorCustomizeGump )
+		};
+
 		private static readonly TimeSpan WanderInitial = TimeSpan.FromSeconds( 3.0 );
 		private static readonly TimeSpan WanderInterval = TimeSpan.FromSeconds( 3.0 );
 
@@ -95,21 +101,32 @@ namespace Server.Mobiles
 			}
 		}
 
+		// Called whenever a manager interacts with the mannequin. Records who, so that the wander
+		// tick can face them while a config gump is open. The actual "is anything open" check is
+		// done via HasGump() per tick — so closing the gump immediately releases the pause.
 		public void PauseFor( Mobile from )
 		{
 			if ( from == null || from.Deleted )
 				return;
 
 			m_PauseTarget = from;
-			m_PauseUntil = DateTime.UtcNow + PauseDuration;
 
-			if ( m_Roaming )
+			if ( m_Roaming && IsConfigGumpOpen() )
 				Direction = GetDirectionTo( from );
 		}
 
-		private bool IsPaused()
+		private bool IsConfigGumpOpen()
 		{
-			return m_PauseTarget != null && !m_PauseTarget.Deleted && DateTime.UtcNow < m_PauseUntil;
+			if ( m_PauseTarget == null || m_PauseTarget.Deleted || m_PauseTarget.NetState == null )
+				return false;
+
+			for ( int i = 0; i < m_ConfigGumpTypes.Length; i++ )
+			{
+				if ( m_PauseTarget.HasGump( m_ConfigGumpTypes[i] ) )
+					return true;
+			}
+
+			return false;
 		}
 
 		private void OnWanderTick()
@@ -128,17 +145,17 @@ namespace Server.Mobiles
 				return;
 			}
 
-			if ( IsPaused() )
+			if ( IsConfigGumpOpen() )
 			{
 				Direction = GetDirectionTo( m_PauseTarget );
 				return;
 			}
 
-			// ~25% of ticks, idle instead of moving — looks more natural
-			if ( Utility.RandomDouble() < 0.25 )
+			// ~10% idle ticks for natural-feeling pauses.
+			if ( Utility.RandomDouble() < 0.10 )
 				return;
 
-			// Open any closed adjacent doors so the mannequin can pass.
+			// Open any closed adjacent doors so the mannequin can pass through.
 			if ( this.Map != null )
 			{
 				IPooledEnumerable eable = this.Map.GetItemsInRange( this.Location, 1 );
@@ -153,18 +170,30 @@ namespace Server.Mobiles
 				eable.Free();
 			}
 
-			Direction d = (Direction)( Utility.Random( 8 ) );
+			// Try several directions per tick — the first one that fits inside the house AND
+			// actually moves wins. This avoids "turn but don't move" stalls when a single
+			// random direction happens to be blocked.
+			int startDir = Utility.Random( 8 );
 
-			int nx = X, ny = Y;
-			Server.Movement.Movement.Offset( d, ref nx, ref ny );
-			Point3D probe = new Point3D( nx, ny, Z );
+			for ( int i = 0; i < 8; i++ )
+			{
+				Direction d = (Direction)( ( startDir + i ) & 0x7 );
 
-			if ( !house.IsInside( probe, 16 ) )
-				return;
+				int nx = X, ny = Y;
+				Server.Movement.Movement.Offset( d, ref nx, ref ny );
+				Point3D probe = new Point3D( nx, ny, Z );
 
-			// Move handles stairs + facing. If it fails (frozen/blocked), we just try again next tick.
-			this.Direction = d;
-			this.Move( d );
+				if ( !house.IsInside( probe, 16 ) )
+					continue;
+
+				// Mobile.Move only moves when m_Direction matches d; otherwise it turns. To get
+				// a single-tick move, set Direction first so the match check passes inside Move.
+				if ( ( this.Direction & Direction.Mask ) != d )
+					this.Direction = d;
+
+				if ( this.Move( d ) )
+					return;
+			}
 		}
 
 		public Mannequin( BaseHouse house ) : base()
