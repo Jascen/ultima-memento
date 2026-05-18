@@ -939,7 +939,11 @@ namespace Server.Gumps
 						if ( from.RaceSection < 1 )
 							from.RaceSection = 1;
 						from.CloseGump( typeof( Server.Items.RacePotions.RacePotionsGump ) );
-						from.SendGump( new Server.Items.RacePotions.RacePotionsGump( from, 1, false, man ) );
+						// tavern=0 -> full gypsy-shelf UI with category sidebar and no
+						// species filter (the tavern>0 path filters out anything that
+						// doesn't match the manager's current species, which collapses
+						// the list to "Human" only).
+						from.SendGump( new Server.Items.RacePotions.RacePotionsGump( from, 0, false, man ) );
 					}
 					break;
 				}
