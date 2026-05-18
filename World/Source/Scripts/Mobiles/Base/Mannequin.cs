@@ -71,12 +71,16 @@ namespace Server.Mobiles
 
 			if ( value )
 			{
+				// CantWalk = true makes Paths.cs treat every dry tile as a blocker
+				// (it's the "can only swim" flag), so CheckMovement would always fail.
 				Frozen = false;
+				CantWalk = false;
 				StartWanderTimer();
 			}
 			else
 			{
 				Frozen = true;
+				CantWalk = true;
 				StopWanderTimer();
 			}
 		}
@@ -562,6 +566,7 @@ namespace Server.Mobiles
 					if ( !Deleted && m_Roaming )
 					{
 						Frozen = false;
+						CantWalk = false;
 						StartWanderTimer();
 					}
 				} ) );
