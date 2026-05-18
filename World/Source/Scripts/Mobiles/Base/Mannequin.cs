@@ -32,8 +32,8 @@ namespace Server.Mobiles
 		private static readonly Type[] m_ConfigGumpTypes = new Type[]
 		{
 			typeof( Server.Gumps.MannequinOwnerGump ),
-			typeof( Server.Gumps.MannequinRaceGump ),
-			typeof( Server.Gumps.NewPlayerVendorCustomizeGump )
+			typeof( Server.Gumps.NewPlayerVendorCustomizeGump ),
+			typeof( Server.Items.RacePotions.RacePotionsGump )
 		};
 
 		private static readonly TimeSpan WanderInitial = TimeSpan.FromSeconds( 3.0 );

@@ -931,12 +931,15 @@ namespace Server.Gumps
 					new PVHuePicker( m_Vendor, PVHueTarget.Skin, from ).SendTo( from.NetState );
 					break;
 				}
-				case 7: // Change Race (mannequin only)
+				case 7: // Change Race (mannequin only) — reuse the gypsy race gump, cosmetic-only.
 				{
 					if ( m_Vendor is Mannequin )
 					{
-						from.CloseGump( typeof( MannequinRaceGump ) );
-						from.SendGump( new MannequinRaceGump( (Mannequin)m_Vendor, 0, from ) );
+						Mannequin man = (Mannequin) m_Vendor;
+						if ( from.RaceSection < 1 )
+							from.RaceSection = 1;
+						from.CloseGump( typeof( Server.Items.RacePotions.RacePotionsGump ) );
+						from.SendGump( new Server.Items.RacePotions.RacePotionsGump( from, 1, false, man ) );
 					}
 					break;
 				}
