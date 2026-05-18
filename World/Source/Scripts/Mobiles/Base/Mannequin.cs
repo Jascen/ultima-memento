@@ -578,7 +578,7 @@ namespace Server.Mobiles
 			private Mannequin m_Mannequin;
 			private Mobile m_From;
 
-			public ManageMannequinEntry( Mannequin mannequin, Mobile from ) : base( 1011355 ) // "Customize"
+			public ManageMannequinEntry( Mannequin mannequin, Mobile from ) : base( 5101 ) // -> cliloc 3005101 "Edit"
 			{
 				m_Mannequin = mannequin;
 				m_From = from;
