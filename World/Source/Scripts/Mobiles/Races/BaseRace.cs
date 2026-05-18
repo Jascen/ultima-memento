@@ -8,6 +8,10 @@ namespace Server.Items
 {
 	public class BaseRace : Item
 	{
+		// Race IDs above this threshold are monster-race button/encoding IDs;
+		// subtract this base to get the index into the monster body lookup.
+		public const int MonsterRaceIDBase = 80000;
+
 		[Constructable]
 		public BaseRace() : base( 0x4047 )
 		{

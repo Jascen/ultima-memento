@@ -159,13 +159,13 @@ namespace Server.Gumps
 
 			if ( page > 0 )
 			{
-				costume = BaseRace.GetCostume( 80000 + page );
+				costume = BaseRace.GetCostume( BaseRace.MonsterRaceIDBase + page );
 
 				if ( costume != null )
 				{
 					speciesName = costume.Name;
 					speciesGump = 50000 + costume.SpeciesGump;
-					confirmButton = 80000 + page;
+					confirmButton = BaseRace.MonsterRaceIDBase + page;
 				}
 			}
 
@@ -232,7 +232,7 @@ namespace Server.Gumps
 				return;
 			}
 
-			if ( id > 80000 )
+			if ( id > BaseRace.MonsterRaceIDBase )
 			{
 				m_Mannequin.ApplyRace( id );
 				return;
@@ -244,7 +244,7 @@ namespace Server.Gumps
 			int p = page - 1;
 			while ( p > 0 )
 			{
-				BaseRace c = BaseRace.GetCostume( 80000 + p );
+				BaseRace c = BaseRace.GetCostume( BaseRace.MonsterRaceIDBase + p );
 				if ( c != null && !String.IsNullOrEmpty( c.Name ) && c.SpeciesID > 0 )
 				{
 					c.Delete();
@@ -262,7 +262,7 @@ namespace Server.Gumps
 			int p = page + 1;
 			while ( p <= MaxMonsterPage )
 			{
-				BaseRace c = BaseRace.GetCostume( 80000 + p );
+				BaseRace c = BaseRace.GetCostume( BaseRace.MonsterRaceIDBase + p );
 				if ( c != null && !String.IsNullOrEmpty( c.Name ) && c.SpeciesID > 0 )
 				{
 					c.Delete();

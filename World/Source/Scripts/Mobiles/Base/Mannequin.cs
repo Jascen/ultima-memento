@@ -423,7 +423,7 @@ namespace Server.Mobiles
 
 		public void ApplyRace( int raceID )
 		{
-			if ( raceID <= 80000 )
+			if ( raceID <= BaseRace.MonsterRaceIDBase )
 			{
 				RevertToHuman();
 				return;
