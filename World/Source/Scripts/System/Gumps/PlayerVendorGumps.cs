@@ -482,6 +482,9 @@ namespace Server.Gumps
 			m_Vendor = v;
 			int x,y;
 
+			if ( v is Mannequin )
+				((Mannequin)v).PauseFor( from );
+
 			from.CloseGump( typeof( PlayerVendorCustomizeGump ) );
 
 			AddPage( 0 );
@@ -558,6 +561,9 @@ namespace Server.Gumps
 
 			if ( !CanOwn( m_Vendor, from ) )
 				return;
+
+			if ( m_Vendor is Mannequin )
+				((Mannequin)m_Vendor).PauseFor( from );
 
 			if ( info.ButtonID == 0 )
 			{
@@ -706,6 +712,9 @@ namespace Server.Gumps
 
 				if ( !CanOwn( m_Vendor, m_Mob ) )
 					return;
+
+				if ( m_Vendor is Mannequin )
+					((Mannequin)m_Vendor).PauseFor( m_Mob );
 
 				m_Item.Hue = hue;
 				m_Mob.SendGump( new PlayerVendorCustomizeGump( m_Vendor, m_Mob ) );

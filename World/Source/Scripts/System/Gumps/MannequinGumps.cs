@@ -10,9 +10,12 @@ namespace Server.Gumps
 	{
 		private Mannequin m_Mannequin;
 
-		public MannequinOwnerGump( Mannequin mannequin ) : base( 100, 100 )
+		public MannequinOwnerGump( Mannequin mannequin, Mobile from ) : base( 100, 100 )
 		{
 			m_Mannequin = mannequin;
+
+			if ( from != null )
+				mannequin.PauseFor( from );
 
 			Closable = true;
 			Disposable = true;
@@ -52,6 +55,11 @@ namespace Server.Gumps
 			AddLabel( x + 35, y, 0x480, "Pack Up" );
 			y += step;
 
+			// Roaming toggle
+			AddCheck( x, y, 0xD2, 0xD3, mannequin.Roaming, 99 );
+			AddLabel( x + 35, y, 0x480, "Roam house" );
+			y += step;
+
 			AddButton( x, y, 4005, 4007, 0, GumpButtonType.Reply, 0 );
 			AddLabel( x + 35, y, 0x480, "Close" );
 		}
@@ -65,6 +73,14 @@ namespace Server.Gumps
 
 			if ( !m_Mannequin.CanManage( from ) )
 				return;
+
+			// Apply roaming-switch state regardless of which button was pressed.
+			bool wantRoam = info.IsSwitched( 99 );
+			if ( wantRoam != m_Mannequin.Roaming )
+				m_Mannequin.Roaming = wantRoam;
+
+			// Any response counts as interaction — refresh the pause window.
+			m_Mannequin.PauseFor( from );
 
 			switch ( info.ButtonID )
 			{
@@ -81,14 +97,14 @@ namespace Server.Gumps
 				case 3: // Change Race
 				{
 					from.CloseGump( typeof( MannequinRaceGump ) );
-					from.SendGump( new MannequinRaceGump( m_Mannequin, 0 ) );
+					from.SendGump( new MannequinRaceGump( m_Mannequin, 0, from ) );
 					break;
 				}
 				case 4: // Toggle Male/Female
 				{
 					m_Mannequin.ToggleFemale( from );
 					from.CloseGump( typeof( MannequinOwnerGump ) );
-					from.SendGump( new MannequinOwnerGump( m_Mannequin ) );
+					from.SendGump( new MannequinOwnerGump( m_Mannequin, from ) );
 					break;
 				}
 				case 5: // Customize Appearance
@@ -111,9 +127,12 @@ namespace Server.Gumps
 		private Mannequin m_Mannequin;
 		private int m_Page;
 
-		public MannequinRaceGump( Mannequin mannequin, int page ) : base( 50, 50 )
+		public MannequinRaceGump( Mannequin mannequin, int page, Mobile from ) : base( 50, 50 )
 		{
 			m_Mannequin = mannequin;
+
+			if ( from != null )
+				mannequin.PauseFor( from );
 
 			// Clamp + skip invalid monster entries
 			if ( page < 0 )
@@ -185,6 +204,9 @@ namespace Server.Gumps
 			if ( !m_Mannequin.CanManage( from ) )
 				return;
 
+			// Any response counts as interaction — refresh the pause window.
+			m_Mannequin.PauseFor( from );
+
 			int id = info.ButtonID;
 
 			if ( id == 0 )
@@ -193,14 +215,14 @@ namespace Server.Gumps
 			if ( id == 1 )
 			{
 				int next = FindPrevValid( m_Page );
-				from.SendGump( new MannequinRaceGump( m_Mannequin, next ) );
+				from.SendGump( new MannequinRaceGump( m_Mannequin, next, from ) );
 				return;
 			}
 
 			if ( id == 2 )
 			{
 				int next = FindNextValid( m_Page );
-				from.SendGump( new MannequinRaceGump( m_Mannequin, next ) );
+				from.SendGump( new MannequinRaceGump( m_Mannequin, next, from ) );
 				return;
 			}
 

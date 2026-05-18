@@ -26,6 +26,14 @@ namespace Server.Mobiles
 		private BaseHouse m_House;
 		private bool m_Female;
 		private int m_CosmeticRaceID;
+		private bool m_Roaming;
+		private DateTime m_PauseUntil;
+		private Mobile m_PauseTarget;
+		private Timer m_WanderTimer;
+
+		private static readonly TimeSpan PauseDuration = TimeSpan.FromSeconds( 45.0 );
+		private static readonly TimeSpan WanderInitial = TimeSpan.FromSeconds( 3.0 );
+		private static readonly TimeSpan WanderInterval = TimeSpan.FromSeconds( 3.0 );
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public BaseHouse House
@@ -55,6 +63,121 @@ namespace Server.Mobiles
 		{
 			get { return m_CosmeticRaceID; }
 			set { m_CosmeticRaceID = value; }
+		}
+
+		[CommandProperty( AccessLevel.GameMaster )]
+		public bool Roaming
+		{
+			get { return m_Roaming; }
+			set { SetRoaming( value ); }
+		}
+
+		public void SetRoaming( bool value )
+		{
+			m_Roaming = value;
+
+			if ( value )
+			{
+				Frozen = false;
+				StartWanderTimer();
+			}
+			else
+			{
+				Frozen = true;
+				StopWanderTimer();
+			}
+		}
+
+		private void StartWanderTimer()
+		{
+			if ( m_WanderTimer != null )
+			{
+				m_WanderTimer.Stop();
+				m_WanderTimer = null;
+			}
+
+			m_WanderTimer = Timer.DelayCall( WanderInitial, WanderInterval, new TimerCallback( OnWanderTick ) );
+		}
+
+		private void StopWanderTimer()
+		{
+			if ( m_WanderTimer != null )
+			{
+				m_WanderTimer.Stop();
+				m_WanderTimer = null;
+			}
+		}
+
+		public void PauseFor( Mobile from )
+		{
+			if ( from == null || from.Deleted )
+				return;
+
+			m_PauseTarget = from;
+			m_PauseUntil = DateTime.UtcNow + PauseDuration;
+
+			if ( m_Roaming )
+				Direction = GetDirectionTo( from );
+		}
+
+		private bool IsPaused()
+		{
+			return m_PauseTarget != null && !m_PauseTarget.Deleted && DateTime.UtcNow < m_PauseUntil;
+		}
+
+		private void OnWanderTick()
+		{
+			if ( Deleted || !m_Roaming )
+			{
+				StopWanderTimer();
+				return;
+			}
+
+			BaseHouse house = m_House;
+			if ( house == null || house.Deleted || !house.IsInside( this.Location, 16 ) )
+			{
+				// Mannequin somehow outside its house; halt roaming.
+				SetRoaming( false );
+				return;
+			}
+
+			if ( IsPaused() )
+			{
+				Direction = GetDirectionTo( m_PauseTarget );
+				return;
+			}
+
+			// ~25% of ticks, idle instead of moving — looks more natural
+			if ( Utility.RandomDouble() < 0.25 )
+				return;
+
+			// Open any closed adjacent doors so the mannequin can pass.
+			if ( this.Map != null )
+			{
+				IPooledEnumerable eable = this.Map.GetItemsInRange( this.Location, 1 );
+				foreach ( Item item in eable )
+				{
+					BaseDoor door = item as BaseDoor;
+					if ( door != null && !door.Open )
+					{
+						try { door.Use( this ); } catch { /* locked or no access — ignore */ }
+					}
+				}
+				eable.Free();
+			}
+
+			Direction d = (Direction)( Utility.Random( 8 ) );
+
+			int nx = X, ny = Y;
+			Server.Movement.Movement.Offset( d, ref nx, ref ny );
+			Point3D probe = new Point3D( nx, ny, Z );
+
+			if ( !house.IsInside( probe, 16 ) )
+				return;
+
+			// Move handles stairs + facing. If it fails (frozen/blocked), we just try again next tick.
+			this.Direction = d;
+			this.Move( d );
 		}
 
 		public Mannequin( BaseHouse house ) : base()
@@ -98,9 +221,14 @@ namespace Server.Mobiles
 				return;
 
 			if ( CanManage( from ) )
+			{
+				PauseFor( from );
 				OpenBackpack( from );
+			}
 			else
+			{
 				DisplayPaperdollTo( from );
+			}
 		}
 
 		public void OpenBackpack( Mobile from )
@@ -119,12 +247,24 @@ namespace Server.Mobiles
 
 		public override bool CheckNonlocalLift( Mobile from, Item item )
 		{
-			return CanManage( from );
+			if ( CanManage( from ) )
+			{
+				PauseFor( from );
+				return true;
+			}
+
+			return false;
 		}
 
 		public override bool CheckNonlocalDrop( Mobile from, Item item, Item target )
 		{
-			return CanManage( from );
+			if ( CanManage( from ) )
+			{
+				PauseFor( from );
+				return true;
+			}
+
+			return false;
 		}
 
 		public override bool AllowItemUse( Item item )
@@ -160,6 +300,8 @@ namespace Server.Mobiles
 
 		public override void OnAfterDelete()
 		{
+			StopWanderTimer();
+
 			if ( m_House != null )
 			{
 				m_House.Mannequins.Remove( this );
@@ -333,7 +475,9 @@ namespace Server.Mobiles
 		{
 			base.Serialize( writer );
 
-			writer.Write( (int) 1 ); // version
+			writer.Write( (int) 2 ); // version
+
+			writer.Write( (bool) m_Roaming ); // v2
 
 			writer.Write( (Item) m_House );
 			writer.Write( (bool) m_Female );
@@ -348,6 +492,11 @@ namespace Server.Mobiles
 
 			switch ( version )
 			{
+				case 2:
+				{
+					m_Roaming = reader.ReadBool();
+					goto case 1;
+				}
 				case 1:
 				case 0:
 				{
@@ -376,6 +525,19 @@ namespace Server.Mobiles
 			Blessed = true;
 			Frozen = true;
 			CantWalk = true;
+
+			// Defer wander-timer start until world is fully loaded.
+			if ( m_Roaming )
+			{
+				Timer.DelayCall( TimeSpan.FromSeconds( 5.0 ), new TimerCallback( delegate
+				{
+					if ( !Deleted && m_Roaming )
+					{
+						Frozen = false;
+						StartWanderTimer();
+					}
+				} ) );
+			}
 		}
 
 		private class ManageMannequinEntry : ContextMenuEntry
@@ -398,7 +560,7 @@ namespace Server.Mobiles
 					return;
 
 				m_From.CloseGump( typeof( MannequinOwnerGump ) );
-				m_From.SendGump( new MannequinOwnerGump( m_Mannequin ) );
+				m_From.SendGump( new MannequinOwnerGump( m_Mannequin, m_From ) );
 			}
 		}
 	}
