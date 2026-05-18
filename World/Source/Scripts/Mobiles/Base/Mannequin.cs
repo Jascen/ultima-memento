@@ -24,8 +24,6 @@ namespace Server.Mobiles
 		};
 
 		private BaseHouse m_House;
-		private bool m_Female;
-		private int m_CosmeticRaceID;
 		private bool m_Roaming;
 		private DateTime m_PauseUntil;
 		private Mobile m_PauseTarget;
@@ -52,18 +50,7 @@ namespace Server.Mobiles
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public bool IsFemale
-		{
-			get { return m_Female; }
-			set { m_Female = value; Female = value; }
-		}
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public int CosmeticRaceID
-		{
-			get { return m_CosmeticRaceID; }
-			set { m_CosmeticRaceID = value; }
-		}
+		public int CosmeticRaceID { get; set; }
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool Roaming
@@ -185,8 +172,7 @@ namespace Server.Mobiles
 			Name = "a mannequin";
 			Body = 0x190;
 			Female = false;
-			m_Female = false;
-			m_CosmeticRaceID = 0;
+			CosmeticRaceID = 0;
 
 			Blessed = true;
 			Frozen = true;
@@ -448,7 +434,7 @@ namespace Server.Mobiles
 				return;
 			}
 
-			m_CosmeticRaceID = raceID;
+			CosmeticRaceID = raceID;
 			Body = costume.SpeciesID;
 
 			costume.Delete();
@@ -456,8 +442,8 @@ namespace Server.Mobiles
 
 		public void RevertToHuman()
 		{
-			m_CosmeticRaceID = 0;
-			Body = m_Female ? 0x191 : 0x190;
+			CosmeticRaceID = 0;
+			Body = Female ? 0x191 : 0x190;
 		}
 
 		public void ToggleFemale( Mobile from )
@@ -465,25 +451,24 @@ namespace Server.Mobiles
 			if ( !CanManage( from ) )
 				return;
 
-			m_Female = !m_Female;
-			Female = m_Female;
+			Female = !Female;
 
 			// Only flip body if we're currently human. Race body remains.
-			if ( m_CosmeticRaceID == 0 )
-				Body = m_Female ? 0x191 : 0x190;
+			if ( CosmeticRaceID == 0 )
+				Body = Female ? 0x191 : 0x190;
 		}
 
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
 
-			writer.Write( (int) 2 ); // version
+			writer.Write( (int) 3 ); // version
 
-			writer.Write( (bool) m_Roaming ); // v2
-
+			writer.Write( (bool) m_Roaming );
 			writer.Write( (Item) m_House );
-			writer.Write( (bool) m_Female );
-			writer.Write( (int) m_CosmeticRaceID );
+			writer.Write( (int) CosmeticRaceID );
+
+			// Note: Female is persisted by base.Serialize on Mobile.
 		}
 
 		public override void Deserialize( GenericReader reader )
@@ -494,6 +479,13 @@ namespace Server.Mobiles
 
 			switch ( version )
 			{
+				case 3:
+				{
+					m_Roaming = reader.ReadBool();
+					House = (BaseHouse) reader.ReadItem();
+					CosmeticRaceID = reader.ReadInt();
+					break;
+				}
 				case 2:
 				{
 					m_Roaming = reader.ReadBool();
@@ -503,23 +495,23 @@ namespace Server.Mobiles
 				case 0:
 				{
 					House = (BaseHouse) reader.ReadItem();
-					m_Female = reader.ReadBool();
-					Female = m_Female;
+					Female = reader.ReadBool(); // legacy m_Female; base already owns Female now
 
 					if ( version >= 1 )
-						m_CosmeticRaceID = reader.ReadInt();
+						CosmeticRaceID = reader.ReadInt();
 
-					if ( m_CosmeticRaceID > 0 )
-					{
-						BaseRace costume = BaseRace.GetCostume( m_CosmeticRaceID );
-						if ( costume != null )
-						{
-							if ( costume.SpeciesID > 0 )
-								Body = costume.SpeciesID;
-							costume.Delete();
-						}
-					}
 					break;
+				}
+			}
+
+			if ( CosmeticRaceID > 0 )
+			{
+				BaseRace costume = BaseRace.GetCostume( CosmeticRaceID );
+				if ( costume != null )
+				{
+					if ( costume.SpeciesID > 0 )
+						Body = costume.SpeciesID;
+					costume.Delete();
 				}
 			}
 

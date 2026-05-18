@@ -44,7 +44,7 @@ namespace Server.Gumps
 			y += step;
 
 			AddButton( x, y, 4005, 4007, 4, GumpButtonType.Reply, 0 );
-			AddLabel( x + 35, y, 0x480, mannequin.IsFemale ? "Switch to Male" : "Switch to Female" );
+			AddLabel( x + 35, y, 0x480, mannequin.Female ? "Switch to Male" : "Switch to Female" );
 			y += step;
 
 			AddButton( x, y, 4005, 4007, 5, GumpButtonType.Reply, 0 );

@@ -196,6 +196,8 @@ namespace Server.Multis
 
 			foreach ( Mannequin mannequin in list )
 				mannequin.Delete();
+
+			m_Mannequins.Clear();
 		}
 
 		public virtual void Decay_Sandbox()

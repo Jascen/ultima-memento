@@ -73,7 +73,7 @@ namespace Server.Items
 
 			if ( p == null )
 			{
-				from.SendLocalizedMessage( 1042001 );
+				from.SendLocalizedMessage( 500269 ); // You cannot build that there.
 				return;
 			}
 
