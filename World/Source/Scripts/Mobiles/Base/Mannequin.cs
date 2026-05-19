@@ -38,6 +38,7 @@ namespace Server.Mobiles
 		private BaseHouse m_House;
 		private bool m_Roaming;
 		private Mobile m_PauseTarget;
+		private DateTime m_PauseUntil;
 		private Timer m_WanderTimer;
 
 		// Config gumps whose open state should stop roaming and make the mannequin face the manager.
@@ -50,6 +51,7 @@ namespace Server.Mobiles
 
 		private static readonly TimeSpan WanderInitial = TimeSpan.FromSeconds( 3.0 );
 		private static readonly TimeSpan WanderInterval = TimeSpan.FromSeconds( 3.0 );
+		private static readonly TimeSpan PauseAfterAction = TimeSpan.FromSeconds( 10.0 );
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public BaseHouse House
@@ -117,29 +119,49 @@ namespace Server.Mobiles
 			}
 		}
 
-		// Called whenever a manager interacts with the mannequin. Records who, so that the wander
-		// tick can face them while a config gump is open. The actual "is anything open" check is
-		// done via HasGump() per tick — so closing the gump immediately releases the pause.
+		// Called whenever a manager interacts with the mannequin. Records who, so that
+		// the wander tick can face them; pauses while a config gump is open (released
+		// instantly when closed via HasGump) and for a short window after any other
+		// interaction (backpack open, drag-drop, lift, equip), which has no clean
+		// "closed" signal — the timer expires on its own once activity stops.
 		public void PauseFor( Mobile from )
 		{
 			if ( from == null || from.Deleted )
 				return;
 
 			m_PauseTarget = from;
+			m_PauseUntil = DateTime.UtcNow + PauseAfterAction;
 
-			if ( m_Roaming && IsConfigGumpOpen() )
+			if ( m_Roaming && ShouldPause() )
 				Direction = GetDirectionTo( from );
 		}
 
-		private bool IsConfigGumpOpen()
+		private bool ShouldPause()
 		{
 			if ( m_PauseTarget == null || m_PauseTarget.Deleted || m_PauseTarget.NetState == null )
 				return false;
+
+			if ( DateTime.UtcNow < m_PauseUntil )
+				return true;
 
 			for ( int i = 0; i < m_ConfigGumpTypes.Length; i++ )
 			{
 				if ( m_PauseTarget.HasGump( m_ConfigGumpTypes[i] ) )
 					return true;
+			}
+
+			// Backpack-open path: a container display isn't a gump, so HasGump() misses
+			// it. Honor Container.Openers + in-range check instead so the mannequin
+			// stays put while the owner browses the backpack. Once they walk out of
+			// range the in-range test fails and roaming resumes.
+			Container pack = Backpack;
+			if ( pack != null && pack.Openers != null && pack.Openers.Contains( m_PauseTarget ) )
+			{
+				if ( m_PauseTarget.Map == this.Map
+					&& m_PauseTarget.InRange( this.GetWorldLocation(), pack.GetUpdateRange( m_PauseTarget ) ) )
+				{
+					return true;
+				}
 			}
 
 			return false;
@@ -161,7 +183,7 @@ namespace Server.Mobiles
 				return;
 			}
 
-			if ( IsConfigGumpOpen() )
+			if ( ShouldPause() )
 			{
 				Direction = GetDirectionTo( m_PauseTarget );
 				return;
@@ -272,7 +294,13 @@ namespace Server.Mobiles
 
 		public override bool AllowEquipFrom( Mobile mob )
 		{
-			return CanManage( mob ) && base.AllowEquipFrom( mob );
+			// Mirrors PlayerVendor.AllowEquipFrom: managers can equip the mannequin
+			// directly. Base Mobile.AllowEquipFrom only allows self/GM, which would
+			// otherwise reject every owner attempt to dress the mannequin.
+			if ( CanManage( mob ) )
+				return true;
+
+			return base.AllowEquipFrom( mob );
 		}
 
 		public override bool CheckNonlocalLift( Mobile from, Item item )
