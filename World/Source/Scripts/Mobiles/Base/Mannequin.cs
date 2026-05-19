@@ -301,18 +301,6 @@ namespace Server.Mobiles
 			return base.CanBeRenamedBy( from );
 		}
 
-		public override bool CanBeDamaged()
-		{
-			return false;
-		}
-
-		public override void OnDamage( int amount, Mobile from, bool willKill )
-		{
-			// Mannequins are invulnerable via Blessed + CanBeDamaged() => false,
-			// so this should never fire — but defer to base if it ever does.
-			base.OnDamage( amount, from, willKill );
-		}
-
 		public override bool CanPaperdollBeOpenedBy( Mobile from )
 		{
 			return true;
