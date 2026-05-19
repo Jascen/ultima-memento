@@ -265,33 +265,53 @@ namespace Server.Engines.Plants
 				}
 				case 2: // Infestation
 				{
-					from.Send( new DisplayHelpTopic( 54, true ) ); // INFESTATION LEVEL
-
-					from.SendGump( new MainPlantGump( m_Plant ) );
+					from.SendGump(
+						new InfoHelpGump(
+							from,
+							"Infestation Level",
+							"The Infestation Level meter (grey bug image) shows the relative amount of insects that are currently attacking your plant.<BR><BR>A yellow + sign means the plant has a small infestation.  A red + sign indicates a severe infestation.",
+							onClose: () => from.SendGump( new MainPlantGump( m_Plant ) )
+						)
+					);
 
 					break;
 				}
 				case 3: // Fungus
 				{
-					from.Send( new DisplayHelpTopic( 56, true ) ); // FUNGUS LEVEL
-
-					from.SendGump( new MainPlantGump( m_Plant ) );
+					from.SendGump(
+						new InfoHelpGump(
+							from,
+							"Fungus Level",
+							"The Fungus Level meter (mushroom image) shows the amount of fungi that are currently sapping health from your plant.<BR><BR>A yellow + sign means the plant has a small fungus infection.  A red + sign indicates a severe fungus infection.",
+							onClose: () => from.SendGump( new MainPlantGump( m_Plant ) )
+						)
+					);
 
 					break;
 				}
 				case 4: // Poison
 				{
-					from.Send( new DisplayHelpTopic( 58, true ) ); // POISON LEVEL
-
-					from.SendGump( new MainPlantGump( m_Plant ) );
+					from.SendGump(
+						new InfoHelpGump(
+							from,
+							"Poison Level",
+							"The Poison Level meter (skull image) shows the amount of poison that your plant has soaked up.<BR><BR>A yellow + sign means the plant is slightly poisoned.  A red + sign indicates that the plant is severely poisoned.",
+							onClose: () => from.SendGump( new MainPlantGump( m_Plant ) )
+						)
+					);
 
 					break;
 				}
 				case 5: // Disease
 				{
-					from.Send( new DisplayHelpTopic( 60, true ) ); // DISEASE LEVEL
-
-					from.SendGump( new MainPlantGump( m_Plant ) );
+					from.SendGump(
+						new InfoHelpGump(
+							from,
+							"Disease Level",
+							"The Disease Level meter (purple goo image) shows the strength of the disease affecting your plant.<BR><BR>A yellow + sign means the plant is slightly infected.  A red + sign indicates that the plant is severely infected.",
+							onClose: () => from.SendGump( new MainPlantGump( m_Plant ) )
+						)
+					);
 
 					break;
 				}
@@ -350,10 +370,14 @@ namespace Server.Engines.Plants
 				}
 				case 11: // Help
 				{
-					from.Send( new DisplayHelpTopic( 48, true ) ); // PLANT GROWING
-
-					from.SendGump( new MainPlantGump( m_Plant ) );
-
+					from.SendGump(
+						new InfoHelpGump(
+							from,
+							"Plant Growing",
+							"Using special seeds harvested from slain monsters, you may grow uniquely colored plants to use as house decorations or to produce hybrid seeds and resources. <BR><BR> As your plant grows from a seed to a full-grown plant, it will need watering and alchemical care in order to protect if from insect infestations and harmful fungi.<BR><BR>Through the process of cross-pollination, you may even be the first person to grow a unique new hybrid plant type!",
+							onClose: () => from.SendGump( new MainPlantGump( m_Plant ) )
+						)
+					);
 					break;
 				}
 				case 12: // Empty the bowl

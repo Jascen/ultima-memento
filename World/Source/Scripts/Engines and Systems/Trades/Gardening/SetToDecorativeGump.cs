@@ -66,9 +66,14 @@ namespace Server.Engines.Plants
 				}
 				case 2: // Help
 				{
-					from.Send( new DisplayHelpTopic( 70, true ) ); // DECORATIVE MODE
-
-					from.SendGump( new SetToDecorativeGump( m_Plant ) );
+					from.SendGump(
+						new InfoHelpGump(
+							from,
+							"Decorative Mode",
+							"When a plant reaches its maximum growth level, a Decorative Mode symbol will appear in the Resources Menu.  This symbol is displayed as a leafy plant with a red / symbol through it.<BR><BR>Pressing this button (and clicking Yes to apply) will set the plant to Decorative Mode.<BR><BR>A plant set to Decorative Mode will not produce seeds or resources, and cannot be used for cross-pollination.  A Decorative Plant does not need upkeep, however, and is always in a healthy state.<BR><BR>Decorative Mode should be activated if you simply want your plant to be used as a house decoration, and therefore do not want to have to water it or keep it healthy.<BR><BR>A Decorative Plant will have the tag [decorative] displayed above it when single-clicked.<BR><BR>IMPORTANT NOTE : Once a plant is set to Decorative Mode, it cannot be set back to its normal state.  A Decorative Plant will never produce seeds or resources again.",
+							onClose: () => from.SendGump( new SetToDecorativeGump( m_Plant ) )
+						)
+					);
 
 					break;
 				}

@@ -150,26 +150,38 @@ namespace Server.Engines.Plants
 				}
 				case 3: // Pollination
 				{
-					from.Send( new DisplayHelpTopic( 67, true ) ); // POLLINATION STATE
-
-					from.SendGump( new ReproductionGump( m_Plant ) );
-
+					from.SendGump(
+						new InfoHelpGump(
+							from,
+							"Pollination State",
+							"The Pollination State indicator displays the current pollination state of a plant.<BR><BR>A yellow - symbol indicates that the plant has not yet produced any pollen, as it has not reached full-grown level.<BR><BR>A red ! symbol indicates that the plant has entered its pollen producing state, and can have pollen gathered from it, or be cross-pollinated to.<BR><BR>A green + symbol indicates that the plant has been pollinated (either by itself, through natural self-pollination, or by the pollen of another plant).  While you can still gather pollen from a plant in this state, the plant can no longer be the target of cross-pollination.",
+							onClose: () => from.SendGump( new ReproductionGump( m_Plant ) )
+						)
+					);
 					break;
 				}
 				case 4: // Resources
 				{
-					from.Send( new DisplayHelpTopic( 69, true ) ); // RESOURCE PRODUCTION
-
-					from.SendGump( new ReproductionGump( m_Plant ) );
-
+					from.SendGump(
+						new InfoHelpGump(
+							from,
+							"Resource Production",
+							"Certain plant type and color combinations result in a plant that can produce unique resources.<BR><BR>A plant will begin producing resources at the same time it produces seeds, when it reaches its maximum growth level.<BR><BR>One resource is produced per day, up to a maximum of eight resources.  A plant will only produce resources if it is healthy.<BR><BR>You may gather resources from a plant by using the Gather Resources button on the Resources menu.  You will pick all available resources from the plant and place them in your backpack, if there is room.<BR><BR>The number of resources available is displayed next to the Resource # indicator (petal image in an empty box).<BR><BR>A red X symbol indicates that the plant has been set to decorative mode, or has produced its maximum amount.<BR><BR>Resources produced by unique plant combinations have special properties dependant on the resource type and color.",
+							onClose: () => from.SendGump( new ReproductionGump( m_Plant ) )
+						)
+					);
 					break;
 				}
 				case 5: // Seeds
 				{
-					from.Send( new DisplayHelpTopic( 68, true ) ); // SEED PRODUCTION
-
-					from.SendGump( new ReproductionGump( m_Plant ) );
-
+					from.SendGump(
+						new InfoHelpGump(
+							from,
+							"Seed Production",
+							"When a plant reaches its maximum growth level, it will no longer grow in size, but will instead produce seeds any time a growth check is performed.<BR><BR>The type of seed that a plant produces is determined by whether it pollinated itself, or if pollen from another plant was applied to it during the cross-pollination process.<BR><BR>A plant will produce one seed per day, up to a maximum of eight seeds.  A plant will only produce a seed if it is healthy.<BR><BR>You may gather seeds from a plant by using the Gather Seeds button on the Resources menu.  You will pick all available seeds from the plant and place them in your backpack, if there is room.<BR><BR>The number of seeds available is displayed next to the Seed # indicator (seed image in an empty box).<BR><BR>A red X symbol indicates that the plant has been set to decorative mode, or has produced its maximum amount.",
+							onClose: () => from.SendGump( new ReproductionGump( m_Plant ) )
+						)
+					);
 					break;
 				}
 				case 6: // Gather pollen

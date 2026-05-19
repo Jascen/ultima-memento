@@ -77,9 +77,14 @@ namespace Server.Engines.Plants
 				}
 				case 2: // Help
 				{
-					from.Send( new DisplayHelpTopic( 71, true ) ); // EMPTYING THE BOWL
-
-					from.SendGump( new EmptyTheBowlGump( m_Plant ) );
+					from.SendGump(
+						new InfoHelpGump(
+							from,
+							"Emptying the Bowl",
+							"If you would like to empty your plant bowl of the plant or seed and start over again, you may use the Empty Bowl button on the Main Menu.<BR><BR>If the plant in the bowl is in the <a href=\"?50\">seed</a> or sapling stage, emptying the bowl will result in a bowl and the seed placed in your backpack.<BR><BR>If the bowl only had dirt in it, or the plant had grown beyond the sapling phase, emptying the bowl will destroy the plant, returning only the plant bowl to your backpack.",
+							onClose: () => from.SendGump( new EmptyTheBowlGump( m_Plant ) )
+						)
+					);
 
 					break;
 				}
