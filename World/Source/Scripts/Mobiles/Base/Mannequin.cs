@@ -303,6 +303,22 @@ namespace Server.Mobiles
 			return base.AllowEquipFrom( mob );
 		}
 
+		public override bool EquipItem( Item item )
+		{
+			// Mannequins are display dummies — bypass item.CanEquip so race-locked,
+			// gender-locked, stat-required, and skill-gated gear all goes on without
+			// fuss. We still respect layer validity, layer conflicts (CheckEquip), and
+			// the OnEquip hooks so visual/stat side effects on the item side fire.
+			if ( item == null || item.Deleted || item.Layer == Layer.Invalid )
+				return false;
+
+			if ( !CheckEquip( item ) || !OnEquip( item ) || !item.OnEquip( this ) )
+				return false;
+
+			AddItem( item );
+			return true;
+		}
+
 		public override bool CheckNonlocalLift( Mobile from, Item item )
 		{
 			// Mirrors PlayerVendor.CheckNonlocalLift: managers can freely lift from
