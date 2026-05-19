@@ -266,10 +266,10 @@ namespace Server.Mobiles
 
 		public override bool CheckNonlocalLift( Mobile from, Item item )
 		{
+			// Mirrors PlayerVendor.CheckNonlocalLift: managers can freely lift from
+			// the mannequin; do NOT defer to base, which only allows self/GM and would
+			// otherwise return LRReason.TryToSteal ("That item does not belong to you").
 			if ( !CanManage( from ) )
-				return false;
-
-			if ( !base.CheckNonlocalLift( from, item ) )
 				return false;
 
 			PauseFor( from );
@@ -278,10 +278,9 @@ namespace Server.Mobiles
 
 		public override bool CheckNonlocalDrop( Mobile from, Item item, Item target )
 		{
+			// Same rationale as CheckNonlocalLift — base.CheckNonlocalDrop refuses
+			// any non-self, non-GM drop, which would block legitimate owner drops.
 			if ( !CanManage( from ) )
-				return false;
-
-			if ( !base.CheckNonlocalDrop( from, item, target ) )
 				return false;
 
 			PauseFor( from );
