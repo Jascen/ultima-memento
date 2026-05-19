@@ -16,6 +16,7 @@ namespace Server.Misc
 			builder.Append(Version() + "<br>");
 
 			builder.Append("Changes<br>");
+			builder.Append("- Gump - Add tooltips for bee hives<br>");
 			builder.Append("- Housekeeping - The following spells had a minor change that should not impact anything:<br>");
 			builder.Append("               - Elemental Blast/Storm, Mindblast, Explosion, Psionic Blast, Hail Storm<br>");
 			builder.Append("- Mobs - Can now teleport in more places (Boats, Dungeon Time, etc)<br>");
@@ -28,6 +29,7 @@ namespace Server.Misc
 			builder.Append("- Gump - Fix issue where Chemist Bar (Alchemist Pouch) buttons didn't work<br>");
 			builder.Append("- Gump - Foe Requiem in song book matches the skill requirement (50 instead of 80)<br>");
 			builder.Append("- Gump - Fix potion alignment for plants<br>");
+			builder.Append("- Gump - Fix images for bee hives<br>");
 			builder.Append("- Item - Items that can block equipping now use the proper method<br>");
 			builder.Append("- Spell - Syth and Jedi spells now properly consume the displayed crystal cost, down from 200% or 300%<br>");
 			builder.Append("- Spell - Insult implementation and displayed info now match<br>");

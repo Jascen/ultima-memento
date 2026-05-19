@@ -5,6 +5,7 @@ using Server.Gumps;
 using Server.Network;
 using Server.Multis;
 using Server.Targeting;
+using Server.Utilities;
 
 namespace Server.Engines.Apiculture
 {	
@@ -21,6 +22,9 @@ namespace Server.Engines.Apiculture
 			Dragable=true;
 			Resizable=false;
 			
+			const int GRAPHIC_SLOT_WIDTH = 20;
+			const int GRAPHIC_SLOT_HEIGHT = 20;
+
 			AddPage(0);
 			AddBackground(37, 26, 205, 161, 3600);
 			
@@ -30,22 +34,9 @@ namespace Server.Engines.Apiculture
 			AddItem(206, 87, 3307);
 			AddItem(205, 20, 3307);
 
-			AddImage(101, 66, 1417);  //circle thing
-			AddItem(118, 89, 2330);   //beehive
-
-			//potions
-			AddItem(193, 46, 3848);
-			AddItem(193, 96, 3847);
-			AddItem(193, 71, 3850);
-			AddItem(193, 121, 3852);
-			AddItem(193, 146, 3849);
-
-			//status icons
-			AddItem(-5, 76, 882); //little bug thing
-			AddItem(41, 121, 4088);
-			AddItem(45, 148, 3336);
-			AddItem(44, 49, 5154);
-			AddItem(46, 100, 6884);
+			//hive
+			AddImage(101, 66, 1417);
+			GumpUtilities.AddCenteredItemToGump(this, 2330, 101, 66, 80, 80);
 			
 			//corner boxes
 			AddImage(34, 20, 210);
@@ -53,12 +44,6 @@ namespace Server.Engines.Apiculture
 			AddImage(34, 172, 210);
 			AddImage(228, 172, 210);
 			
-			//boxes around status icons
-			AddImage(58, 71, 212);  //infestation
-			AddImage(58, 96, 212);  //disease
-			AddImage(58, 121, 212); //water
-			AddImage(58, 146, 212); //flower
-
 			//potion lables
 			AddLabel(190, 46, 0x481,  hive.potAgility.ToString() );  //agility
 			AddLabel(190, 72, 0x481,  hive.potPoison.ToString() );   //poison
@@ -66,84 +51,119 @@ namespace Server.Engines.Apiculture
 			AddLabel(190, 121, 0x481, hive.potHeal.ToString() );     //heal
 			AddLabel(190, 146, 0x481, hive.potStrength.ToString() ); //strength	
 
-			//status labels
-			switch( hive.ParasiteLevel )  //parasites
-			{
-				case 1: AddLabel(81, 71, 52, @"-"); break;
-				case 2: AddLabel(81, 71, 37, @"-"); break;
-			}
-			switch( hive.DiseaseLevel )  //disease
-			{
-				case 1: AddLabel(81, 96, 52, @"-");break;
-				case 2: AddLabel(81, 96, 37, @"-");break;
-			}
-			switch( hive.ScaleWater() ) //water
-			{
-				case ResourceStatus.None    : AddLabel(81, 121, 37, @"X"); break;
-				case ResourceStatus.VeryLow : AddLabel(81, 121, 37, @"-"); break;
-				case ResourceStatus.Low     : AddLabel(81, 121, 52, @"-"); break;
-				case ResourceStatus.High    : AddLabel(81, 121, 67, @"+"); break;
-				case ResourceStatus.VeryHigh: AddLabel(81, 121, 52, @"+"); break;
-			    case ResourceStatus.TooHigh : AddLabel(81, 121, 37, @"+"); break;
-			}
-			switch( hive.ScaleFlower() ) //flowers
-			{
-				case ResourceStatus.None    : AddLabel(81, 145, 37, @"X"); break;
-				case ResourceStatus.VeryLow : AddLabel(81, 145, 37, @"-"); break;
-				case ResourceStatus.Low     : AddLabel(81, 145, 52, @"-"); break;
-				case ResourceStatus.High    : AddLabel(81, 145, 67, @"+"); break;
-				case ResourceStatus.VeryHigh: AddLabel(81, 145, 52, @"+"); break;
-				case ResourceStatus.TooHigh : AddLabel(81, 145, 37, @"+"); break;
-			}
-			
-			//corner labels
-			AddLabel(40, 20, 0x481, ((int)hive.HiveStage).ToString() ); //top left (stage)
-			
-			//last growth
-			switch( m_hive.LastGrowth )
-			{
-				case HiveGrowthIndicator.PopulationDown: AddLabel(234, 20, 37, "-"); break; //red -
-				case HiveGrowthIndicator.PopulationUp  : AddLabel(234, 20, 67, "+"); break; //green +
-				case HiveGrowthIndicator.NotHealthy    : AddLabel(234, 20, 37, "!"); break; //red !
-				case HiveGrowthIndicator.LowResources  : AddLabel(234, 20, 52, "!"); break; //yellow !
-				case HiveGrowthIndicator.Grown         : AddLabel(234, 20, 92, "+"); break; //blue +
-			}
-			
-			AddLabel(40, 172, 0x481, "?"); //help
-			AddLabel(232, 172, 37, @"\");   //destroy
-			AddItem(214, 176, 6256, 0);  //destroy
-
-			//misc labels
-			if( hive.HiveStage >= HiveStatus.Producing )
-				AddLabel(100, 42, 92, "Colony : "+hive.Population.ToString()+"0k" );
-			else if( hive.HiveStage >= HiveStatus.Brooding )
-				AddLabel(100, 42, 92, "   Brooding");
-			else
-				AddLabel(100, 42, 92, "  Colonizing");
-			switch( hive.OverallHealth ) //overall health
-			{
-				case HiveHealth.Dying: AddLabel(116, 146, 37, "Dying"); break;
-				case HiveHealth.Sickly: AddLabel(116, 146, 52, "Sickly"); break;
-				case HiveHealth.Healthy: AddLabel(116, 146, 67, "Healthy"); break;
-				case HiveHealth.Thriving: AddLabel(116, 146, 92, "Thriving"); break;
-			}  
-
 			//resource
 			AddButton(58, 46, 212, 212, (int)Buttons.butResource, GumpButtonType.Reply, 0);
 			//help
 			AddButton(34, 172, 212, 212, (int)Buttons.butHelp, GumpButtonType.Reply, 0);
 			//destroy
 			AddButton(228, 172, 212, 212, (int)Buttons.butDestroy, GumpButtonType.Reply, 0);
+
+			//status labels
+			AddImage(58, 71, 212);  //infestation
+			AddItem(44, 49, 5154);
+			switch( hive.ParasiteLevel )  //parasites
+			{
+				case 1: AddTooltip("Infestation: Minor"); AddLabel(81, 71, 52, @"-"); break;
+				case 2: AddTooltip("Infestation: Major"); AddLabel(81, 71, 37, @"-"); break;
+			}
+
+			AddImage(58, 96, 212);  //disease
+			AddItem(-5, 76, 882); //little bug thing
+			switch( hive.DiseaseLevel )  //disease
+			{
+				case 1: AddTooltip("Disease: Minor"); AddLabel(81, 96, 52, @"-"); break;
+				case 2: AddTooltip("Disease: Major"); AddLabel(81, 96, 37, @"-"); break;
+			}
+
+			AddImage(58, 121, 212); //water
+			AddItem(41, 121, 0x0FF8);
+			switch( hive.ScaleWater() ) //water
+			{
+				case ResourceStatus.None    : AddTooltip("No Nearby Water"); AddLabel(81, 121, 37, @"X"); break;
+				case ResourceStatus.VeryLow : AddTooltip("Water: Very Low"); AddLabel(81, 121, 37, @"-"); break;
+				case ResourceStatus.Low     : AddTooltip("Water: Low"); AddLabel(81, 121, 52, @"-"); break;
+				case ResourceStatus.High    : AddTooltip("Water: High"); AddLabel(81, 121, 67, @"+"); break;
+				case ResourceStatus.VeryHigh: AddTooltip("Water: Very High"); AddLabel(81, 121, 52, @"+"); break;
+			    case ResourceStatus.TooHigh : AddTooltip("Water: Too High"); AddLabel(81, 121, 37, @"+"); break;
+			}
+
+			AddImage(58, 146, 212); //flower
+			AddItem(45, 148, 3336);
+			switch( hive.ScaleFlower() ) //flowers
+			{
+				case ResourceStatus.None    : AddTooltip("No Nearby Flowers"); AddLabel(81, 145, 37, @"X"); break;
+				case ResourceStatus.VeryLow : AddTooltip("Flowers: Very Low"); AddLabel(81, 145, 37, @"-"); break;
+				case ResourceStatus.Low     : AddTooltip("Flowers: Low"); AddLabel(81, 145, 52, @"-"); break;
+				case ResourceStatus.High    : AddTooltip("Flowers: High"); AddLabel(81, 145, 67, @"+"); break;
+				case ResourceStatus.VeryHigh: AddTooltip("Flowers: Very High"); AddLabel(81, 145, 52, @"+"); break;
+				case ResourceStatus.TooHigh : AddTooltip("Flowers: Too High"); AddLabel(81, 145, 37, @"+"); break;
+			}
+			
+			//corner labels
+			AddLabel(40, 20, 0x481, ((int)hive.HiveStage).ToString() ); //top left (stage)
+			AddTooltip("Hive Stage");
+			
+			//last growth
+			AddItem(46, 100, 6884);
+			switch( m_hive.LastGrowth )
+			{
+				case HiveGrowthIndicator.PopulationDown: AddTooltip("Last Growth: Population Down"); AddLabel(234, 20, 37, "-"); break; //red -
+				case HiveGrowthIndicator.PopulationUp  : AddTooltip("Last Growth: Population Up"); AddLabel(234, 20, 67, "+"); break; //green +
+				case HiveGrowthIndicator.NotHealthy    : AddTooltip("Last Growth: Not Healthy"); AddLabel(234, 20, 37, "!"); break; //red !
+				case HiveGrowthIndicator.LowResources  : AddTooltip("Last Growth: Low Resources"); AddLabel(234, 20, 52, "!"); break; //yellow !
+				case HiveGrowthIndicator.Grown         : AddTooltip("Last Growth: Grown"); AddLabel(234, 20, 92, "+"); break; //blue +
+			}
+			
+			AddLabel(40, 172, 0x481, "?"); //help
+			AddTooltip("Help");
+
+			GumpUtilities.AddCenteredItemToGump(this, 6256, 228, 172, GRAPHIC_SLOT_WIDTH, GRAPHIC_SLOT_HEIGHT);
+			AddLabel(232, 172, 37, @"\");   //destroy
+			AddTooltip("Destroy");
+
+			//misc labels
+			string statusLabel;
+			if( hive.HiveStage >= HiveStatus.Producing ) statusLabel = "Colony : " + hive.Population.ToString()+ "0k";
+			else if( hive.HiveStage >= HiveStatus.Brooding ) statusLabel = "Brooding";
+			else statusLabel = "Colonizing";
+			TextDefinition.AddHtmlText(this, 37, 42, 203, 20, string.Format("<CENTER>{0}</CENTER>", statusLabel), HtmlColors.COOL_BLUE);
+
+			switch( hive.OverallHealth ) //overall health
+			{
+				case HiveHealth.Dying: AddLabel(116, 146, 37, "Dying"); break;
+				case HiveHealth.Sickly: AddLabel(116, 146, 52, "Sickly"); break;
+				case HiveHealth.Healthy: AddLabel(116, 146, 67, "Healthy"); break;
+				case HiveHealth.Thriving: AddLabel(116, 146, 92, "Thriving"); break;
+			}
+
+			const int ITEM_START_X = 202;
+			const int ITEM_HEIGHT = 25;
+			int bY = 46;
+
 			//agility
-			AddButton(202, 46, 212, 212, (int)Buttons.butAgil, GumpButtonType.Reply, 0);
+			AddButton(202, bY, 212, 212, (int)Buttons.butAgil, GumpButtonType.Reply, 0);
+			GumpUtilities.AddCenteredItemToGump(this, 0x0F08, ITEM_START_X, bY, GRAPHIC_SLOT_WIDTH, GRAPHIC_SLOT_HEIGHT);
+			bY += ITEM_HEIGHT;
+
 			//poison
 			AddButton(202, 71, 212, 212, (int)Buttons.butPois, GumpButtonType.Reply, 0);
+			GumpUtilities.AddCenteredItemToGump(this, 0xF0A, ITEM_START_X, bY, GRAPHIC_SLOT_WIDTH, GRAPHIC_SLOT_HEIGHT);
+			bY += ITEM_HEIGHT;
+
 			//cure
 			AddButton(202, 96, 212, 212, (int)Buttons.butCure, GumpButtonType.Reply, 0);
+			GumpUtilities.AddCenteredItemToGump(this, 0xF07, ITEM_START_X, bY, GRAPHIC_SLOT_WIDTH, GRAPHIC_SLOT_HEIGHT);
+			bY += ITEM_HEIGHT;
+
 			//heal
 			AddButton(202, 121, 212, 212, (int)Buttons.butHeal, GumpButtonType.Reply, 0);
+			GumpUtilities.AddCenteredItemToGump(this, 0xF0C, ITEM_START_X, bY, GRAPHIC_SLOT_WIDTH, GRAPHIC_SLOT_HEIGHT);
+			bY += ITEM_HEIGHT;
+
 			//strength
 			AddButton(202, 146, 212, 212, (int)Buttons.butStr, GumpButtonType.Reply, 0);
+			GumpUtilities.AddCenteredItemToGump(this, 0xF09, ITEM_START_X, bY, GRAPHIC_SLOT_WIDTH, GRAPHIC_SLOT_HEIGHT);
+			bY += ITEM_HEIGHT;
 
 		}
 
