@@ -158,7 +158,7 @@ namespace Server.Mobiles
 			if ( pack != null && pack.Openers != null && pack.Openers.Contains( m_PauseTarget ) )
 			{
 				if ( m_PauseTarget.Map == this.Map
-					&& m_PauseTarget.InRange( this.GetWorldLocation(), pack.GetUpdateRange( m_PauseTarget ) ) )
+					&& m_PauseTarget.InRange( this.Location, pack.GetUpdateRange( m_PauseTarget ) ) )
 				{
 					return true;
 				}
