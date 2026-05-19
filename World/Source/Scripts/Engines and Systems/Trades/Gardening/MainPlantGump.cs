@@ -3,6 +3,7 @@ using Server;
 using Server.Items;
 using Server.Gumps;
 using Server.Network;
+using Server.Utilities;
 
 namespace Server.Engines.Plants
 {
@@ -17,6 +18,8 @@ namespace Server.Engines.Plants
 			DrawBackground();
 
 			DrawPlant();
+			const int GRAPHIC_SLOT_WIDTH = 20;
+			const int GRAPHIC_SLOT_HEIGHT = 20;
 
 			AddButton( 71, 67, 0xD4, 0xD4, 1, GumpButtonType.Reply, 0 ); // Reproduction menu
 			AddItem( 59, 68, 0xD08 );
@@ -43,20 +46,22 @@ namespace Server.Engines.Plants
 			AddItem( 193, 67, 0x1F9D );
 			AddPlusMinus( 196, 67, system.Water );
 
+			const int ITEM_START_X = 209;
+
 			AddButton( 209, 91, 0xD4, 0xD4, 7, GumpButtonType.Reply, 0 ); // Poison potion
-			AddItem( 197, 91, 0xF0A );
+			GumpUtilities.AddCenteredItemToGump(this, 0xF0A, ITEM_START_X, 91, GRAPHIC_SLOT_WIDTH, GRAPHIC_SLOT_HEIGHT);
 			AddLevel( 196, 91, system.PoisonPotion );
 
 			AddButton( 209, 115, 0xD4, 0xD4, 8, GumpButtonType.Reply, 0 ); // Cure potion
-			AddItem( 192, 115, 0xF07 );
+			GumpUtilities.AddCenteredItemToGump(this, 0xF07, ITEM_START_X, 115, GRAPHIC_SLOT_WIDTH, GRAPHIC_SLOT_HEIGHT);
 			AddLevel( 196, 115, system.CurePotion );
 
 			AddButton( 209, 139, 0xD4, 0xD4, 9, GumpButtonType.Reply, 0 ); // Heal potion
-			AddItem( 190, 139, 0xF0C );
+			GumpUtilities.AddCenteredItemToGump(this, 0xF0C, ITEM_START_X, 139, GRAPHIC_SLOT_WIDTH, GRAPHIC_SLOT_HEIGHT);
 			AddLevel( 196, 139, system.HealPotion );
 
 			AddButton( 209, 163, 0xD4, 0xD4, 10, GumpButtonType.Reply, 0 ); // Strength potion
-			AddItem( 193, 163, 0xF09 );
+			GumpUtilities.AddCenteredItemToGump(this, 0xF09, ITEM_START_X, 163, GRAPHIC_SLOT_WIDTH, GRAPHIC_SLOT_HEIGHT);
 			AddLevel( 196, 163, system.StrengthPotion );
 
 			AddImage( 48, 47, 0xD2 );
