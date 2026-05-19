@@ -6,6 +6,7 @@ using Server.Gumps;
 using Server.Items;
 using Server.Multis;
 using Server.Network;
+using Server.Targeting;
 using Server.ContextMenus;
 
 namespace Server.Mobiles
@@ -304,6 +305,11 @@ namespace Server.Mobiles
 		public override bool CanPaperdollBeOpenedBy( Mobile from )
 		{
 			return true;
+		}
+
+		public override bool IsSnoop( Mobile from )
+		{
+			return false;
 		}
 
 		public override void GetProperties( ObjectPropertyList list )
@@ -610,6 +616,8 @@ namespace Server.Mobiles
 		{
 		}
 
+		public override int DefaultMaxWeight{ get{ return 0; } }
+
 		public override bool CheckHold( Mobile m, Item item, bool message, bool checkItems, int plusItems, int plusWeight )
 		{
 			if ( !base.CheckHold( m, item, message, checkItems, plusItems, plusWeight ) )
@@ -634,6 +642,30 @@ namespace Server.Mobiles
 		public override bool IsAccessibleTo( Mobile m )
 		{
 			return true;
+		}
+
+		public override bool CheckItemUse( Mobile from, Item item )
+		{
+			if ( !base.CheckItemUse( from, item ) )
+				return false;
+
+			if ( item is Container )
+				return true;
+
+			from.SendLocalizedMessage( 500447 ); // That is not accessible.
+			return false;
+		}
+
+		public override bool CheckTarget( Mobile from, Target targ, object targeted )
+		{
+			if ( !base.CheckTarget( from, targ, targeted ) )
+				return false;
+
+			if ( from.AccessLevel >= AccessLevel.GameMaster )
+				return true;
+
+			Mannequin m = RootParent as Mannequin;
+			return m != null && m.CanManage( from );
 		}
 
 		public override void Serialize( GenericWriter writer )
