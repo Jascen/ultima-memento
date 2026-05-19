@@ -37,10 +37,9 @@ namespace Server.Items
 			if ( ItemOwner != null ){ list.Add( 1070722, "Rune for " + ItemOwner.Name + "" ); } else { list.Add( 1070722, "Rune"); }
         }
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
-			Hue = 0; if ( ItemSide > 0 ){ Hue = 0xB20; }
-			if ( this.ItemOwner != from )
+			if ( ItemOwner != from )
 			{
 				from.LocalOverheadMessage( MessageType.Emote, 0x916, true, "This rune belongs to another!" );
 				return false;
@@ -55,7 +54,17 @@ namespace Server.Items
 				from.LocalOverheadMessage( MessageType.Emote, 0x916, true, "Your morality is too corrupt to wield that!" );
 				return false;
 			}
-			return true;
+
+			return base.CanEquip( from );
+		}
+
+		public override bool OnEquip( Mobile from )
+		{
+			Hue = 0;
+			if ( ItemSide > 0 )
+				Hue = 0xB20;
+
+			return base.OnEquip( from );
 		}
 
 		public static void MoralityCheck( Item rune, Mobile from )

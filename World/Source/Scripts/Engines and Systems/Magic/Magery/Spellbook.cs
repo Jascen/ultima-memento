@@ -470,9 +470,111 @@ namespace Server.Items
 		private ulong m_Content;
 		private int m_Count;
 
+		protected virtual bool CheckSpellbookEquipRequirements( Mobile from )
+		{
+			if ( this is SongBook )
+			{
+				if ( from.Skills[SkillName.Musicianship].Base < 30 )
+				{
+					from.SendMessage( "Your need at least a natural neophyte skill in musicianship to equip that!" );
+					return false;
+				}
+			}
+			else if ( this is NecromancerSpellbook )
+			{
+				if ( from.Skills[SkillName.Necromancy].Base < 30 )
+				{
+					from.SendMessage( "Your need at least a natural neophyte skill in necromancy to equip that!" );
+					return false;
+				}
+			}
+			else if ( this is ElementalSpellbook )
+			{
+				if ( from.Skills[SkillName.Elementalism].Base < 30 )
+				{
+					from.SendMessage( "Your need at least a natural neophyte skill in elementalism to equip that!" );
+					return false;
+				}
+				if ( !ElementalSpell.CanUseBook( this, from, true ) )
+					return false;
+			}
+			else if ( this is BookOfNinjitsu )
+			{
+				if ( from.Skills[SkillName.Ninjitsu].Base < 30 )
+				{
+					from.SendMessage( "Your need at least a natural neophyte skill in ninjitsu to equip that!" );
+					return false;
+				}
+			}
+			else if ( this is BookOfBushido )
+			{
+				if ( from.Skills[SkillName.Bushido].Base < 30 )
+				{
+					from.SendMessage( "Your need at least a natural neophyte skill in bushido to equip that!" );
+					return false;
+				}
+			}
+			else if ( this is BookOfChivalry )
+			{
+				if ( from.Skills[SkillName.Knightship].Base < 30 || from.Karma < 0 )
+				{
+					from.SendMessage( "Your need at least a natural neophyte skill in knightship to equip that!" );
+					return false;
+				}
+			}
+			else if ( this is DeathKnightSpellbook )
+			{
+				if ( from.Skills[SkillName.Knightship].Base < 30 || from.Karma > 0 )
+				{
+					from.SendMessage( "Your need at least a natural neophyte skill in knightship to equip that!" );
+					return false;
+				}
+			}
+			else if ( this is HolyManSpellbook )
+			{
+				return false;
+			}
+			else if ( this is MysticSpellbook )
+			{
+				if ( from.Skills[SkillName.Focus].Base < 100 || from.Skills[SkillName.Meditation].Base < 100 )
+				{
+					from.SendMessage( "Your need at least a natural grandmaster skill in focus and meditation to equip that!" );
+					return false;
+				}
+			}
+			else if ( this is SythSpellbook )
+			{
+				return false;
+			}
+			else if ( this is JediSpellbook )
+			{
+				return false;
+			}
+			else if ( this is AncientSpellbook )
+			{
+				if ( ((AncientSpellbook)this).Owner != from )
+					return false;
+				if ( from.Skills[SkillName.Magery].Base < 30 && from.Skills[SkillName.Necromancy].Base < 30 )
+				{
+					from.SendMessage( "Your need at least a natural neophyte skill in magery or necromancy to equip that!" );
+					return false;
+				}
+			}
+			else if ( from.Skills[SkillName.Magery].Base < 30 )
+			{
+				from.SendMessage( "Your need at least a natural neophyte skill in magery to equip that!" );
+				return false;
+			}
+
+			return true;
+		}
+
 		public override bool CanEquip( Mobile from )
 		{
 			if ( !from.CanBeginAction( typeof( BaseWeapon ) ) )
+				return false;
+
+			if ( !CheckSpellbookEquipRequirements( from ) )
 				return false;
 
 			return base.CanEquip( from );
@@ -739,81 +841,6 @@ namespace Server.Items
 		public override bool OnEquip( Mobile from )
 		{
 			ResourceMods.DefaultItemHue( this );
-
-			if ( this is SongBook ){ if ( from.Skills[SkillName.Musicianship].Base < 30 )
-			{
-				from.SendMessage("Your need at least a natural neophyte skill in musicianship to equip that!");
-				return false;
-			}}
-			else if ( this is NecromancerSpellbook ){ if ( from.Skills[SkillName.Necromancy].Base < 30 )
-			{
-				from.SendMessage("Your need at least a natural neophyte skill in necromancy to equip that!");
-				return false;
-			}}
-			else if ( this is ElementalSpellbook )
-			{
-				if ( from.Skills[SkillName.Elementalism].Base < 30 )
-				{
-					from.SendMessage("Your need at least a natural neophyte skill in elementalism to equip that!");
-					return false;
-				}
-				if ( !ElementalSpell.CanUseBook( this, from, true ) )
-					return false;
-			}
-
-			else if ( this is BookOfNinjitsu ){ if ( from.Skills[SkillName.Ninjitsu].Base < 30 )
-			{
-				from.SendMessage("Your need at least a natural neophyte skill in ninjitsu to equip that!");
-				return false;
-			}}
-			else if ( this is BookOfBushido ){ if ( from.Skills[SkillName.Bushido].Base < 30 )
-			{
-				from.SendMessage("Your need at least a natural neophyte skill in bushido to equip that!");
-				return false;
-			}}
-			else if ( this is BookOfChivalry ){ if ( from.Skills[SkillName.Knightship].Base < 30 || from.Karma < 0 )
-			{
-				from.SendMessage("Your need at least a natural neophyte skill in knightship to equip that!");
-				return false;
-			}}
-			else if ( this is DeathKnightSpellbook ){ if ( from.Skills[SkillName.Knightship].Base < 30 || from.Karma > 0 )
-			{
-				from.SendMessage("Your need at least a natural neophyte skill in knightship to equip that!");
-				return false;
-			}}
-			else if ( this is HolyManSpellbook )
-			{
-				return false;
-			}
-			else if ( this is MysticSpellbook ){ if ( from.Skills[SkillName.Focus].Base < 100 || from.Skills[SkillName.Meditation].Base < 100 )
-			{
-				from.SendMessage("Your need at least a natural grandmaster skill in focus and meditation to equip that!");
-				return false;
-			}}
-			else if ( this is SythSpellbook )
-			{
-				return false;
-			}
-			else if ( this is JediSpellbook )
-			{
-				return false;
-			}
-			else if ( this is AncientSpellbook )
-			{
-				if ( ((AncientSpellbook)this).Owner != from )
-					return false;
-				if ( from.Skills[SkillName.Magery].Base < 30 && from.Skills[SkillName.Necromancy].Base < 30 )
-				{
-					from.SendMessage("Your need at least a natural neophyte skill in magery or necromancy to equip that!");
-					return false;
-				}
-			}
-			else if ( from.Skills[SkillName.Magery].Base < 30 )
-			{
-				from.SendMessage("Your need at least a natural neophyte skill in magery to equip that!");
-				return false;
-			}
-
 			return base.OnEquip( from );
 		}
 

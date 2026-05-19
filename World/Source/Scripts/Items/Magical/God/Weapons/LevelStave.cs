@@ -238,11 +238,16 @@ namespace Server.Items
 			}
 		}
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
-			if (!BaseWeapon.WizardCheck( from ))
+			if ( !CheckWizardEquip( from ) )
 				return false;
 
+			return base.CanEquip( from );
+		}
+
+		public override bool OnEquip( Mobile from )
+		{
 			from.SendMessage( "You need mage eye crystals to power this item, and you can turn common gems into that with this." );
 			return base.OnEquip( from );
 		}

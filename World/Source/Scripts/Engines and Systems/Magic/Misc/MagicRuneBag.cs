@@ -46,17 +46,22 @@ namespace Server.Items
 			ResourceMods.SetRandomResource( false, false, this, CraftResource.RegularLeather, false, null );
 		}
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
-			from.CloseGump( typeof( MagicRuneGump ) );
 			if ( Enchanted == MagicSpell.None )
 			{
 				from.LocalOverheadMessage( MessageType.Emote, 0x916, true, "There is no magic on the bag!" );
 				from.SendMessage( "There is no magic on the bag!" );
 				return false;
 			}
-			base.OnEquip( from );
-			return true;
+
+			return base.CanEquip( from );
+		}
+
+		public override bool OnEquip( Mobile from )
+		{
+			from.CloseGump( typeof( MagicRuneGump ) );
+			return base.OnEquip( from );
 		}
 
 		public override void GetProperties( ObjectPropertyList list )

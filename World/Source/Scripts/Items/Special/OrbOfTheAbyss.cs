@@ -19,15 +19,15 @@ namespace Server.Items
 			Hue = 0x489;
 		}
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
 			if ( owner != from )
 			{
-				from.SendMessage ("This is not your orb!");
+				from.SendMessage( "This is not your orb!" );
 				return false;
 			}
 
-			return base.OnEquip( from );
+			return base.CanEquip( from );
 		}
 
         public override void AddNameProperties(ObjectPropertyList list)

@@ -62,191 +62,193 @@ namespace Server.Items
       		
 		}		
 	
+		public override bool CanEquip( Mobile mob )
+		{
+			if ( mob.BodyMod > 0 )
+			{
+				mob.PublicOverheadMessage( MessageType.Regular, 0x44, false, "This costume will not fit in this form" );
+				return false;
+			}
+
+			return base.CanEquip( mob );
+		}
+
 		public override bool OnEquip( Mobile mob )
 		{
-      			if( base.OnEquip( mob ) )
-      			{
-				if ( mob.BodyMod > 0)
-				{
-					mob.PublicOverheadMessage(MessageType.Regular, 0x44, false, "This costume will not fit in this form");
-					mob.AddToBackpack( this );
-					return false;
-				}
-				else
-				{
-					if (this.Name == "Ghost Costume")
-					{
-						mob.BodyMod = 0x3CA;
-						mob.HueMod = 1150;
-						mob.NameMod = "Spooky Ghost";
-					}
-					else if (this.Name == "Mummy Costume")
-					{
-						mob.BodyMod = 154;
-						mob.HueMod = 0;
-						mob.NameMod = "Scary Mummy";
-					}
-					else if (this.Name == "Zombie Costume")
-					{
-						mob.BodyMod = 728;
-						mob.HueMod = 0;
-						mob.NameMod = "Creepy Zombie";
-					}
-					else if (this.Name == "Vampire Costume")
-					{
-						mob.BodyMod = 125;
-						mob.HueMod = 0;
-						mob.NameMod = "Terrifying Vampire";
-					}
-					else if (this.Name == "Skeleton Costume")
-					{
-						mob.BodyMod = 90;
-						mob.HueMod = 0;
-						mob.NameMod = "Frightening Skeleton";
-					}
-					else if (this.Name == "Devil Costume")
-					{
-						mob.BodyMod = 509;
-						mob.HueMod = 0;
-						mob.NameMod = "Horrifying Devil";
-					}
-					else if (this.Name == "Lizardman Costume")
-					{
-						mob.BodyMod = 534;
-						mob.HueMod = 0;
-						mob.NameMod = "Ugly Lizardman";
-					}
-					else if (this.Name == "Orc Costume")
-					{
-						mob.BodyMod = 7;
-						mob.HueMod = 0;
-						mob.NameMod = "Foul Orc";
-					}
-					else if (this.Name == "Goblin Costume")
-					{
-						mob.BodyMod = 632;
-						mob.HueMod = 61;
-						mob.NameMod = "Goofy Goblin";
-					}
-					else if (this.Name == "Harpy Costume")
-					{
-						mob.BodyMod = 153;
-						mob.HueMod = 0;
-						mob.NameMod = "Unsightly Harpy";
-					}
-					else if (this.Name == "Gargoyle Costume")
-					{
-						mob.BodyMod = 4;
-						mob.HueMod = 0;
-						mob.NameMod = "Horrid Gargoyle";
-					}
-					else if (this.Name == "Headless Costume")
-					{
-						mob.BodyMod = 31;
-						mob.HueMod = 0;
-						mob.NameMod = "Freaky Headless One";
-					}
-					else if (this.Name == "Lich Costume")
-					{
-						mob.BodyMod = 24;
-						mob.HueMod = 0;
-						mob.NameMod = "Dreadful Lich";
-					}
-					else if (this.Name == "Toad Costume")
-					{
-						mob.BodyMod = 270;
-						mob.HueMod = 268;
-						mob.NameMod = "Decrepit Toad";
-					}
-					else if (this.Name == "Elemental Costume")
-					{
-						switch ( Utility.RandomMinMax( 0, 3 ) )
-						{
-							case 0: mob.BodyMod = 14; break;
-							case 1: mob.BodyMod = 13; break;
-							case 2: mob.BodyMod = 15; break;
-							case 3: mob.BodyMod = 16; break;
-						}
-						mob.HueMod = 0;
-						mob.NameMod = "Monstrous Elemental";
-					}
-					else if (this.Name == "Centaur Costume")
-					{
-						mob.BodyMod = 101;
-						mob.HueMod = 0;
-						mob.NameMod = "Wild Centaur";
-					}
-					else if (this.Name == "Succubus Costume")
-					{
-						mob.BodyMod = 149;
-						mob.HueMod = 0;
-						mob.NameMod = "Evil Succubus";
-					}
-					else if (this.Name == "Dragon Costume")
-					{
-						mob.BodyMod = 59;
-						mob.HueMod = 0;
-						mob.NameMod = "Diabolical Dragon";
-					}
-					else if (this.Name == "Werewolf Costume")
-					{
-						mob.BodyMod = 708;
-						mob.HueMod = 0;
-						mob.NameMod = "Ravaging Werewolf";
-					}
-					else if (this.Name == "Ape Costume")
-					{
-						mob.BodyMod = 332;
-						mob.HueMod = 0x902;
-						mob.NameMod = "Primitive Ape";
-					}
-					else if (this.Name == "Nightmare Costume")
-					{
-						mob.BodyMod = 795;
-						mob.HueMod = 0;
-						mob.NameMod = "Worst Nightmare";
-					}
-					else if (this.Name == "Treant Costume")
-					{
-						mob.BodyMod = 309;
-						mob.HueMod = 0;
-						mob.NameMod = "Tranquil Treant";
-					}
-					else if (this.Name == "Minotaur Costume")
-					{
-						mob.BodyMod = 78;
-						mob.HueMod = 0;
-						mob.NameMod = "Mangy Minotaur";
-					}
-					else if (this.Name == "Frankenstein Costume")
-					{
-						mob.BodyMod = 69;
-						mob.HueMod = 0;
-						mob.NameMod = "Frankenstein's Monster";
-					}
-					else if (this.Name == "Swamp Thing Costume")
-					{
-						mob.BodyMod = 172;
-						mob.HueMod = 0;
-						mob.NameMod = "Swamp Thing";
-					}
-					else if (this.Name == "Black Knight Costume")
-					{
-						mob.BodyMod = 311;
-						mob.HueMod = 0;
-						mob.NameMod = "The Black Knight";
-					}
-						Mobiles.IMount mt = mob.Mount;
-							if ( mt != null )
-							{
-								Server.Mobiles.EtherealMount.EthyDismount( mob );
-								mt.Rider = null;
-							}
-					return true;
-				}
+			if ( !base.OnEquip( mob ) )
+				return false;
 
-      			}
-			return base.OnEquip( mob );
+			if (this.Name == "Ghost Costume")
+			{
+				mob.BodyMod = 0x3CA;
+				mob.HueMod = 1150;
+				mob.NameMod = "Spooky Ghost";
+			}
+			else if (this.Name == "Mummy Costume")
+			{
+				mob.BodyMod = 154;
+				mob.HueMod = 0;
+				mob.NameMod = "Scary Mummy";
+			}
+			else if (this.Name == "Zombie Costume")
+			{
+				mob.BodyMod = 728;
+				mob.HueMod = 0;
+				mob.NameMod = "Creepy Zombie";
+			}
+			else if (this.Name == "Vampire Costume")
+			{
+				mob.BodyMod = 125;
+				mob.HueMod = 0;
+				mob.NameMod = "Terrifying Vampire";
+			}
+			else if (this.Name == "Skeleton Costume")
+			{
+				mob.BodyMod = 90;
+				mob.HueMod = 0;
+				mob.NameMod = "Frightening Skeleton";
+			}
+			else if (this.Name == "Devil Costume")
+			{
+				mob.BodyMod = 509;
+				mob.HueMod = 0;
+				mob.NameMod = "Horrifying Devil";
+			}
+			else if (this.Name == "Lizardman Costume")
+			{
+				mob.BodyMod = 534;
+				mob.HueMod = 0;
+				mob.NameMod = "Ugly Lizardman";
+			}
+			else if (this.Name == "Orc Costume")
+			{
+				mob.BodyMod = 7;
+				mob.HueMod = 0;
+				mob.NameMod = "Foul Orc";
+			}
+			else if (this.Name == "Goblin Costume")
+			{
+				mob.BodyMod = 632;
+				mob.HueMod = 61;
+				mob.NameMod = "Goofy Goblin";
+			}
+			else if (this.Name == "Harpy Costume")
+			{
+				mob.BodyMod = 153;
+				mob.HueMod = 0;
+				mob.NameMod = "Unsightly Harpy";
+			}
+			else if (this.Name == "Gargoyle Costume")
+			{
+				mob.BodyMod = 4;
+				mob.HueMod = 0;
+				mob.NameMod = "Horrid Gargoyle";
+			}
+			else if (this.Name == "Headless Costume")
+			{
+				mob.BodyMod = 31;
+				mob.HueMod = 0;
+				mob.NameMod = "Freaky Headless One";
+			}
+			else if (this.Name == "Lich Costume")
+			{
+				mob.BodyMod = 24;
+				mob.HueMod = 0;
+				mob.NameMod = "Dreadful Lich";
+			}
+			else if (this.Name == "Toad Costume")
+			{
+				mob.BodyMod = 270;
+				mob.HueMod = 268;
+				mob.NameMod = "Decrepit Toad";
+			}
+			else if (this.Name == "Elemental Costume")
+			{
+				switch ( Utility.RandomMinMax( 0, 3 ) )
+				{
+					case 0: mob.BodyMod = 14; break;
+					case 1: mob.BodyMod = 13; break;
+					case 2: mob.BodyMod = 15; break;
+					case 3: mob.BodyMod = 16; break;
+				}
+				mob.HueMod = 0;
+				mob.NameMod = "Monstrous Elemental";
+			}
+			else if (this.Name == "Centaur Costume")
+			{
+				mob.BodyMod = 101;
+				mob.HueMod = 0;
+				mob.NameMod = "Wild Centaur";
+			}
+			else if (this.Name == "Succubus Costume")
+			{
+				mob.BodyMod = 149;
+				mob.HueMod = 0;
+				mob.NameMod = "Evil Succubus";
+			}
+			else if (this.Name == "Dragon Costume")
+			{
+				mob.BodyMod = 59;
+				mob.HueMod = 0;
+				mob.NameMod = "Diabolical Dragon";
+			}
+			else if (this.Name == "Werewolf Costume")
+			{
+				mob.BodyMod = 708;
+				mob.HueMod = 0;
+				mob.NameMod = "Ravaging Werewolf";
+			}
+			else if (this.Name == "Ape Costume")
+			{
+				mob.BodyMod = 332;
+				mob.HueMod = 0x902;
+				mob.NameMod = "Primitive Ape";
+			}
+			else if (this.Name == "Nightmare Costume")
+			{
+				mob.BodyMod = 795;
+				mob.HueMod = 0;
+				mob.NameMod = "Worst Nightmare";
+			}
+			else if (this.Name == "Treant Costume")
+			{
+				mob.BodyMod = 309;
+				mob.HueMod = 0;
+				mob.NameMod = "Tranquil Treant";
+			}
+			else if (this.Name == "Minotaur Costume")
+			{
+				mob.BodyMod = 78;
+				mob.HueMod = 0;
+				mob.NameMod = "Mangy Minotaur";
+			}
+			else if (this.Name == "Frankenstein Costume")
+			{
+				mob.BodyMod = 69;
+				mob.HueMod = 0;
+				mob.NameMod = "Frankenstein's Monster";
+			}
+			else if (this.Name == "Swamp Thing Costume")
+			{
+				mob.BodyMod = 172;
+				mob.HueMod = 0;
+				mob.NameMod = "Swamp Thing";
+			}
+			else if (this.Name == "Black Knight Costume")
+			{
+				mob.BodyMod = 311;
+				mob.HueMod = 0;
+				mob.NameMod = "The Black Knight";
+			}
+
+			Mobiles.IMount mt = mob.Mount;
+			if ( mt != null )
+			{
+				Server.Mobiles.EtherealMount.EthyDismount( mob );
+				mt.Rider = null;
+			}
+
+			return true;
 		}
 
 		public HalloweenCostume( Serial serial ) : base( serial )

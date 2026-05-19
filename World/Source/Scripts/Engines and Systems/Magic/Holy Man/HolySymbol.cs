@@ -36,15 +36,15 @@ namespace Server.Items
             if ( owner != null ){ list.Add( 1070722, "Piety for " + owner.Name + ": " + sPower + ""); }
         } 
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
 			if ( owner != from )
 			{
-				from.SendMessage ("This is not your holy symbol!");
+				from.SendMessage( "This is not your holy symbol!" );
 				return false;
 			}
 
-			return base.OnEquip( from );
+			return base.CanEquip( from );
 		}
 
 		public HolySymbol( Serial serial ) : base( serial )

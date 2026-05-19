@@ -80,12 +80,15 @@ namespace Server.Items
 			return ( from.AccessLevel >= m_AccessLevel );
 		}
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
 			if ( from.AccessLevel < m_AccessLevel )
+			{
 				from.SendMessage( "You may not wear this." );
+				return false;
+			}
 
-			return ( from.AccessLevel >= m_AccessLevel );
+			return base.CanEquip( from );
 		}
 	}
 }

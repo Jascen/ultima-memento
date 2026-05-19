@@ -100,10 +100,10 @@ namespace Server.Items
 			this.InvalidateProperties();
 		}
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
-			if ( this.StaffOwner == from )
-				return base.OnEquip( from );
+			if ( StaffOwner == from )
+				return base.CanEquip( from );
 
 			from.LocalOverheadMessage( MessageType.Emote, 0x916, true, "The staff burns your hands!" );
 			return false;

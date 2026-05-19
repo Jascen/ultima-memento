@@ -33,14 +33,14 @@ namespace Server.Items
 			if ( ItemOwner != null ){ list.Add( 1070722, "Talisman for " + ItemOwner.Name + "" ); } else { list.Add( 1070722, "Trinket"); }
         }
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
-			if ( this.ItemOwner != from )
+			if ( ItemOwner != from )
 			{
 				from.LocalOverheadMessage( MessageType.Emote, 0x916, true, "This talisman belongs to another!" );
 				return false;
 			}
-			return true;
+			return base.CanEquip( from );
 		}
 
 		public override void OnDoubleClick( Mobile from )

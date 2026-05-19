@@ -69,12 +69,12 @@ namespace Server.Items
 			}
 		}
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
-			if (!BaseWeapon.WizardCheck( from ))
+			if ( !CheckWizardEquip( from ) )
 				return false;
 
-			return base.OnEquip( from );
+			return base.CanEquip( from );
 		}
 
 		public WizardWand( Serial serial ) : base( serial )

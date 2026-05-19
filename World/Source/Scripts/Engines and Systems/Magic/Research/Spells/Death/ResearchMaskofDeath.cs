@@ -115,18 +115,17 @@ namespace Server.Items
 		{
 		}
 
+		public override bool CanEquip( Mobile from )
+		{
+			if ( owner != from )
+				return false;
+
+			return base.CanEquip( from );
+		}
+
 		public override bool OnEquip( Mobile from )
 		{
-			if ( this.owner == from )
-			{
-				base.OnEquip( from );
-			}
-			else
-			{
-				this.Delete();
-				return false;
-			}
-			return true;
+			return base.OnEquip( from );
 		}
 
 		public override void Serialize( GenericWriter writer )

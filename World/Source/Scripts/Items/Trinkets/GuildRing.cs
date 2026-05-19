@@ -121,18 +121,15 @@ namespace Server.Items
             if ( RingOwner != null ){ list.Add( 1049644, RingOwner.Name ); }
         }
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
-			if ( this.RingOwner == from )
-			{
-				base.OnEquip( from );
-			}
-			else
+			if ( RingOwner != from )
 			{
 				from.SendMessage( "This is not your guild ring!" );
 				return false;
 			}
-			return true;
+
+			return base.CanEquip( from );
 		}
 
 		public GuildRing( Serial serial ) : base( serial )

@@ -40,15 +40,14 @@ namespace Server.Items
 			else { list.Add(1070722, "Trinket"); }
 		}
 
-		public override bool OnEquip(Mobile from)
+		public override bool CanEquip( Mobile from )
 		{
-			if (Owner != from)
+			if ( Owner != from )
 			{
-				from.LocalOverheadMessage(MessageType.Emote, 0x916, true, "This talisman belongs to another!");
+				from.LocalOverheadMessage( MessageType.Emote, 0x916, true, "This talisman belongs to another!" );
 				return false;
 			}
-
-			return true;
+			return base.CanEquip( from );
 		}
 
 		public override void Serialize(GenericWriter writer)

@@ -17,18 +17,15 @@ namespace Server.Items
 			LootType = LootType.Blessed;
 		}
 
-		public override bool OnEquip( Mobile from )
+		public override bool CanEquip( Mobile from )
 		{
-			if ( this.m_Owner == from )
-			{
-				base.OnEquip( from );
-			}
-			else
+			if ( m_Owner != from )
 			{
 				from.SendMessage( "You cannot seem to wear the robe!" );
 				return false;
 			}
-			return true;
+
+			return base.CanEquip( from );
 		}
 
 		public override bool DisplayLootType{ get{ return false; } }
