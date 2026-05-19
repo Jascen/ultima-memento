@@ -1262,28 +1262,7 @@ namespace Server
 			else
 				i = Construct( m_SArtyTypes );
 				
-			if ( m != null && isBag( i ) )
-			{
-				bool bagged = false;
-
-				if ( m != null && m.Backpack != null )
-				{
-					List<Item> list = new List<Item>();
-					(m.Backpack).RecurseItems( list );
-					foreach ( Item im in list )
-					{
-						if ( isBag( im ) )
-							bagged = true;
-					}
-				}
-
-				if ( bagged )
-				{
-					i.Delete();
-					i = Construct( m_SArtyTypes );
-				}
-			}
-			else if ( Utility.RandomBool() && isBag( i ) )
+			if ( m == null && Utility.RandomBool() && isBag( i ) )
 			{
 				i.Delete();
 				i = Construct( m_SArtyTypes );
