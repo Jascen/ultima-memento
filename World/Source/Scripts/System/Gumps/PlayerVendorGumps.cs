@@ -482,6 +482,9 @@ namespace Server.Gumps
 			m_Vendor = v;
 			int x,y;
 
+			if ( v is Mannequin )
+				((Mannequin)v).PauseFor( from );
+
 			from.CloseGump( typeof( PlayerVendorCustomizeGump ) );
 
 			AddPage( 0 );
@@ -532,6 +535,23 @@ namespace Server.Gumps
 			}
 		}
 
+		public static bool CanOwn( Mobile target, Mobile user )
+		{
+			if ( target == null || target.Deleted )
+				return false;
+
+			if ( target is PlayerVendor )
+				return ((PlayerVendor)target).CanInteractWith( user, true );
+
+			if ( target is PlayerBarkeeper )
+				return ((PlayerBarkeeper)target).IsOwner( user );
+
+			if ( target is Mannequin )
+				return ((Mannequin)target).CanManage( user );
+
+			return false;
+		}
+
 		public override void OnResponse( NetState state, RelayInfo info )
 		{
 			if ( m_Vendor.Deleted )
@@ -539,11 +559,11 @@ namespace Server.Gumps
 
 			Mobile from = state.Mobile;
 
-			if ( m_Vendor is PlayerVendor && !((PlayerVendor)m_Vendor).CanInteractWith( from, true ) )
+			if ( !CanOwn( m_Vendor, from ) )
 				return;
 
-			if ( m_Vendor is PlayerBarkeeper && !((PlayerBarkeeper)m_Vendor).IsOwner( from ) )
-				return;
+			if ( m_Vendor is Mannequin )
+				((Mannequin)m_Vendor).PauseFor( from );
 
 			if ( info.ButtonID == 0 )
 			{
@@ -690,11 +710,11 @@ namespace Server.Gumps
 				if ( m_Item.Deleted )
 					return;
 
-				if ( m_Vendor is PlayerVendor && !((PlayerVendor)m_Vendor).CanInteractWith( m_Mob, true ) )
+				if ( !CanOwn( m_Vendor, m_Mob ) )
 					return;
 
-				if ( m_Vendor is PlayerBarkeeper && !((PlayerBarkeeper)m_Vendor).IsOwner( m_Mob ) )
-					return;
+				if ( m_Vendor is Mannequin )
+					((Mannequin)m_Vendor).PauseFor( m_Mob );
 
 				m_Item.Hue = hue;
 				m_Mob.SendGump( new PlayerVendorCustomizeGump( m_Vendor, m_Mob ) );
@@ -704,7 +724,7 @@ namespace Server.Gumps
 
 	public class NewPlayerVendorCustomizeGump : Gump
 	{
-		private PlayerVendor m_Vendor;
+		private Mobile m_Vendor;
 
 		private class HairOrBeard
 		{
@@ -745,7 +765,7 @@ namespace Server.Gumps
 				new HairOrBeard( 0x204D,	1011401 )	// Vandyke
 			};
 
-		public NewPlayerVendorCustomizeGump( PlayerVendor vendor ) : base( 50, 50 )
+		public NewPlayerVendorCustomizeGump( Mobile vendor ) : base( 50, 50 )
 		{
 			m_Vendor = vendor;
 
@@ -807,6 +827,17 @@ namespace Server.Gumps
 				AddHtmlLocalized( 195, 312, 160, 18, 1015328, 0x7FFF, false, false ); // Female
 			}
 
+			// Skin color (applies to Mobile.Hue — works for vendors, barkeepers and mannequins alike)
+			AddButton( 10, 310, 0xFA5, 0xFA7, 6, GumpButtonType.Reply, 0 );
+			AddHtml( 45, 312, 110, 18, "<BASEFONT COLOR=#FFFFFF>Skin Color</BASEFONT>", false, false );
+
+			// Mannequin-only: Change Race (cosmetic). Placed near the Male/Female toggle.
+			if ( vendor is Mannequin )
+			{
+				AddButton( 160, 270, 0xFA5, 0xFA7, 7, GumpButtonType.Reply, 0 );
+				AddHtml( 195, 272, 160, 18, "<BASEFONT COLOR=#FFFFFF>Change Race</BASEFONT>", false, false );
+			}
+
 			AddButton( 10, 340, 0xFA5, 0xFA7, 0, GumpButtonType.Reply, 0 );
 			AddHtmlLocalized( 45, 342, 305, 18, 1060675, 0x7FFF, false, false ); // CLOSE
 		}
@@ -815,16 +846,22 @@ namespace Server.Gumps
 		{
 			Mobile from = sender.Mobile;
 
-			if ( !m_Vendor.CanInteractWith( from, true ) )
+			if ( !PlayerVendorCustomizeGump.CanOwn( m_Vendor, from ) )
 				return;
+
+			if ( m_Vendor is Mannequin )
+				((Mannequin)m_Vendor).PauseFor( from );
 
 			switch ( info.ButtonID )
 			{
 				case 0: // CLOSE
 				{
-					m_Vendor.Direction = m_Vendor.GetDirectionTo( from );
-					m_Vendor.Animate( 32, 5, 1, true, false, 0 ); // bow
-					m_Vendor.SayTo( from, 1043310 + Utility.Random( 12 ) ); // a little random speech
+					if ( !(m_Vendor is Mannequin) )
+					{
+						m_Vendor.Direction = m_Vendor.GetDirectionTo( from );
+						m_Vendor.Animate( 32, 5, 1, true, false, 0 ); // bow
+						m_Vendor.SayTo( from, 1043310 + Utility.Random( 12 ) ); // a little random speech
+					}
 
 					break;
 				}
@@ -859,7 +896,7 @@ namespace Server.Gumps
 				{
 					if ( m_Vendor.HairItemID > 0 )
 					{
-						new PVHuePicker( m_Vendor, false, from ).SendTo( from.NetState );
+						new PVHuePicker( m_Vendor, PVHueTarget.Hair, from ).SendTo( from.NetState );
 					}
 					else
 					{
@@ -880,13 +917,34 @@ namespace Server.Gumps
 				{
 					if ( m_Vendor.FacialHairItemID > 0 )
 					{
-						new PVHuePicker( m_Vendor, true, from ).SendTo( from.NetState );
+						new PVHuePicker( m_Vendor, PVHueTarget.FacialHair, from ).SendTo( from.NetState );
 					}
 					else
 					{
 						from.SendGump( new NewPlayerVendorCustomizeGump( m_Vendor ) );
 					}
 
+					break;
+				}
+				case 6: // Skin color
+				{
+					new PVHuePicker( m_Vendor, PVHueTarget.Skin, from ).SendTo( from.NetState );
+					break;
+				}
+				case 7: // Change Race (mannequin only) — reuse the gypsy race gump, cosmetic-only.
+				{
+					if ( m_Vendor is Mannequin )
+					{
+						Mannequin man = (Mannequin) m_Vendor;
+						if ( from.RaceSection < 1 )
+							from.RaceSection = 1;
+						from.CloseGump( typeof( Server.Items.RacePotions.RacePotionsGump ) );
+						// tavern=0 -> full gypsy-shelf UI with category sidebar and no
+						// species filter (the tavern>0 path filters out anything that
+						// doesn't match the manager's current species, which collapses
+						// the list to "Human" only).
+						from.SendGump( new Server.Items.RacePotions.RacePotionsGump( from, 0, false, man ) );
+					}
 					break;
 				}
 				default:
@@ -944,29 +1002,41 @@ namespace Server.Gumps
 
 		private class PVHuePicker : HuePicker
 		{
-			private PlayerVendor m_Vendor;
-			private bool m_FacialHair;
+			private Mobile m_Vendor;
+			private PVHueTarget m_Target;
 			private Mobile m_From;
 
-			public PVHuePicker( PlayerVendor vendor, bool facialHair, Mobile from ) : base( 0xFAB )
+			public PVHuePicker( Mobile vendor, PVHueTarget target, Mobile from ) : base( 0xFAB )
 			{
 				m_Vendor = vendor;
-				m_FacialHair = facialHair;
+				m_Target = target;
 				m_From = from;
 			}
 
 			public override void OnResponse( int hue )
 			{
-				if ( !m_Vendor.CanInteractWith( m_From, true ) )
+				if ( !PlayerVendorCustomizeGump.CanOwn( m_Vendor, m_From ) )
 					return;
 
-				if ( m_FacialHair )
-					m_Vendor.FacialHairHue = hue;
-				else
-					m_Vendor.HairHue = hue;
+				switch ( m_Target )
+				{
+					case PVHueTarget.FacialHair: m_Vendor.FacialHairHue = hue; break;
+					case PVHueTarget.Skin:       m_Vendor.Hue = hue;           break;
+					default:                     m_Vendor.HairHue = hue;       break;
+				}
+
+				if ( m_Vendor is Mannequin )
+					((Mannequin)m_Vendor).PauseFor( m_From );
 
 				m_From.SendGump( new NewPlayerVendorCustomizeGump( m_Vendor ) );
 			}
 		}
+	}
+
+	public enum PVHueTarget
+	{
+		Hair,
+		FacialHair,
+		Skin
 	}
 }

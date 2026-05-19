@@ -191,6 +191,13 @@ namespace Server.Multis
 
 			foreach ( PlayerBarkeeper barkeeper in list )
 				barkeeper.Delete();
+
+			list = new ArrayList( Mannequins );
+
+			foreach ( Mannequin mannequin in list )
+				mannequin.Delete();
+
+			m_Mannequins.Clear();
 		}
 
 		public virtual void Decay_Sandbox()
@@ -226,6 +233,7 @@ namespace Server.Multis
 
 		private ArrayList m_PlayerVendors = new ArrayList();
 		private ArrayList m_PlayerBarkeepers = new ArrayList();
+		private ArrayList m_Mannequins = new ArrayList();
 
 		private ArrayList m_LockDowns;
 		private ArrayList m_VendorRentalContracts;
@@ -326,7 +334,15 @@ namespace Server.Multis
 				}
 			}
 
-			return fromSecures + fromVendors + fromLockdowns + fromMovingCrate;
+			int fromMannequins = 0;
+
+			foreach ( Mannequin mannequin in Mannequins )
+			{
+				if ( mannequin.Backpack != null )
+					fromMannequins += mannequin.Backpack.TotalItems;
+			}
+
+			return fromSecures + fromVendors + fromLockdowns + fromMovingCrate + fromMannequins;
 		}
 
 		public bool InRange( IPoint2D from, int range )
@@ -2954,6 +2970,7 @@ namespace Server.Multis
 		public HouseSign Sign{ get{ return m_Sign; } set{ m_Sign = value; } }
 		public ArrayList PlayerVendors{ get{ return m_PlayerVendors; } }
 		public ArrayList PlayerBarkeepers{ get{ return m_PlayerBarkeepers; } }
+		public ArrayList Mannequins{ get{ return m_Mannequins; } }
 		public ArrayList VendorRentalContracts{ get{ return m_VendorRentalContracts; } }
 		public ArrayList VendorInventories{ get{ return m_VendorInventories; } }
 		public ArrayList RelocatedEntities{ get{ return m_RelocatedEntities; } }

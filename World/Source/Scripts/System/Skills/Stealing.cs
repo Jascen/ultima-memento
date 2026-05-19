@@ -257,7 +257,7 @@ namespace Server.SkillHandlers
 				{
 					m_Thief.SendLocalizedMessage( 1005598 ); // You can't steal from shopkeepers.
 				}
-				else if ( root is PlayerVendor || root is PlayerBarkeeper )
+				else if ( root is PlayerVendor || root is PlayerBarkeeper || root is Mannequin )
 				{
 					m_Thief.SendLocalizedMessage( 502709 ); // You can't steal from vendors.
 				}

@@ -66,12 +66,21 @@ namespace Server.Items
 		public class RacePotionsGump : Gump
 		{
 			private bool m_RequireConfirmation;
-			private int m_Tavern; 
+			private int m_Tavern;
+			private Mannequin m_Mannequin;
 
-			public RacePotionsGump( Mobile from, int tavern, bool requireConfirmation ): base( 50, 50 )
+			public RacePotionsGump( Mobile from, int tavern, bool requireConfirmation )
+				: this( from, tavern, requireConfirmation, null )
+			{
+			}
+
+			// Mannequin overload: routes Apply buttons to cosmetic-only race methods on the mannequin
+			// and hides the per-race ability/stats block (mannequins gain no stat bonuses).
+			public RacePotionsGump( Mobile from, int tavern, bool requireConfirmation, Mannequin mannequin ): base( 50, 50 )
 			{
 				m_Tavern = tavern;
 				m_RequireConfirmation = requireConfirmation;
+				m_Mannequin = mannequin;
 				string color = "#c09b88";
 				int page = from.RaceSection;
 
@@ -250,7 +259,10 @@ namespace Server.Items
 					AddImage(453, 51, 50422);						// BACKPACK
 					AddHtml( 479, 308, 200, 20, @"<BODY><BASEFONT Color=#000008><CENTER>" + (costume.Name).ToUpper() + "</CENTER></BASEFONT></BODY>", (bool)false, (bool)false);
 					AddButton(653, 254, 4023, 4023, btn, GumpButtonType.Reply, 0);	// OK BUTTON
-					AddHtml( 403, 372, 356, 217, @"<BODY><BASEFONT Color=" + color + ">" + Server.Items.BaseRace.GetAbilities( btn-80000 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
+
+					// Mannequins get no stat/ability bonuses, so skip the abilities block.
+					if ( m_Mannequin == null )
+						AddHtml( 403, 372, 356, 217, @"<BODY><BASEFONT Color=" + color + ">" + Server.Items.BaseRace.GetAbilities( btn-80000 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
 					costume.Delete();
 				}
@@ -294,7 +306,7 @@ namespace Server.Items
 				if ( info.ButtonID == 123456789 )
 				{
 					from.RaceSection = 0;
-					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation ) );
+					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation, m_Mannequin ) );
 					from.SendSound( 0x4A ); 
 				}
 				else if ( info.ButtonID > 6000 && info.ButtonID < 6100 )
@@ -348,41 +360,55 @@ namespace Server.Items
 					else if ( quick == 44 ){ move = 166; }
 
 					from.RaceSection = move+1;
-					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation ) );
+					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation, m_Mannequin ) );
 					from.SendSound( 0x4A ); 
 				}
 				else if ( info.ButtonID == 9999 )
 				{
-					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation ) );
+					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation, m_Mannequin ) );
 					from.SendGump( new CreatureHelpGump( from, m_Tavern ) );
 					from.SendSound( 0x4A ); 
 				}
 				else if ( info.ButtonID > 0 && info.ButtonID < 180 )
 				{
 					from.RaceSection = info.ButtonID;
-					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation ) );
+					from.SendGump( new RacePotionsGump( from, m_Tavern, m_RequireConfirmation, m_Mannequin ) );
 					from.SendSound( 0x4A ); 
 				}
 				else if ( info.ButtonID == 1000 )
 				{
-					ConfirmationGump.PromptIfFalse(
-						from,
-						m_RequireConfirmation,
-						() =>
-							{
-								BaseRace.BackToHuman( from );
-								if ( m_Tavern == 0 ){ from.PlaySound( Utility.RandomList( 0x030, 0x031 ) ); }
-								Effects.SendLocationParticles( EffectItem.Create( from.Location, from.Map, EffectItem.DefaultDuration ), 0x3728, 8, 20, 0, 0, 5042, 0 );
-							},
-						onConfirmed => new ConfirmationGump(from, "Confirm Race Change", "Changing to a Human will cause you to permanently lose all racial bonuses. You will not be able to change back. Are you sure you want to change?", onConfirmed )
-					);
+					if ( m_Mannequin != null )
+					{
+						m_Mannequin.RevertToHuman();
+					}
+					else
+					{
+						ConfirmationGump.PromptIfFalse(
+							from,
+							m_RequireConfirmation,
+							() =>
+								{
+									BaseRace.BackToHuman( from );
+									if ( m_Tavern == 0 ){ from.PlaySound( Utility.RandomList( 0x030, 0x031 ) ); }
+									Effects.SendLocationParticles( EffectItem.Create( from.Location, from.Map, EffectItem.DefaultDuration ), 0x3728, 8, 20, 0, 0, 5042, 0 );
+								},
+							onConfirmed => new ConfirmationGump(from, "Confirm Race Change", "Changing to a Human will cause you to permanently lose all racial bonuses. You will not be able to change back. Are you sure you want to change?", onConfirmed )
+						);
+					}
 				}
 				else if ( info.ButtonID > 80000 )
 				{
-					int race = info.ButtonID - 80000;
-					BaseRace.CreateRace( from, race, true );
-					if ( m_Tavern == 0 ){ from.PlaySound( Utility.RandomList( 0x030, 0x031 ) ); }
-					Effects.SendLocationParticles( EffectItem.Create( from.Location, from.Map, EffectItem.DefaultDuration ), 0x3728, 8, 20, 0, 0, 5042, 0 );
+					if ( m_Mannequin != null )
+					{
+						m_Mannequin.ApplyRace( info.ButtonID );
+					}
+					else
+					{
+						int race = info.ButtonID - 80000;
+						BaseRace.CreateRace( from, race, true );
+						if ( m_Tavern == 0 ){ from.PlaySound( Utility.RandomList( 0x030, 0x031 ) ); }
+						Effects.SendLocationParticles( EffectItem.Create( from.Location, from.Map, EffectItem.DefaultDuration ), 0x3728, 8, 20, 0, 0, 5042, 0 );
+					}
 				}
 				else
 				{

@@ -296,6 +296,9 @@ namespace Server.Engines.Craft
 			index = AddCraft( typeof( Dressform ), 1002155, 1044339, 63.1, 88.1, typeof( Board ), 1015101, 25, 1044351 );
 			AddSkill( index, SkillName.Tailoring, 65.0, 70.0 );
 			AddRes( index, typeof( Fabric ), 1044286, 10, 1044287 );
+			index = AddCraft( typeof( MannequinDeed ), 1044294, "mannequin deed", 75.0, 100.0, typeof( Board ), 1015101, 50, 1044351 );
+			AddSkill( index, SkillName.Tailoring, 50.0, 55.0 );
+			AddRes( index, typeof( Fabric ), 1044286, 30, 1044287 );
 			index = AddCraft( typeof( SpinningwheelEastDeed ), 1002155, 1044341, 73.6, 98.6, typeof( Board ), 1015101, 75, 1044351 );
 			AddSkill( index, SkillName.Tailoring, 65.0, 70.0 );
 			AddRes( index, typeof( Fabric ), 1044286, 25, 1044287 );
