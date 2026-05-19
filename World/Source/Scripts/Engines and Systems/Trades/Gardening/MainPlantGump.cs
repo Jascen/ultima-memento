@@ -23,27 +23,33 @@ namespace Server.Engines.Plants
 
 			AddButton( 71, 67, 0xD4, 0xD4, 1, GumpButtonType.Reply, 0 ); // Reproduction menu
 			AddItem( 59, 68, 0xD08 );
+			AddTooltip("Reproduction Menu");
 
 			PlantSystem system = plant.PlantSystem;
 
 			AddButton( 71, 91, 0xD4, 0xD4, 2, GumpButtonType.Reply, 0 ); // Infestation
 			AddItem( 8, 96, 0x372 );
+			AddTooltip("Infestation Level");
 			AddPlus( 95, 92, system.Infestation );
 
 			AddButton( 71, 115, 0xD4, 0xD4, 3, GumpButtonType.Reply, 0 ); // Fungus
 			AddItem( 58, 115, 0xD16 );
+			AddTooltip("Fungus Level");
 			AddPlus( 95, 116, system.Fungus );
 
 			AddButton( 71, 139, 0xD4, 0xD4, 4, GumpButtonType.Reply, 0 ); // Poison
 			AddItem( 59, 143, 0x1AE4 );
+			AddTooltip("Poison Level");
 			AddPlus( 95, 140, system.Poison );
 
 			AddButton( 71, 163, 0xD4, 0xD4, 5, GumpButtonType.Reply, 0 ); // Disease
 			AddItem( 55, 167, 0x1727 );
+			AddTooltip("Disease Level");
 			AddPlus( 95, 164, system.Disease );
 
 			AddButton( 209, 67, 0xD2, 0xD2, 6, GumpButtonType.Reply, 0 ); // Water
 			AddItem( 193, 67, 0x1F9D );
+			AddTooltip("Water Level");
 			AddPlusMinus( 196, 67, system.Water );
 
 			const int ITEM_START_X = 209;
@@ -65,15 +71,19 @@ namespace Server.Engines.Plants
 			AddLevel( 196, 163, system.StrengthPotion );
 
 			AddImage( 48, 47, 0xD2 );
+			AddTooltip("Plant Stage: " + ((int)m_Plant.PlantStatus).ToString());
 			AddLevel( 54, 47, (int)m_Plant.PlantStatus );
 
 			AddImage( 232, 47, 0xD2 );
+			// Tooltip internal
 			AddGrowthIndicator( 239, 47 );
 
 			AddButton( 48, 183, 0xD2, 0xD2, 11, GumpButtonType.Reply, 0 ); // Help
+			AddTooltip("Help");
 			AddLabel( 54, 183, 0x835, "?" );
 
 			AddButton( 232, 183, 0xD4, 0xD4, 12, GumpButtonType.Reply, 0 ); // Empty the bowl
+			AddTooltip("Empty the bowl");
 			AddItem( 219, 180, 0x15FD );
 		}
 
@@ -219,11 +229,11 @@ namespace Server.Engines.Plants
 
 			switch ( m_Plant.PlantSystem.GrowthIndicator )
 			{
-				case PlantGrowthIndicator.InvalidLocation : AddLabel( x, y, 0x21, "!" ); break;
-				case PlantGrowthIndicator.NotHealthy : AddLabel( x, y, 0x21, "-" ); break;
-				case PlantGrowthIndicator.Delay : AddLabel( x, y, 0x35, "-" ); break;
-				case PlantGrowthIndicator.Grown : AddLabel( x, y, 0x3, "+" ); break;
-				case PlantGrowthIndicator.DoubleGrown : AddLabel( x, y, 0x3F, "+" ); break;
+				case PlantGrowthIndicator.InvalidLocation : AddTooltip("Growth: Invalid Location"); AddLabel( x, y, 0x21, "!" ); break;
+				case PlantGrowthIndicator.NotHealthy : AddTooltip("Growth: Not Healthy"); AddLabel( x, y, 0x21, "-" ); break;
+				case PlantGrowthIndicator.Delay : AddTooltip("Growth: Waiting"); AddLabel( x, y, 0x35, "-" ); break;
+				case PlantGrowthIndicator.Grown : AddTooltip("Growth: Grown"); AddLabel( x, y, 0x3, "+" ); break;
+				case PlantGrowthIndicator.DoubleGrown : AddTooltip("Growth: Double Grown"); AddLabel( x, y, 0x3F, "+" ); break;
 			}
 		}
 

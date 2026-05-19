@@ -17,6 +17,7 @@ namespace Server.Misc
 
 			builder.Append("Changes<br>");
 			builder.Append("- Gump - Add tooltips for bee hives<br>");
+			builder.Append("- Gump - Add tooltips for plants<br>");
 			builder.Append("- Housekeeping - The following spells had a minor change that should not impact anything:<br>");
 			builder.Append("               - Elemental Blast/Storm, Mindblast, Explosion, Psionic Blast, Hail Storm<br>");
 			builder.Append("- Mobs - Can now teleport in more places (Boats, Dungeon Time, etc)<br>");
