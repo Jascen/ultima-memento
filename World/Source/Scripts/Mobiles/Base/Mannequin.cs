@@ -24,6 +24,17 @@ namespace Server.Mobiles
 			Layer.OuterLegs, Layer.InnerLegs
 		};
 
+		public static bool IsSwappableLayer( Layer layer )
+		{
+			for ( int i = 0; i < SwappableLayers.Length; i++ )
+			{
+				if ( SwappableLayers[i] == layer )
+					return true;
+			}
+
+			return false;
+		}
+
 		private BaseHouse m_House;
 		private bool m_Roaming;
 		private Mobile m_PauseTarget;
@@ -274,6 +285,42 @@ namespace Server.Mobiles
 
 			PauseFor( from );
 			return true;
+		}
+
+		public override bool OnDragDrop( Mobile from, Item dropped )
+		{
+			if ( !CanManage( from ) )
+			{
+				from.SendMessage( "Only the owner can give items to this mannequin." );
+				return false;
+			}
+
+			if ( dropped is Gold )
+			{
+				from.SendMessage( "The mannequin has no use for gold." );
+				return false;
+			}
+
+			PauseFor( from );
+
+			// Auto-equip if the item belongs to a swappable layer. If the layer is
+			// occupied, dump the existing item into the mannequin's backpack first.
+			if ( IsSwappableLayer( dropped.Layer ) )
+			{
+				Item existing = FindItemOnLayer( dropped.Layer );
+
+				if ( existing != null && Backpack != null )
+					Backpack.DropItem( existing );
+
+				if ( EquipItem( dropped ) )
+					return true;
+			}
+
+			if ( Backpack != null && Backpack.TryDropItem( from, dropped, false ) )
+				return true;
+
+			from.SendMessage( "The mannequin could not accept that." );
+			return false;
 		}
 
 		public override bool CheckNonlocalDrop( Mobile from, Item item, Item target )
@@ -665,6 +712,60 @@ namespace Server.Mobiles
 
 			Mannequin m = RootParent as Mannequin;
 			return m != null && m.CanManage( from );
+		}
+
+		public override void GetChildContextMenuEntries( Mobile from, List<ContextMenuEntry> list, Item item )
+		{
+			base.GetChildContextMenuEntries( from, list, item );
+
+			Mannequin m = RootParent as Mannequin;
+
+			if ( m == null || !m.CanManage( from ) )
+				return;
+
+			if ( Mannequin.IsSwappableLayer( item.Layer ) )
+				list.Add( new EquipOntoMannequinEntry( m, item ) );
+		}
+
+		private class EquipOntoMannequinEntry : ContextMenuEntry
+		{
+			private Mannequin m_Mannequin;
+			private Item m_Item;
+
+			// Cliloc 3006132 "Use" — closest single-word generic action in the
+			// 3005xxx-3006xxx context-menu range; "Equip" has no entry there.
+			public EquipOntoMannequinEntry( Mannequin mannequin, Item item ) : base( 6132 )
+			{
+				m_Mannequin = mannequin;
+				m_Item = item;
+			}
+
+			public override bool NonLocalUse{ get{ return true; } }
+
+			public override void OnClick()
+			{
+				Mobile from = Owner.From;
+
+				if ( m_Mannequin == null || m_Mannequin.Deleted || m_Item == null || m_Item.Deleted )
+					return;
+
+				if ( !m_Mannequin.CanManage( from ) )
+					return;
+
+				if ( !Mannequin.IsSwappableLayer( m_Item.Layer ) )
+					return;
+
+				Container pack = m_Mannequin.Backpack;
+				Item existing = m_Mannequin.FindItemOnLayer( m_Item.Layer );
+
+				if ( existing != null && pack != null )
+					pack.DropItem( existing );
+
+				if ( !m_Mannequin.EquipItem( m_Item ) )
+					from.SendMessage( "The mannequin could not equip that." );
+				else
+					m_Mannequin.PauseFor( from );
+			}
 		}
 
 		public override void Serialize( GenericWriter writer )
