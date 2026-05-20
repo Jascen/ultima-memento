@@ -271,18 +271,25 @@ namespace Server.Items
 					{
 						from.SendLocalizedMessage( 1042270 ); // That is not in your house.
 					}
-					else if ( m_Decorator.Command != DecorateCommand.Turn )
-					{
-						from.SendMessage( "You can only turn a mannequin with this tool." );
-					}
 					else if ( mannequin.Roaming )
 					{
-						from.SendMessage( "You must disable roaming on the mannequin before you can turn it." );
+						from.SendMessage( "You must disable roaming on the mannequin before you can use the Homeowner Tools on it." );
 					}
 					else
 					{
-						Direction next = (Direction)( ( ( (int)mannequin.Direction + 1 ) & 0x7 ) );
-						mannequin.Direction = next;
+						switch ( m_Decorator.Command )
+						{
+							case DecorateCommand.Turn:	TurnMannequin( mannequin );						break;
+							case DecorateCommand.Up:	UpMannequin( mannequin, from );					break;
+							case DecorateCommand.Down:	DownMannequin( mannequin, from );				break;
+							case DecorateCommand.North:	ShiftMannequin( mannequin, from, house,  0, -1, "north" );	break;
+							case DecorateCommand.East:	ShiftMannequin( mannequin, from, house,  1,  0, "east"  );	break;
+							case DecorateCommand.South:	ShiftMannequin( mannequin, from, house,  0,  1, "south" );	break;
+							case DecorateCommand.West:	ShiftMannequin( mannequin, from, house, -1,  0, "west"  );	break;
+							default:
+								from.SendMessage( "You can only turn or move a mannequin with this tool." );
+								break;
+						}
 					}
 
 					from.Target = new InternalTarget( m_Decorator );
@@ -2205,12 +2212,15 @@ namespace Server.Items
 
 			private static int GetFloorZ( Item item )
 			{
-				Map map = item.Map;
+				return GetFloorZ( item.Map, item.X, item.Y, item.Z );
+			}
 
+			private static int GetFloorZ( Map map, int x, int y, int compareZ )
+			{
 				if ( map == null )
 					return int.MinValue;
 
-				StaticTile[] tiles = map.Tiles.GetStaticTiles( item.X, item.Y, true );
+				StaticTile[] tiles = map.Tiles.GetStaticTiles( x, y, true );
 
 				int z = int.MinValue;
 
@@ -2221,11 +2231,46 @@ namespace Server.Items
 
 					int top = tile.Z; // Confirmed : no height checks here
 
-					if ( id.Surface && !id.Impassable && top > z && top <= item.Z )
+					if ( id.Surface && !id.Impassable && top > z && top <= compareZ )
 						z = top;
 				}
 
 				return z;
+			}
+
+			private static void TurnMannequin( Mannequin m )
+			{
+				m.Direction = (Direction)( ( (int)m.Direction + 1 ) & 0x7 );
+			}
+
+			private static void UpMannequin( Mannequin m, Mobile from )
+			{
+				int floorZ = GetFloorZ( m.Map, m.X, m.Y, m.Z );
+
+				if ( floorZ > int.MinValue && m.Z < ( floorZ + 15 ) )
+					m.Location = new Point3D( m.X, m.Y, m.Z + 1 );
+				else
+					from.SendLocalizedMessage( 1042274 ); // You cannot raise it up any higher.
+			}
+
+			private static void DownMannequin( Mannequin m, Mobile from )
+			{
+				int floorZ = GetFloorZ( m.Map, m.X, m.Y, m.Z );
+
+				if ( floorZ > int.MinValue && m.Z > floorZ )
+					m.Location = new Point3D( m.X, m.Y, m.Z - 1 );
+				else
+					from.SendLocalizedMessage( 1042275 ); // You cannot lower it down any further.
+			}
+
+			private static void ShiftMannequin( Mannequin m, Mobile from, BaseHouse house, int dx, int dy, string dirName )
+			{
+				Point3D dest = new Point3D( m.X + dx, m.Y + dy, m.Z );
+
+				if ( house.IsInside( dest, 16 ) )
+					m.Location = dest;
+				else
+					from.SendMessage( "You cannot move it " + dirName + " any further." );
 			}
 
 			private static bool ValidRegion( Point3D loc, Map map, Mobile from )
