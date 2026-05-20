@@ -203,11 +203,14 @@ namespace Server.Items
 					return;
 				}
 
-				item.Hue = 0;
-				if (item.Hue != 0)
+				if (!item.Stackable)
 				{
-					from.SendMessage("You can't extract that");
-					return;
+					item.Hue = 0;
+					if (item.Hue != 0)
+					{
+						from.SendMessage("You can't extract that");
+						return;
+					}
 				}
 
 				Dye = extractedHue;
