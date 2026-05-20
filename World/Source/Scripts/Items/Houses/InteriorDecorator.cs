@@ -279,13 +279,13 @@ namespace Server.Items
 					{
 						switch ( m_Decorator.Command )
 						{
-							case DecorateCommand.Turn:	TurnMannequin( mannequin );						break;
-							case DecorateCommand.Up:	UpMannequin( mannequin, from );					break;
-							case DecorateCommand.Down:	DownMannequin( mannequin, from );				break;
-							case DecorateCommand.North:	ShiftMannequin( mannequin, from, house,  0, -1, "north" );	break;
-							case DecorateCommand.East:	ShiftMannequin( mannequin, from, house,  1,  0, "east"  );	break;
-							case DecorateCommand.South:	ShiftMannequin( mannequin, from, house,  0,  1, "south" );	break;
-							case DecorateCommand.West:	ShiftMannequin( mannequin, from, house, -1,  0, "west"  );	break;
+							case DecorateCommand.Turn:	Turn( mannequin );						break;
+							case DecorateCommand.Up:	Up( mannequin, from );					break;
+							case DecorateCommand.Down:	Down( mannequin, from );				break;
+							case DecorateCommand.North:	Shift( mannequin, from, house,  0, -1, "north" );	break;
+							case DecorateCommand.East:	Shift( mannequin, from, house,  1,  0, "east"  );	break;
+							case DecorateCommand.South:	Shift( mannequin, from, house,  0,  1, "south" );	break;
+							case DecorateCommand.West:	Shift( mannequin, from, house, -1,  0, "west"  );	break;
 							default:
 								from.SendMessage( "You can only turn or move a mannequin with this tool." );
 								break;
@@ -2238,12 +2238,12 @@ namespace Server.Items
 				return z;
 			}
 
-			private static void TurnMannequin( Mannequin m )
+			private static void Turn( Mobile m )
 			{
 				m.Direction = (Direction)( ( (int)m.Direction + 1 ) & 0x7 );
 			}
 
-			private static void UpMannequin( Mannequin m, Mobile from )
+			private static void Up( Mobile m, Mobile from )
 			{
 				int floorZ = GetFloorZ( m.Map, m.X, m.Y, m.Z );
 
@@ -2253,7 +2253,7 @@ namespace Server.Items
 					from.SendLocalizedMessage( 1042274 ); // You cannot raise it up any higher.
 			}
 
-			private static void DownMannequin( Mannequin m, Mobile from )
+			private static void Down( Mobile m, Mobile from )
 			{
 				int floorZ = GetFloorZ( m.Map, m.X, m.Y, m.Z );
 
@@ -2263,7 +2263,7 @@ namespace Server.Items
 					from.SendLocalizedMessage( 1042275 ); // You cannot lower it down any further.
 			}
 
-			private static void ShiftMannequin( Mannequin m, Mobile from, BaseHouse house, int dx, int dy, string dirName )
+			private static void Shift( Mobile m, Mobile from, BaseHouse house, int dx, int dy, string dirName )
 			{
 				Point3D dest = new Point3D( m.X + dx, m.Y + dy, m.Z );
 
