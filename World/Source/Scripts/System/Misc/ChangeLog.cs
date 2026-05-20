@@ -24,6 +24,7 @@ namespace Server.Misc
 			builder.Append("- Misc - Autoloot and ammo recovery will now try to place ammo in an equipped quiver<br>");
 			builder.Append("- Item - Mannequins can now be crafted by Carpenters<br>");
 			builder.Append("- Item - Hoards/Pedestals can now drop a Bag of Holding even if you already have one<br>");
+			builder.Append("- Item - Hue vacuum tube is still usable on, but no longer removes the dye from stackable itemsbr>");
 			builder.Append("- Spell - Mages Ballad, Army's Paeon, and Foe Requiem now grant musicianship checks every tick<br>");
 
 			builder.Append("<br>");
