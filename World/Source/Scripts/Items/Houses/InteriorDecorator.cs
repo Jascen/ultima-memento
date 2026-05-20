@@ -1,5 +1,6 @@
 using System;
 using Server;
+using Server.Mobiles;
 using Server.Network;
 using Server.Multis;
 using Server.Regions;
@@ -256,6 +257,38 @@ namespace Server.Items
 
 			protected override void OnTarget( Mobile from, object targeted )
 			{
+				if ( targeted is Mannequin && InteriorDecorator.CheckUse( m_Decorator, from ) )
+				{
+					Mannequin mannequin = (Mannequin)targeted;
+					BaseHouse house = BaseHouse.FindHouseAt( from );
+					BaseHouse mHouse = BaseHouse.FindHouseAt( mannequin );
+
+					if ( house == null || !house.IsCoOwner( from ) )
+					{
+						from.SendLocalizedMessage( 502092 ); // You must be in your house to do this.
+					}
+					else if ( mHouse != house )
+					{
+						from.SendLocalizedMessage( 1042270 ); // That is not in your house.
+					}
+					else if ( m_Decorator.Command != DecorateCommand.Turn )
+					{
+						from.SendMessage( "You can only turn a mannequin with this tool." );
+					}
+					else if ( mannequin.Roaming )
+					{
+						from.SendMessage( "You must disable roaming on the mannequin before you can turn it." );
+					}
+					else
+					{
+						Direction next = (Direction)( ( ( (int)mannequin.Direction + 1 ) & 0x7 ) );
+						mannequin.Direction = next;
+					}
+
+					from.Target = new InternalTarget( m_Decorator );
+					return;
+				}
+
 				if ( targeted is Item && InteriorDecorator.CheckUse( m_Decorator, from ) )
 				{
 					BaseHouse house = BaseHouse.FindHouseAt( from );
