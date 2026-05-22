@@ -1050,11 +1050,11 @@ namespace Server.Mobiles
 			if ( !(this is Humanoid || (this is HouseVisitor && (this.Body == 9 || this.Body == 320))) ){ list.Add( new SpeechGumpEntry( from, this ) ); }
 		}
 
-		public override bool TryTalk( Mobile from )
+		public override bool TryTalk( PlayerMobile from )
 		{
-			if ( this is Humanoid || (this is HouseVisitor && (this.Body == 9 || this.Body == 320)) )
+			if ( from == null )
 				return false;
-			if ( !( from is PlayerMobile ) )
+			if ( this is Humanoid || (this is HouseVisitor && (this.Body == 9 || this.Body == 320)) )
 				return false;
 
 			new SpeechGumpEntry( from, this ).OnClick();

@@ -123,9 +123,9 @@ namespace Server.Mobiles
 			list.Add( new SpeechGumpEntry( from, this ) );
 		}
 
-		public override bool TryTalk( Mobile from )
+		public override bool TryTalk( PlayerMobile from )
 		{
-			if ( !( from is PlayerMobile ) )
+			if ( from == null )
 				return false;
 
 			new SpeechGumpEntry( from, this ).OnClick();

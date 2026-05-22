@@ -91,9 +91,9 @@ namespace Server.Mobiles
 			}
 		}
 
-		public override bool TryTalk( Mobile from )
+		public override bool TryTalk( PlayerMobile from )
 		{
-			if ( from.Blessed || !( from is PlayerMobile ) )
+			if ( from == null )
 				return false;
 
 			new SpeechGumpEntry( from, this ).OnClick();

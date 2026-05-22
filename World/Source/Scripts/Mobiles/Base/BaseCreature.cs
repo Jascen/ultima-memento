@@ -7898,26 +7898,27 @@ namespace Server.Mobiles
 				Delete();
 			}
 
-			if ( from is PlayerMobile && ((PlayerMobile)from).Preferences.DoubleClickToTalk && TryTalk( from ) )
+			PlayerMobile player = from as PlayerMobile;
+			if ( player != null && player.Preferences.DoubleClickToTalk && TryTalk( player ) )
 				return;
 
 			base.OnDoubleClick( from );
 		}
 
-		public virtual bool TryTalk( Mobile from )
+		public virtual bool TryTalk( PlayerMobile from )
 		{
+			if ( from == null )
+				return false;
+
 			if ( TalkGumpTitle == null || TalkGumpSubject == null )
 				return false;
 
-			if ( !( from is PlayerMobile ) || !CheckChattingAccess( from ) )
+			if ( !CheckChattingAccess( from ) )
 				return false;
 
-			PlayerMobile mobile = (PlayerMobile)from;
-			if ( mobile.HasGump( typeof( SpeechGump ) ) )
-				return true;
-
 			Server.Misc.IntelligentAction.SayHey( this );
-			mobile.SendGump( new SpeechGump( mobile, TalkGumpTitle, SpeechFunctions.SpeechText( this, mobile, TalkGumpSubject ) ) );
+			from.CloseGump( typeof( SpeechGump ) );
+			from.SendGump( new SpeechGump( from, TalkGumpTitle, SpeechFunctions.SpeechText( this, from, TalkGumpSubject ) ) );
 			return true;
 		}
 
