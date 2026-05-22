@@ -169,7 +169,7 @@ namespace Server.Misc
 				if (skill.Value == 0) continue;
 
 				Bag bag = new Bag { Name = m.Skills[skill.Name].Name };
-				m.Backpack.AddItem(bag);
+				PackItem(m.Backpack, bag);
 
 				switch (skill.Name)
 				{
