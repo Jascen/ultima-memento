@@ -7898,7 +7898,27 @@ namespace Server.Mobiles
 				Delete();
 			}
 
+			if ( from is PlayerMobile && ((PlayerMobile)from).Preferences.DoubleClickToTalk && TryTalk( from ) )
+				return;
+
 			base.OnDoubleClick( from );
+		}
+
+		public virtual bool TryTalk( Mobile from )
+		{
+			if ( TalkGumpTitle == null || TalkGumpSubject == null )
+				return false;
+
+			if ( !( from is PlayerMobile ) || !CheckChattingAccess( from ) )
+				return false;
+
+			PlayerMobile mobile = (PlayerMobile)from;
+			if ( mobile.HasGump( typeof( SpeechGump ) ) )
+				return true;
+
+			Server.Misc.IntelligentAction.SayHey( this );
+			mobile.SendGump( new SpeechGump( mobile, TalkGumpTitle, SpeechFunctions.SpeechText( this, mobile, TalkGumpSubject ) ) );
+			return true;
 		}
 
 		private DateTime m_NextPickup;
