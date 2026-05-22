@@ -75,6 +75,7 @@ namespace Server.Items
 			base.GetProperties(list);
 
 			list.Add(string.Format("Summons a hoard minion for {0} minutes", SUMMON_DURATION_MINUTES));
+			list.Add("[Automatically picks up stackable items off the ground]");
 		}
 
 		public override void Serialize( GenericWriter writer )

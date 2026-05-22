@@ -26,6 +26,7 @@ namespace Server.Misc
 			builder.Append("- Item - Mannequins can now be crafted by Carpenters<br>");
 			builder.Append("- Item - Hoards/Pedestals can now drop a Bag of Holding even if you already have one<br>");
 			builder.Append("- Item - Hue vacuum tube is still usable on, but no longer removes the dye from stackable itemsbr>");
+			builder.Append("- Item - Add tooltip indicating what a Hoard Minion does<br>");
 			builder.Append("- Quest - 'Seeking Brave Adventurers' quest now uses gump buttons instead of context menu options<br>");
 			builder.Append("- Spell - Mages Ballad, Army's Paeon, and Foe Requiem now grant musicianship checks every tick<br>");
 
