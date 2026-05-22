@@ -55,7 +55,8 @@ namespace Server.Utilities
                 typeof(BaseWeapon),
                 typeof(BaseClothing),
                 typeof(BaseInstrument),
-                typeof(BaseTrinket)
+                typeof(BaseTrinket),
+                typeof(Spellbook)
             );
         }
     }

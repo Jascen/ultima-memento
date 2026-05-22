@@ -36,6 +36,7 @@ namespace Server.Misc
 			builder.Append("- Gump - Fix potion alignment for plants<br>");
 			builder.Append("- Gump - Fix help info gumps for plants<br>");
 			builder.Append("- Gump - Fix images for bee hives<br>");
+			builder.Append("- Gump - Fix issue where runic scribe tools could not craft spellbooks<br>");
 			builder.Append("- Item - Items that can block equipping now use the proper method<br>");
 			builder.Append("- Spell - Syth and Jedi spells now properly consume the displayed crystal cost, down from 200% or 300%<br>");
 			builder.Append("- Spell - Insult implementation and displayed info now match<br>");
