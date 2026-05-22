@@ -115,8 +115,7 @@ namespace Server.Engines.Craft
 					else if ( CraftSystem.AllowManyCraft( m_Tool ) && context.LastMade != null && !context.LastMade.UseAllRes)
 					{
 						AddHtml( x, y, 100, 40, String.Format( "<BASEFONT COLOR=#{0:X6}>Craft Amount:</BASEFONT>", FontColor ), false, false );
-						AddTextField(x + 95, y, 125, 20, 1);
-						AddButton( INFO_PANEL_START + INFO_WINDOW_WIDTH - 32, y - 3, 4023, 4024, 3000+GetButtonID( 6, 2 ), GumpButtonType.Reply, 0 );
+						AddCraftAmountButtons( this, x + 95, y - 3, GetButtonID( 6, 2 ) );
 					}
 					else if ( context.LastMade != null )
 					{
@@ -219,10 +218,65 @@ namespace Server.Engines.Craft
 			}
 		}
 
-		private void AddTextField( int x, int y, int width, int height, int index, string initialText = "" )
+		private const int CRAFT_AMOUNT_ICON1 = 11316;
+		private const int CRAFT_AMOUNT_ICON10 = 11317;
+		private const int CRAFT_AMOUNT_ICON100 = 11318;
+
+		public static void AddCraftAmountButtons( Gump g, int x, int y, int baseButtonId )
 		{
-			AddBackground( x - 2, y - 2, width + 4, height + 4, 0x2486 );
-			AddTextEntry( x + 2, y + 2, width - 4, height - 4, 0, index, initialText );
+			g.AddButton( x, y, CRAFT_AMOUNT_ICON1, CRAFT_AMOUNT_ICON1, baseButtonId, GumpButtonType.Reply, 0 );
+			g.AddButton( x + 30, y, CRAFT_AMOUNT_ICON10, CRAFT_AMOUNT_ICON10, 1000 + baseButtonId, GumpButtonType.Reply, 0 );
+			g.AddButton( x + 60, y, CRAFT_AMOUNT_ICON100, CRAFT_AMOUNT_ICON100, 2000 + baseButtonId, GumpButtonType.Reply, 0 );
+			
+			// Custom amount button
+			int startX = x + 99;
+			g.AddButton( startX, y, CRAFT_AMOUNT_ICON10, CRAFT_AMOUNT_ICON10, 3000 + baseButtonId, GumpButtonType.Reply, 0 );
+			g.AddTooltip( "Custom amount" );
+			y += 3;
+			g.AddImage(startX, y, 13003);
+			g.AddImage(startX + 7, y, 13004);
+			g.AddImage(startX + 14, y, 13004);
+			g.AddImage(startX + 21, y, 13005);
+			TextDefinition.AddHtmlText(g, startX + 1, y - 2, 28, 20, "<CENTER>xx</CENTER>", HtmlColors.WHITE);
+		}
+
+		public static void DoCraft( Mobile from, CraftSystem craftSystem, BaseTool tool, CraftItem item, int amount )
+		{
+			bool needsRecipe = item.Recipe != null && from is PlayerMobile && !((PlayerMobile)from).HasRecipe( item.Recipe );
+
+			if ( needsRecipe )
+				return;
+
+			int num = craftSystem.CanCraft( from, tool, item.ItemType );
+
+			CraftSystem.SetDescription( craftSystem.GetContext( from ), tool, item.ItemType, craftSystem, item.NameString, from, item );
+
+			if ( num > 0 )
+			{
+				from.CloseGump( typeof( CraftGump ) );
+				from.CloseGump( typeof( CraftGumpItem ) );
+				from.SendGump( new CraftGump( from, craftSystem, tool, num ) );
+			}
+			else
+			{
+				Type type = null;
+
+				CraftContext context = craftSystem.GetContext( from );
+
+				if ( context != null )
+				{
+					CraftSubResCol res = craftSystem.CraftSubRes;
+					int resIndex = context.LastResourceIndex;
+
+					if ( resIndex >= 0 && resIndex < res.Count )
+						type = res.GetAt( resIndex ).ItemType;
+				}
+
+				if ( 1 < amount )
+					craftSystem.BulkCreateItem( from, item.ItemType, type, tool, item, amount );
+				else
+					craftSystem.CreateItem( from, item.ItemType, type, tool, item );
+			}
 		}
 
 		public void CreateResList( bool opt, Mobile from )
@@ -462,39 +516,7 @@ namespace Server.Engines.Craft
 
 		public void CraftItem( CraftItem item, int amount )
 		{
-			bool needsRecipe = item.Recipe != null && m_From is PlayerMobile && !((PlayerMobile)m_From).HasRecipe( item.Recipe );
-			if (needsRecipe) return;
-
-			int num = m_CraftSystem.CanCraft( m_From, m_Tool, item.ItemType );
-
-			CraftSystem.SetDescription( m_CraftSystem.GetContext( m_From ), m_Tool, item.ItemType, m_CraftSystem, item.NameString, m_From, item );
-
-			if ( num > 0 )
-			{
-				m_From.CloseGump( typeof( CraftGump ) );
-				m_From.CloseGump( typeof( CraftGumpItem ) );
-				m_From.SendGump( new CraftGump( m_From, m_CraftSystem, m_Tool, num ) );
-			}
-			else
-			{
-				Type type = null;
-
-				CraftContext context = m_CraftSystem.GetContext( m_From );
-
-				if ( context != null )
-				{
-					CraftSubResCol res = m_CraftSystem.CraftSubRes;
-					int resIndex = context.LastResourceIndex;
-
-					if ( resIndex >= 0 && resIndex < res.Count )
-						type = res.GetAt( resIndex ).ItemType;
-				}
-
-				if ( 1 < amount )
-					m_CraftSystem.BulkCreateItem( m_From, item.ItemType, type, m_Tool, item, amount );
-				else
-					m_CraftSystem.CreateItem( m_From, item.ItemType, type, m_Tool, item );
-			}
+			DoCraft( m_From, m_CraftSystem, m_Tool, item, amount );
 		}
 
 		public override void OnResponse( NetState sender, RelayInfo info )
@@ -512,14 +534,15 @@ namespace Server.Engines.Craft
 			int toMake;
 			if ( buttonID > 3000 && CraftSystem.AllowManyCraft( m_Tool ) )
 			{
-				buttonID = buttonID - 3000;
-				TextRelay t = info.GetTextEntry(1);
-				string textAmount = t != null && !string.IsNullOrWhiteSpace(t.Text) ? t.Text : "1";
-				if (!int.TryParse(textAmount, out toMake) || toMake < 1 || 10000 < toMake)
+				int baseButtonId = buttonID - 3000;
+				if ( baseButtonId == GetButtonID( 6, 2 ) )
 				{
-					m_From.SendGump( new CraftGump( m_From, m_CraftSystem, m_Tool, "Please pick a number between 1 and 10000." ) );
-					return;
+					CraftContext promptContext = m_CraftSystem.GetContext( m_From );
+					if ( promptContext != null && promptContext.LastMade != null )
+						CraftAmountPrompt.Begin( m_From, m_CraftSystem, m_Tool, promptContext.LastMade, CraftAmountSource.CraftGumpMakeLast );
 				}
+
+				return;
 			}
 			else if ( buttonID > 2000 && CraftSystem.AllowManyCraft( m_Tool ) )
 			{
