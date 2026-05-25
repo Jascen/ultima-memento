@@ -31,7 +31,7 @@ namespace Server.Items
 				{
 					m.SendMessage( "This magical gate doesn't seem to do anything." );
 				}
-				else if ( Worlds.RegionAllowedRecall( m.Map, m.Location, m.X, m.Y ) == false && m.Land != Land.Ambrosia && m.Land != Land.Kuldar )
+				else if ( Worlds.RegionAllowedRecall( m, m.Map, m.Location, m.X, m.Y ) == false && m.Land != Land.Ambrosia && m.Land != Land.Kuldar )
 				{
 					m.SendMessage( "This magical gate doesn't seem to do anything." );
 				}
