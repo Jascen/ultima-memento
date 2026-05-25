@@ -312,7 +312,8 @@ namespace Server.Gumps
 
 		public override void OnResponse( NetState sender, RelayInfo info )
 		{
-			Mobile from = sender.Mobile;
+			var from = sender.Mobile as PlayerMobile;
+			if ( from == null ) return;
 
 			from.CloseGump( typeof( QuickBar ) );
 
@@ -334,12 +335,12 @@ namespace Server.Gumps
 			else if ( info.ButtonID == 22 ){ if ( from.HasGump( typeof( RegBar ) ) ){ from.CloseGump( typeof( RegBar ) ); } else { InvokeCommand( "regbar", from ); } }
 			else if ( info.ButtonID == 23 ){ from.CloseGump( typeof( MyLibrary ) ); from.SendGump( new MyLibrary( from, 0 ) ); from.SendSound( 0x4A ); }
 			else if ( info.ButtonID == 24 ){ from.CloseGump( typeof( MyChat ) ); from.SendGump( new MyChat( from, 0 ) ); from.SendSound( 0x4A ); }
-			else if ( info.ButtonID == 25 ){ if ( from.HasGump( typeof( SpellBarsBard1 ) ) ){ InvokeCommand( "bardclose1", from ); } else { InvokeCommand( "bardtool1", from ); } }
-			else if ( info.ButtonID == 250 ){ if ( from.HasGump( typeof( SpellBarsBard2 ) ) ){ InvokeCommand( "bardclose2", from ); } else { InvokeCommand( "bardtool2", from ); } }
-			else if ( info.ButtonID == 26 ){ if ( from.HasGump( typeof( SpellBarsKnight1 ) ) ){ InvokeCommand( "knightclose1", from ); } else { InvokeCommand( "knighttool1", from ); } }
-			else if ( info.ButtonID == 260 ){ if ( from.HasGump( typeof( SpellBarsKnight2 ) ) ){ InvokeCommand( "knightclose2", from ); } else { InvokeCommand( "knighttool2", from ); } }
-			else if ( info.ButtonID == 27 ){ if ( from.HasGump( typeof( SpellBarsDeath1 ) ) ){ InvokeCommand( "deathclose1", from ); } else { InvokeCommand( "deathtool1", from ); } }
-			else if ( info.ButtonID == 270 ){ if ( from.HasGump( typeof( SpellBarsDeath2 ) ) ){ InvokeCommand( "deathclose2", from ); } else { InvokeCommand( "deathtool2", from ); } }
+			else if ( info.ButtonID == 25 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Bard_1 ); }
+			else if ( info.ButtonID == 250 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Bard_2 ); }
+			else if ( info.ButtonID == 26 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Knight_1 ); }
+			else if ( info.ButtonID == 260 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Knight_2 ); }
+			else if ( info.ButtonID == 27 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Death_1 ); }
+			else if ( info.ButtonID == 270 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Death_2 ); }
 			else if ( info.ButtonID == 28 )
 			{
 				if ( from.HasGump( typeof( DruidPouch.DruidBar ) ) )
@@ -353,8 +354,8 @@ namespace Server.Gumps
 					else { from.SendGump( new DruidPouch.DruidBar( from, pouch, false ) ); }
 				}
 			}
-			else if ( info.ButtonID == 29 ){ if ( from.HasGump( typeof( SpellBarsElement1 ) ) ){ InvokeCommand( "elementclose1", from ); } else { InvokeCommand( "elementtool1", from ); } }
-			else if ( info.ButtonID == 290 ){ if ( from.HasGump( typeof( SpellBarsElement2 ) ) ){ InvokeCommand( "elementclose2", from ); } else { InvokeCommand( "elementtool2", from ); } }
+			else if ( info.ButtonID == 29 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Elemental_1 ); }
+			else if ( info.ButtonID == 290 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Elemental_2 ); }
 			else if ( info.ButtonID == 30 )
 			{ 
 				if ( from.HasGump( typeof( JediSpellbook.PowerColumn ) ) )
@@ -386,20 +387,20 @@ namespace Server.Gumps
 				else if ( from.HasGump( typeof( BagOfTricks.TricksSmallRow ) ) ){ 		from.CloseGump( typeof( BagOfTricks.TricksSmallRow ) );	}
 				else { 																																from.SendGump( new BagOfTricks.TricksLargeColumn( from ) );	}
 			}
-			else if ( info.ButtonID == 32 ){ if ( from.HasGump( typeof( SpellBarsMage1 ) ) ){ InvokeCommand( "mageclose1", from ); } else { InvokeCommand( "magetool1", from ); } }
-			else if ( info.ButtonID == 320 ){ if ( from.HasGump( typeof( SpellBarsMage2 ) ) ){ InvokeCommand( "mageclose2", from ); } else { InvokeCommand( "magetool2", from ); } }
-			else if ( info.ButtonID == 352 ){ if ( from.HasGump( typeof( SpellBarsMage3 ) ) ){ InvokeCommand( "mageclose3", from ); } else { InvokeCommand( "magetool3", from ); } }
-			else if ( info.ButtonID == 384 ){ if ( from.HasGump( typeof( SpellBarsMage4 ) ) ){ InvokeCommand( "mageclose4", from ); } else { InvokeCommand( "magetool4", from ); } }
-			else if ( info.ButtonID == 33 ){ if ( from.HasGump( typeof( SpellBarsMonk1 ) ) ){ InvokeCommand( "monkclose1", from ); } else { InvokeCommand( "monktool1", from ); } }
-			else if ( info.ButtonID == 330 ){ if ( from.HasGump( typeof( SpellBarsMonk2 ) ) ){ InvokeCommand( "monkclose2", from ); } else { InvokeCommand( "monktool2", from ); } }
-			else if ( info.ButtonID == 34 ){ if ( from.HasGump( typeof( SpellBarsNecro1 ) ) ){ InvokeCommand( "necroclose1", from ); } else { InvokeCommand( "necrotool1", from ); } }
-			else if ( info.ButtonID == 340 ){ if ( from.HasGump( typeof( SpellBarsNecro2 ) ) ){ InvokeCommand( "necroclose2", from ); } else { InvokeCommand( "necrotool2", from ); } }
-			else if ( info.ButtonID == 35 ){ if ( from.HasGump( typeof( SpellBarsPriest1 ) ) ){ InvokeCommand( "holyclose1", from ); } else { InvokeCommand( "holytool1", from ); } }
-			else if ( info.ButtonID == 350 ){ if ( from.HasGump( typeof( SpellBarsPriest2 ) ) ){ InvokeCommand( "holyclose2", from ); } else { InvokeCommand( "holytool2", from ); } }
-			else if ( info.ButtonID == 36 ){ if ( from.HasGump( typeof( SetupBarsArch1 ) ) ){ InvokeCommand( "archclose1", from ); } else { InvokeCommand( "archtool1", from ); } }
-			else if ( info.ButtonID == 360 ){ if ( from.HasGump( typeof( SetupBarsArch2 ) ) ){ InvokeCommand( "archclose2", from ); } else { InvokeCommand( "archtool2", from ); } }
-			else if ( info.ButtonID == 396 ){ if ( from.HasGump( typeof( SetupBarsArch3 ) ) ){ InvokeCommand( "archclose3", from ); } else { InvokeCommand( "archtool3", from ); } }
-			else if ( info.ButtonID == 432 ){ if ( from.HasGump( typeof( SetupBarsArch4 ) ) ){ InvokeCommand( "archclose4", from ); } else { InvokeCommand( "archtool4", from ); } }
+			else if ( info.ButtonID == 32 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Mage_1 ); }
+			else if ( info.ButtonID == 320 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Mage_2 ); }
+			else if ( info.ButtonID == 352 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Mage_3 ); }
+			else if ( info.ButtonID == 384 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Mage_4 ); }
+			else if ( info.ButtonID == 33 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Monk_1 ); }
+			else if ( info.ButtonID == 330 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Monk_2 ); }
+			else if ( info.ButtonID == 34 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Necro_1 ); }
+			else if ( info.ButtonID == 340 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Necro_2 ); }
+			else if ( info.ButtonID == 35 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Priest_1 ); }
+			else if ( info.ButtonID == 350 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Priest_2 ); }
+			else if ( info.ButtonID == 36 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Ancient_1 ); }
+			else if ( info.ButtonID == 360 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Ancient_2 ); }
+			else if ( info.ButtonID == 396 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Ancient_3 ); }
+			else if ( info.ButtonID == 432 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Ancient_4 ); }
 			else if ( info.ButtonID == 37 )
 			{
 				if ( from.HasGump( typeof( ShinobiScroll.ShinobiColumn ) ) )

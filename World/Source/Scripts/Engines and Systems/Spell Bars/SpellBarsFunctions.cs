@@ -1,29 +1,5 @@
 using System;
-using Server;
-using System.Collections;
-using Server.Network;
 using Server.Mobiles;
-using Server.Items;
-using Server.Misc;
-using Server.Commands;
-using Server.Commands.Generic;
-using Server.Spells;
-using Server.Spells.First;
-using Server.Spells.Second;
-using Server.Spells.Third;
-using Server.Spells.Fourth;
-using Server.Spells.Fifth;
-using Server.Spells.Sixth;
-using Server.Spells.Seventh;
-using Server.Spells.Eighth;
-using Server.Spells.Necromancy;
-using Server.Spells.Chivalry;
-using Server.Spells.DeathKnight; 
-using Server.Spells.Song;
-using Server.Spells.HolyMan;
-using Server.Spells.Research;
-using Server.Prompts;
-using Server.Gumps;
 
 namespace Server.SpellBars
 {
@@ -57,6 +33,7 @@ namespace Server.SpellBars
 			else if ( ToolBar == "SetupBarsPriest2" ){ ToolBarSetting = m.SpellBars.Priest2; }
 			else if ( ToolBar == "SetupBarsMonk1" ){ ToolBarSetting = m.SpellBars.Monk1; }
 			else if ( ToolBar == "SetupBarsMonk2" ){ ToolBarSetting = m.SpellBars.Monk2; }
+			else Console.WriteLine("Invalid Toolbar key: {0}", ToolBar);
 
 			string[] eachSetting = ToolBarSetting.Split('#');
 			int nLine = 1;
@@ -159,6 +136,7 @@ namespace Server.SpellBars
 			else if ( ToolBar == "SetupBarsPriest2" ){ return pm.SpellBars.Priest2; }
 			else if ( ToolBar == "SetupBarsMonk1" ){ return pm.SpellBars.Monk1; }
 			else if ( ToolBar == "SetupBarsMonk2" ){ return pm.SpellBars.Monk2; }
+			else Console.WriteLine("Invalid Toolbar key: {0}", ToolBar);
 
 			return "";
 		}
@@ -184,6 +162,24 @@ namespace Server.SpellBars
 			int nValue = Convert.ToInt32(sSetting);
 
 			return nValue;
+		}
+
+		public static bool GetToolBarSetting( string ToolBarSetting, int nSetting )
+		{
+			string sSetting = "0";
+
+			string[] eachSetting = ToolBarSetting.Split('#');
+			int nLine = 1;
+
+			foreach (string eachSettings in eachSetting)
+			{
+				if ( nLine == nSetting ){ sSetting = eachSettings; break; }
+				nLine++;
+			}
+
+			int nValue = Convert.ToInt32(sSetting);
+
+			return nValue > 0;
 		}
 	}
 }

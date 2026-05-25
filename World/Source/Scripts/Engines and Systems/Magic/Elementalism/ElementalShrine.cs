@@ -130,31 +130,13 @@ namespace Server.Items
 				if ( newWindows )
 				{
 					ElementalSpell.UnequipBook( m );
-					if ( m.HasGump( typeof( SpellBarsElement1 ) ) )
-					{
-						m.CloseGump( typeof( SpellBarsElement1 ) );
-						m.SendGump( new SpellBarsElement1( m ) );
-					}
-					if ( m.HasGump( typeof( SpellBarsElement2 ) ) )
-					{
-						m.CloseGump( typeof( SpellBarsElement2 ) );
-						m.SendGump( new SpellBarsElement2( m ) );
-					}
+					SpellBarRegistry.CloseAllToolbars( m, SpellBarSchool.Elemental );
 					if ( m.HasGump( typeof( QuickBar ) ) )
 					{
 						m.CloseGump( typeof( QuickBar ) );
 						m.SendGump( new QuickBar( m ) );
 					}
-					if ( m.HasGump( typeof( SetupBarsElement1 ) ) )
-					{
-						m.CloseGump( typeof( SetupBarsElement1 ) );
-						m.SendGump( new SetupBarsElement1( (PlayerMobile)m, 0 ) );
-					}
-					if ( m.HasGump( typeof( SetupBarsElement2 ) ) )
-					{
-						m.CloseGump( typeof( SetupBarsElement2 ) );
-						m.SendGump( new SetupBarsElement2( (PlayerMobile)m, 0 ) );
-					}
+					SpellBarRegistry.RefreshOpenSetupGumps( m, SpellBarSchool.Elemental );
 					m.CloseGump( typeof( ElementalSpellbookGump ) );
 					m.CloseGump( typeof( ElementalSpellHelp ) );
 				}

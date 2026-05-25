@@ -1063,6 +1063,15 @@ namespace Server.Items
 				AddHtml( 12, 12, 382, 20, @"<BODY><BASEFONT Color=" + color + ">" + titleTxt + "</BASEFONT></BODY>", (bool)false, (bool)false);
 			}
 
+			private static void OpenArchSetupGump( Mobile from, SpellBarId barId )
+			{
+				var player = from as PlayerMobile;
+				if ( player == null )
+					return;
+
+				SpellBarRegistry.OpenSetup( player, barId, 2 );
+			}
+
 			public override void OnResponse( NetState state, RelayInfo info )
 			{
 				Mobile from = state.Mobile;
@@ -1112,10 +1121,10 @@ namespace Server.Items
 				}
 				else if ( info.ButtonID > 1200 )
 				{
-					if ( info.ButtonID == 1201 ){ from.CloseGump( typeof( SetupBarsArch1 ) ); from.SendGump( new SetupBarsArch1( (PlayerMobile)from, 2 ) ); }
-					else if ( info.ButtonID == 1202 ){ from.CloseGump( typeof( SetupBarsArch2 ) ); from.SendGump( new SetupBarsArch2( (PlayerMobile)from, 2 ) ); }
-					else if ( info.ButtonID == 1203 ){ from.CloseGump( typeof( SetupBarsArch3 ) ); from.SendGump( new SetupBarsArch3( (PlayerMobile)from, 2 ) ); }
-					else if ( info.ButtonID == 1204 ){ from.CloseGump( typeof( SetupBarsArch4 ) ); from.SendGump( new SetupBarsArch4( (PlayerMobile)from, 2 ) ); }
+					if ( info.ButtonID == 1201 ){ OpenArchSetupGump( from, SpellBarId.Ancient_1 ); }
+					else if ( info.ButtonID == 1202 ){ OpenArchSetupGump( from, SpellBarId.Ancient_2 ); }
+					else if ( info.ButtonID == 1203 ){ OpenArchSetupGump( from, SpellBarId.Ancient_3 ); }
+					else if ( info.ButtonID == 1204 ){ OpenArchSetupGump( from, SpellBarId.Ancient_4 ); }
 
 					else if ( info.ButtonID == 1211 ){ InvokeCommand( "archtool1", from ); }
 					else if ( info.ButtonID == 1212 ){ InvokeCommand( "archtool2", from ); }

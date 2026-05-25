@@ -1413,72 +1413,72 @@ namespace Server.Engines.Help
 
 					case PageActionType.MagicToolbar_BardSongsBarI_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsBard1( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Bard_1, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_BardSongsBarII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsBard2( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Bard_2, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_KnightSpellBarI_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsKnight1( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Knight_1, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_KnightSpellBarII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsKnight2( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Knight_2, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_DeathKnightSpellBarI_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsDeath1( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Death_1, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_DeathKnightSpellBarII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsDeath2( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Death_2, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_MagerySpellBarI_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsMage1( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_1, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_MagerySpellBarII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsMage2( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_2, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_MagerySpellBarIII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsMage3( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_3, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_MagerySpellBarIV_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsMage4( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_4, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_NecromancerSpellBarI_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsNecro1( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Necro_1, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_NecromancerSpellBarII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsNecro2( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Necro_2, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_PriestSpellBarI_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsPriest1( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Priest_1, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_PriestSpellBarII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsPriest2( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Priest_2, from, 1 ) );
 						break;
 					}
 					case PageActionType.Setting_CustomTitle:
@@ -1488,42 +1488,42 @@ namespace Server.Engines.Help
 					}
 					case PageActionType.MagicToolbar_AncientSpellBarI_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsArch1( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_1, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_AncientSpellBarII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsArch2( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_2, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_AncientSpellBarIII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsArch3( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_3, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_AncientSpellBarIV_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsArch4( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_4, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_MonkSpellBarI_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsMonk1( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Monk_1, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_MonkSpellBarII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsMonk2( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Monk_2, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_ElementalSpellBarI_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsElement1( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Elemental_1, from, 1 ) );
 						break;
 					}
 					case PageActionType.MagicToolbar_ElementalSpellBarII_Config:
 					{
-						TryConfigureSpellBar( new SetupBarsElement2( (PlayerMobile)from, 1 ) );
+						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Elemental_2, from, 1 ) );
 						break;
 					}
 
