@@ -1135,7 +1135,25 @@ namespace Server.Engines.Craft
 					}
 					else if (tool is IRunicWhenExceptional && ItemUtilities.IsExceptional(item)) // Exceptional applies a runic
 					{
-						BaseRunicTool.ApplyAttributesTo(item, 1, 5, 20);
+						int min = 5;
+						int max = 20;
+
+						if (0 < Skills.Count)
+						{
+							var skill = Skills.GetAt(0);
+							var skillValue = from.Skills[skill.SkillToMake].Value;
+							if (100 < skillValue)
+							{
+								// 5 - 20
+								if (105 <= skillValue) max += 5; // 5 - 25
+								if (110 <= skillValue) min += 5; // 10 - 25
+								if (115 <= skillValue) max += 5; // 10 - 30
+								if (120 <= skillValue) min += 5; // 15 - 30
+								if (125 <= skillValue) max += 5; // 15 - 35
+							}
+						}
+
+						BaseRunicTool.ApplyAttributesTo(item, 1, min, max);
 					}
 
 					if ( maxAmount > 0 )
