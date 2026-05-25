@@ -65,16 +65,6 @@ namespace Server.Engines.Craft
 				AddHtmlLocalized( 50, 408, 150, 18, 1044150, LabelColor, false, false ); // BACK
 					
 				bool needsRecipe = craftItem.Recipe != null && from is PlayerMobile && !((PlayerMobile)from).HasRecipe( craftItem.Recipe );
-				if ( !needsRecipe && CraftSystem.AllowManyCraft( m_Tool ) && !m_CraftItem.UseAllRes )
-				{
-					CraftGump.AddCraftAmountButtons( this, 270, 405, 1 );
-					AddHtmlLocalized( 403, 408, 150, 18, 1044151, LabelColor, false, false ); // MAKE NOW
-				}
-				// else
-				// {
-				// 	AddButton( 270, 387, 4005, 4007, 1, GumpButtonType.Reply, 0 );
-				// 	AddHtmlLocalized( 305, 390, 150, 18, 1044151, LabelColor, false, false ); // MAKE NOW
-				// }
 
 				if ( craftItem.NameNumber > 0 )
 					AddHtmlLocalized( 330, 40, 180, 18, craftItem.NameNumber, LabelColor, false, false );
