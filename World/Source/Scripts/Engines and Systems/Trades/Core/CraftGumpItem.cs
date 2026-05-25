@@ -111,7 +111,7 @@ namespace Server.Engines.Craft
 					else if ( CraftSystem.AllowManyCraft( m_Tool ) && !m_CraftItem.UseAllRes)
 					{
 						AddHtml( x, y, 100, 40, String.Format( "<BASEFONT COLOR={0}>Craft Amount:</BASEFONT>", TextColor ), false, false );
-						CraftGump.AddCraftAmountButtons( this, x + 95, y - 3, 1 );
+						CraftGump.AddCraftAmountButtons( this, x + 90, y - 3, 1 );
 					}
 					else
 					{

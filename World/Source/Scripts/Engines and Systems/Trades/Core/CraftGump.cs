@@ -115,7 +115,7 @@ namespace Server.Engines.Craft
 					else if ( CraftSystem.AllowManyCraft( m_Tool ) && context.LastMade != null && !context.LastMade.UseAllRes)
 					{
 						AddHtml( x, y, 100, 40, String.Format( "<BASEFONT COLOR=#{0:X6}>Craft Amount:</BASEFONT>", FontColor ), false, false );
-						AddCraftAmountButtons( this, x + 95, y - 3, GetButtonID( 6, 2 ) );
+						AddCraftAmountButtons( this, x + 90, y - 3, GetButtonID( 6, 2 ) );
 					}
 					else if ( context.LastMade != null )
 					{
@@ -225,11 +225,17 @@ namespace Server.Engines.Craft
 		public static void AddCraftAmountButtons( Gump g, int x, int y, int baseButtonId )
 		{
 			g.AddButton( x, y, CRAFT_AMOUNT_ICON1, CRAFT_AMOUNT_ICON1, baseButtonId, GumpButtonType.Reply, 0 );
-			g.AddButton( x + 30, y, CRAFT_AMOUNT_ICON10, CRAFT_AMOUNT_ICON10, 1000 + baseButtonId, GumpButtonType.Reply, 0 );
-			g.AddButton( x + 60, y, CRAFT_AMOUNT_ICON100, CRAFT_AMOUNT_ICON100, 2000 + baseButtonId, GumpButtonType.Reply, 0 );
+			x += 17;
+			x += 22;
+			g.AddButton( x, y, CRAFT_AMOUNT_ICON10, CRAFT_AMOUNT_ICON10, 1000 + baseButtonId, GumpButtonType.Reply, 0 );
+			x += 23;
+			x += 22;
+			g.AddButton( x, y, CRAFT_AMOUNT_ICON100, CRAFT_AMOUNT_ICON100, 2000 + baseButtonId, GumpButtonType.Reply, 0 );
+			x += 31;
+			x += 22;
 			
 			// Custom amount button
-			int startX = x + 99;
+			int startX = x;
 			g.AddButton( startX, y, CRAFT_AMOUNT_ICON10, CRAFT_AMOUNT_ICON10, 3000 + baseButtonId, GumpButtonType.Reply, 0 );
 			g.AddTooltip( "Custom amount" );
 			y += 3;
