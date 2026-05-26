@@ -746,7 +746,7 @@ namespace Server.Engines.Help
             CommandSystem.Handle(from, String.Format("{0}{1}", CommandSystem.Prefix, c));
         }
 
-		private void TryConfigureSpellBar(SetupSpellBarGump gump)
+		private void TryConfigureSpellBar(SpellBarSetupGumpBase gump)
 		{
 			if (gump.ConfigureGump())
 			{
