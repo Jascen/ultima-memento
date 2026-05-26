@@ -11,8 +11,8 @@ namespace Server.Engines.Instancing
 
 		public int InstanceId { get { return m_InstanceId; } }
 
-		public SkyInstanceRegion( int instanceId, Map map, Rectangle2D area )
-			: base( SkyInstanceManager.RegionNameFor( instanceId ), map, 50, area )
+		public SkyInstanceRegion( int instanceId, Map map, Rectangle3D area )
+			: base( SkyInstanceManager.RegionNameFor( instanceId ), map, SkyInstanceManager.RegionPriority, area )
 		{
 			m_InstanceId = instanceId;
 		}
