@@ -35,12 +35,6 @@ namespace Server.Items
 
         public void Target( Mobile m, Mobile from, Artifact_RodOfResurrection rod )
         {
-            if ( m == from )
-            {
-                SelfTarget( from );
-                return;
-            }
-
             if ( !from.CanSee( m ) )
             {
                 from.SendLocalizedMessage( 500237 ); // Target can not be seen.
@@ -48,6 +42,20 @@ namespace Server.Items
             else if ( !from.Alive )
             {
                 from.SendLocalizedMessage( 501040 ); // The resurrecter must be alive.
+            }
+            else if ( m == from )
+            {
+	            if ( SoulOrb.FindActive( from ) != null )
+	            {
+	                from.SendMessage( "The spirits watch you already." );
+	                return;
+	            }
+	
+	            var orb = SoulOrb.Create( from, SoulOrbType.Default );
+	            if ( orb != null )
+	            {
+	                from.SendMessage( "You feel the spirits watching you, awaiting to send you back to your body." );
+	            }
             }
             else if (m.Alive && !m.IsDeadBondedPet)
             {
@@ -80,28 +88,6 @@ namespace Server.Items
  
                 master.CloseGump(typeof(PetResurrectGump));
                 master.SendGump(new PetResurrectGump(master, pet));
-            }
-        }
-
-        private void SelfTarget( Mobile from )
-        {
-            if ( !from.Alive )
-            {
-                from.SendLocalizedMessage( 501040 ); // The resurrecter must be alive.
-                return;
-            }
-
-            if ( SoulOrb.FindActive( from ) != null )
-            {
-                from.SendMessage( "The spirits watch you already." );
-                return;
-            }
-
-            var orb = SoulOrb.Create( from, SoulOrbType.Default );
-            if ( orb != null )
-            {
-                from.SendMessage( "You feel the spirits watching you, awaiting to send you back to your body." );
-                orb.Location = Location;
             }
         }
 
