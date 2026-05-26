@@ -628,7 +628,7 @@ namespace Server.Misc
 			Land land = Server.Lands.GetLand( map, location, x, y );
 			Region reg = Region.Find( location, map );
 
-			if ( land == Land.Kuldar && PlayerSettings.GetDiscovered( m, "the Bottle World of Kuldar" ) )
+			if ( land == Land.Kuldar && PlayerSettings.GetDiscovered( m, "the Bottle World of Kuldar" ) && !PlayerSettings.GetKeys( m, "VordoKey" ) )
 				canLeave = false;
 
 			if ( land == Land.SkaraBrae )
@@ -685,9 +685,6 @@ namespace Server.Misc
 				return false;
 
 			if ( reg.IsPartOf( "Moonlight Cavern" ) )
-				return false;
-
-			if ( land == Land.Kuldar )
 				return false;
 
 			if ( reg.IsPartOf( "the Village of Ravendark" ) )
