@@ -43,6 +43,20 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage( 501040 ); // The resurrecter must be alive.
             }
+            else if ( m == from )
+            {
+	            if ( SoulOrb.FindActive( from ) != null )
+	            {
+	                from.SendMessage( "The spirits watch you already." );
+	                return;
+	            }
+	
+	            var orb = SoulOrb.Create( from, SoulOrbType.Default );
+	            if ( orb != null )
+	            {
+	                from.SendMessage( "You feel the spirits watching you, awaiting to send you back to your body." );
+	            }
+            }
             else if (m.Alive && !m.IsDeadBondedPet)
             {
                 from.SendLocalizedMessage( 501041 ); // Target is not dead.
