@@ -8,6 +8,8 @@ namespace Server.Engines.Craft
 		private List<CraftItem> m_Items;
 
         public List<CraftItem> Items { get { return m_Items; } }
+        public List<CraftItem> SearchResults { get; private set; }
+		public string SearchTerm { get; set; }
         public int LastResourceIndex { get; set; }
         public int LastResourceIndex2 { get; set; }
         public int LastGroupIndex { get; set; }
@@ -23,6 +25,7 @@ namespace Server.Engines.Craft
 		public CraftContext()
 		{
 			m_Items = new List<CraftItem>();
+			SearchResults = new List<CraftItem>();
 			LastResourceIndex = -1;
 			LastResourceIndex2 = -1;
 			LastGroupIndex = -1;
@@ -32,6 +35,7 @@ namespace Server.Engines.Craft
 			ItemID = 0;
 			Hue = 0;
 			NameString = null;
+			SearchTerm = null;
 		}
 
 		public CraftItem LastMade
@@ -43,6 +47,12 @@ namespace Server.Engines.Craft
 
 				return null;
 			}
+		}
+
+		public void ClearSearch()
+		{
+			SearchResults.Clear();
+			SearchTerm = null;
 		}
 
 		public void OnMade( CraftItem item )

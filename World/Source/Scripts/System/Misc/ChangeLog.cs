@@ -19,6 +19,7 @@ namespace Server.Misc
 			builder.Append("- Craft - Every 5 points past GM now increases the Min or Max intensity bonus by 5% on Exceptional crafts<br>");
 			builder.Append("- Gump - Add tooltips for bee hives<br>");
 			builder.Append("- Gump - Add tooltips for plants<br>");
+			builder.Append("- Gump - Add search button to Craft gump<br>");
 			builder.Append("- Gump - Multi-craft is now a button that prompts for a value<br>");
 			builder.Append("- Gump - Major refactor on Spell Bars for extensibility<br>");
 			builder.Append("- Housekeeping - The following spells had a minor change that should not impact anything:<br>");

@@ -24,6 +24,9 @@ namespace Server.Engines.Craft
 		private const int FontColor = 0xFFFFFF;
 		private const int moveUp = 0;
 		private const int moveDown = 0;
+		private const int LastTenGroupIndex = 501;
+
+		public const int SearchGroupIndex = 502;
 
 		private enum CraftPage
 		{
@@ -58,8 +61,6 @@ namespace Server.Engines.Craft
 			from.CloseGump( typeof( CraftGump ) );
 			from.CloseGump( typeof( CraftGumpItem ) );
 
-			bool needsRecipe = context.LastMade != null && context.LastMade.Recipe != null && from is PlayerMobile && !((PlayerMobile)from).HasRecipe( context.LastMade.Recipe );
-
 			if ( tool.Parent == from )
 			{
 				AddPage( 0 );
@@ -79,6 +80,10 @@ namespace Server.Engines.Craft
 
 					AddImageTiled(10, y, LEFT_WINDOW_WIDTH, BORDER_WIDTH, HORIZONTAL_LINE); // Bottom border
 				}
+				
+				const int ICON_RETICLE = 13006;
+				AddButton( 11, 5+moveDown, ICON_RETICLE, ICON_RETICLE, GetButtonID( 6, 11 ), GumpButtonType.Reply, 0 );
+				AddTooltip("Search");
 
 				if ( craftSystem.GumpTitleNumber > 0 )
 					AddHtmlLocalized( 10, 12, 510, 20, craftSystem.GumpTitleNumber, LabelColor, false, false );
@@ -86,7 +91,10 @@ namespace Server.Engines.Craft
 					AddHtml( 10, 12, 510, 20, craftSystem.GumpTitleString, false, false );
 
 				AddHtmlLocalized( 10, 37+moveDown, 200, 22, 1044010, LabelColor, false, false ); // <CENTER>CATEGORIES</CENTER>
-				AddHtmlLocalized( 215, 37+moveDown, 305, 22, 1044011, LabelColor, false, false ); // <CENTER>SELECTIONS</CENTER>
+				if ( context != null && context.LastGroupIndex == SearchGroupIndex )
+					AddHtml( 215, 37+moveDown, 305, 22, string.Format("<CENTER><BASEFONT Color={0}>RESULTS FOR: {1}</BASEFONT></CENTER>", TextColor, context.SearchTerm), false, false );
+				else
+					AddHtmlLocalized( 215, 37+moveDown, 305, 22, 1044011, LabelColor, false, false ); // <CENTER>SELECTIONS</CENTER>
 
 				// Info Panel
 				if ( craftSystem.ShowGumpInfo && context.ItemID > 0)
@@ -104,6 +112,7 @@ namespace Server.Engines.Craft
 					AddImageTiled(INFO_PANEL_START + 10, y, INFO_WINDOW_WIDTH - 15, BORDER_WIDTH, HORIZONTAL_LINE); // Top border -- Margin
 					y += 10;
 
+					bool needsRecipe = context.LastMade != null && context.LastMade.Recipe != null && from is PlayerMobile && !((PlayerMobile)from).HasRecipe( context.LastMade.Recipe );
 					if ( context.LastMade != null && tool is IRunicTool && !TypeUtilities.IsEquipmentType(context.LastMade.ItemType ) )
 					{
 						AddHtml( x, y, INFO_WINDOW_WIDTH, 40, String.Format( "<BASEFONT COLOR=#{0:X6}>No runic benefit</BASEFONT>", FontColor ), false, false );
@@ -404,21 +413,43 @@ namespace Server.Engines.Craft
 
 		public void CreateItemList( int selectedGroup, Mobile from )
 		{
-			if ( selectedGroup == 501 ) // 501 : Last 10
+			if ( selectedGroup == LastTenGroupIndex )
 			{
 				CreateMakeLastList();
 				return;
 			}
 
+			if ( selectedGroup == SearchGroupIndex )
+			{
+				CraftContext context = m_CraftSystem.GetContext( m_From );
+				if ( context != null )
+					CreateCraftItemSelectionList( context.SearchResults, from );
+
+				return;
+			}
+
 			CraftGroupCol craftGroupCol = m_CraftSystem.CraftGroups;
+
+			if ( selectedGroup < 0 || selectedGroup >= craftGroupCol.Count )
+				return;
+
 			CraftGroup craftGroup = craftGroupCol.GetAt( selectedGroup );
 			CraftItemCol craftItemCol = craftGroup.CraftItems;
+			var items = new List<CraftItem>( craftItemCol.Count );
 
 			for ( int i = 0; i < craftItemCol.Count; ++i )
+				items.Add( craftItemCol.GetAt( i ) );
+
+			CreateCraftItemSelectionList( items, from );
+		}
+
+		public void CreateCraftItemSelectionList( IList<CraftItem> items, Mobile from )
+		{
+			for ( int i = 0; i < items.Count; ++i )
 			{
 				int index = i % 10;
 
-				CraftItem craftItem = craftItemCol.GetAt( i );
+				CraftItem craftItem = items[i];
 
 				if ( index == 0 )
 				{
@@ -491,6 +522,66 @@ namespace Server.Engines.Craft
 				else
 					AddLabel( 265, 62+moveDown + (index * 20), LabelHue, craftItem.NameString );
 			}
+		}
+
+		private static string GetCraftItemDisplayName( CraftItem item )
+		{
+			if ( item.NameNumber > 0 )
+				return CliLocTable.Lookup( item.NameNumber ) ?? string.Empty;
+
+			return item.NameString ?? string.Empty;
+		}
+
+		public static List<CraftItem> SearchCraftItems( CraftSystem system, string query )
+		{
+			query = query.Trim();
+			var results = new List<CraftItem>();
+			CraftItemCol col = system.CraftItems;
+
+			for ( int i = 0; i < col.Count; i++ )
+			{
+				CraftItem item = col.GetAt( i );
+				string name = GetCraftItemDisplayName( item );
+
+				if ( name.IndexOf( query, StringComparison.OrdinalIgnoreCase ) >= 0 )
+					results.Add( item );
+			}
+
+			return results;
+		}
+
+		private static bool TryGetCraftItemAtIndex( CraftContext context, CraftSystem system, int index, out CraftItem item )
+		{
+			item = null;
+
+			if ( context == null || index < 0 )
+				return false;
+
+			if ( context.LastGroupIndex == SearchGroupIndex )
+			{
+				if ( index < context.SearchResults.Count )
+				{
+					item = context.SearchResults[index];
+					return true;
+				}
+
+				return false;
+			}
+
+			CraftGroupCol groups = system.CraftGroups;
+			int groupIndex = context.LastGroupIndex;
+
+			if ( groupIndex < 0 || groupIndex >= groups.Count )
+				return false;
+
+			CraftGroup group = groups.GetAt( groupIndex );
+
+			if ( index >= group.CraftItems.Count )
+				return false;
+
+			item = group.CraftItems.GetAt( index );
+
+			return true;
 		}
 
 		public int CreateGroupList()
@@ -580,6 +671,7 @@ namespace Server.Engines.Craft
 
 					if ( index >= 0 && index < groups.Count )
 					{
+						context.ClearSearch();
 						context.LastGroupIndex = index;
 						m_From.SendGump( new CraftGump( m_From, system, m_Tool, null ) );
 					}
@@ -591,15 +683,9 @@ namespace Server.Engines.Craft
 					if ( context == null )
 						break;
 
-					int groupIndex = context.LastGroupIndex;
-
-					if ( groupIndex >= 0 && groupIndex < groups.Count )
-					{
-						CraftGroup group = groups.GetAt( groupIndex );
-
-						if ( index >= 0 && index < group.CraftItems.Count )
-							CraftItem( group.CraftItems.GetAt( index ), toMake );
-					}
+					CraftItem craftItem;
+					if ( TryGetCraftItemAtIndex( context, system, index, out craftItem ) )
+						CraftItem( craftItem, toMake );
 
 					break;
 				}
@@ -608,15 +694,9 @@ namespace Server.Engines.Craft
 					if ( context == null )
 						break;
 
-					int groupIndex = context.LastGroupIndex;
-
-					if ( groupIndex >= 0 && groupIndex < groups.Count )
-					{
-						CraftGroup group = groups.GetAt( groupIndex );
-
-						if ( index >= 0 && index < group.CraftItems.Count )
-							m_From.SendGump( new CraftGumpItem( m_From, system, group.CraftItems.GetAt( index ), m_Tool ) );
-					}
+					CraftItem craftItem;
+					if ( TryGetCraftItemAtIndex( context, system, index, out craftItem ) )
+						m_From.SendGump( new CraftGumpItem( m_From, system, craftItem, m_Tool ) );
 
 					break;
 				}
@@ -711,9 +791,15 @@ namespace Server.Engines.Craft
 							if ( context == null )
 								break;
 
-							context.LastGroupIndex = 501;
+							context.ClearSearch();
+							context.LastGroupIndex = LastTenGroupIndex;
 							m_From.SendGump( new CraftGump( m_From, system, m_Tool, null ) );
 
+							break;
+						}
+						case 11: // Search
+						{
+							CraftSearchPrompt.Begin( m_From, system, m_Tool );
 							break;
 						}
 						case 4: // Toggle use resource hue
