@@ -12,7 +12,104 @@ namespace Server.Engines.Instancing
 		{
 			CommandSystem.Register( "skydwelling", AccessLevel.Player, new CommandEventHandler( OnSkyDwellingCommand ) );
 			CommandSystem.Register( "leavedwelling", AccessLevel.Player, new CommandEventHandler( OnLeaveDwellingCommand ) );
+			CommandSystem.Register( "skyfriend", AccessLevel.Player, new CommandEventHandler( OnSkyFriendCommand ) );
+			CommandSystem.Register( "skyvisit", AccessLevel.Player, new CommandEventHandler( OnSkyVisitCommand ) );
 			CommandSystem.Register( "skyinstance", AccessLevel.GameMaster, new CommandEventHandler( OnAdminCommand ) );
+		}
+
+		private static void OnSkyFriendCommand( CommandEventArgs e )
+		{
+			Mobile from = e.Mobile;
+
+			if ( e.Arguments.Length == 0 )
+			{
+				from.SendMessage( "Usage: [skyfriend add | remove | list" );
+				return;
+			}
+
+			string sub = e.Arguments[0].ToLower();
+			switch ( sub )
+			{
+				case "list":
+				{
+					SkyInstance inst = SkyInstanceManager.GetByOwner( from );
+					if ( inst == null || inst.Friends.Count == 0 )
+					{
+						from.SendMessage( "You have not invited anyone to your sky dwelling." );
+						return;
+					}
+					from.SendMessage( "Friends invited to your sky dwelling:" );
+					for ( int i = 0; i < inst.Friends.Count; i++ )
+					{
+						Mobile f = World.FindMobile( inst.Friends[i] );
+						from.SendMessage( " - {0}", f != null ? f.Name : String.Format( "(deleted, serial 0x{0:X})", (int)inst.Friends[i] ) );
+					}
+					break;
+				}
+				case "add":
+				{
+					from.SendMessage( "Target the player to invite to your sky dwelling." );
+					from.Target = new FriendTarget( true );
+					break;
+				}
+				case "remove":
+				{
+					from.SendMessage( "Target the player to un-invite from your sky dwelling." );
+					from.Target = new FriendTarget( false );
+					break;
+				}
+				default:
+					from.SendMessage( "Usage: [skyfriend add | remove | list" );
+					break;
+			}
+		}
+
+		private static void OnSkyVisitCommand( CommandEventArgs e )
+		{
+			Mobile from = e.Mobile;
+			from.SendMessage( "Target the player whose sky dwelling you want to visit." );
+			from.Target = new SkyVisitTarget();
+		}
+
+		private class FriendTarget : Target
+		{
+			private readonly bool m_Add;
+			public FriendTarget( bool add ) : base( 12, false, TargetFlags.None )
+			{
+				m_Add = add;
+			}
+			protected override void OnTarget( Mobile from, object o )
+			{
+				PlayerMobile target = o as PlayerMobile;
+				if ( target == null ) { from.SendMessage( "That is not a player." ); return; }
+				if ( target == from ) { from.SendMessage( "You cannot {0} yourself.", m_Add ? "invite" : "un-invite" ); return; }
+
+				if ( m_Add )
+				{
+					if ( SkyInstanceManager.AddFriend( from, target ) )
+						from.SendMessage( "{0} can now visit your sky dwelling.", target.Name );
+					else
+						from.SendMessage( "{0} is already invited.", target.Name );
+				}
+				else
+				{
+					if ( SkyInstanceManager.RemoveFriend( from, target ) )
+						from.SendMessage( "{0} can no longer visit your sky dwelling.", target.Name );
+					else
+						from.SendMessage( "{0} was not on your invite list.", target.Name );
+				}
+			}
+		}
+
+		private class SkyVisitTarget : Target
+		{
+			public SkyVisitTarget() : base( 12, false, TargetFlags.None ) { }
+			protected override void OnTarget( Mobile from, object o )
+			{
+				PlayerMobile target = o as PlayerMobile;
+				if ( target == null ) { from.SendMessage( "That is not a player." ); return; }
+				SkyInstanceManager.VisitFriendDwelling( from, target );
+			}
 		}
 
 		private static void OnSkyDwellingCommand( CommandEventArgs e )
@@ -34,7 +131,7 @@ namespace Server.Engines.Instancing
 
 			if ( e.Arguments.Length == 0 )
 			{
-				from.SendMessage( "[skyinstance subcommands: status | unload <minutes> | despawn | gotoplayer" );
+				from.SendMessage( "[skyinstance subcommands: status | unload <minutes> | despawn | gotoplayer | placeportal | freedead" );
 				return;
 			}
 
@@ -91,8 +188,21 @@ namespace Server.Engines.Instancing
 						from.Target = new VisitTarget();
 						break;
 					}
+				case "placeportal":
+					{
+						SkyDwellingPortal portal = new SkyDwellingPortal();
+						portal.MoveToWorld( from.Location, from.Map );
+						from.SendMessage( "Placed a sky dwelling portal here." );
+						break;
+					}
+				case "freedead":
+					{
+						int freed = SkyInstanceManager.ReleaseDeadOwners();
+						from.SendMessage( "Freed {0} orphaned slot(s).", freed );
+						break;
+					}
 				default:
-					from.SendMessage( "Unknown subcommand. Try: status, unload, despawn, gotoplayer" );
+					from.SendMessage( "Unknown subcommand. Try: status, unload, despawn, gotoplayer, placeportal, freedead" );
 					break;
 			}
 		}

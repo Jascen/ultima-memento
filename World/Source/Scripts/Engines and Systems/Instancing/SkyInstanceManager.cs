@@ -51,11 +51,13 @@ namespace Server.Engines.Instancing
 		{
 			LoadData();
 			RehydrateAll();
+			int orphans = ReleaseDeadOwners();
 			EnsureSweepTimer();
 
-			Console.WriteLine( "[SkyInstance] Ready: {0} allocated / {1} capacity on {2} (Z {3}-{4}, unload after {5} min).",
+			Console.WriteLine( "[SkyInstance] Ready: {0} allocated / {1} capacity on {2} (Z {3}-{4}, unload after {5} min){6}.",
 				_byId.Count, MaxSlots, InstanceMap != null ? InstanceMap.Name : "?",
-				RegionZMin, RegionZMax, (int)UnloadAfter.TotalMinutes );
+				RegionZMin, RegionZMax, (int)UnloadAfter.TotalMinutes,
+				orphans > 0 ? String.Format( ", freed {0} orphaned slot(s)", orphans ) : "" );
 		}
 
 		private static void OnWorldSave( WorldSaveEventArgs e )
@@ -223,23 +225,34 @@ namespace Server.Engines.Instancing
 
 			Point3D landing = GetLandingPoint( inst.Id );
 			Map map = InstanceMap;
+			int x = landing.X, y = landing.Y, z = landing.Z;
 
-			// A simple identifying signpost near the landing. The dwelling "contents"
-			// is intentionally minimal for now; this is the lazy-loaded layer that the
-			// unload sweep deletes.
 			Mobile owner = inst.FindOwner();
 			string ownerLabel = (owner != null && !String.IsNullOrEmpty( owner.Name )) ? owner.Name : String.Format( "#{0}", inst.Id );
 
-			Static sign = new Static( 0x1F28 );
+			// Owner sign on the north edge.
+			Static sign = new Static( 0xBD2 ); // brass house sign — same graphic the housing system uses
 			sign.Name = String.Format( "{0}'s sky dwelling", ownerLabel );
-			sign.MoveToWorld( new Point3D( landing.X, landing.Y - 1, landing.Z ), map );
+			sign.MoveToWorld( new Point3D( x, y - 5, z ), map );
 			inst.TempItems.Add( sign );
 
-			// A couple of decorative torches at the corners.
-			AddTempItem( inst, 0xA12, new Point3D( landing.X - 3, landing.Y - 3, landing.Z ), map );
-			AddTempItem( inst, 0xA12, new Point3D( landing.X + 3, landing.Y - 3, landing.Z ), map );
-			AddTempItem( inst, 0xA12, new Point3D( landing.X - 3, landing.Y + 3, landing.Z ), map );
-			AddTempItem( inst, 0xA12, new Point3D( landing.X + 3, landing.Y + 3, landing.Z ), map );
+			// Lanterns at the four corners of the platform.
+			AddTempItem( inst, 0xA22, new Point3D( x - 4, y - 4, z ), map );
+			AddTempItem( inst, 0xA22, new Point3D( x + 4, y - 4, z ), map );
+			AddTempItem( inst, 0xA22, new Point3D( x - 4, y + 4, z ), map );
+			AddTempItem( inst, 0xA22, new Point3D( x + 4, y + 4, z ), map );
+
+			// Bed along the west wall.
+			AddTempItem( inst, 0xA7B, new Point3D( x - 4, y - 1, z ), map ); // bed head
+			AddTempItem( inst, 0xA7C, new Point3D( x - 4, y,     z ), map ); // bed foot
+
+			// Bookcase against the east wall.
+			AddTempItem( inst, 0xA9D, new Point3D( x + 4, y - 2, z ), map );
+
+			// Small table + chair south of the landing (the landing tile stays clear).
+			AddTempItem( inst, 0xB7D, new Point3D( x,     y + 2, z ), map ); // oak table
+			AddTempItem( inst, 0xB30, new Point3D( x + 1, y + 2, z ), map ); // chair
+			AddTempItem( inst, 0xB30, new Point3D( x - 1, y + 2, z ), map ); // chair
 
 			inst.Loaded = true;
 			inst.Touch();
@@ -293,6 +306,130 @@ namespace Server.Engines.Instancing
 				foreach ( SkyInstance inst in toUnload )
 					Despawn( inst );
 			}
+
+			ReleaseDeadOwners();
+		}
+
+		// ----- Orphaned slot cleanup -----
+
+		public static int ReleaseDeadOwners()
+		{
+			List<SkyInstance> toRelease = null;
+			foreach ( SkyInstance inst in _byId.Values )
+			{
+				if ( World.FindMobile( inst.OwnerSerial ) == null )
+				{
+					if ( toRelease == null ) toRelease = new List<SkyInstance>();
+					toRelease.Add( inst );
+				}
+			}
+
+			if ( toRelease == null ) return 0;
+
+			foreach ( SkyInstance inst in toRelease )
+				FreeSlot( inst );
+
+			return toRelease.Count;
+		}
+
+		public static void FreeSlot( SkyInstance inst )
+		{
+			Despawn( inst );
+
+			// Delete all permanent floor tiles in the slot rect at our Z.
+			Rectangle2D xy = GetSlotRect( inst.Id );
+			List<Item> toDelete = new List<Item>();
+			IPooledEnumerable eable = InstanceMap.GetItemsInBounds( xy );
+			try
+			{
+				foreach ( Item it in eable )
+				{
+					if ( it is Static && it.ItemID == FloorItemId && it.Z == LandingZ )
+						toDelete.Add( it );
+				}
+			}
+			finally
+			{
+				eable.Free();
+			}
+			for ( int i = 0; i < toDelete.Count; i++ )
+				toDelete[i].Delete();
+
+			if ( inst.Region != null )
+			{
+				inst.Region.Unregister();
+				inst.Region = null;
+			}
+
+			_ownerToSlot.Remove( inst.OwnerSerial );
+			_byId.Remove( inst.Id );
+
+			Console.WriteLine( "[SkyInstance] Freed slot {0} (owner serial 0x{1:X} no longer exists).", inst.Id, (int)inst.OwnerSerial );
+		}
+
+		// ----- Friend management -----
+
+		public static bool IsFriend( SkyInstance inst, Mobile m )
+		{
+			if ( inst == null || m == null ) return false;
+			if ( inst.OwnerSerial == m.Serial ) return true;
+			for ( int i = 0; i < inst.Friends.Count; i++ )
+				if ( inst.Friends[i] == m.Serial ) return true;
+			return false;
+		}
+
+		public static bool AddFriend( Mobile owner, Mobile friend )
+		{
+			if ( owner == null || friend == null ) return false;
+			if ( owner == friend ) return false;
+
+			SkyInstance inst = GetOrCreate( owner );
+			if ( inst == null ) return false;
+
+			for ( int i = 0; i < inst.Friends.Count; i++ )
+				if ( inst.Friends[i] == friend.Serial ) return false;
+
+			inst.Friends.Add( friend.Serial );
+			return true;
+		}
+
+		public static bool RemoveFriend( Mobile owner, Mobile friend )
+		{
+			if ( owner == null || friend == null ) return false;
+			SkyInstance inst = GetByOwner( owner );
+			if ( inst == null ) return false;
+
+			for ( int i = 0; i < inst.Friends.Count; i++ )
+			{
+				if ( inst.Friends[i] == friend.Serial )
+				{
+					inst.Friends.RemoveAt( i );
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public static bool VisitFriendDwelling( Mobile from, Mobile owner )
+		{
+			if ( from == null || owner == null ) return false;
+			SkyInstance inst = GetByOwner( owner );
+			if ( inst == null )
+			{
+				from.SendMessage( "{0} has no sky dwelling.", owner.Name );
+				return false;
+			}
+			if ( !IsFriend( inst, from ) && from.AccessLevel < AccessLevel.GameMaster )
+			{
+				from.SendMessage( "{0} has not invited you to their sky dwelling.", owner.Name );
+				return false;
+			}
+
+			Point3D landing = GetLandingPoint( inst.Id );
+			Server.Mobiles.BaseCreature.TeleportPets( from, landing, InstanceMap, false );
+			from.MoveToWorld( landing, InstanceMap );
+			from.SendMessage( "You arrive in {0}'s sky dwelling.", owner.Name );
+			return true;
 		}
 
 		private static bool HasPlayersInside( SkyInstance inst )
@@ -390,7 +527,7 @@ namespace Server.Engines.Instancing
 				SavePath,
 				delegate( GenericWriter writer )
 				{
-					writer.Write( (int) 1 ); // version
+					writer.Write( (int) 2 ); // version
 
 					writer.Write( (int) _byId.Count );
 					foreach ( SkyInstance inst in _byId.Values )
@@ -403,6 +540,9 @@ namespace Server.Engines.Instancing
 						writer.Write( (int) inst.TempItems.Count );
 						for ( int i = 0; i < inst.TempItems.Count; i++ )
 							writer.Write( (Item) inst.TempItems[i] );
+						writer.Write( (int) inst.Friends.Count );
+						for ( int i = 0; i < inst.Friends.Count; i++ )
+							writer.Write( (int) inst.Friends[i] );
 					}
 				} );
 		}
@@ -441,6 +581,13 @@ namespace Server.Engines.Instancing
 									inst.TempItems.Add( it );
 							}
 							inst.Loaded = loaded && inst.TempItems.Count > 0;
+						}
+
+						if ( version >= 2 )
+						{
+							int friendCount = reader.ReadInt();
+							for ( int j = 0; j < friendCount; j++ )
+								inst.Friends.Add( (Serial)reader.ReadInt() );
 						}
 
 						_byId[id] = inst;
