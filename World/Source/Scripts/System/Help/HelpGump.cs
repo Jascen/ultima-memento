@@ -230,6 +230,8 @@ namespace Server.Engines.Help
 			Setting_SingleAttemptID_Info,
 			Setting_ColorlessFabricBreakdown,
 			Setting_ColorlessFabricBreakdown_Info,
+			Setting_DoubleClickToTalk,
+			Setting_DoubleClickToTalk_Info,
 		}
 
 		public static void Initialize()
@@ -632,6 +634,9 @@ namespace Server.Engines.Help
 				AddSetting(xs, g, from, "Double Click to ID Items", PageActionType.Setting_DoubleClickToIDItems, PageActionType.Setting_DoubleClickToIDItems_Info);
 				if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
 
+				AddSetting(xs, g, from, "Double Click Talk", PageActionType.Setting_DoubleClickToTalk, PageActionType.Setting_DoubleClickToTalk_Info);
+				if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
+
 				AddSetting(xs, g, from, "Single ID Attempt", PageActionType.Setting_SingleAttemptID, PageActionType.Setting_SingleAttemptID_Info);
 				if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
 
@@ -892,6 +897,7 @@ namespace Server.Engines.Help
 				case PageActionType.Setting_WeaponAbilityNames: return from.Preferences.CharacterWepAbNames;
 				case PageActionType.Setting_UseAncientSpellbook: return ResearchSettings.BookCaster( from );
 				case PageActionType.Setting_DoubleClickToIDItems: return from.Preferences.DoubleClickID;
+				case PageActionType.Setting_DoubleClickToTalk: return from.Preferences.DoubleClickToTalk;
 				case PageActionType.Setting_OrdinaryResources: return from.HarvestOrdinary;
 				case PageActionType.Setting_RemoveVendorGoldSafeguard: return from.Preferences.IgnoreVendorGoldSafeguard;
 				case PageActionType.Setting_SuppressVendorTooltips: return from.Preferences.SuppressVendorTooltip;
@@ -1383,6 +1389,12 @@ namespace Server.Engines.Help
 					case PageActionType.Setting_DoubleClickToIDItems:
 					{
 						from.Preferences.DoubleClickID = !from.Preferences.DoubleClickID;
+						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
+						break;
+					}
+					case PageActionType.Setting_DoubleClickToTalk:
+					{
+						from.Preferences.DoubleClickToTalk = !from.Preferences.DoubleClickToTalk;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
 						break;
 					}
@@ -2261,6 +2273,14 @@ namespace Server.Engines.Help
 					scrollbar = false;
 					title = "Double Click to ID Items";
 					info = "Enabling this will allow your character to try and identify items by double clicking them.<BR><BR>NOTE: if you are using any third party software, that tries to open all of your containers, then that third party software will try to identify these items without your consent.";
+					break;
+				}
+
+				case PageActionType.Setting_DoubleClickToTalk_Info:
+				{
+					scrollbar = false;
+					title = "Double Click Talk";
+					info = "When enabled, double clicking a citizen or other talkative NPC (the ones with a 'Talk' option in their context menu - found at meeting spots, town guards, innkeepers, couriers, and epic characters) will open their conversation directly instead of opening their paperdoll. NPCs without anything to say still show their paperdoll as normal.";
 					break;
 				}
 

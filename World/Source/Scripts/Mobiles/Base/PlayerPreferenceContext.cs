@@ -43,6 +43,8 @@ namespace Server.Mobiles
 			}
 
 			DefaultRunebookSpellType = 2 < version ? (RunebookGump.SpellType)reader.ReadInt() : RunebookGump.SpellType.None;
+
+			DoubleClickToTalk = 3 < version ? reader.ReadBool() : false;
 		}
 
 		[CommandProperty(AccessLevel.GameMaster)]
@@ -77,6 +79,9 @@ namespace Server.Mobiles
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public bool DoubleClickID { get; set; }
+
+		[CommandProperty(AccessLevel.GameMaster)]
+		public bool DoubleClickToTalk { get; set; }
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public int GumpHue { get; set; }
@@ -119,7 +124,7 @@ namespace Server.Mobiles
 
 		public void Serialize(GenericWriter writer)
 		{
-			writer.Write(3);
+			writer.Write(4);
 
 			writer.Write(DoubleClickID);
 			writer.Write(SuppressVendorTooltip);
@@ -146,6 +151,8 @@ namespace Server.Mobiles
 			writer.Write(RegBar);
 			writer.Write(UsingAncientBook);
 			writer.Write((int)DefaultRunebookSpellType);
+
+			writer.Write(DoubleClickToTalk);
 		}
 	}
 }

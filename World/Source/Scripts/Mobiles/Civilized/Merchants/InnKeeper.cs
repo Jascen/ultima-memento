@@ -117,11 +117,20 @@ namespace Server.Mobiles
 		}
 
 		///////////////////////////////////////////////////////////////////////////
-		public override void GetContextMenuEntries( Mobile from, List<ContextMenuEntry> list ) 
-		{ 
-			base.GetContextMenuEntries( from, list ); 
-			list.Add( new SpeechGumpEntry( from, this ) ); 
-		} 
+		public override void GetContextMenuEntries( Mobile from, List<ContextMenuEntry> list )
+		{
+			base.GetContextMenuEntries( from, list );
+			list.Add( new SpeechGumpEntry( from, this ) );
+		}
+
+		public override bool TryTalk( PlayerMobile from )
+		{
+			if ( from == null )
+				return false;
+
+			new SpeechGumpEntry( from, this ).OnClick();
+			return true;
+		}
 
 		public class SpeechGumpEntry : ContextMenuEntry
 		{
