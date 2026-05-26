@@ -773,7 +773,7 @@ namespace Server
 
 	public class LootPackItem
 	{
-		private Type m_Type;
+		public Type Type { get; private set; }
 		private int m_Chance;
 
 		public int Chance
@@ -787,7 +787,7 @@ namespace Server
 			try
 			{
 				Item item;
-				Type type = m_Type;
+				Type type = Type;
 
 				creator = creator != null ? MobileUtilities.TryGetMasterPlayer(creator) : null;
 				if (creator is PlayerMobile)
@@ -873,7 +873,7 @@ namespace Server
 
 		public LootPackItem( Type type, int chance )
 		{
-			m_Type = type;
+			Type = type;
 			m_Chance = chance;
 		}
 	}
