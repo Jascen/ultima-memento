@@ -13,6 +13,7 @@ namespace Server.Engines.Instancing
 		private readonly List<Item> m_TempItems = new List<Item>();
 		private Item m_Floor;
 		private SkyInstanceRegion m_Region;
+		private readonly List<Serial> m_Friends = new List<Serial>();
 
 		public int Id { get { return m_Id; } }
 		public Serial OwnerSerial { get { return m_OwnerSerial; } set { m_OwnerSerial = value; } }
@@ -21,6 +22,7 @@ namespace Server.Engines.Instancing
 		public List<Item> TempItems { get { return m_TempItems; } }
 		public Item Floor { get { return m_Floor; } set { m_Floor = value; } }
 		public SkyInstanceRegion Region { get { return m_Region; } set { m_Region = value; } }
+		public List<Serial> Friends { get { return m_Friends; } }
 
 		public SkyInstance( int id )
 		{
