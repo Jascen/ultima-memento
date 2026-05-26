@@ -634,7 +634,7 @@ namespace Server.Engines.Help
 				AddSetting(xs, g, from, "Double Click to ID Items", PageActionType.Setting_DoubleClickToIDItems, PageActionType.Setting_DoubleClickToIDItems_Info);
 				if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
 
-				AddSetting(xs, g, from, "Double Click talk to Citizens", PageActionType.Setting_DoubleClickToTalk, PageActionType.Setting_DoubleClickToTalk_Info);
+				AddSetting(xs, g, from, "Double Click Talk", PageActionType.Setting_DoubleClickToTalk, PageActionType.Setting_DoubleClickToTalk_Info);
 				if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
 
 				AddSetting(xs, g, from, "Single ID Attempt", PageActionType.Setting_SingleAttemptID, PageActionType.Setting_SingleAttemptID_Info);
@@ -2279,7 +2279,7 @@ namespace Server.Engines.Help
 				case PageActionType.Setting_DoubleClickToTalk_Info:
 				{
 					scrollbar = false;
-					title = "Double Click talk to Citizens";
+					title = "Double Click Talk";
 					info = "When enabled, double clicking a citizen or other talkative NPC (the ones with a 'Talk' option in their context menu - found at meeting spots, town guards, innkeepers, couriers, and epic characters) will open their conversation directly instead of opening their paperdoll. NPCs without anything to say still show their paperdoll as normal.";
 					break;
 				}
