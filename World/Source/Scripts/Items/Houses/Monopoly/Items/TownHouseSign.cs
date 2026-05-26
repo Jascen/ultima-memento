@@ -497,7 +497,7 @@ namespace Knives.TownHouses
 			Purchase( m, false );
 		}
 
-		public void Purchase( Mobile m, bool sellitems )
+		public virtual void Purchase( Mobile m, bool sellitems )
 		{
             try
             {

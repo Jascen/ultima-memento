@@ -38,6 +38,10 @@ namespace Server
 
 		public static int GetDifficulty( Point3D loc, Map map ) // THESE ARE DUNGEON DIFFICULTY LEVELS FROM 0 (NEWBIE) TO 1 (NORMAL) UP TO 5 (EPIC)
 		{
+			// Instance maps mirror a real map; resolve so the map-identity checks below match.
+			if ( map != null && map.BaseMap != null )
+				map = map.BaseMap;
+
 			Land land = Lands.GetLand( map, loc, loc.X, loc.Y );
 
 			int Heat = -5;
@@ -343,6 +347,11 @@ namespace Server
 
 		public static Land GetLand( Map map, Point3D location, int x, int y )
 		{
+			// Instance maps mirror a real map; resolve to it so the map-identity
+			// checks below behave as they would on the original.
+			if ( map != null && map.BaseMap != null )
+				map = map.BaseMap;
+
 			Region reg = Region.Find( location, map );
 			Land land = Land.Sosaria;
 
@@ -491,6 +500,11 @@ namespace Server
     {
 		public static Terrain GetTerrain( Map map, Point3D location, int x, int y )
 		{
+			// Instance maps mirror a real map; resolve so map-identity checks match
+			// (tiles are shared, so the lookups read identical terrain either way).
+			if ( map != null && map.BaseMap != null )
+				map = map.BaseMap;
+
 			if ( map == Map.Internal || x < 0 || y < 0 )
 				return Terrain.None;
 
@@ -1496,6 +1510,21 @@ namespace Server
 		private static List<Map> m_AllMaps = new List<Map>();
 
 		public static List<Map> AllMaps { get { return m_AllMaps; } }
+
+		private Map m_BaseMap;
+
+		// The real map this map is an instance copy of (e.g. SerpentIsland), or null
+		// for a normal map. Instance maps are separate objects for isolation, so a
+		// reference check like ( map == Map.SerpentIsland ) is false for them; use
+		// Logical / IsInstance to reason about the map they mirror.
+		public Map BaseMap { get { return m_BaseMap; } set { m_BaseMap = value; } }
+
+		// True if this map is a per-player instance copy of another map.
+		public bool IsInstance { get { return m_BaseMap != null; } }
+
+		// This map, or the real map it mirrors. Use for terrain/land/rule logic and
+		// for identity checks, e.g. ( map.Logical == Map.SerpentIsland ).
+		public Map Logical { get { return m_BaseMap != null ? m_BaseMap : this; } }
 
 		private int m_MapID, m_MapIndex, m_FileIndex;
 

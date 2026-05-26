@@ -1525,8 +1525,6 @@ namespace Server.Mobiles
 		{
 			var land = Lands.GetLand(this);
 
-			Server.Engines.Instancing.SkyInstanceManager.PrepareForArrival( map, loc );
-
 			base.MoveToWorld( loc, map );
 
 			var newLand = Lands.GetLand(this);
