@@ -62,7 +62,7 @@ namespace Server.Spells.Undead
 			{
 				Caster.SendMessage( "That potion does not seem to work in this place." );
 			}
-			else if ( Worlds.RegionAllowedRecall( Caster, Caster.Map, Caster.Location, Caster.X, Caster.Y ) == false )
+			else if ( Worlds.RegionAllowedRecall( Caster.Map, Caster.Location, Caster.X, Caster.Y ) == false )
 			{
 				Caster.SendMessage( "That potion does not seem to work in this place." );
 			}

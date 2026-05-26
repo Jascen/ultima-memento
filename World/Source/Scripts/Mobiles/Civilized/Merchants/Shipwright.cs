@@ -116,7 +116,7 @@ namespace Server.Mobiles
 			{
 				this.SayTo(from, "Your ship is somewhere I cannot send you." );
 			}
-			else if ( Worlds.RegionAllowedRecall( from, from.Map, from.Location, from.X, from.Y ) == false )
+			else if ( Worlds.RegionAllowedRecall( from.Map, from.Location, from.X, from.Y ) == false )
 			{
 				this.SayTo(from, "Your ship is somewhere I cannot send you." );
 			}
