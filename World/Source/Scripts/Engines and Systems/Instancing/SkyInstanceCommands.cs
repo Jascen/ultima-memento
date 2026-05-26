@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Server;
 using Server.Commands;
 using Server.Mobiles;
@@ -48,6 +49,11 @@ namespace Server.Engines.Instancing
 				}
 				case "add":
 				{
+					if ( !SkyInstanceManager.OwnsDwelling( from ) )
+					{
+						from.SendMessage( "You do not own a sky dwelling. Purchase one from a sky dwelling sign." );
+						return;
+					}
 					from.SendMessage( "Target the player to invite to your sky dwelling." );
 					from.Target = new FriendTarget( true );
 					break;
@@ -131,7 +137,7 @@ namespace Server.Engines.Instancing
 
 			if ( e.Arguments.Length == 0 )
 			{
-				from.SendMessage( "[skyinstance subcommands: status | unload <minutes> | despawn | gotoplayer | placeportal | freedead" );
+				from.SendMessage( "[skyinstance subcommands: status | price <gold> | unload <minutes> | park | grant | gotoplayer | placeportal | freedead" );
 				return;
 			}
 
@@ -141,14 +147,29 @@ namespace Server.Engines.Instancing
 			{
 				case "status":
 					{
-						from.SendMessage( "Sky Instance status: {0} allocated / {1} capacity (unload after {2} min).",
-							SkyInstanceManager.AllocatedCount,
-							SkyInstanceManager.MaxSlots,
+						from.SendMessage( "Sky Dwelling status: {0} record(s), {1} live / {2} pool maps (price {3}g, unload after {4} min).",
+							SkyInstanceManager.OwnerCount,
+							SkyInstanceManager.LiveCount,
+							SkyInstanceManager.PoolSize,
+							SkyInstanceManager.DwellingPrice,
 							(int)SkyInstanceManager.UnloadAfter.TotalMinutes );
-						int loaded = 0;
-						foreach ( SkyInstance inst in SkyInstanceManager.AllInstances )
-							if ( inst.Loaded ) loaded++;
-						from.SendMessage( "Currently materialized: {0}.", loaded );
+						break;
+					}
+				case "price":
+					{
+						if ( e.Arguments.Length < 2 )
+						{
+							from.SendMessage( "Usage: [skyinstance price <gold>" );
+							return;
+						}
+						int gold;
+						if ( !Int32.TryParse( e.Arguments[1], out gold ) || gold < 0 )
+						{
+							from.SendMessage( "Bad gold value." );
+							return;
+						}
+						SkyInstanceManager.DwellingPrice = gold;
+						from.SendMessage( "Sky dwellings now cost {0} gold.", gold );
 						break;
 					}
 				case "unload":
@@ -168,18 +189,25 @@ namespace Server.Engines.Instancing
 						from.SendMessage( "Sky dwellings will now unload after {0} minutes of inactivity.", minutes );
 						break;
 					}
-				case "despawn":
+				case "park":
 					{
+						List<SkyInstance> live = new List<SkyInstance>( SkyInstanceManager.AllInstances );
 						int count = 0;
-						foreach ( SkyInstance inst in SkyInstanceManager.AllInstances )
+						foreach ( SkyInstance inst in live )
 						{
-							if ( inst.Loaded )
+							if ( inst.IsLive )
 							{
-								SkyInstanceManager.Despawn( inst );
+								SkyInstanceManager.Park( inst );
 								count++;
 							}
 						}
-						from.SendMessage( "Force-despawned {0} loaded instances.", count );
+						from.SendMessage( "Parked {0} live dwelling(s).", count );
+						break;
+					}
+				case "grant":
+					{
+						from.SendMessage( "Target the player to grant a sky dwelling (bypasses purchase)." );
+						from.Target = new GrantTarget();
 						break;
 					}
 				case "gotoplayer":
@@ -198,12 +226,32 @@ namespace Server.Engines.Instancing
 				case "freedead":
 					{
 						int freed = SkyInstanceManager.ReleaseDeadOwners();
-						from.SendMessage( "Freed {0} orphaned slot(s).", freed );
+						from.SendMessage( "Freed {0} orphaned dwelling(s).", freed );
 						break;
 					}
 				default:
-					from.SendMessage( "Unknown subcommand. Try: status, unload, despawn, gotoplayer, placeportal, freedead" );
+					from.SendMessage( "Unknown subcommand. Try: status, unload, park, gotoplayer, placeportal, freedead" );
 					break;
+			}
+		}
+
+		private class GrantTarget : Target
+		{
+			public GrantTarget() : base( 12, false, TargetFlags.None ) { }
+
+			protected override void OnTarget( Mobile from, object targeted )
+			{
+				PlayerMobile target = targeted as PlayerMobile;
+				if ( target == null )
+				{
+					from.SendMessage( "That is not a player." );
+					return;
+				}
+
+				if ( SkyInstanceManager.Purchase( target ) )
+					from.SendMessage( "Granted a sky dwelling to {0}.", target.Name );
+				else
+					from.SendMessage( "{0} already owns a sky dwelling.", target.Name );
 			}
 		}
 
@@ -222,19 +270,8 @@ namespace Server.Engines.Instancing
 					return;
 				}
 
-				SkyInstance inst = SkyInstanceManager.GetOrCreate( target );
-				if ( inst == null )
-				{
-					from.SendMessage( "Could not allocate a dwelling for that player." );
-					return;
-				}
-
-				if ( !inst.Loaded )
-					SkyInstanceManager.Materialize( inst );
-
-				Server.Mobiles.BaseCreature.TeleportPets( from, SkyInstanceManager.GetLandingPoint( inst.Id ), SkyInstanceManager.InstanceMap, false );
-				from.MoveToWorld( SkyInstanceManager.GetLandingPoint( inst.Id ), SkyInstanceManager.InstanceMap );
-				from.SendMessage( "You arrive in {0}'s sky dwelling (#{1}).", target.Name, inst.Id );
+				// GameMasters bypass the friend check inside VisitFriendDwelling.
+				SkyInstanceManager.VisitFriendDwelling( from, target );
 			}
 		}
 	}
