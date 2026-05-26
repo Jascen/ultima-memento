@@ -25,11 +25,14 @@ namespace Server.Misc
 			builder.Append("- Housekeeping - The following spells had a minor change that should not impact anything:<br>");
 			builder.Append("               - Elemental Blast/Storm, Mindblast, Explosion, Psionic Blast, Hail Storm<br>");
 			builder.Append("- Mobs - Can now teleport in more places (Boats, Dungeon Time, etc)<br>");
+			builder.Append("- Misc - Completing Vordo's quest now enables fast travel for that area<br>");
 			builder.Append("- Misc - Autoloot and ammo recovery will now try to place ammo in an equipped quiver<br>");
 			builder.Append("- Item - Mannequins can now be crafted by Carpenters<br>");
 			builder.Append("- Item - Hoards/Pedestals can now drop a Bag of Holding even if you already have one<br>");
 			builder.Append("- Item - Hue vacuum tube is still usable on, but no longer removes the dye from stackable itemsbr>");
 			builder.Append("- Item - Add tooltip indicating what a Hoard Minion does<br>");
+			builder.Append("- Item - Rod of Resurrection can now create a Soul Orb on yourself<br>");
+			builder.Append("- Preference - Add preference to change double-click to auto-select Talk option when possible<br>");
 			builder.Append("- Quest - 'Seeking Brave Adventurers' quest now uses gump buttons instead of context menu options<br>");
 			builder.Append("- Spell - Mages Ballad, Army's Paeon, and Foe Requiem now grant musicianship checks every tick<br>");
 
