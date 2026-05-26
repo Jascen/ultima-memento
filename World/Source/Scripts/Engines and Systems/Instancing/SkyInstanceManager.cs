@@ -52,36 +52,15 @@ namespace Server.Engines.Instancing
 			LoadData();
 			RehydrateAll();
 			EnsureSweepTimer();
+
+			Console.WriteLine( "[SkyInstance] Ready: {0} allocated / {1} capacity on {2} (Z {3}-{4}, unload after {5} min).",
+				_byId.Count, MaxSlots, InstanceMap != null ? InstanceMap.Name : "?",
+				RegionZMin, RegionZMax, (int)UnloadAfter.TotalMinutes );
 		}
 
 		private static void OnWorldSave( WorldSaveEventArgs e )
 		{
-			// Despawn lazy-loaded items before persisting so they don't survive as
-			// orphans across a restart. Permanent floor tiles stay (they're tracked
-			// via inst.Floor and re-created by EnsureFloor if missing).
-			List<SkyInstance> wasLoaded = null;
-			foreach ( SkyInstance inst in _byId.Values )
-			{
-				if ( inst.Loaded )
-				{
-					if ( wasLoaded == null ) wasLoaded = new List<SkyInstance>();
-					wasLoaded.Add( inst );
-					Despawn( inst );
-				}
-			}
-
 			SaveData();
-
-			// Re-materialize anything that had a player still inside, so the save
-			// is transparent to current occupants.
-			if ( wasLoaded != null )
-			{
-				foreach ( SkyInstance inst in wasLoaded )
-				{
-					if ( HasPlayersInside( inst ) )
-						Materialize( inst );
-				}
-			}
 		}
 
 		private static void EnsureSweepTimer()
@@ -411,15 +390,19 @@ namespace Server.Engines.Instancing
 				SavePath,
 				delegate( GenericWriter writer )
 				{
-					writer.Write( (int) 0 ); // version
+					writer.Write( (int) 1 ); // version
 
 					writer.Write( (int) _byId.Count );
 					foreach ( SkyInstance inst in _byId.Values )
 					{
 						writer.Write( (int) inst.Id );
-						writer.Write( (int) (int)inst.OwnerSerial );
+						writer.Write( (int) inst.OwnerSerial );
 						writer.Write( (Item) inst.Floor );
 						writer.Write( (DateTime) inst.LastTouched );
+						writer.Write( (bool) inst.Loaded );
+						writer.Write( (int) inst.TempItems.Count );
+						for ( int i = 0; i < inst.TempItems.Count; i++ )
+							writer.Write( (Item) inst.TempItems[i] );
 					}
 				} );
 		}
@@ -446,6 +429,20 @@ namespace Server.Engines.Instancing
 						inst.OwnerSerial = ownerSerial;
 						inst.Floor = floor;
 						inst.LastTouched = touched;
+
+						if ( version >= 1 )
+						{
+							bool loaded = reader.ReadBool();
+							int itemCount = reader.ReadInt();
+							for ( int j = 0; j < itemCount; j++ )
+							{
+								Item it = reader.ReadItem();
+								if ( it != null && !it.Deleted )
+									inst.TempItems.Add( it );
+							}
+							inst.Loaded = loaded && inst.TempItems.Count > 0;
+						}
+
 						_byId[id] = inst;
 						_ownerToSlot[ownerSerial] = id;
 					}
