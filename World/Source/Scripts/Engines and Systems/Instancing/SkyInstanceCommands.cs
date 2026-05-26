@@ -11,6 +11,7 @@ namespace Server.Engines.Instancing
 		public static void Configure()
 		{
 			CommandSystem.Register( "skydwelling", AccessLevel.Player, new CommandEventHandler( OnSkyDwellingCommand ) );
+			CommandSystem.Register( "leavedwelling", AccessLevel.Player, new CommandEventHandler( OnLeaveDwellingCommand ) );
 			CommandSystem.Register( "skyinstance", AccessLevel.GameMaster, new CommandEventHandler( OnAdminCommand ) );
 		}
 
@@ -18,6 +19,13 @@ namespace Server.Engines.Instancing
 		{
 			Mobile from = e.Mobile;
 			SkyInstanceManager.SendOwnerToTheirInstance( from );
+		}
+
+		private static void OnLeaveDwellingCommand( CommandEventArgs e )
+		{
+			Mobile from = e.Mobile;
+			if ( !SkyInstanceManager.LeaveDwelling( from ) )
+				from.SendMessage( "You are not currently in a sky dwelling." );
 		}
 
 		private static void OnAdminCommand( CommandEventArgs e )

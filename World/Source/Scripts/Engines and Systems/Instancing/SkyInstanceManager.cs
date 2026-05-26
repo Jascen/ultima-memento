@@ -51,7 +51,32 @@ namespace Server.Engines.Instancing
 
 		private static void OnWorldSave( WorldSaveEventArgs e )
 		{
+			// Despawn lazy-loaded items before persisting so they don't survive as
+			// orphans across a restart. Permanent floor tiles stay (they're tracked
+			// via inst.Floor and re-created by EnsureFloor if missing).
+			List<SkyInstance> wasLoaded = null;
+			foreach ( SkyInstance inst in _byId.Values )
+			{
+				if ( inst.Loaded )
+				{
+					if ( wasLoaded == null ) wasLoaded = new List<SkyInstance>();
+					wasLoaded.Add( inst );
+					Despawn( inst );
+				}
+			}
+
 			SaveData();
+
+			// Re-materialize anything that had a player still inside, so the save
+			// is transparent to current occupants.
+			if ( wasLoaded != null )
+			{
+				foreach ( SkyInstance inst in wasLoaded )
+				{
+					if ( HasPlayersInside( inst ) )
+						Materialize( inst );
+				}
+			}
 		}
 
 		private static void EnsureSweepTimer()
@@ -232,8 +257,11 @@ namespace Server.Engines.Instancing
 			// A simple identifying signpost near the landing. The dwelling "contents"
 			// is intentionally minimal for now; this is the lazy-loaded layer that the
 			// unload sweep deletes.
-			Static sign = new Static( 0x1F28 ); // a glowing rune-like marker
-			sign.Name = String.Format( "Sky Dwelling #{0}", inst.Id );
+			Mobile owner = inst.FindOwner();
+			string ownerLabel = (owner != null && !String.IsNullOrEmpty( owner.Name )) ? owner.Name : String.Format( "#{0}", inst.Id );
+
+			Static sign = new Static( 0x1F28 );
+			sign.Name = String.Format( "{0}'s sky dwelling", ownerLabel );
 			sign.MoveToWorld( new Point3D( landing.X, landing.Y - 1, landing.Z ), map );
 			inst.TempItems.Add( sign );
 
@@ -348,7 +376,12 @@ namespace Server.Engines.Instancing
 				Materialize( inst );
 		}
 
-		// ----- Teleport helper -----
+		// ----- Teleport helpers -----
+
+		// Default ground-level fallback when leaving a dwelling: same landing the
+		// existing shared Sky Home uses on Sosaria.
+		public static Map ExitMap = Map.Sosaria;
+		public static Point3D ExitPoint = new Point3D( 3884, 2879, 0 );
 
 		public static void SendOwnerToTheirInstance( Mobile owner )
 		{
@@ -367,6 +400,17 @@ namespace Server.Engines.Instancing
 			Point3D landing = GetLandingPoint( inst.Id );
 			Server.Mobiles.BaseCreature.TeleportPets( owner, landing, InstanceMap, false );
 			owner.MoveToWorld( landing, InstanceMap );
+		}
+
+		public static bool LeaveDwelling( Mobile m )
+		{
+			if ( m == null ) return false;
+			if ( m.Map != InstanceMap ) return false;
+			if ( GetSlotIdFromLocation( m.Map, m.X, m.Y ) < 0 ) return false;
+
+			Server.Mobiles.BaseCreature.TeleportPets( m, ExitPoint, ExitMap, false );
+			m.MoveToWorld( ExitPoint, ExitMap );
+			return true;
 		}
 
 		// ----- Persistence -----
