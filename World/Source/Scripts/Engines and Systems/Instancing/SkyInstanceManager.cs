@@ -10,8 +10,10 @@ namespace Server.Engines.Instancing
 	public static class SkyInstanceManager
 	{
 		// ----- Slot pool configuration -----
-		// Pool lives in the unplayed region of SavagedEmpire (map is 1280x4096,
-		// playable bounds end at y=1792 — so y=2048+ is free space).
+		// Pool sits at Z=100 above SavagedEmpire's lower half. The map's playable
+		// area uses Z 0-30; our Z range (80-128) sits well above it, so our
+		// SkyInstanceRegion (priority 110) wins at Z>=80 without disturbing the
+		// dungeons and caves that overlap our X/Y at ground level.
 		public static Map InstanceMap { get { return Map.SavagedEmpire; } }
 
 		public const int PoolOriginX = 32;
@@ -21,9 +23,12 @@ namespace Server.Engines.Instancing
 		public const int GridColumns = 16;
 		public const int GridRows    = 32;
 		public const int MaxSlots    = GridColumns * GridRows; // 512
-		public const int LandingZ    = 10;
-		public const int FloorItemId = 0x495; // wood floor tile
-		public const int PlatformRadius = 5; // 11x11 walkable platform
+		public const int LandingZ    = 100;
+		public const int RegionZMin  = 80;
+		public const int RegionZMax  = 128;   // sbyte.MaxValue + 1
+		public const int RegionPriority = 110; // beats the Hedge Maze (95) and other high-priority overlays
+		public const int FloorItemId = 0x495; // marble paver — walkable, used elsewhere as MarblePavers
+		public const int PlatformRadius = 5;  // 11x11 walkable platform
 
 		// Despawn temp items after this much inactivity. Tunable via [skydwelling unload N].
 		public static TimeSpan UnloadAfter = TimeSpan.FromMinutes( 15 );
@@ -176,7 +181,14 @@ namespace Server.Engines.Instancing
 		private static void EnsureRegion( SkyInstance inst )
 		{
 			if ( inst.Region != null ) return;
-			SkyInstanceRegion region = new SkyInstanceRegion( inst.Id, InstanceMap, GetSlotRect( inst.Id ) );
+
+			Rectangle2D xy = GetSlotRect( inst.Id );
+			Rectangle3D rect3 = new Rectangle3D(
+				new Point3D( xy.Start.X, xy.Start.Y, RegionZMin ),
+				new Point3D( xy.End.X,   xy.End.Y,   RegionZMax )
+			);
+
+			SkyInstanceRegion region = new SkyInstanceRegion( inst.Id, InstanceMap, rect3 );
 			region.RuneName = GetRuneNameFor( inst );
 			region.Register();
 			inst.Region = region;
@@ -192,48 +204,27 @@ namespace Server.Engines.Instancing
 
 		private static void EnsureFloor( SkyInstance inst )
 		{
-			// A small permanent walkable platform so Recall's CanSpawnMobile check passes
-			// even when the dwelling has not been lazy-loaded yet. The bulk of the
-			// dwelling (walls, furniture, etc.) is the materialized layer above.
+			// A small permanent walkable platform so Recall's CanSpawnMobile check
+			// passes even when the dwelling's lazy decoration is unloaded. The bulk
+			// of the dwelling (walls, furniture, etc.) is the materialized layer
+			// above and gets despawned by the idle sweep.
 			Point3D landing = GetLandingPoint( inst.Id );
+			bool isNew = ( inst.Floor == null || inst.Floor.Deleted );
+			if ( !isNew ) return; // floor + surrounding platform already in World.Items
 
-			if ( inst.Floor == null || inst.Floor.Deleted )
-			{
-				Static center = new Static( FloorItemId );
-				center.MoveToWorld( landing, InstanceMap );
-				inst.Floor = center;
-			}
+			Static center = new Static( FloorItemId );
+			center.MoveToWorld( landing, InstanceMap );
+			inst.Floor = center;
 
-			// The platform around the center is also permanent (cheap, 121 tiles per
-			// allocated slot, only allocated slots pay this cost).
 			for ( int dx = -PlatformRadius; dx <= PlatformRadius; dx++ )
 			{
 				for ( int dy = -PlatformRadius; dy <= PlatformRadius; dy++ )
 				{
 					if ( dx == 0 && dy == 0 ) continue;
-					Point3D p = new Point3D( landing.X + dx, landing.Y + dy, landing.Z );
-					if ( PlatformTileExists( p ) ) continue;
 					Static tile = new Static( FloorItemId );
-					tile.MoveToWorld( p, InstanceMap );
+					tile.MoveToWorld( new Point3D( landing.X + dx, landing.Y + dy, landing.Z ), InstanceMap );
 				}
 			}
-		}
-
-		private static bool PlatformTileExists( Point3D p )
-		{
-			IPooledEnumerable eable = InstanceMap.GetItemsInRange( p, 0 );
-			try
-			{
-				foreach ( Item it in eable )
-				{
-					if ( it is Static && it.Z == p.Z ) return true;
-				}
-			}
-			finally
-			{
-				eable.Free();
-			}
-			return false;
 		}
 
 		private static void RehydrateAll()
@@ -327,15 +318,12 @@ namespace Server.Engines.Instancing
 
 		private static bool HasPlayersInside( SkyInstance inst )
 		{
-			Map map = InstanceMap;
-			Rectangle2D rect = GetSlotRect( inst.Id );
-
 			foreach ( NetState ns in NetState.Instances )
 			{
 				Mobile m = ns.Mobile;
 				if ( m == null ) continue;
-				if ( m.Map != map ) continue;
-				if ( rect.Contains( m.Location ) ) return true;
+				SkyInstanceRegion sir = m.Region as SkyInstanceRegion;
+				if ( sir != null && sir.InstanceId == inst.Id ) return true;
 			}
 			return false;
 		}
@@ -365,6 +353,7 @@ namespace Server.Engines.Instancing
 		public static void PrepareForArrival( Map map, Point3D loc )
 		{
 			if ( map != InstanceMap ) return;
+			if ( loc.Z < RegionZMin || loc.Z >= RegionZMax ) return; // not in our Z layer
 			int slotId = GetSlotIdFromLocation( map, loc.X, loc.Y );
 			if ( slotId < 0 ) return;
 
@@ -405,8 +394,7 @@ namespace Server.Engines.Instancing
 		public static bool LeaveDwelling( Mobile m )
 		{
 			if ( m == null ) return false;
-			if ( m.Map != InstanceMap ) return false;
-			if ( GetSlotIdFromLocation( m.Map, m.X, m.Y ) < 0 ) return false;
+			if ( !( m.Region is SkyInstanceRegion ) ) return false;
 
 			Server.Mobiles.BaseCreature.TeleportPets( m, ExitPoint, ExitMap, false );
 			m.MoveToWorld( ExitPoint, ExitMap );
