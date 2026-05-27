@@ -117,6 +117,13 @@ namespace Server.Items
 			}
 		}
 
+		public override bool StackWith(Mobile from, Item dropped, bool playSound)
+		{
+			if (dropped is TransmutationPotion && ((TransmutationPotion)dropped).Resource != Resource) return false;
+
+			return base.StackWith(from, dropped, playSound);
+		}
+
 		public void SetMaterial()
 		{
 			if ( this.Resource == CraftResource.None )
