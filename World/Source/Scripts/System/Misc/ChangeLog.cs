@@ -32,6 +32,7 @@ namespace Server.Misc
 			builder.Append("- Item - Hue vacuum tube is still usable on, but no longer removes the dye from stackable itemsbr>");
 			builder.Append("- Item - Add tooltip indicating what a Hoard Minion does<br>");
 			builder.Append("- Item - Rod of Resurrection can now create a Soul Orb on yourself<br>");
+			builder.Append("- Item - Double-clicking currency in the bank now creates Gold in the bank instead of the Player's backpack<br>");
 			builder.Append("- Preference - Add preference to change double-click to auto-select Talk option when possible<br>");
 			builder.Append("- Quest - 'Seeking Brave Adventurers' quest now uses gump buttons instead of context menu options<br>");
 			builder.Append("- Skill - Taming now indicates if your skill is too low to succeed<br>");
