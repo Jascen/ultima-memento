@@ -65,6 +65,8 @@ namespace Server.SkillHandlers
 						{
 							if ( c.ControlMaster == from )
 							{
+								from.CheckTargetSkillExplicit( SkillName.Druidism, c, 0.0, Math.Max( 25, c.MinTameSkill ) );
+
 								from.CloseGump( typeof( DruidismGump ) );
 								from.SendGump( new DruidismGump( from, c, 0 ) );
 								from.SendSound( 0x0F9 );
