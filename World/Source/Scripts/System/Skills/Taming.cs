@@ -204,6 +204,7 @@ namespace Server.SkillHandlers
 						else
 						{
 							creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502806, from.NetState ); // You have no chance of taming this creature.
+							from.SendMessage("You need at least '{0}' Taming skill to tame this creature.", creature.MinTameSkill.ToString("F1"));
 						}
 					}
 					else

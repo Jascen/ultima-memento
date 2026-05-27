@@ -34,6 +34,7 @@ namespace Server.Misc
 			builder.Append("- Item - Rod of Resurrection can now create a Soul Orb on yourself<br>");
 			builder.Append("- Preference - Add preference to change double-click to auto-select Talk option when possible<br>");
 			builder.Append("- Quest - 'Seeking Brave Adventurers' quest now uses gump buttons instead of context menu options<br>");
+			builder.Append("- Skill - Taming now indicates if your skill is too low to succeed<br>");
 			builder.Append("- Spell - Mages Ballad, Army's Paeon, and Foe Requiem now grant musicianship checks every tick<br>");
 
 			builder.Append("<br>");
