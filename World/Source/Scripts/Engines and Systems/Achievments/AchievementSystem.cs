@@ -22,11 +22,11 @@ namespace Scripts.Mythik.Systems.Achievements
 			public string Name;
 
 
-			public AchievementCategory(int id, int parent, string v3)
+			public AchievementCategory(int id, int parent, string name)
 			{
 				ID = id;
 				Parent = parent;
-				Name = v3;
+				Name = name;
 			}
 		}
 
