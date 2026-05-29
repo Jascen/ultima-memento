@@ -38,6 +38,30 @@ namespace Server.Items
 		{
 		}
 
+		public override bool OnDragLift(Mobile from)
+		{
+            // Entity is Visible so Ctrl+Shift can show it
+            // Disallow moving it
+            return false;
+		}
+
+		public override void OnDoubleClick(Mobile from)
+		{
+			if ( owner != null && owner == from )
+			{
+				Delete();
+				from.SendMessage("You disarm the trap.");
+			}
+		}
+
+		public override void AppendChildProperties(ObjectPropertyList list)
+		{
+			base.AppendChildProperties(list);
+
+			if ( owner != null && owner.Player )
+				list.Add("[Double-click to delete]");
+		}
+
 		public override void OnMovement( Mobile m, Point3D oldLocation )
 		{
 			if ( m is PlayerMobile ) return; // Players must walk over it directly
