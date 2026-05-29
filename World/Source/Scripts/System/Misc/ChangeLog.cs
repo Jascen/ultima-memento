@@ -17,6 +17,7 @@ namespace Server.Misc
 
 			builder.Append("Changes<br>");
 			builder.Append("- Craft - Every 5 points past GM now increases the Min or Max intensity bonus by 5% on Exceptional crafts<br>");
+			builder.Append("- Craft - Targeting oneself with Breakdown now auto-targets the Crafting Container<br>");
 			builder.Append("- Gump - Add tooltips for bee hives<br>");
 			builder.Append("- Gump - Add tooltips for plants<br>");
 			builder.Append("- Gump - Add search button to Craft gump<br>");

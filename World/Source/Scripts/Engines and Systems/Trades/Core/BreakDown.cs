@@ -178,6 +178,12 @@ namespace Server.Engines.Craft
 
 			protected override void OnTarget( Mobile from, object targeted )
 			{
+				// Targeting oneself is a shortcut to use the crafting container
+				if ( targeted == from && from.ContainerCraft > 0 )
+				{
+					targeted = BaseContainer.PutStuffBox( from, from.ContainerCraft );
+				}
+
 				if ( targeted is Item )
 				{
 					if ( !((Item)targeted).IsChildOf( from.Backpack ) ) 
