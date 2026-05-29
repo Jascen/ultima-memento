@@ -108,17 +108,11 @@ namespace Server
 					{
 						// 1% per 10 points
 						var pierce = (int) Math.Min( 100, poisonSkill ) / 10;
-
-						// 5% at each 5 point breakpoint
-						if (105 <= poisonSkill) pierce += 5;
-						if (110 <= poisonSkill) pierce += 5;
-						if (115 <= poisonSkill) pierce += 5;
-						if (120 <= poisonSkill) pierce += 5;
-						if (125 <= poisonSkill) pierce += 5;
+						if ( 100 < poisonSkill ) pierce += (int) ( 2 * ( poisonSkill - 100 ) / 5 );
 
 						if ( m.Player ) pierce /= 2; // Reduce pierce by half against players
 
-						// Up to 35% total pierce bonus
+						// Up to 20% total pierce bonus
 						resPois = Math.Max( 0, resPois - pierce );
 					}
 				}
