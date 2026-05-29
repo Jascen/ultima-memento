@@ -101,6 +101,28 @@ namespace Server
 				int resPois = m.PoisonResistance;
 				int resNrgy = m.EnergyResistance;
 
+				if ( 0 < resPois )
+				{
+					var poisonSkill = Math.Min( 125, from.Skills[SkillName.Poisoning].Value );
+					if ( 0 < poisonSkill )
+					{
+						// 1% per 10 points
+						var pierce = (int) Math.Min( 100, poisonSkill ) / 10;
+
+						// 5% at each 5 point breakpoint
+						if (105 <= poisonSkill) pierce += 5;
+						if (110 <= poisonSkill) pierce += 5;
+						if (115 <= poisonSkill) pierce += 5;
+						if (120 <= poisonSkill) pierce += 5;
+						if (125 <= poisonSkill) pierce += 5;
+
+						if ( m.Player ) pierce /= 2; // Reduce pierce by half against players
+
+						// Up to 35% total pierce bonus
+						resPois = Math.Max( 0, resPois - pierce );
+					}
+				}
+
 				totalDamage  = damage * phys * (100 - resPhys);
 				totalDamage += damage * fire * (100 - resFire);
 				totalDamage += damage * cold * (100 - resCold);

@@ -44,6 +44,7 @@ namespace Server.Misc
 			builder.Append("- Quest - 'Seeking Brave Adventurers' quest now uses gump buttons instead of context menu options<br>");
 			builder.Append("- Skill - Taming now indicates if your skill is too low to succeed<br>");
 			builder.Append("- Skill - Druidism now provides gains against your pets, up to their required taming skill<br>");
+			builder.Append("- Skill - Poisoning skill now adds resistance pierce to any poison-based damage<br>");
 			builder.Append("- Spell - Mages Ballad, Army's Paeon, and Foe Requiem now grant musicianship checks every tick<br>");
 			builder.Append("- Vendor - Dropping a container on a vendor will now attempt to sell all contents<br>");
 
