@@ -8,6 +8,9 @@ namespace Server.Mobiles
 		public PlayerPreferenceContext()
 		{
 			ColorlessFabricBreakdown = true;
+			VendorContainerSellCompactItemsPerPage = VendorContainerSellConfigGump.DefaultVendorContainerSellCompactItemsPerPage;
+			VendorContainerSellLargeItemsPerPage = VendorContainerSellConfigGump.DefaultVendorContainerSellLargeItemsPerPage;
+			VendorContainerSellSelectionBehavior = VendorContainerSellSelectionBehavior.AsManyAsPossible;
 		}
 
 		public PlayerPreferenceContext(GenericReader reader)
@@ -45,6 +48,21 @@ namespace Server.Mobiles
 			DefaultRunebookSpellType = 2 < version ? (RunebookGump.SpellType)reader.ReadInt() : RunebookGump.SpellType.None;
 
 			DoubleClickToTalk = 3 < version ? reader.ReadBool() : false;
+
+			if ( 4 < version )
+			{
+				VendorContainerSellEnabled = reader.ReadBool();
+				VendorContainerSellShowItemImages = reader.ReadBool();
+				VendorContainerSellCompactItemsPerPage = reader.ReadInt();
+				VendorContainerSellLargeItemsPerPage = reader.ReadInt();
+				VendorContainerSellSelectionBehavior = (VendorContainerSellSelectionBehavior)reader.ReadInt();
+			}
+			else
+			{
+				VendorContainerSellCompactItemsPerPage = VendorContainerSellConfigGump.DefaultVendorContainerSellCompactItemsPerPage;
+				VendorContainerSellLargeItemsPerPage = VendorContainerSellConfigGump.DefaultVendorContainerSellLargeItemsPerPage;
+				VendorContainerSellSelectionBehavior = VendorContainerSellSelectionBehavior.AsManyAsPossible;
+			}
 		}
 
 		[CommandProperty(AccessLevel.GameMaster)]
@@ -122,9 +140,24 @@ namespace Server.Mobiles
 		[CommandProperty(AccessLevel.GameMaster)]
 		public bool WeaponBarOpen { get; set; }
 
+		[CommandProperty(AccessLevel.GameMaster)]
+		public bool VendorContainerSellEnabled { get; set; }
+
+		[CommandProperty(AccessLevel.GameMaster)]
+		public bool VendorContainerSellShowItemImages { get; set; }
+
+		[CommandProperty(AccessLevel.GameMaster)]
+		public int VendorContainerSellCompactItemsPerPage { get; set; }
+
+		[CommandProperty(AccessLevel.GameMaster)]
+		public int VendorContainerSellLargeItemsPerPage { get; set; }
+
+		[CommandProperty(AccessLevel.GameMaster)]
+		public VendorContainerSellSelectionBehavior VendorContainerSellSelectionBehavior { get; set; }
+
 		public void Serialize(GenericWriter writer)
 		{
-			writer.Write(4);
+			writer.Write(5);
 
 			writer.Write(DoubleClickID);
 			writer.Write(SuppressVendorTooltip);
@@ -153,6 +186,12 @@ namespace Server.Mobiles
 			writer.Write((int)DefaultRunebookSpellType);
 
 			writer.Write(DoubleClickToTalk);
+
+			writer.Write(VendorContainerSellEnabled);
+			writer.Write(VendorContainerSellShowItemImages);
+			writer.Write(VendorContainerSellCompactItemsPerPage);
+			writer.Write(VendorContainerSellLargeItemsPerPage);
+			writer.Write((int)VendorContainerSellSelectionBehavior);
 		}
 	}
 }

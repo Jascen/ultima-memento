@@ -11,6 +11,7 @@ using Server.Multis;
 using Server.Targeting;
 using Server.Engines.GlobalShoppe;
 using Server.Utilities;
+using Server.Gumps;
 using System.Linq;
 
 namespace Server.Mobiles
@@ -1081,6 +1082,143 @@ namespace Server.Mobiles
 			from.Send( new EquipUpdate( pack ) );
 		}
 
+		public bool ShouldUseVendorGoldSafeguard( Mobile from )
+		{
+			if ( MySettings.S_RichMerchants ) return false;
+
+			var player = from as PlayerMobile;
+			if (player == null) return false;
+
+			return !player.Preferences.IgnoreVendorGoldSafeguard;
+		}
+
+		public virtual int GetSellBarter( Mobile from )
+		{
+			PlayerMobile pm = (PlayerMobile)from;
+			int barter = (int)from.Skills[SkillName.Mercantile].Value;
+
+			if ( barter < 100 && this.NpcGuild != NpcGuild.None && this.NpcGuild == pm.NpcGuild )
+				barter = 100;
+			else if ( BeggingPose( from ) > 0 && !(this is PlayerBarkeeper) )
+				barter = (int)from.Skills[SkillName.Begging].Value;
+
+			return barter;
+		}
+
+		public virtual bool TryGetSellState( Item item, Mobile from, int barter, IShopSellInfo[] info, out SellItemState state )
+		{
+			state = null;
+
+			if ( item == null || item.Deleted )
+				return false;
+
+			LockableContainer parentcon = item.ParentEntity as LockableContainer;
+
+			if ( parentcon != null && parentcon.Locked ) return false;
+			if ( item is Container && ( (Container)item ).Items.Count != 0 ) return false;
+			if ( !item.IsStandardLoot() || !item.Movable ) return false;
+
+			foreach ( IShopSellInfo ssi in info )
+			{
+				if ( ssi.IsSellable( item ) )
+				{
+					state = new SellItemState( item, ssi.GetSellPriceFor( item, barter ), ssi.GetNameFor( item ) );
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public virtual List<SellItemState> GetSellableItemsFromContainer( Container container, Mobile from )
+		{
+			var result = new List<SellItemState>();
+			var seen = new HashSet<Serial>();
+			var items = new List<Item>();
+
+			container.RecurseItems( items );
+
+			IShopSellInfo[] info = GetSellInfo();
+			int barter = GetSellBarter( from );
+
+			foreach ( Item item in items )
+			{
+				if ( item.Stackable ) continue;
+				if ( seen.Contains( item.Serial ) ) continue;
+
+				SellItemState sellState;
+				if ( TryGetSellState( item, from, barter, info, out sellState ) )
+				{
+					seen.Add( item.Serial );
+					result.Add( sellState );
+
+					if ( result.Count >= MaxSell )
+						break;
+				}
+			}
+
+			return result;
+		}
+
+		public virtual bool TryOpenContainerSellGump( Mobile from, Container container )
+		{
+			if ( BeggingPose( from ) > 0 && !(this is PlayerBarkeeper) )
+				from.Say( BeggingWords() );
+
+			if ( !IsActiveBuyer || !from.CheckAlive() )
+				return false;
+
+			if ( !CheckVendorAccess( from ) )
+			{
+				this.Say( "I have no business with you." );
+				return false;
+			}
+
+			int coins = GetOrCreateCoinPurse( this, from, true );
+			if ( coins < 1 )
+			{
+				SayTo( from, "I have no gold to barter with." );
+				return false;
+			}
+
+			SayTo( from, true, "I have {0} gold to barter with.", coins );
+
+			List<SellItemState> items = GetSellableItemsFromContainer( container, from );
+
+			if ( items.Count == 0 )
+			{
+				Say( true, "You have nothing I would be interested in." );
+				return false;
+			}
+
+			from.CloseGump( typeof( VendorContainerSellGump ) );
+
+			if ( this.RaceID == 0 && Utility.RandomBool() )
+				this.PlaySound( this.Female ? 797 : 1069 );
+
+			PlayerMobile pm = from as PlayerMobile;
+
+			if ( pm != null && !pm.Preferences.VendorContainerSellEnabled )
+			{
+				Hashtable table = new Hashtable();
+
+				foreach ( SellItemState state in items )
+				{
+					if ( state.Item != null && !table.Contains( state.Item ) )
+						table[state.Item] = state;
+				}
+
+				SendPacksTo( from );
+				from.Send( new VendorSellList( this, table ) );
+				return true;
+			}
+
+			bool unlimitedGold = !ShouldUseVendorGoldSafeguard( from );
+
+			from.SendGump( new VendorContainerSellGump( this, container, items, coins, unlimitedGold, pm.Preferences ) );
+			return true;
+		}
+
 		public virtual void VendorSell( Mobile from ) // Send list of items that are for sale
 		{
 			if ( BeggingPose(from) > 0 && !(this is PlayerBarkeeper) ) // LET US SEE IF THEY ARE BEGGING
@@ -1542,6 +1680,13 @@ namespace Server.Mobiles
 				}
 
 				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+				else if ( dropped is Container )
+				{
+					TryOpenContainerSellGump( from, (Container)dropped );
+
+					return false;
+				}
 
 				/* TODO: Thou art giving me? and fame/karma for gold gifts */
 			}
@@ -2196,6 +2341,7 @@ namespace Server.Mobiles
 				seller.AddToBackpack( new Gold( GiveGold ) );
 
 				seller.PlaySound( 0x0037 );//Gold dropping sound
+				seller.SendMessage("You have sold {0} items for {1} gold.", Sold, GiveGold);
 			}
 
 			return true;

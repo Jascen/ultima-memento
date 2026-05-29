@@ -39,6 +39,7 @@ namespace Server.Misc
 			builder.Append("- Skill - Taming now indicates if your skill is too low to succeed<br>");
 			builder.Append("- Skill - Druidism now provides gains against your pets, up to their required taming skill<br>");
 			builder.Append("- Spell - Mages Ballad, Army's Paeon, and Foe Requiem now grant musicianship checks every tick<br>");
+			builder.Append("- Vendor - Dropping a container on a vendor will now attempt to sell all contents<br>");
 
 			builder.Append("<br>");
 			builder.Append("Fixes<br>");

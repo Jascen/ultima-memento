@@ -232,6 +232,8 @@ namespace Server.Engines.Help
 			Setting_ColorlessFabricBreakdown_Info,
 			Setting_DoubleClickToTalk,
 			Setting_DoubleClickToTalk_Info,
+			Setting_VendorContainerSell,
+			Setting_VendorContainerSell_Info,
 		}
 
 		public static void Initialize()
@@ -650,6 +652,9 @@ namespace Server.Engines.Help
 				if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
 
 				AddSetting(xs, g, from, "Suppress Vendor Tooltips", PageActionType.Setting_SuppressVendorTooltips, PageActionType.Setting_SuppressVendorTooltips_Info);
+				if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
+
+				AddSetting(xs, g, from, "Container Sell", PageActionType.Setting_VendorContainerSell, PageActionType.Setting_VendorContainerSell_Info);
 				// Last setting, don't add a row
 
 				// Section - Play Styles
@@ -873,7 +878,8 @@ namespace Server.Engines.Help
 				case PageActionType.Setting_SkillTitle: 
 				case PageActionType.Setting_SetCraftingContainer: 
 				case PageActionType.Setting_SetHarvestingContainer: 
-				case PageActionType.Setting_SetLootContainer: return true;
+				case PageActionType.Setting_SetLootContainer:
+				case PageActionType.Setting_VendorContainerSell: return true;
 			}
 
 			return false;
@@ -1408,6 +1414,12 @@ namespace Server.Engines.Help
 					{
 						from.Preferences.SuppressVendorTooltip = !from.Preferences.SuppressVendorTooltip;
 						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
+						break;
+					}
+					case PageActionType.Setting_VendorContainerSell:
+					{
+						from.CloseGump( typeof( VendorContainerSellConfigGump ) );
+						from.SendGump( new VendorContainerSellConfigGump( from, 12 ) );
 						break;
 					}
 					case PageActionType.Setting_SingleAttemptID:
@@ -2309,6 +2321,13 @@ namespace Server.Engines.Help
 				{
 					title = "Suppress Vendor Tooltips";
 					info = "Command: [SuppressTooltips<br><br>When enabled, vendor tooltips will not be sent to the client. This can be helpful for players who use a touch screen. Warning: Players usually have to re-log to re-query synchronize with this after changing it.";
+					break;
+				}
+
+				case PageActionType.Setting_VendorContainerSell_Info:
+				{
+					title = "Container Sell";
+					info = "Configure the gump shown when you drop a container on a vendor to sell its contents. If the new gump is disabled, sellable items from the container are sent through the classic vendor sell list instead.";
 					break;
 				}
 
