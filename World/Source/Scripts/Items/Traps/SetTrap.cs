@@ -17,6 +17,15 @@ namespace Server.Items
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int Power { get{ return power; } set{ power = value; } }
 
+		private bool m_HasSecondaryEffect;
+		private PotionEffect m_SecondaryEffect;
+
+		[CommandProperty( AccessLevel.GameMaster )]
+		public bool HasSecondaryEffect { get { return m_HasSecondaryEffect; } }
+
+		[CommandProperty( AccessLevel.GameMaster )]
+		public PotionEffect SecondaryEffect { get { return m_SecondaryEffect; } }
+
 		public override bool HandlesOnMovement{ get{ return true; } }
 
 		private DateTime m_DecayTime;
@@ -25,12 +34,22 @@ namespace Server.Items
 		public virtual TimeSpan DecayDelay{ get{ return TimeSpan.FromSeconds( 180.0 ); } } // HOW LONG UNTIL THE TRAP DECAYS IN SECONDS
 
 		[Constructable]
-		public SetTrap( Mobile source, int level ) : base( 0x0702 )
+		public SetTrap( Mobile source, int level ) : this( source, level, false, PotionEffect.Nightsight )
+		{
+		}
+
+		public SetTrap( Mobile source, int level, PotionEffect secondaryEffect ) : this( source, level, true, secondaryEffect )
+		{
+		}
+
+		private SetTrap( Mobile source, int level, bool hasSecondary, PotionEffect secondaryEffect ) : base( 0x0702 )
 		{
 			Movable = false;
 			Name = "a trap";
 			owner = source;
 			power = level;
+			m_HasSecondaryEffect = hasSecondary;
+			m_SecondaryEffect = secondaryEffect;
 			RefreshDecay( true );
 		}
 
@@ -105,6 +124,9 @@ namespace Server.Items
 						m.Damage( itHurts, owner );
 						if ( m is BaseCreature )
 							owner.DoHarmful( m );
+
+						if ( m_HasSecondaryEffect && owner != null )
+							TrapPotionEffects.ApplySecondary( m_SecondaryEffect, owner, m, Location, Map );
 					}
 					else
 					{
@@ -138,7 +160,9 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 0 ); // version
+			writer.Write( (int) 1 ); // version
+			writer.Write( m_HasSecondaryEffect );
+			writer.Write( (int)m_SecondaryEffect );
 			writer.Write( m_DecayTime );
 			writer.Write( (Mobile)owner );
 			writer.Write( (int)power );
@@ -150,15 +174,21 @@ namespace Server.Items
 			int version = reader.ReadInt();
 			switch ( version )
 			{
+				case 1:
+				{
+					m_HasSecondaryEffect = reader.ReadBool();
+					m_SecondaryEffect = (PotionEffect)reader.ReadInt();
+					goto case 0;
+				}
 				case 0:
 				{
 					m_DecayTime = reader.ReadDateTime();
 					RefreshDecay( false );
+					owner = reader.ReadMobile();
+					power = reader.ReadInt();
 					break;
 				}
 			}
-			owner = reader.ReadMobile();
-			power = reader.ReadInt();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Server.ContextMenus;
 using Server.Spells;
 using Server.Targeting;
 
@@ -7,8 +8,19 @@ namespace Server.Items
 {
 	public class TrapKit : Item
 	{
+		public override string DefaultDescription { get { return "These tools are used to create traps. These traps can be coated with offensive potions from alchemy to create a trap with an additional effect."; } }
+
 		private static readonly Dictionary<Mobile, DateTime> s_NextTrapPlace = new Dictionary<Mobile, DateTime>();
 		private static readonly TimeSpan TrapPlaceCooldown = TimeSpan.FromSeconds( 3.0 );
+
+		private bool m_HasSecondaryEffect;
+		private PotionEffect m_SecondaryEffect;
+
+		[CommandProperty( AccessLevel.GameMaster )]
+		public bool HasSecondaryEffect { get { return m_HasSecondaryEffect; } }
+
+		[CommandProperty( AccessLevel.GameMaster )]
+		public PotionEffect SecondaryEffect { get { return m_SecondaryEffect; } }
 
 		public override void ResourceChanged( CraftResource resource )
 		{
@@ -38,6 +50,151 @@ namespace Server.Items
 			LimitsDelete = true;
 			Weight = 5.0;
 			Name = "trapping tools";
+		}
+
+		public void SetSecondaryEffect( PotionEffect effect )
+		{
+			switch ( effect )
+			{
+				case PotionEffect.ExplosionLesser:
+				case PotionEffect.Explosion:
+				case PotionEffect.ExplosionGreater:
+					Hue = 1273;
+					break;
+
+				case PotionEffect.Conflagration:
+				case PotionEffect.ConflagrationGreater:
+					Hue = 1257;
+					break;
+
+				case PotionEffect.Frostbite:
+				case PotionEffect.FrostbiteGreater:
+					Hue = 1153;
+					break;
+
+				case PotionEffect.PoisonLesser:
+				case PotionEffect.Poison:
+				case PotionEffect.PoisonGreater:
+				case PotionEffect.PoisonDeadly:
+				case PotionEffect.PoisonLethal:
+					Hue = 1270;
+					break;
+
+				case PotionEffect.ConfusionBlast:
+				case PotionEffect.ConfusionBlastGreater:
+					Hue = 1264;
+					break;
+
+				default:
+					break;
+			}
+
+			m_HasSecondaryEffect = true;
+			m_SecondaryEffect = effect;
+			InvalidateProperties();
+		}
+
+		public void ClearSecondaryEffect()
+		{
+			m_HasSecondaryEffect = false;
+			InvalidateProperties();
+		}
+
+		public override void AppendChildProperties(ObjectPropertyList list)
+		{
+			base.AppendChildProperties(list);
+			
+			if ( m_HasSecondaryEffect )
+				list.Add( string.Format( "Coated with {0}", TrapPotionEffects.GetEffectDisplayName( m_SecondaryEffect ) ) );
+			else
+				list.Add( "Can be coated with a potion" );
+		}
+
+		public void Fill_OnTarget( Mobile from, object targ )
+		{
+			if ( !IsChildOf( from.Backpack ) )
+			{
+				from.SendMessage( "These tools must be in your backpack to use." );
+				return;
+			}
+
+			var potion = targ as BasePotion;
+			if ( potion == null )
+			{
+				from.SendMessage( "You can only coat the tools with a potion." );
+				return;
+			}
+
+			TrapPotionEffects.TryCoat( this, from, potion );
+		}
+
+		public override void GetContextMenuEntries( Mobile from, List<ContextMenuEntry> list )
+		{
+			base.GetContextMenuEntries( from, list );
+
+			if ( !from.Alive || !IsChildOf( from.Backpack ) ) return;
+
+			if ( m_HasSecondaryEffect )
+				list.Add( new EmptyMenu( from, this ) );
+			else
+				list.Add( new FillMenu( from, this ) );
+		}
+
+		public class EmptyMenu : ContextMenuEntry
+		{
+			private readonly TrapKit m_TrapKit;
+			private readonly Mobile m_From;
+
+			public EmptyMenu( Mobile from, TrapKit kit ) : base( 6142, 1 )
+			{
+				m_From = from;
+				m_TrapKit = kit;
+			}
+
+			public override void OnClick()
+			{
+				if ( m_TrapKit == null || m_TrapKit.Deleted ) return;
+
+				if ( !m_TrapKit.IsChildOf( m_From.Backpack ) )
+				{
+					m_From.SendMessage( "This must be in your backpack to use." );
+					return;
+				}
+
+				if ( !m_TrapKit.HasSecondaryEffect ) return;
+
+				m_TrapKit.ClearSecondaryEffect();
+				m_From.SendMessage( "You wipe the potion coating from the trapping tools." );
+				m_From.PlaySound( 0x240 );
+			}
+		}
+
+		public class FillMenu : ContextMenuEntry
+		{
+			private readonly TrapKit m_TrapKit;
+			private readonly Mobile m_From;
+
+			public FillMenu( Mobile from, TrapKit kit ) : base( 6255, 1 )
+			{
+				m_From = from;
+				m_TrapKit = kit;
+			}
+
+			public override void OnClick()
+			{
+				if ( m_TrapKit == null || m_TrapKit.Deleted )
+					return;
+
+				if ( m_TrapKit.IsChildOf( m_From.Backpack ) )
+				{
+					m_From.BeginTarget( -1, true, TargetFlags.None, new TargetCallback( m_TrapKit.Fill_OnTarget ) );
+					m_From.SendLocalizedMessage( 500837 ); // Fill from what?
+				}
+				else
+				{
+					m_From.SendMessage( "This must be in your backpack to use." );
+				}
+			}
 		}
 
 		public static bool IsOnTrapCooldown( Mobile m )
@@ -178,12 +335,13 @@ namespace Server.Items
 			var power = (int)( from.Skills[SkillName.RemoveTrap].Value / 2 ) + 1;
 			power += CraftResources.GetBonus( Resource );
 
-			var trap = new SetTrap(from, power)
-			{
-				Hue = Hue,
-				Movable = true
-			};
-			trap.MoveToWorld(loc, map);
+			SetTrap trap;
+			if ( m_HasSecondaryEffect ) trap = new SetTrap( from, power, m_SecondaryEffect );
+			else trap = new SetTrap( from, power );
+
+			trap.Hue = Hue;
+			trap.Movable = true;
+			trap.MoveToWorld( loc, map );
 
 			ConsumeLimits( 1 );
 			SetTrapCooldown( from );
@@ -281,13 +439,21 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 1 );
+			writer.Write( (int) 2 );
+			writer.Write( m_HasSecondaryEffect );
+			writer.Write( (int) m_SecondaryEffect );
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
+
+			if ( version >= 2 )
+			{
+				m_HasSecondaryEffect = reader.ReadBool();
+				m_SecondaryEffect = (PotionEffect)reader.ReadInt();
+			}
 
 			if ( version < 1 )
 			{

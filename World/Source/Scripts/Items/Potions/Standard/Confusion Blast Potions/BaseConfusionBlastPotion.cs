@@ -83,12 +83,18 @@ namespace Server.Items
 			Explode( (Mobile) states[ 0 ], (Point3D) states[ 1 ], (Map) states[ 2 ] );
 		}
 
-		public virtual void Explode( Mobile from, Point3D loc, Map map )
+		public void Explode( Mobile from, Point3D loc, Map map )
+		{
+			Explode( from, loc, map, true );
+		}
+
+		public virtual void Explode( Mobile from, Point3D loc, Map map, bool consume )
 		{
 			if ( Deleted || map == null )
 				return;
 
-			Consume();
+			if ( consume )
+				Consume();
 
 			// Check if any other players are using this potion
 			for ( int i = 0; i < m_Users.Count; i ++ )

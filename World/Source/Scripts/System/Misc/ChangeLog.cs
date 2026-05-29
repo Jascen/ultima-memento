@@ -38,8 +38,8 @@ namespace Server.Misc
 			builder.Append("- Item - Trap kit created traps have several changes:<br>");
 			builder.Append("       - Now have a 0.5 second interruptible cast time with a 3 second cooldown<br>");
 			builder.Append("       - Owners can now disarm their own traps by double-clicking them<br>");
+			builder.Append("       - Can now be coated with standard offensive potions<br>");
 			builder.Append("       - Can now be seen when Ctrl+Shift is held<br>");
-			builder.Append("- Item - Trap kit traps now have a power level and decay timer<br>");
 			builder.Append("- Preference - Add preference to change double-click to auto-select Talk option when possible<br>");
 			builder.Append("- Quest - 'Seeking Brave Adventurers' quest now uses gump buttons instead of context menu options<br>");
 			builder.Append("- Skill - Taming now indicates if your skill is too low to succeed<br>");

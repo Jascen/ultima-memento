@@ -229,10 +229,16 @@ namespace Server.Items
 
 		public void Explode( Mobile from, bool direct, Point3D loc, Map map )
 		{
+			Explode( from, direct, loc, map, true );
+		}
+
+		public void Explode( Mobile from, bool direct, Point3D loc, Map map, bool consume )
+		{
 			if ( Deleted )
 				return;
 
-			Consume();
+			if ( consume )
+				Consume();
 
 			for ( int i = 0; m_Users != null && i < m_Users.Count; ++i )
 			{

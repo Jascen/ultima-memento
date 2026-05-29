@@ -320,7 +320,12 @@ namespace Server.Items
 
 		public BasePotion FillBottle()
 		{
-			switch ( m_Type )
+			return CreatePotion( m_Type );
+		}
+
+		public static BasePotion CreatePotion( PotionEffect type )
+		{
+			switch ( type )
 			{
 				default:
 				case PotionEffect.Nightsight:				return new NightSightPotion();
