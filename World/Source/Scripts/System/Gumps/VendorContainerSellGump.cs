@@ -39,17 +39,13 @@ namespace Server.Gumps
 			var selection = preferences.VendorContainerSellSelectionBehavior;
 
 			int pageCount = Math.Max(1, (items.Count + itemsPerPage - 1) / itemsPerPage);
-			int listedGold = 0;
-
-			for (int i = 0; i < items.Count; i++)
-			{
-				listedGold += items[i].Price;
-			}
 
 			int rowsThisPage = Math.Min(items.Count, itemsPerPage);
 			int gumpHeight = LIST_START_Y + rowsThisPage * rowHeight + FOOTER_HEIGHT;
 			var footerYStart = gumpHeight - FOOTER_HEIGHT;
 
+			int listedGold = 0;
+			var checkStateVendorGold = vendorGold;
 			for (int page = 0; page < pageCount; page++)
 			{
 				AddPage(page + 1);
@@ -66,11 +62,11 @@ namespace Server.Gumps
 				int start = page * itemsPerPage;
 				int end = Math.Min(start + itemsPerPage, items.Count);
 
-				var checkStateVendorGold = vendorGold;
 				for (int i = start; i < end; i++)
 				{
 					SellItemState state = items[i];
 					Item item = state.Item;
+					listedGold += state.Price;
 					int row = i - start;
 
 					x = startX;
