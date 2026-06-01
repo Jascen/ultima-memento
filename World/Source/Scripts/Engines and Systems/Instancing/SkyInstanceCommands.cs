@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Server;
+using Server.Items;
 using Server.Commands;
 using Server.Mobiles;
 using Server.Targeting;
@@ -11,6 +12,43 @@ namespace Server.Engines.Instancing
 	{
 		// Convenience handle to the sky-dwelling system.
 		private static SkyDwellingInstanceType Sky { get { return SkyDwellingInstanceType.Instance; } }
+
+		// Swap any already-placed plain climb teleporters that lead to the instanced
+		// sky dwelling for the chooser version, so a live world picks up the new gump
+		// without a full re-decoration. New worlds get it straight from the cfg.
+		private static int InstallChooserRopes()
+		{
+			Point3D dest = new Point3D( 1974, 1977, 0 );
+
+			List<KeywordTeleporter> targets = new List<KeywordTeleporter>();
+			foreach ( Item it in World.Items.Values )
+			{
+				if ( it == null || it.Deleted ) continue;
+				if ( it.GetType() != typeof( KeywordTeleporter ) ) continue; // not the subclass
+
+				KeywordTeleporter kt = (KeywordTeleporter)it;
+				if ( kt.MapDest == Map.SerpentIsland && kt.PointDest == dest )
+					targets.Add( kt );
+			}
+
+			foreach ( KeywordTeleporter kt in targets )
+			{
+				SkyDwellingTeleporter rep = new SkyDwellingTeleporter();
+				rep.Substring = kt.Substring;
+				rep.Keyword   = kt.Keyword;
+				rep.Range     = kt.Range;
+				rep.PointDest = kt.PointDest;
+				rep.MapDest   = kt.MapDest;
+				rep.Active    = kt.Active;
+				rep.ItemID    = kt.ItemID;
+				rep.Hue       = kt.Hue;
+
+				rep.MoveToWorld( kt.Location, kt.Map );
+				kt.Delete();
+			}
+
+			return targets.Count;
+		}
 
 		public static void Configure()
 		{
@@ -140,7 +178,7 @@ namespace Server.Engines.Instancing
 
 			if ( e.Arguments.Length == 0 )
 			{
-				from.SendMessage( "[skyinstance subcommands: status | price <gold> | unload <minutes> | park | grant | gotoplayer | placeportal | freedead" );
+				from.SendMessage( "[skyinstance subcommands: status | price <gold> | unload <minutes> | park | grant | gotoplayer | placeportal | freedead | installrope" );
 				return;
 			}
 
@@ -232,8 +270,14 @@ namespace Server.Engines.Instancing
 						from.SendMessage( "Freed {0} orphaned dwelling(s).", freed );
 						break;
 					}
+				case "installrope":
+					{
+						int swapped = InstallChooserRopes();
+						from.SendMessage( "Replaced {0} climb teleporter(s) with the sky dwelling chooser.", swapped );
+						break;
+					}
 				default:
-					from.SendMessage( "Unknown subcommand. Try: status, unload, park, gotoplayer, placeportal, freedead" );
+					from.SendMessage( "Unknown subcommand. Try: status, unload, park, gotoplayer, placeportal, freedead, installrope" );
 					break;
 			}
 		}

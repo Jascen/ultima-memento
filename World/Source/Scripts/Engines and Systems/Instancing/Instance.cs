@@ -37,6 +37,7 @@ namespace Server.Engines.Instancing
 		private int m_LiveMapIndex = -1;
 		private bool m_Built;
 		private bool m_Purchased;
+		private bool m_Public;
 		private readonly List<Serial> m_Members = new List<Serial>();
 		private readonly List<InstanceItem> m_Items = new List<InstanceItem>();
 
@@ -60,6 +61,10 @@ namespace Server.Engines.Instancing
 		// it to distinguish a permanent owner from a transient look-around visit;
 		// transient types ignore it.
 		public bool Purchased { get { return m_Purchased; } set { m_Purchased = value; } }
+
+		// When true the instance is listed for anyone to visit (e.g. via the sky
+		// dwelling chooser). Owner-controlled; meaningless for transient types.
+		public bool Public { get { return m_Public; } set { m_Public = value; } }
 
 		// Players besides the owner who may enter: dwelling friends, or the snapshot
 		// of a party for a shared instance.

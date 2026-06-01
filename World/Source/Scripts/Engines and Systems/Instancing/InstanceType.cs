@@ -579,7 +579,7 @@ namespace Server.Engines.Instancing
 				SavePath,
 				delegate( GenericWriter writer )
 				{
-					writer.Write( (int) 1 ); // version
+					writer.Write( (int) 2 ); // version
 
 					writer.Write( (int) _byOwner.Count );
 					foreach ( Instance inst in _byOwner.Values )
@@ -588,6 +588,7 @@ namespace Server.Engines.Instancing
 						writer.Write( (DateTime) inst.LastTouched );
 						writer.Write( (bool) inst.Built );
 						writer.Write( (bool) inst.Purchased );
+						writer.Write( (bool) inst.Public );
 						writer.Write( (int) inst.LiveMapIndex );
 
 						writer.Write( (int) inst.Members.Count );
@@ -624,6 +625,8 @@ namespace Server.Engines.Instancing
 						inst.Built = reader.ReadBool();
 						if ( version >= 1 )
 							inst.Purchased = reader.ReadBool();
+						if ( version >= 2 )
+							inst.Public = reader.ReadBool();
 						inst.LiveMapIndex = reader.ReadInt();
 
 						int memberCount = reader.ReadInt();
