@@ -27,7 +27,7 @@ namespace Server.Engines.Instancing
 				return;
 			}
 
-			SkyInstanceManager.SendOwnerToTheirInstance( from );
+			SkyDwellingInstanceType.Instance.SendOwnerToTheirInstance( from );
 		}
 
 		public override void AddNameProperties( ObjectPropertyList list )
