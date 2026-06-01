@@ -18,6 +18,13 @@ namespace Server.Utilities
 			}
 		}
 
+		public static T FirstOrDefault<T>(Func<T, bool> predicate) where T : Item
+		{
+			return World.Items.Values
+				.Where(item => item is T && predicate((T)item))
+				.FirstOrDefault() as T;
+		}
+
 		public static IEnumerable<T> ForEachItem<T>(Func<T, bool> predicate) where T : Item
 		{
 			var items = World.Items.Values
