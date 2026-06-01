@@ -337,7 +337,7 @@ namespace Server.Items
 			}
         }
 
-		public void MakeVillain( QuestTome book )
+		public static void MakeVillain( QuestTome book )
         {
 			book.VillainHue = 0;
 			book.VillainBody = 0;
@@ -349,8 +349,8 @@ namespace Server.Items
 			{
 				switch ( Utility.RandomMinMax( 0, 3 ) )
 				{
-					case 0:	book.VillainType = "ArchFiend";			book.VillainName = NameList.RandomName( "daemon" );		book.VillainBody = Utility.RandomList( 9, 320 );	color = true;	book.VillainCategory = "a daemon";		break;
-					case 1:	book.VillainType = "ArchFiend";			book.VillainName = NameList.RandomName( "demonic" );	book.VillainBody = Utility.RandomList( 191, 427 );	color = true;
+					case 0:	book.VillainType = typeof(Archfiend).Name;			book.VillainName = NameList.RandomName( "daemon" );		book.VillainBody = Utility.RandomList( 9, 320 );	color = true;	book.VillainCategory = "a daemon";		break;
+					case 1:	book.VillainType = typeof(Archfiend).Name;			book.VillainName = NameList.RandomName( "demonic" );	book.VillainBody = Utility.RandomList( 191, 427 );	color = true;
 						switch ( Utility.RandomMinMax( 0, 2 ) )
 						{
 							case 0:	book.VillainCategory = "a balron"; break;
@@ -358,8 +358,8 @@ namespace Server.Items
 							case 2:	book.VillainCategory = "a balrog"; break;
 						}
 					break;
-					case 2:	book.VillainType = "ArchFiend";			book.VillainName = NameList.RandomName( "devil" );		book.VillainBody = Utility.RandomList( 765, 804, 436, 88, 138 );	book.VillainCategory = "a devil";		break;
-					case 3:	book.VillainType = "Succubus";			book.VillainName = NameList.RandomName( "goddess" );	book.VillainBody = 174;	color = true;
+					case 2:	book.VillainType = typeof(Archfiend).Name;			book.VillainName = NameList.RandomName( "devil" );		book.VillainBody = Utility.RandomList( 765, 804, 436, 88, 138 );	book.VillainCategory = "a devil";		break;
+					case 3:	book.VillainType = typeof(Succubus).Name;			book.VillainName = NameList.RandomName( "goddess" );	book.VillainBody = 174;	color = true;
 						switch ( Utility.RandomMinMax( 0, 2 ) )
 						{
 							case 0:	book.VillainCategory = "a succubus"; break;
@@ -376,25 +376,25 @@ namespace Server.Items
 
 				switch ( Utility.RandomMinMax( 0, 18 ) )
 				{
-					case 0:		book.VillainType = "AbyssGiant";		break;
-					case 1:		book.VillainType = "CloudGiant";		break;
-					case 2:		book.VillainType = "FireGiant";			break;
-					case 3:		book.VillainType = "ForestGiant";		break;
-					case 4:		book.VillainType = "FrostGiant";		break;
-					case 5:		book.VillainType = "HillGiant";			break;
-					case 6:		book.VillainType = "HillGiantShaman";	break;
-					case 7:		book.VillainType = "IceGiant";			break;
-					case 8:		book.VillainType = "JungleGiant";		break;
-					case 9:		book.VillainType = "LavaGiant";			break;
-					case 10:	book.VillainType = "MountainGiant";		break;
-					case 11:	book.VillainType = "SandGiant";			break;
-					case 12:	book.VillainType = "StarGiant";			break;
-					case 13:	book.VillainType = "StoneGiant";		break;
-					case 14:	book.VillainType = "StormGiant";		break;
-					case 15:	book.VillainType = "AncientCyclops";	book.VillainName = NameList.RandomName( "greek" );		book.VillainCategory = "a cyclops";	break;
-					case 16:	book.VillainType = "AncientEttin";		book.VillainCategory = "an ettin";	break;
-					case 17:	book.VillainType = "OgreLord";			book.VillainCategory = "an ogre";	break;
-					case 18:	book.VillainType = "Giant";				break;
+					case 0:		book.VillainType = typeof(AbyssGiant).Name;		break;
+					case 1:		book.VillainType = typeof(CloudGiant).Name;		break;
+					case 2:		book.VillainType = typeof(FireGiant).Name;			break;
+					case 3:		book.VillainType = typeof(ForestGiant).Name;		break;
+					case 4:		book.VillainType = typeof(FrostGiant).Name;		break;
+					case 5:		book.VillainType = typeof(HillGiant).Name;			break;
+					case 6:		book.VillainType = typeof(HillGiantShaman).Name;	break;
+					case 7:		book.VillainType = typeof(IceGiant).Name;			break;
+					case 8:		book.VillainType = typeof(JungleGiant).Name;		break;
+					case 9:		book.VillainType = typeof(LavaGiant).Name;			break;
+					case 10:	book.VillainType = typeof(MountainGiant).Name;		break;
+					case 11:	book.VillainType = typeof(SandGiant).Name;			break;
+					case 12:	book.VillainType = typeof(StarGiant).Name;			break;
+					case 13:	book.VillainType = typeof(StoneGiant).Name;		break;
+					case 14:	book.VillainType = typeof(StormGiant).Name;		break;
+					case 15:	book.VillainType = typeof(AncientCyclops).Name;	book.VillainName = NameList.RandomName( "greek" );		book.VillainCategory = "a cyclops";	break;
+					case 16:	book.VillainType = typeof(AncientEttin).Name;		book.VillainCategory = "an ettin";	break;
+					case 17:	book.VillainType = typeof(OgreLord).Name;			book.VillainCategory = "an ogre";	break;
+					case 18:	book.VillainType = typeof(Giant).Name;				break;
 				}
 			}
 			else if ( enemy == 3 )
@@ -403,38 +403,38 @@ namespace Server.Items
 				book.VillainName = NameList.RandomName( "dragon" );
 				switch ( Utility.RandomMinMax( 0, 24 ) )
 				{
-					case 0:		book.VillainType = "Dragon";					book.VillainBody = Utility.RandomList( 12, 59 );	color = true;	break;
-					case 1:		book.VillainType = "AncientWyrm";				break;
-					case 2:		book.VillainType = "ShadowWyrm";				break;
-					case 3:		book.VillainType = "VolcanicDragon";			break;
-					case 4:		book.VillainType = "VoidDragon";				break;
-					case 5:		book.VillainType = "AshDragon";					break;
-					case 6:		book.VillainType = "CrystalDragon";				break;
-					case 7:		book.VillainType = "ElderDragon";				break;
-					case 8:		book.VillainType = "PrimevalAmberDragon";		break;
-					case 9:		book.VillainType = "VolcanicDragon";			break;
-					case 10:	book.VillainType = "PrimevalBlackDragon";		break;
-					case 11:	book.VillainType = "PrimevalDragon";			break;
-					case 12:	book.VillainType = "PrimevalFireDragon";		break;
-					case 13:	book.VillainType = "PrimevalGreenDragon";		break;
-					case 14:	book.VillainType = "PrimevalNightDragon";		break;
-					case 15:	book.VillainType = "PrimevalRedDragon";			break;
-					case 16:	book.VillainType = "PrimevalRoyalDragon";		break;
-					case 17:	book.VillainType = "PrimevalRunicDragon";		break;
-					case 18:	book.VillainType = "PrimevalSilverDragon";		break;
-					case 19:	book.VillainType = "PrimevalStygianDragon";		break;
-					case 20:	book.VillainType = "PrimevalVolcanicDragon";	break;
-					case 21:	book.VillainType = "VampiricDragon";			break;
-					case 22:	book.VillainType = "PrimevalAbysmalDragon";		break;
-					case 23:	book.VillainType = "AncientDrake";				book.VillainCategory = "a drake";	break;
-					case 24:	book.VillainType = "AncientWyvern";				book.VillainCategory = "a wyvern";	break;
+					case 0:		book.VillainType = typeof(Dragons).Name;					book.VillainBody = Utility.RandomList( 12, 59 );	color = true;	break;
+					case 1:		book.VillainType = typeof(AncientWyrm).Name;				break;
+					case 2:		book.VillainType = typeof(ShadowWyrm).Name;				break;
+					case 3:		book.VillainType = typeof(VolcanicDragon).Name;			break;
+					case 4:		book.VillainType = typeof(VoidDragon).Name;				break;
+					case 5:		book.VillainType = typeof(AshDragon).Name;					break;
+					case 6:		book.VillainType = typeof(CrystalDragon).Name;				break;
+					case 7:		book.VillainType = typeof(ElderDragon).Name;				break;
+					case 8:		book.VillainType = typeof(PrimevalAmberDragon).Name;		break;
+					case 9:		book.VillainType = typeof(VolcanicDragon).Name;			break;
+					case 10:	book.VillainType = typeof(PrimevalBlackDragon).Name;		break;
+					case 11:	book.VillainType = typeof(PrimevalDragon).Name;			break;
+					case 12:	book.VillainType = typeof(PrimevalFireDragon).Name;		break;
+					case 13:	book.VillainType = typeof(PrimevalGreenDragon).Name;		break;
+					case 14:	book.VillainType = typeof(PrimevalNightDragon).Name;		break;
+					case 15:	book.VillainType = typeof(PrimevalRedDragon).Name;			break;
+					case 16:	book.VillainType = typeof(PrimevalRoyalDragon).Name;		break;
+					case 17:	book.VillainType = typeof(PrimevalRunicDragon).Name;		break;
+					case 18:	book.VillainType = typeof(PrimevalSilverDragon).Name;		break;
+					case 19:	book.VillainType = typeof(PrimevalStygianDragon).Name;		break;
+					case 20:	book.VillainType = typeof(PrimevalVolcanicDragon).Name;	break;
+					case 21:	book.VillainType = typeof(VampiricDragon).Name;			break;
+					case 22:	book.VillainType = typeof(PrimevalAbysmalDragon).Name;		break;
+					case 23:	book.VillainType = typeof(AncientDrake).Name;				book.VillainCategory = "a drake";	break;
+					case 24:	book.VillainType = typeof(AncientWyvern).Name;				book.VillainCategory = "a wyvern";	break;
 				}
 			}
 			else if ( enemy == 4 )
 			{
 				book.VillainCategory = "a beholder";
 				Mobile m = new Beholder(); 
-				book.VillainType = "Beholder";
+				book.VillainType = typeof(Beholder).Name;
 				book.VillainName = m.Name;
 				book.VillainHue = m.Hue;
 				m.Delete();
@@ -444,13 +444,13 @@ namespace Server.Items
 				if ( Utility.RandomBool() )
 				{
 					book.VillainCategory = "a gargoyle";
-					book.VillainType = "StygianGargoyleLord";
+					book.VillainType = typeof(StygianGargoyleLord).Name;
 					book.VillainName = NameList.RandomName( "gargoyle name" );
 				}
 				else
 				{
 					book.VillainCategory = "a sphinx";
-					book.VillainType = "AncientSphinx";
+					book.VillainType = typeof(AncientSphinx).Name;
 					book.VillainName = NameList.RandomName( "drakkul" );
 				}
 			}
@@ -460,7 +460,7 @@ namespace Server.Items
 				{
 					book.VillainCategory = "a reptilian humanoid";
 					Mobile m = new Sleestax(); 
-					book.VillainType = "Sleestax";
+					book.VillainType = typeof(Sleestax).Name;
 					book.VillainName = m.Name;
 					book.VillainHue = m.Hue;
 					m.Delete();
@@ -468,7 +468,7 @@ namespace Server.Items
 				else
 				{
 					book.VillainCategory = "a serpentoid";
-					book.VillainType = "OphidianKnight";
+					book.VillainType = typeof(OphidianKnight).Name;
 					book.VillainName = NameList.RandomName( "lizardman" );
 					book.VillainBody = 306;
 				}
@@ -478,14 +478,14 @@ namespace Server.Items
 				if ( Utility.RandomBool() )
 				{
 					book.VillainCategory = "an arachnid";
-					book.VillainType = "AbyssCrawler";
+					book.VillainType = typeof(AbyssCrawler).Name;
 					book.VillainName = NameList.RandomName( "goblin" );
 					book.VillainBody = 173;
 				}
 				else
 				{
 					book.VillainCategory = "an insectoid";
-					book.VillainType = "AntaurKing";
+					book.VillainType = typeof(AntaurKing).Name;
 					book.VillainName = NameList.RandomName( "goblin" );
 					book.VillainBody = 784;
 				}
@@ -496,7 +496,7 @@ namespace Server.Items
 				{
 					book.VillainCategory = "a reaper";
 					Mobile m = new EvilEnt(); 
-					book.VillainType = "EvilEnt";
+					book.VillainType = typeof(EvilEnt).Name;
 					book.VillainName = m.Name;
 					book.VillainHue = m.Hue;
 					m.Delete();
@@ -504,7 +504,7 @@ namespace Server.Items
 				else
 				{
 					book.VillainCategory = "an elemental";
-					book.VillainType = "CrystalGoliath";
+					book.VillainType = typeof(CrystalGoliath).Name;
 					book.VillainName = NameList.RandomName( "urk" );
 					book.VillainBody = 753;
 				}
@@ -513,21 +513,21 @@ namespace Server.Items
 			{
 				switch ( Utility.RandomMinMax( 0, 4 ) )
 				{
-					case 0:		book.VillainType = "Dracolich";					book.VillainName = NameList.RandomName( "dragon" );			book.VillainBody = Utility.RandomList( 104, 323 );		book.VillainCategory = "a dracolich";		break;
-					case 1:		book.VillainType = "AncientLich";				book.VillainName = NameList.RandomName( "ancient lich" );	book.VillainCategory = "a lich";			break;
-					case 2:		book.VillainType = "AncientFleshGolem";			book.VillainName = NameList.RandomName( "greek" );			book.VillainBody = 999;									book.VillainCategory = "a flesh golem";		break;
-					case 3:		book.VillainType = "GrundulVarg";				book.VillainName = NameList.RandomName( "ancient lich" );	book.VillainBody = Utility.RandomList( 768, 65, 107 );	book.VillainCategory = "a dread lord";		break;
-					case 4:		book.VillainType = "GrundulVarg";				book.VillainName = NameList.RandomName( "greek" );			book.VillainBody = Utility.RandomList( 768, 65, 107 );	book.VillainCategory = "a death knight";	break;
+					case 0:		book.VillainType = typeof(Dracolich).Name;					book.VillainName = NameList.RandomName( "dragon" );			book.VillainBody = Utility.RandomList( 104, 323 );		book.VillainCategory = "a dracolich";		break;
+					case 1:		book.VillainType = typeof(AncientLich).Name;				book.VillainName = NameList.RandomName( "ancient lich" );	book.VillainCategory = "a lich";			break;
+					case 2:		book.VillainType = typeof(AncientFleshGolem).Name;			book.VillainName = NameList.RandomName( "greek" );			book.VillainBody = 999;									book.VillainCategory = "a flesh golem";		break;
+					case 3:		book.VillainType = typeof(GrundulVarg).Name;				book.VillainName = NameList.RandomName( "ancient lich" );	book.VillainBody = Utility.RandomList( 768, 65, 107 );	book.VillainCategory = "a dread lord";		break;
+					case 4:		book.VillainType = typeof(GrundulVarg).Name;				book.VillainName = NameList.RandomName( "greek" );			book.VillainBody = Utility.RandomList( 768, 65, 107 );	book.VillainCategory = "a death knight";	break;
 				}
 			}
 			else
 			{
 				switch ( Utility.RandomMinMax( 0, 3 ) )
 				{
-					case 0:		book.VillainType = "Watcher";					book.VillainName = NameList.RandomName( "drakkul" );		book.VillainCategory = "a watcher";			break;
-					case 1:		book.VillainType = "Cerberus";					book.VillainName = NameList.RandomName( "greek" );			book.VillainCategory = "a cerberus";		break;
-					case 2:		book.VillainType = "Styguana";					book.VillainName = NameList.RandomName( "lizardman" );		book.VillainCategory = "a styguana";		break;
-					case 3:		book.VillainType = "HellBeast";					book.VillainName = NameList.RandomName( "imp" );			book.VillainCategory = "a hell beast";		break;
+					case 0:		book.VillainType = typeof(Watcher).Name;					book.VillainName = NameList.RandomName( "drakkul" );		book.VillainCategory = "a watcher";			break;
+					case 1:		book.VillainType = typeof(Cerberus).Name;					book.VillainName = NameList.RandomName( "greek" );			book.VillainCategory = "a cerberus";		break;
+					case 2:		book.VillainType = typeof(Styguana).Name;					book.VillainName = NameList.RandomName( "lizardman" );		book.VillainCategory = "a styguana";		break;
+					case 3:		book.VillainType = typeof(HellBeast).Name;					book.VillainName = NameList.RandomName( "imp" );			book.VillainCategory = "a hell beast";		break;
 				}
 			}
 

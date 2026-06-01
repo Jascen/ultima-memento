@@ -318,6 +318,14 @@ namespace Server.Items
 			VillainTitle = reader.ReadString();
 			VillainBody = reader.ReadInt();
 			VillainHue = reader.ReadInt();
+
+			Type mobType = ScriptCompiler.FindTypeByName( VillainType );
+			if ( mobType == null )
+			{
+				var oldType = VillainType;
+				QuestTake.MakeVillain(this);
+				Console.WriteLine("[WARNING] Quest Tome villain type ({0}) was not found. A new villain ({1}) has been generated.", oldType, VillainType);
+			}
 		}
 
 		private class QuestTomeGump : Gump
