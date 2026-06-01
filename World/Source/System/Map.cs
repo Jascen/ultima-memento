@@ -1501,17 +1501,11 @@ namespace Server
 		private Map m_BaseMap;
 
 		// The real map this map is an instance copy of (e.g. SerpentIsland), or null
-		// for a normal map. Instance maps are separate objects for isolation, so a
-		// reference check like ( map == Map.SerpentIsland ) is false for them; use
-		// Logical / IsInstance to reason about the map they mirror.
+		// for a normal map. Equality (operator ==, IEquatable<Map>) reads this so an
+		// instance map compares equal to the map it mirrors -- ( map == Map.SerpentIsland )
+		// is true for an instance of SerpentIsland -- while each instance stays a
+		// distinct object for isolation.
 		public Map BaseMap { get { return m_BaseMap; } set { m_BaseMap = value; } }
-
-		// True if this map is a per-player instance copy of another map.
-		public bool IsInstance { get { return m_BaseMap != null; } }
-
-		// This map, or the real map it mirrors. Use for terrain/land/rule logic and
-		// for identity checks, e.g. ( map.Logical == Map.SerpentIsland ).
-		public Map Logical { get { return m_BaseMap != null ? m_BaseMap : this; } }
 
 		private int m_MapID, m_MapIndex, m_FileIndex;
 
