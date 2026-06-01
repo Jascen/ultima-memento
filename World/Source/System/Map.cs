@@ -38,10 +38,6 @@ namespace Server
 
 		public static int GetDifficulty( Point3D loc, Map map ) // THESE ARE DUNGEON DIFFICULTY LEVELS FROM 0 (NEWBIE) TO 1 (NORMAL) UP TO 5 (EPIC)
 		{
-			// Instance maps mirror a real map; resolve so the map-identity checks below match.
-			if ( map != null && map.BaseMap != null )
-				map = map.BaseMap;
-
 			Land land = Lands.GetLand( map, loc, loc.X, loc.Y );
 
 			int Heat = -5;
@@ -347,11 +343,6 @@ namespace Server
 
 		public static Land GetLand( Map map, Point3D location, int x, int y )
 		{
-			// Instance maps mirror a real map; resolve to it so the map-identity
-			// checks below behave as they would on the original.
-			if ( map != null && map.BaseMap != null )
-				map = map.BaseMap;
-
 			Region reg = Region.Find( location, map );
 			Land land = Land.Sosaria;
 
@@ -500,11 +491,6 @@ namespace Server
     {
 		public static Terrain GetTerrain( Map map, Point3D location, int x, int y )
 		{
-			// Instance maps mirror a real map; resolve so map-identity checks match
-			// (tiles are shared, so the lookups read identical terrain either way).
-			if ( map != null && map.BaseMap != null )
-				map = map.BaseMap;
-
 			if ( map == Map.Internal || x < 0 || y < 0 )
 				return Terrain.None;
 
@@ -1488,8 +1474,9 @@ namespace Server
 
 	[Parsable]
 	//[CustomEnum( new string[]{ "Lodor", "Sosaria", "Underworld", "SerpentIsland", "IslesDread", "SavagedEmpire", "Internal" } )]
-	public sealed class Map : IComparable, IComparable<Map>
+	public sealed class Map : IComparable, IComparable<Map>, IEquatable<Map>
 	{
+		private readonly Guid _hashId = Guid.NewGuid();
 		public const int SectorSize = 16;
 		public const int SectorShift = 4;
 		public static int SectorActiveRange = 2;
@@ -3662,6 +3649,40 @@ namespace Server
 				return this.CompareTo( other );
 
 			throw new ArgumentException();
+		}
+
+		public static bool operator ==(Map left, Map right)
+        {
+			if (ReferenceEquals(left, null))
+			{
+				return ReferenceEquals(right, null);
+			}
+
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(Map left, Map right)
+		{
+			return !(left == right);
+		}
+
+		public bool Equals(Map map)
+		{			
+			if (ReferenceEquals(null, map)) return false;
+			if (ReferenceEquals(this, map)) return true;
+			if (map.GetType() != GetType()) return false;
+
+			return BaseMap != null && BaseMap == map;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as Map);
+		}
+
+		public override int GetHashCode()
+		{
+			return _hashId.GetHashCode();
 		}
 	}
 }
