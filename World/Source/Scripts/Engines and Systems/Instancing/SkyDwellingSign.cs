@@ -13,7 +13,7 @@ namespace Server.Engines.Instancing
 	// so the purchase looks and costs exactly like the non-instanced one -- but the
 	// outcome is the player owning the instance they are already standing in. The
 	// sign deletes itself once purchased. Per-player ownership lives in
-	// SkyInstanceManager.
+	// SkyDwellingInstanceType.
 	[Flipable( 0xC0B, 0xC0C )]
 	public class SkyDwellingSign : TownHouseSign
 	{
@@ -35,7 +35,7 @@ namespace Server.Engines.Instancing
 			if ( !Visible )
 				return;
 
-			if ( SkyInstanceManager.OwnsDwelling( m ) )
+			if ( SkyDwellingInstanceType.Instance.OwnsDwelling( m ) )
 			{
 				m.SendMessage( "You already own this sky dwelling." );
 				return;
@@ -52,7 +52,7 @@ namespace Server.Engines.Instancing
 			if ( m == null )
 				return;
 
-			if ( SkyInstanceManager.OwnsDwelling( m ) )
+			if ( SkyDwellingInstanceType.Instance.OwnsDwelling( m ) )
 			{
 				m.SendMessage( "You already own this sky dwelling." );
 				return;
@@ -75,7 +75,7 @@ namespace Server.Engines.Instancing
 			if ( m.AccessLevel == AccessLevel.Player && price > 0 )
 				m.SendLocalizedMessage( 1060398, price.ToString() ); // ~1_AMOUNT~ gold has been withdrawn from your bank box.
 
-			if ( !SkyInstanceManager.Purchase( m ) )
+			if ( !SkyDwellingInstanceType.Instance.Purchase( m ) )
 			{
 				m.SendMessage( "You already own this sky dwelling." );
 				return;

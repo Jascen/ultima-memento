@@ -9,6 +9,9 @@ namespace Server.Engines.Instancing
 {
 	public static class SkyInstanceCommands
 	{
+		// Convenience handle to the sky-dwelling system.
+		private static SkyDwellingInstanceType Sky { get { return SkyDwellingInstanceType.Instance; } }
+
 		public static void Configure()
 		{
 			CommandSystem.Register( "skydwelling", AccessLevel.Player, new CommandEventHandler( OnSkyDwellingCommand ) );
@@ -33,23 +36,23 @@ namespace Server.Engines.Instancing
 			{
 				case "list":
 				{
-					SkyInstance inst = SkyInstanceManager.GetByOwner( from );
-					if ( inst == null || inst.Friends.Count == 0 )
+					Instance inst = Sky.GetByOwner( from );
+					if ( inst == null || inst.Members.Count == 0 )
 					{
 						from.SendMessage( "You have not invited anyone to your sky dwelling." );
 						return;
 					}
 					from.SendMessage( "Friends invited to your sky dwelling:" );
-					for ( int i = 0; i < inst.Friends.Count; i++ )
+					for ( int i = 0; i < inst.Members.Count; i++ )
 					{
-						Mobile f = World.FindMobile( inst.Friends[i] );
-						from.SendMessage( " - {0}", f != null ? f.Name : String.Format( "(deleted, serial 0x{0:X})", (int)inst.Friends[i] ) );
+						Mobile f = World.FindMobile( inst.Members[i] );
+						from.SendMessage( " - {0}", f != null ? f.Name : String.Format( "(deleted, serial 0x{0:X})", (int)inst.Members[i] ) );
 					}
 					break;
 				}
 				case "add":
 				{
-					if ( !SkyInstanceManager.OwnsDwelling( from ) )
+					if ( !Sky.OwnsDwelling( from ) )
 					{
 						from.SendMessage( "You do not own a sky dwelling. Purchase one from a sky dwelling sign." );
 						return;
@@ -92,14 +95,14 @@ namespace Server.Engines.Instancing
 
 				if ( m_Add )
 				{
-					if ( SkyInstanceManager.AddFriend( from, target ) )
+					if ( Sky.AddFriend( from, target ) )
 						from.SendMessage( "{0} can now visit your sky dwelling.", target.Name );
 					else
 						from.SendMessage( "{0} is already invited.", target.Name );
 				}
 				else
 				{
-					if ( SkyInstanceManager.RemoveFriend( from, target ) )
+					if ( Sky.RemoveFriend( from, target ) )
 						from.SendMessage( "{0} can no longer visit your sky dwelling.", target.Name );
 					else
 						from.SendMessage( "{0} was not on your invite list.", target.Name );
@@ -114,20 +117,20 @@ namespace Server.Engines.Instancing
 			{
 				PlayerMobile target = o as PlayerMobile;
 				if ( target == null ) { from.SendMessage( "That is not a player." ); return; }
-				SkyInstanceManager.VisitFriendDwelling( from, target );
+				Sky.VisitFriendDwelling( from, target );
 			}
 		}
 
 		private static void OnSkyDwellingCommand( CommandEventArgs e )
 		{
 			Mobile from = e.Mobile;
-			SkyInstanceManager.SendOwnerToTheirInstance( from );
+			Sky.SendOwnerToTheirInstance( from );
 		}
 
 		private static void OnLeaveDwellingCommand( CommandEventArgs e )
 		{
 			Mobile from = e.Mobile;
-			if ( !SkyInstanceManager.LeaveDwelling( from ) )
+			if ( !Sky.LeaveInstance( from ) )
 				from.SendMessage( "You are not currently in a sky dwelling." );
 		}
 
@@ -148,11 +151,11 @@ namespace Server.Engines.Instancing
 				case "status":
 					{
 						from.SendMessage( "Sky Dwelling status: {0} record(s), {1} live / {2} pool maps (price {3}g, unload after {4} min).",
-							SkyInstanceManager.OwnerCount,
-							SkyInstanceManager.LiveCount,
-							SkyInstanceManager.PoolSize,
-							SkyInstanceManager.DwellingPrice,
-							(int)SkyInstanceManager.UnloadAfter.TotalMinutes );
+							Sky.OwnerCount,
+							Sky.LiveCount,
+							Sky.PoolSize,
+							Sky.DwellingPrice,
+							(int)Sky.UnloadAfter.TotalMinutes );
 						break;
 					}
 				case "price":
@@ -168,7 +171,7 @@ namespace Server.Engines.Instancing
 							from.SendMessage( "Bad gold value." );
 							return;
 						}
-						SkyInstanceManager.DwellingPrice = gold;
+						Sky.DwellingPrice = gold;
 						from.SendMessage( "Sky dwellings now cost {0} gold.", gold );
 						break;
 					}
@@ -185,19 +188,19 @@ namespace Server.Engines.Instancing
 							from.SendMessage( "Bad minutes value." );
 							return;
 						}
-						SkyInstanceManager.UnloadAfter = TimeSpan.FromMinutes( minutes );
+						Sky.SetUnloadAfter( TimeSpan.FromMinutes( minutes ) );
 						from.SendMessage( "Sky dwellings will now unload after {0} minutes of inactivity.", minutes );
 						break;
 					}
 				case "park":
 					{
-						List<SkyInstance> live = new List<SkyInstance>( SkyInstanceManager.AllInstances );
+						List<Instance> live = new List<Instance>( Sky.LiveInstances );
 						int count = 0;
-						foreach ( SkyInstance inst in live )
+						foreach ( Instance inst in live )
 						{
 							if ( inst.IsLive )
 							{
-								SkyInstanceManager.Park( inst );
+								Sky.Park( inst );
 								count++;
 							}
 						}
@@ -225,7 +228,7 @@ namespace Server.Engines.Instancing
 					}
 				case "freedead":
 					{
-						int freed = SkyInstanceManager.ReleaseDeadOwners();
+						int freed = Sky.ReleaseDeadOwners();
 						from.SendMessage( "Freed {0} orphaned dwelling(s).", freed );
 						break;
 					}
@@ -248,7 +251,7 @@ namespace Server.Engines.Instancing
 					return;
 				}
 
-				if ( SkyInstanceManager.Purchase( target ) )
+				if ( Sky.Purchase( target ) )
 					from.SendMessage( "Granted a sky dwelling to {0}.", target.Name );
 				else
 					from.SendMessage( "{0} already owns a sky dwelling.", target.Name );
@@ -271,7 +274,7 @@ namespace Server.Engines.Instancing
 				}
 
 				// GameMasters bypass the friend check inside VisitFriendDwelling.
-				SkyInstanceManager.VisitFriendDwelling( from, target );
+				Sky.VisitFriendDwelling( from, target );
 			}
 		}
 	}
