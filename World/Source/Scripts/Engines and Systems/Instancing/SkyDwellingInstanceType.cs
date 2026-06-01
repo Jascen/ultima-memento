@@ -152,13 +152,100 @@ namespace Server.Engines.Instancing
 			Point3D signLoc = new Point3D( DwellingX, DwellingY - 1, DwellingZ ); // entrance fallback
 			CloneOriginalStructure( inst, map, ref signLoc );
 
-			if ( !inst.Purchased )
-			{
-				SkyDwellingSign sign = new SkyDwellingSign();
+			// Always place the sign: a purchase sign for an unclaimed visit, or an
+			// owned management sign (set public/private) once the dwelling is owned.
+			SkyDwellingSign sign = new SkyDwellingSign();
+			if ( inst.Purchased )
+				sign.SetOwned( inst.OwnerSerial );
+			else
 				sign.Price = DwellingPrice;
-				sign.MoveToWorld( signLoc, map );
-				inst.Items.Add( new InstanceItem( sign, signLoc ) );
+
+			sign.MoveToWorld( signLoc, map );
+			inst.Items.Add( new InstanceItem( sign, signLoc ) );
+		}
+
+		// ----- Chooser / public-listing support -----
+
+		public bool IsOwnedBy( Instance inst, Mobile m )
+		{
+			return inst != null && m != null && inst.OwnerSerial == OwnerKey( m );
+		}
+
+		// Purchased dwellings this player is an invited friend/co-owner of (excludes
+		// their own).
+		public List<Instance> InvitedInstances( Mobile m )
+		{
+			List<Instance> list = new List<Instance>();
+			if ( m == null ) return list;
+
+			foreach ( Instance inst in AllInstances )
+			{
+				if ( !inst.Purchased ) continue;
+				if ( inst.OwnerSerial == OwnerKey( m ) ) continue;
+				if ( IsMember( inst, m ) )
+					list.Add( inst );
 			}
+			return list;
+		}
+
+		// All public dwellings, excluding the given player's own (and anything they
+		// are already invited to, to avoid duplicate rows).
+		public List<Instance> PublicInstances( Mobile excludeFor )
+		{
+			List<Instance> invited = InvitedInstances( excludeFor );
+			List<Instance> list = new List<Instance>();
+
+			foreach ( Instance inst in AllInstances )
+			{
+				if ( !inst.Purchased || !inst.Public ) continue;
+				if ( excludeFor != null && inst.OwnerSerial == OwnerKey( excludeFor ) ) continue;
+				if ( invited.Contains( inst ) ) continue;
+				list.Add( inst );
+			}
+			return list;
+		}
+
+		// Toggle public/private for an owner's dwelling. Returns false if they don't
+		// own a (purchased) dwelling.
+		public bool SetPublic( Mobile owner, bool pub )
+		{
+			Instance inst = GetByOwner( owner );
+			if ( inst == null || !inst.Purchased ) return false;
+			inst.Public = pub;
+			return true;
+		}
+
+		public bool IsPublic( Mobile owner )
+		{
+			Instance inst = GetByOwner( owner );
+			return inst != null && inst.Public;
+		}
+
+		// Enter a chosen dwelling with an access check: owner, invited friend, a
+		// public dwelling, or staff.
+		public bool EnterChosen( Mobile from, Instance inst )
+		{
+			if ( from == null || inst == null ) return false;
+
+			bool allowed = inst.OwnerSerial == OwnerKey( from )
+						|| IsMember( inst, from )
+						|| inst.Public
+						|| from.AccessLevel >= AccessLevel.GameMaster;
+
+			if ( !allowed )
+			{
+				from.SendMessage( "You are not allowed to enter that sky dwelling." );
+				return false;
+			}
+
+			if ( SendToInstance( from, inst ) )
+			{
+				Mobile owner = World.FindMobile( inst.OwnerSerial );
+				if ( owner != null && owner != from )
+					from.SendMessage( "You arrive in {0}'s sky dwelling.", owner.Name );
+				return true;
+			}
+			return false;
 		}
 
 		// Copy the original first sky dwelling's doors (and discover its sign spot)
