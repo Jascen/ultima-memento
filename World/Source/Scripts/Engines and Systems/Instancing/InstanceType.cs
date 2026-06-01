@@ -113,9 +113,10 @@ namespace Server.Engines.Instancing
 				Map map = new Map( ClonedMapID, idx, ClonedFileIndex, MapWidth, MapHeight, 1,
 					String.Format( "{0}{1}", Key, i ), Rules );
 
-				// Mark it an instance of the base map so land/terrain/difficulty logic
-				// treats it as that map (see Map.Logical / Lands.GetLand) while it stays
-				// a distinct world for isolation.
+				// Record the base map this clone mirrors. Map's == / IEquatable<Map>
+				// reads BaseMap, so land/terrain/difficulty logic that checks
+				// ( map == Map.SerpentIsland ) treats this instance as that map, while
+				// it stays a distinct world for isolation.
 				map.BaseMap = baseMap;
 
 				Map.Maps[idx] = map;
