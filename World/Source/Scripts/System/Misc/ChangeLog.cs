@@ -35,6 +35,7 @@ namespace Server.Misc
 			builder.Append("- Item - Add tooltip indicating what a Hoard Minion does<br>");
 			builder.Append("- Item - Rod of Resurrection can now create a Soul Orb on yourself<br>");
 			builder.Append("- Item - Double-clicking currency in the bank now creates Gold in the bank instead of the Player's backpack<br>");
+			builder.Append("- Item - Dropped pugilist gloves can now be enhanced with leather and bone based on graphic type<br>");
 			builder.Append("- Item - Trap kit created traps have several changes:<br>");
 			builder.Append("       - Now have a 0.5 second interruptible cast time with a 3 second cooldown<br>");
 			builder.Append("       - Owners can now disarm their own traps by double-clicking them<br>");

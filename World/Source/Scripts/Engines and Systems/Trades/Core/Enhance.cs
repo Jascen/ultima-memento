@@ -240,6 +240,8 @@ namespace Server.Engines.Craft
 			if (itemType == typeof(RangerLegs)) return typeof(StuddedLegs);
 
 			if (itemType == typeof(HideChest)) return typeof(LeatherChest);
+			if (itemType == typeof(PugilistGloves)) return typeof(PugilistMits); // Leather
+			if (itemType == typeof(PugilistGlove)) return typeof(BoneGloves); // Bone
 			
 			return null;
 		}
