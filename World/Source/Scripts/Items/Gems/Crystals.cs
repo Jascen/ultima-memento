@@ -1,5 +1,6 @@
 using System;
 using Server;
+using Server.Utilities;
 
 namespace Server.Items
 {
@@ -37,7 +38,16 @@ namespace Server.Items
 			{
 				Delete();
 				int nGold = this.Amount * 5;
-				from.AddToBackpack ( new Gold( nGold ) );
+				if ( nGold > 0 )
+				{
+					foreach (var gold in ItemUtilities.AddStacks(nGold, () => new Gold()))
+					{
+						if (!box.TryStackItem(gold, from))
+						{
+							box.DropItem(gold);
+						}
+					}
+				}
 			}
 			else
 			{
