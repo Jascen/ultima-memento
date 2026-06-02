@@ -16,21 +16,16 @@ namespace Server.Items
 		{
 		}
 
-		public override bool OnEquip(Mobile from)
-		{
-			if (!base.OnEquip(from)) return false;
-			if (false == from is PlayerMobile) return true;
+		[CommandProperty( AccessLevel.GameMaster )]
+		public override Layer Layer
+		{ 
+			get
+			{
+				if (false == RootParentEntity is PlayerMobile) return Layer.Pants;
 
-			Layer = ((PlayerMobile)from).Temptations.CanWearTightPants ? Layer.InnerLegs : Layer.Pants;
-			
-			return true;
-		}
-
-		public override void OnRemoved(object parent)
-		{
-			base.OnRemoved(parent);
-
-			Layer = Layer.Pants;
+				return ((PlayerMobile)RootParentEntity).Temptations.CanWearTightPants ? Layer.InnerLegs : Layer.Pants;
+			} 
+			set { base.Layer = value; }
 		}
 
 		public override void Serialize( GenericWriter writer )
