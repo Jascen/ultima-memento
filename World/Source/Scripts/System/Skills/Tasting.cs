@@ -33,6 +33,7 @@ namespace Server.Items
 			{
 				if ( IsExotic( targeted ) )
 				{
+					from.SendMessage("You... lick the frog.");
 					ExplicitAchievement.TryAward(ExplicitAchievementType.ExoticTaste, from as PlayerMobile);
 				}
 				else if ( targeted is Mobile )
