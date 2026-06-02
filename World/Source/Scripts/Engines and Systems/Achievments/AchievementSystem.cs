@@ -382,9 +382,11 @@ namespace Scripts.Mythik.Systems.Achievements
 
 			#region Feats of Strength - 5000 to 5999
 			const int DEMON_SKULL = 0x2251;
+			const int FROG = 0x2C9B;
 			Categories.Add(new AchievementCategory(5000, 0, "Feats of Strength"));
 			Achievements.Add(new HunterAchievement(5001, 5000, DEMON_SKULL, true, null, 1, "Domo Arigato", "Destroyed the mechanical being of Exodus, the demonic automaton", 5, typeof(Exodus)));
 			Achievements.Add(new HunterAchievement(5002, 5000, DEMON_SKULL, true, null, 1, "Like Thor, but better", "You've bested Jormungandr, the mighty Serpent of Midgard", 5, typeof(Jormungandr)));
+			Achievements.Add(AddExplicit(ExplicitAchievementType.ExoticTaste, 5003, 5000, FROG, "Taste of the Wild", "Wtf? No, you can't eat that!", 5));
 			#endregion Feats of Strength - 5000 to 5999
 
 			CommandSystem.Register("feats", AccessLevel.Player, new CommandEventHandler(OpenGumpCommand));
@@ -493,6 +495,16 @@ namespace Scripts.Mythik.Systems.Achievements
 			};
 
 			Achievements.Add(achievement);
+
+			return achievement;
+		}
+
+		private static ExplicitAchievement AddExplicit(ExplicitAchievementType type, int achievementId, int categoryId, int itemIcon, string title, string description, short rewardPoints)
+		{
+			var achievement = new ExplicitAchievement(achievementId, categoryId, itemIcon, false, null, title, description, rewardPoints);
+
+			Achievements.Add(achievement);
+			ExplicitAchievement.Achievements.Add(type, achievement);
 
 			return achievement;
 		}
