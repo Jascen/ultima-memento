@@ -1,7 +1,6 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Items;
+using Server.Utilities;
 
 namespace Server.Spells.Shinobi
 {
@@ -49,74 +48,7 @@ namespace Server.Spells.Shinobi
 
 					Effects.PlaySound( loc, from.Map, 0x241 );
 
-					if ( o is Mobile )
-					{
-						from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 503101 ); // That did not need to be unlocked.
-					}
-					else if ( o is BaseHouseDoor )  // house door check
-					{
-						from.SendMessage( "This ability is to unlock certain containers and other types of doors." );
-					}
-					else if ( o is Item && ((Item)o).VirtualContainer )
-					{
-						from.SendMessage( "This key is to unlock almost any container." );
-					}
-					else if ( o is BaseDoor )
-					{
-						if ( Server.Items.DoorType.IsDungeonDoor( (BaseDoor)o ) )
-						{
-							if ( ((BaseDoor)o).Locked == false )
-								from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 503101 ); // That did not need to be unlocked.
-
-							else
-							{
-								((BaseDoor)o).Locked = false;
-								Server.Items.DoorType.UnlockDoors( (BaseDoor)o );
-							}
-						}
-						else
-							from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 503101 ); // That did not need to be unlocked.
-					}
-					else if ( !( o is LockableContainer ) )
-					{
-						from.SendLocalizedMessage( 501666 ); // You can't unlock that!
-					}
-					else {
-						LockableContainer cont = (LockableContainer)o;
-
-						if ( Multis.BaseHouse.CheckSecured( cont ) ) 
-							from.SendMessage( "You cannot use this ability on a secure item!" );
-						else if ( !cont.Locked )
-							from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 503101 ); // That did not need to be unlocked.
-						else if ( cont.LockLevel == 0 )
-							from.SendLocalizedMessage( 501666 ); // You can't unlock that!
-						else if ( (this.GetType()).IsAssignableFrom(typeof(TreasureMapChest)) )
-						{
-							from.SendMessage( "A magical aura on this long lost treasure will always be too much for your abilities." );
-						}
-						else if ( (this.GetType()).IsAssignableFrom(typeof(ParagonChest)) )
-						{
-							from.SendMessage( "A magical aura on this long lost treasure will always be too much for your abilities." );
-						}
-						else if ( (this.GetType()).IsAssignableFrom(typeof(PirateChest)) )
-						{
-							from.SendMessage( "This seems to be protected from magic, but maybe an actual lock picker can get it open." );
-						}
-						else {
-							int level = (int)(from.Skills[SkillName.Ninjitsu].Value) + 20;
-
-							if ( level > 50 ){ level = 50; }
-
-							if ( level >= cont.RequiredSkill && !(cont is TreasureMapChest && ((TreasureMapChest)cont).Level > 2) ) {
-								cont.Locked = false;
-
-								if ( cont.LockLevel == -255 )
-									cont.LockLevel = cont.RequiredSkill - 10;
-							}
-							else
-								from.SendMessage( "Your ability does not seem to have an effect on that lock!" );
-						}		
-					}
+					UnlockUtilities.TrySpellUnlock( from, o, UnlockUtilities.EspionageUnlockProfile );
 				}
 
 				m_Owner.FinishSequence();

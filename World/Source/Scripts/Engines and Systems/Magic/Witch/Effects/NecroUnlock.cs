@@ -1,7 +1,7 @@
 using System;
 using Server.Targeting;
-using Server.Network;
 using Server.Items;
+using Server.Utilities;
 
 namespace Server.Spells.Undead
 {
@@ -44,52 +44,7 @@ namespace Server.Spells.Undead
 
 					Effects.PlaySound( loc, from.Map, 0x17E );
 
-					if ( o is Mobile )
-						from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 503101 ); // That did not need to be unlocked.
-					else if ( o is BaseDoor )
-					{
-						if ( Server.Items.DoorType.IsDungeonDoor( (BaseDoor)o ) )
-						{
-							if ( ((BaseDoor)o).Locked == false )
-								from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 503101 ); // That did not need to be unlocked.
-
-							else
-							{
-								((BaseDoor)o).Locked = false;
-								Server.Items.DoorType.UnlockDoors( (BaseDoor)o );
-							}
-						}
-						else
-							from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 503101 ); // That did not need to be unlocked.
-					}
-					else if ( !( o is LockableContainer ) )
-						from.SendLocalizedMessage( 501666 ); // You can't unlock that!
-					else {
-						LockableContainer cont = (LockableContainer)o;
-
-						if ( Multis.BaseHouse.CheckSecured( cont ) ) 
-							from.SendMessage("You cannot use this on a secure item.");
-						else if ( !cont.Locked )
-							from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 503101 ); // That did not need to be unlocked.
-						else if ( cont.LockLevel == 0 )
-							from.SendLocalizedMessage( 501666 ); // You can't unlock that!
-						else if ( cont.VirtualContainer )
-							from.SendLocalizedMessage( 501666 ); // You can't unlock that!
-						else {
-							int level = (int)(from.Skills[SkillName.Necromancy].Value)+Server.Items.BasePotion.EnhancePotions( from );
-
-							if ( level > 90 ){ level = 90; }
-
-							if ( level >= cont.RequiredSkill && !(cont is TreasureMapChest ) ) {
-								cont.Locked = false;
-
-								if ( cont.LockLevel == -255 )
-									cont.LockLevel = cont.RequiredSkill - 10;
-							}
-							else
-								from.PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "This does not seem to work on that lock.", from.NetState);
-						}		
-					}
+					UnlockUtilities.TrySpellUnlock( from, o, UnlockUtilities.NecroUnlockProfile );
 				}
 
 				m_Owner.FinishSequence();

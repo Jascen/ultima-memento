@@ -1,18 +1,18 @@
 using System;
-using System.Collections;
-using Server.Network;
-using Server.Targeting;
-using Server.Prompts;
+using Server.Utilities;
 
 namespace Server.Items
 {
 	public class MagicSkeltonsKey : Item
 	{
+		private static TimeSpan Cooldown = TimeSpan.FromMinutes( 5 );
+		private DateTime NextUseAvailable = DateTime.MinValue;
+
 		public override string DefaultDescription
 		{
 			get
 			{
-				return "These keys can open almost any door or container. Use the key and select locked item to see if it works.";
+				return "These keys can open almost any door or container. Use the key and select locked item to see if it works. The key will be damaged after each use and will need time to regain it's power.";
 			}
 		}
 
@@ -29,7 +29,11 @@ namespace Server.Items
 
 		public override void OnDoubleClick( Mobile from )
 		{
-			Target t;
+			if ( DateTime.Now < NextUseAvailable )
+			{
+				from.SendMessage( "The key is still misshapen from the last use. Wait a moment before using it again." );
+				return;
+			}
 
 			if ( !IsChildOf( from.Backpack ) )
 			{
@@ -38,8 +42,7 @@ namespace Server.Items
 			else
 			{
 				from.SendMessage( "What locked container or door do you want to use the key on?" );
-				t = new UnlockTarget( this );
-				from.Target = t;
+				UnlockUtilities.BeginSkeletonKeyUnlock( from, this, SkeletonKeyTier.Master, UnlockUtilities.SkeletonKeyMessagesMagic );
 			}
 		}
 
@@ -49,175 +52,9 @@ namespace Server.Items
 			list.Add( 1049644, "Open any locked container or door" );
 		}
 
-		private class UnlockTarget : Target
+		public override void Consume()
 		{
-			private MagicSkeltonsKey m_Key;
-
-			public UnlockTarget( MagicSkeltonsKey key ) : base( 1, false, TargetFlags.None )
-			{
-				m_Key = key;
-				CheckLOS = true;
-			}
-
-			protected override void OnTarget( Mobile from, object targeted )
-			{
-				bool trash = false;
-					if ( Utility.RandomMinMax(1,10) == 1 ){ trash = false; }
-
-				if ( !m_Key.IsChildOf( from.Backpack ) )
-				{
-					from.SendLocalizedMessage( 1060640 ); // The item must be in your backpack to use it.
-				}
-				else if ( targeted == m_Key )
-				{
-					from.SendMessage( "This key is to unlock almost any container." );
-				}
-				else if ( targeted is BaseHouseDoor )  // house door check
-				{
-					from.SendMessage( "This key is to unlock almost any container." );
-				}
-				else if ( targeted is Item && ((Item)targeted).VirtualContainer )
-				{
-					from.SendMessage( "This key is to unlock almost any container." );
-				}
-				else if ( targeted is BaseDoor )
-				{
-					if ( Server.Items.DoorType.IsSpaceshipDoor( (BaseDoor)targeted ) && m_Key.ItemID != 0x3A75 )
-					{
-						from.SendMessage( "This doesn't have a key hole, but it does have a card slot." );
-					}
-					else if ( !(Server.Items.DoorType.IsSpaceshipDoor( (BaseDoor)targeted )) && m_Key.ItemID == 0x3A75 )
-					{
-						from.SendMessage( "This doesn't have a card slot, but it does have a key hole." );
-					}
-					else if ( Server.Items.DoorType.IsSpaceshipDoor( (BaseDoor)targeted ) && m_Key.ItemID == 0x3A75 )
-					{
-						if ( ((BaseDoor)targeted).Locked == false )
-							from.SendMessage( "That does not need to be unlocked." );
-
-						else
-						{
-							((BaseDoor)targeted).Locked = false;
-							Server.Items.DoorType.UnlockDoors( (BaseDoor)targeted );
-							from.RevealingAction();
-							from.PlaySound( 0x54B );
-							if ( trash ){ m_Key.Consume(); }
-						}
-					}
-					else if ( Server.Items.DoorType.IsDungeonDoor( (BaseDoor)targeted ) && m_Key.ItemID != 0x3A75 )
-					{
-						if ( ((BaseDoor)targeted).Locked == false )
-							from.SendMessage( "That does not need to be unlocked." );
-
-						else
-						{
-							((BaseDoor)targeted).Locked = false;
-							Server.Items.DoorType.UnlockDoors( (BaseDoor)targeted );
-							from.RevealingAction();
-							from.PlaySound( 0x241 );
-							if ( trash ){ m_Key.Consume(); }
-						}
-					}
-					else
-						from.SendMessage( "That does not need to be unlocked." );
-				}
-				else if ( targeted is ILockable )
-				{
-					ILockable o = (ILockable)targeted;
-					LockableContainer cont2 = o as LockableContainer;
-					if (cont2 == null)
-					{
-						from.SendMessage("That is not a container.");
-						return;
-					}
-
-					if ( Multis.BaseHouse.CheckSecured( cont2 ) ) 
-						from.SendLocalizedMessage( 503098 ); // You cannot cast this on a secure item.
-					else if ( !cont2.Locked )
-						from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 503101 ); // That did not need to be unlocked.
-					else if ( cont2.LockLevel == 0 )
-						from.SendLocalizedMessage( 501666 ); // You can't unlock that!
-					else if ( o.Locked )
-					{
-						if ( o is BaseDoor && !((BaseDoor)o).UseLocks() )  // this seems to check house doors also
-						{
-							from.SendMessage( "This key is to unlock any container." );
-						}
-						else if ( ((Item)o).Catalog == Catalogs.SciFi && ((ILockpickable)targeted).Locked && m_Key.ItemID != 0x3A75 )
-						{
-							from.SendMessage( "This doesn't have a key hole, but it does have a card slot." );
-						}
-						else if ( ((Item)o).Catalog != Catalogs.SciFi && ((ILockpickable)targeted).Locked && m_Key.ItemID == 0x3A75 )
-						{
-							from.SendMessage( "This doesn't have a card slot, but it does have a key hole." );
-						}
-						else if ( ((Item)o).Catalog == Catalogs.SciFi && o.Locked && m_Key.ItemID == 0x3A75 )
-						{
-							o.Locked = false;
-
-							if ( o is LockableContainer )
-							{
-								LockableContainer cont = (LockableContainer)o;
-								if ( cont.LockLevel == -255 )
-								{
-									cont.LockLevel = cont.RequiredSkill - 10;
-									if ( cont.LockLevel == 0 )
-										cont.LockLevel = -1;
-								}
-
-								cont.Picker = from;  // sets "lockpicker" to the user.
-							}
-
-							if ( targeted is Item )
-							{
-								Item item = (Item)targeted;
-								if ( trash ){ from.SendMessage( "You swipe the key card to open the lock, but also wearing it out from further use." ); }
-								else { from.SendMessage( "You swipe the key card to open the lock." ); }
-							}
-
-							from.RevealingAction();
-							from.PlaySound( 0x54B );
-							if ( trash ){ m_Key.Consume(); }
-						}
-						else if ( o.Locked && m_Key.ItemID != 0x3A75 )
-						{
-							o.Locked = false;
-
-							if ( o is LockableContainer )
-							{
-								LockableContainer cont = (LockableContainer)o;
-								if ( cont.LockLevel == -255 )
-								{
-									cont.LockLevel = cont.RequiredSkill - 10;
-									if ( cont.LockLevel == 0 )
-										cont.LockLevel = -1;
-								}
-
-								cont.Picker = from;  // sets "lockpicker" to the user.
-							}
-
-							if ( targeted is Item )
-							{
-								Item item = (Item)targeted;
-								if ( trash ){ from.SendMessage( "The key opens the lock, wearing the key out from further use." ); }
-								else { from.SendMessage( "The key opens the lock." ); }
-							}
-
-							from.RevealingAction();
-							from.PlaySound( 0x241 );
-							if ( trash ){ m_Key.Consume(); }
-						}
-					}
-					else
-					{
-						from.SendMessage( "You don't need to use this key on that." );
-					}
-				}
-				else
-				{
-					from.SendMessage( "This key is to unlock any container." );
-				}
-			}
+			// NextUseAvailable = DateTime.Now.Add( Cooldown );
 		}
 
 		public MagicSkeltonsKey( Serial serial ) : base( serial )
