@@ -41,6 +41,7 @@ namespace Server.Misc
 			builder.Append("       - Owners can now disarm their own traps by double-clicking them<br>");
 			builder.Append("       - Can now be coated with standard offensive potions<br>");
 			builder.Append("       - Can now be seen when Ctrl+Shift is held<br>");
+			builder.Append("- Item - Add tooltip to TMaps to indicate when you must use Lockpicking skill<br>");
 			builder.Append("- Misc - 'Unlock' behaviors have changed:<br>");
 			builder.Append("       - Code was centralized<br>");
 			builder.Append("       - All forms of unlocking now work on L1/L2 TMap chests but Lockpicks are is required for L3+<br>");

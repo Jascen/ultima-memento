@@ -1,17 +1,14 @@
 using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
-using Server;
 using Server.Mobiles;
 using Server.Network;
-using Server.Regions;
 using Server.Targeting;
 using Server.ContextMenus;
 using Server.Items;
 using Server.Misc;
 using Server.Commands;
-using Server.Commands.Generic;
+using Server.Gumps;
+using Server.Utilities;
 
 namespace Server.Items
 {
@@ -789,6 +786,9 @@ namespace Server.Items
 		public override void GetProperties( ObjectPropertyList list )
 		{
             base.GetProperties(list);
+
+			if ( Level > UnlockUtilities.MAX_TMAP_LEVEL && !m_Completed )
+				list.Add(TextDefinition.GetColorizedText("[Requires Lockpicking Skill]", HtmlColors.RED));
 
 			Point3D loc = new Point3D( m_Location.X, m_Location.Y, 0 );
 			Land land = Server.Lands.GetLand( m_Map, loc, m_Location.X, m_Location.Y );
