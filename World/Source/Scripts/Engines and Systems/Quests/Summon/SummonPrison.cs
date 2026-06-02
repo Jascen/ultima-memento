@@ -158,7 +158,7 @@ namespace Server.Items
 				Jailor = RandomThings.GetRandomName() + " " + GetRandomChampion();
 					if ( Utility.RandomMinMax( 1, 4 ) == 1 ){ Jailor = RandomThings.GetRandomSociety(); }
 
-				GetPrisoner( this );
+				MakePrisoner( this );
 			}
 		}
 
@@ -318,6 +318,14 @@ namespace Server.Items
 			RewardName = reader.ReadString();
 
 			if ( PrisonerSerial != null ){ LeaveThisPlace( this ); }
+
+			Type mobType = ScriptCompiler.FindTypeByName( PrisonerBase );
+			if ( mobType == null )
+			{
+				var oldType = PrisonerBase;
+				MakePrisoner(this);
+				Console.WriteLine("[WARNING] Magical Prison boss type ({0}) was not found. A new boss ({1}) has been generated.", oldType, PrisonerBase);
+			}
 
 			ItemID = 0x4FD6;
 		}
@@ -541,83 +549,83 @@ namespace Server.Items
 			return sTitle;
 		}
 
-		public static void GetPrisoner( SummonPrison item )
+		public static void MakePrisoner( SummonPrison item )
 		{
 			int pick = Utility.RandomMinMax( 1, 25 );
 
-			if ( pick == 1 ){		item.Prisoner = "Tiamat the Lord of Dragons";		item.PrisonerBase = "AncientWyrm"; 		item.PrisonerBody = 105;	item.PrisonerHue = 0xA54; 
+			if ( pick == 1 ){		item.Prisoner = "Tiamat the Lord of Dragons";		item.PrisonerBase = typeof(AncientWyrm).Name; 		item.PrisonerBody = 105;	item.PrisonerHue = 0xA54; 
 				item.RewardID = Utility.RandomList( 0x2234, 0x2235 );	item.RewardHue = 0xA54;	item.RewardName = "Head of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 2 ){	item.Prisoner = "Bahamut the Platinum Dragon";		item.PrisonerBase = "AncientWyrm"; 		item.PrisonerBody = 105; 	item.PrisonerHue = 0x430; 
+			else if ( pick == 2 ){	item.Prisoner = "Bahamut the Platinum Dragon";		item.PrisonerBase = typeof(AncientWyrm).Name; 		item.PrisonerBody = 105; 	item.PrisonerHue = 0x430; 
 				item.RewardID = Utility.RandomList( 0x2234, 0x2235 );	item.RewardHue = 0x430;	item.RewardName = "Head of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 3 ){	item.Prisoner = "Balar of the Evil Eye";			item.PrisonerBase = "ShamanicCyclops"; 	item.PrisonerBody = 0; 		item.PrisonerHue = 0xB96; 
+			else if ( pick == 3 ){	item.Prisoner = "Balar of the Evil Eye";			item.PrisonerBase = typeof(ShamanicCyclops).Name; 	item.PrisonerBody = 0; 		item.PrisonerHue = 0xB96; 
 				item.RewardID = 0x2F60;	item.RewardHue = 0;	item.RewardName = "Eye of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 4 ){	item.Prisoner = "Vecna the Lich";					item.PrisonerBase = "LichLord"; 		item.PrisonerBody = 0; 		item.PrisonerHue = 0xA03; 
+			else if ( pick == 4 ){	item.Prisoner = "Vecna the Lich";					item.PrisonerBase = typeof(LichLord).Name; 		item.PrisonerBody = 0; 		item.PrisonerHue = 0xA03; 
 				item.RewardID = 0x5721;	item.RewardHue = 0xA03;	item.RewardName = "Hand of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 5 ){	item.Prisoner = "Orcus the Daemon Prince";			item.PrisonerBase = "DaemonTemplate"; 	item.PrisonerBody = 427; 	item.PrisonerHue = 0xA93; 
+			else if ( pick == 5 ){	item.Prisoner = "Orcus the Daemon Prince";			item.PrisonerBase = typeof(DaemonTemplate).Name; 	item.PrisonerBody = 427; 	item.PrisonerHue = 0xA93; 
 				item.RewardID = Utility.RandomList( 0x369C, 0x364D );	item.RewardHue = 0;	item.RewardName = "Wand of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 6 ){	item.Prisoner = "Kronos the Ancient Titan";			item.PrisonerBase = "ElderTitan"; 		item.PrisonerBody = 0; 		item.PrisonerHue = 0xB8E;
+			else if ( pick == 6 ){	item.Prisoner = "Kronos the Ancient Titan";			item.PrisonerBase = typeof(ElderTitan).Name; 		item.PrisonerBody = 0; 		item.PrisonerHue = 0xB8E;
 				item.RewardID = Utility.RandomList( 0x35ED, 0x35EF );	item.RewardHue = 0xB8E;	item.RewardName = "Throne of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 7 ){	item.Prisoner = "Volturnus the Ruler of the Waves";	item.PrisonerBase = "WaterElemental"; 	item.PrisonerBody = 0; 		item.PrisonerHue = 0xA14;
+			else if ( pick == 7 ){	item.Prisoner = "Volturnus the Ruler of the Waves";	item.PrisonerBase = typeof(WaterElemental).Name; 	item.PrisonerBody = 0; 		item.PrisonerHue = 0xA14;
 				item.RewardID = Utility.RandomList( 0x438E, 0x437E );	item.RewardHue = 0;	item.RewardName = "Shrine of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 8 ){	item.Prisoner = "Adimarchus the Demon Prince of Madness"; item.PrisonerBase = "DaemonTemplate";		item.PrisonerBody = 427; 	item.PrisonerHue = 0xA9E;
+			else if ( pick == 8 ){	item.Prisoner = "Adimarchus the Demon Prince of Madness"; item.PrisonerBase = typeof(DaemonTemplate).Name;		item.PrisonerBody = 427; 	item.PrisonerHue = 0xA9E;
 				item.RewardID = 0x2104;	item.RewardHue = 0xA9E;	item.RewardName = "Statue of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 9 ){	item.Prisoner = "Lord Verminaard";					item.PrisonerBase = "Berserker";		item.PrisonerBody = 0x190; 	item.PrisonerHue = Utility.RandomSkinColor();
+			else if ( pick == 9 ){	item.Prisoner = "Lord Verminaard";					item.PrisonerBase = typeof(Berserker).Name;		item.PrisonerBody = 0x190; 	item.PrisonerHue = Utility.RandomSkinColor();
 				item.RewardID = 0x2645;	item.RewardHue = 0x515;	item.RewardName = "Helm of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 1; }
-			else if ( pick == 10 ){	item.Prisoner = "Nosferatu the Vampire";			item.PrisonerBase = "VampireLord";		item.PrisonerBody = 605; 	item.PrisonerHue = 0x47E;
+			else if ( pick == 10 ){	item.Prisoner = "Nosferatu the Vampire";			item.PrisonerBase = typeof(VampireLord).Name;		item.PrisonerBody = 605; 	item.PrisonerHue = 0x47E;
 				item.RewardID = 0x2631;	item.RewardHue = 0x497;	item.RewardName = "Spirit of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 11 ){	item.Prisoner = "Merlin the Wizard";				item.PrisonerBase = "EvilMage";			item.PrisonerBody = 0x190; 	item.PrisonerHue = Utility.RandomSkinColor();
+			else if ( pick == 11 ){	item.Prisoner = "Merlin the Wizard";				item.PrisonerBase = typeof(EvilMage).Name;			item.PrisonerBody = 0x190; 	item.PrisonerHue = Utility.RandomSkinColor();
 				item.RewardID = 0x1718;	item.RewardHue = 0x674;	item.RewardName = "Hat of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 12 ){	item.Prisoner = "Saruman the White";				item.PrisonerBase = "EvilMage";			item.PrisonerBody = 0x190; 	item.PrisonerHue = Utility.RandomSkinColor();
+			else if ( pick == 12 ){	item.Prisoner = "Saruman the White";				item.PrisonerBase = typeof(EvilMage).Name;			item.PrisonerBody = 0x190; 	item.PrisonerHue = Utility.RandomSkinColor();
 				item.RewardID = Utility.RandomList( 0xE89, 0xE8A ); item.RewardHue = 0x47E;	item.RewardName = "Staff of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 13 ){	item.Prisoner = "Elric of Melnibone";				item.PrisonerBase = "ElfBerserker";		item.PrisonerBody = 605; 	item.PrisonerHue = 0x430;
+			else if ( pick == 13 ){	item.Prisoner = "Elric of Melnibone";				item.PrisonerBase = typeof(ElfBerserker).Name;		item.PrisonerBody = 605; 	item.PrisonerHue = 0x430;
 				item.RewardID = Utility.RandomList( 0x4023, 0x4024 ); item.RewardHue = 0x9C5;	item.RewardName = item.Prisoner + "'s Ruby Throne";
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 14 ){	item.Prisoner = "Conan the Cimmerian";				item.PrisonerBase = "Berserker";		item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x419;
+			else if ( pick == 14 ){	item.Prisoner = "Conan the Cimmerian";				item.PrisonerBase = typeof(Berserker).Name;		item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x419;
 				item.RewardID = Utility.RandomList( 0x48B0, 0x48B1 ); item.RewardHue = 0;	item.RewardName = "Battle Axe of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 15 ){	item.Prisoner = "The Grim Reaper";					item.PrisonerBase = "BoneKnight";		item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x47E;
+			else if ( pick == 15 ){	item.Prisoner = "The Grim Reaper";					item.PrisonerBase = typeof(BoneKnight).Name;		item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x47E;
 				item.RewardID = Utility.RandomList( 0x48C4, 0x48C5 ); item.RewardHue = 0xB92;	item.RewardName = item.Prisoner + "'s Scythe";
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 1; }
-			else if ( pick == 16 ){	item.Prisoner = "Talos the Protector Europa";		item.PrisonerBase = "CaddelliteGolem";	item.PrisonerBody = 189; 	item.PrisonerHue = 0x972;
+			else if ( pick == 16 ){	item.Prisoner = "Talos the Protector Europa";		item.PrisonerBase = typeof(CaddelliteGolem).Name;	item.PrisonerBody = 189; 	item.PrisonerHue = 0x972;
 				item.RewardID = Utility.RandomList( 0x156C, 0x156D ); item.RewardHue = 0x972;	item.RewardName = "Shield of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 17 ){	item.Prisoner = "Red Sonja";						item.PrisonerBase = "Berserker";		item.PrisonerBody = 0x191; 	item.PrisonerHue = Utility.RandomSkinColor();
+			else if ( pick == 17 ){	item.Prisoner = "Red Sonja";						item.PrisonerBase = typeof(Berserker).Name;		item.PrisonerBody = 0x191; 	item.PrisonerHue = Utility.RandomSkinColor();
 				item.RewardID = Utility.RandomList( 0x90C, 0x4073 ); item.RewardHue = 0x9C4;	item.RewardName = item.Prisoner + "'s Sword";
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 1; }
-			else if ( pick == 18 ){	item.Prisoner = "Treebeard the Ent";				item.PrisonerBase = "WalkingReaper";	item.PrisonerBody = 312; 	item.PrisonerHue = 0x83F;
+			else if ( pick == 18 ){	item.Prisoner = "Treebeard the Ent";				item.PrisonerBase = typeof(WalkingReaper).Name;	item.PrisonerBody = 312; 	item.PrisonerHue = 0x83F;
 				item.RewardID = Utility.RandomList( 0xE57, 0xE59 ); item.RewardHue = 0x83F;	item.RewardName = "Stump of " + item.Prisoner;
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 19 ){	item.Prisoner = "Zeus of Mount Olympus";			item.PrisonerBase = "ElderTitan";		item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x8420;
+			else if ( pick == 19 ){	item.Prisoner = "Zeus of Mount Olympus";			item.PrisonerBase = typeof(ElderTitan).Name;		item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x8420;
 				item.RewardID = 0x4518; 							item.RewardHue = 0x9C2;	item.RewardName = "Stone from Mount Olympus";
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 20 ){	item.Prisoner = "Thor of Asgard";					item.PrisonerBase = "Berserker";		item.PrisonerBody = 0x190; 	item.PrisonerHue = Utility.RandomSkinColor();
+			else if ( pick == 20 ){	item.Prisoner = "Thor of Asgard";					item.PrisonerBase = typeof(Berserker).Name;		item.PrisonerBody = 0x190; 	item.PrisonerHue = Utility.RandomSkinColor();
 				item.RewardID = 0x25C2;	item.RewardHue = 0x849;	item.RewardName = "The Serpent of Midgard";
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 21 ){	item.Prisoner = "Hercules the Argonaut";			item.PrisonerBase = "ForestGiant";		item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x83F3;
+			else if ( pick == 21 ){	item.Prisoner = "Hercules the Argonaut";			item.PrisonerBase = typeof(ForestGiant).Name;		item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x83F3;
 				item.RewardID = Utility.RandomList( 0x11F7, 0x11FA ); item.RewardHue = 0x9D3;	item.RewardName = "Golden Fleece";
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 22 ){	item.Prisoner = "King Arthur";			item.PrisonerBase = "Berserker";					item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x83F3;
+			else if ( pick == 22 ){	item.Prisoner = "King Arthur";			item.PrisonerBase = typeof(Berserker).Name;					item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x83F3;
 				item.RewardID = Utility.RandomList( 0x15CA, 0x15CB ); item.RewardHue = 0x9C4;		item.RewardName = "Royal Banner of Camelot";
 				item.PrisonerClothColorUsed = 1;			item.PrisonerFullNameUsed = 1; }
-			else if ( pick == 23 ){	item.Prisoner = "Brona the Warlock Lord";			item.PrisonerBase = "EvilMageLord";		item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x9E0;
+			else if ( pick == 23 ){	item.Prisoner = "Brona the Warlock Lord";			item.PrisonerBase = typeof(EvilMageLord).Name;		item.PrisonerBody = 0x190; 	item.PrisonerHue = 0x9E0;
 				item.RewardID = Utility.RandomList( 0x90C, 0x4073 ); item.RewardHue = 0x496;		item.RewardName = "Sword of Shannara";
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 24 ){	item.Prisoner = "Demogorgon";						item.PrisonerBase = "DaemonTemplate";	item.PrisonerBody = 662; 	item.PrisonerHue = 0;
+			else if ( pick == 24 ){	item.Prisoner = "Demogorgon";						item.PrisonerBase = typeof(DaemonTemplate).Name;	item.PrisonerBody = 662; 	item.PrisonerHue = 0;
 				item.RewardID = Utility.RandomList( 0x115F ); 		 item.RewardHue = 0;			item.RewardName = "Heart of Demogorgon";
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
-			else if ( pick == 25 ){	item.Prisoner = "Lolth the Drow Goddess";			item.PrisonerBase = "Succubus";			item.PrisonerBody = 769; 	item.PrisonerHue = 0;
+			else if ( pick == 25 ){	item.Prisoner = "Lolth the Drow Goddess";			item.PrisonerBase = typeof(Succubus).Name;			item.PrisonerBody = 769; 	item.PrisonerHue = 0;
 				item.RewardID = Utility.RandomList( 0x39A0 ); 		 item.RewardHue = 0xB60;		item.RewardName = "Altar of Lolth";
 				item.PrisonerClothColorUsed = 0;			item.PrisonerFullNameUsed = 0; }
 		}
