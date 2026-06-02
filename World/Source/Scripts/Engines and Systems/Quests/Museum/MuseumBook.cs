@@ -194,7 +194,7 @@ namespace Server.Items
 
 					Museums relic = new Museums();
 					relic.ItemID = Int32.Parse( AntiqueInfo( thing, 1, book ) );
-					relic.Hue = Int32.Parse( AntiqueInfo( thing, 3, book ), NumberStyles.HexNumber | NumberStyles.AllowHexSpecifier);
+					relic.Hue = Int32.Parse( AntiqueInfo( thing, 3, book ) );
 
 					if ( relic.ItemID == 0x4FA4 ){ ColorMetal( relic, 0 ); }
 					else if ( relic.ItemID == 0x4FC9 ){ ColorMetal( relic, 0 ); }
@@ -509,7 +509,7 @@ namespace Server.Items
 			else if ( item == 22 ){ id = "8519"; hex = "0x2147"; name = "Symbol of Ultimate Wisdom"; desc = "From the Chamber of the Codex"; }
 			else if ( item == 23 ){ id = "20413"; hex = "0x4FBD"; name = "Trophy of David"; desc = "For Defeating the Goliath"; }
 			else if ( item == 24 ){ id = "8829"; hex = "0x227D"; name = "Cauldron of the Sea"; desc = "Belonged to Morwen the Hag"; }
-			else if ( item == 25 ){ id = "20420"; hex = "0x4FC4"; hue = "0x0986"; name = "Statue of a Phoenix"; desc = "The Vermilion Bird"; }
+			else if ( item == 25 ){ id = "20420"; hex = "0x4FC4"; hue = 0x0986.ToString(); name = "Statue of a Phoenix"; desc = "The Vermilion Bird"; }
 			else if ( item == 26 ){ id = "20384"; hex = "0x4FA0"; name = "Flower of the Fellowship"; desc = "Grown by Batlin the Druid"; }
 			else if ( item == 27 ){ id = "20391"; hex = "0x4FA7"; name = "Statue of a Knight"; desc = GetKnight( book.KnightStatue ); }
 			else if ( item == 28 ){ id = "21191"; hex = "0x52C7"; name = "Head of Druk"; desc = "The Thunder Dragon"; }
@@ -520,7 +520,7 @@ namespace Server.Items
 			else if ( item == 33 ){ id = "20422"; hex = "0x4FC6"; name = "Statue of Athena"; desc = "The Daughter of Zeus"; }
 			else if ( item == 34 ){ id = "21333"; hex = "0x5355"; name = "Desk of Elminster"; desc = "The Sage of Shadowdale"; }
 			else if ( item == 35 ){ id = "20386"; hex = "0x4FA2"; name = "Flowers from the Silver River"; desc = "From the Land of Shannara"; }
-			else if ( item == 36 ){ id = "732"; hex = "0x02DC"; hue = "0x0B1B"; name = "Lamp of the Genie"; desc = "From the Treasure of Aladdin"; }
+			else if ( item == 36 ){ id = "732"; hex = "0x02DC"; hue = 0x0B1B.ToString(); name = "Lamp of the Genie"; desc = "From the Treasure of Aladdin"; }
 			else if ( item == 37 ){ id = "21244"; hex = "0x52FC"; name = "Stained Glass Lamp"; desc = "Belonged to Doctor Jekyll";}
 			else if ( item == 38 ){ id = "20383"; hex = "0x4F9F"; name = "Mage Flower of D'Hara"; desc = "Grown by Zeddicus Zu'l Zorander"; }
 			else if ( item == 39 ){ id = "4085"; hex = "0x0FF5"; name = "Idol of Virtue"; desc = "Symbol of the Avatar"; light = "1"; }
