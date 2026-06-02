@@ -472,17 +472,7 @@ namespace Server.Items
 							Effects.SendLocationEffect( fire, m.Map, 0x3709, 30, 10 );
 							m.PlaySound( 0x208 );
 							m.SendMessage( "You destroy the dark core of Exodus, unleashing the power." );
-
-							for ( int x = -5; x <= 5; ++x )
-							{
-								for ( int y = -5; y <= 5; ++y )
-								{
-									double dist = Math.Sqrt(x*x+y*y);
-
-									if ( dist <= 5 )
-										new Server.Misc.SummonQuests.GoodiesTimer( m.Map, 707 + x, 2210 + y ).Start();
-								}
-							}
+							Server.Timers.GoodiesTimer.Create(m.Map, 707, 2210, 5);
 
 							Point3D blast = new Point3D( 711, 2210, -5 );
 
