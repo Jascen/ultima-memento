@@ -60,6 +60,7 @@ namespace Server.Misc
 			builder.Append("- Item - Items that can block equipping now use the proper method<br>");
 			builder.Append("- Item - Fix issue where Transmutation potions could mix<br>");
 			builder.Append("- Quest - Fix issue where journal quests could have invalid villains<br>");
+			builder.Append("- Quest - Fix issue where museum book couldn't go past 25th item<br>");
 			builder.Append("- Spell - Syth and Jedi spells now properly consume the displayed crystal cost, down from 200% or 300%<br>");
 			builder.Append("- Spell - Insult implementation and displayed info now match<br>");
 
