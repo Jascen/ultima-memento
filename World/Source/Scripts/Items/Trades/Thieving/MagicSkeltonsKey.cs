@@ -54,7 +54,7 @@ namespace Server.Items
 
 		public override void Consume()
 		{
-			// NextUseAvailable = DateTime.Now.Add( Cooldown );
+			NextUseAvailable = DateTime.Now.Add( Cooldown );
 		}
 
 		public MagicSkeltonsKey( Serial serial ) : base( serial )
