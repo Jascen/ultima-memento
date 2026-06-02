@@ -798,7 +798,7 @@ namespace Server.Utilities
 			private readonly SkeletonKeyTier m_Tier;
 			private readonly Item m_Tool;
 
-			public SkeletonKeyUnlockTarget(Item tool, SkeletonKeyTier tier, SkeletonKeyMessages messages) : base(1, false, TargetFlags.None)
+			public SkeletonKeyUnlockTarget(Item tool, SkeletonKeyTier tier, SkeletonKeyMessages messages) : base(2, false, TargetFlags.None)
 			{
 				m_Tool = tool;
 				m_Tier = tier;
@@ -818,7 +818,7 @@ namespace Server.Utilities
 			private readonly TrapDissolverProfile m_Profile;
 			private readonly Item m_Tool;
 
-			public TrapDissolverUnlockTarget(Item tool, TrapDissolverProfile profile, Func<Mobile, object, Item, bool> extraHandler) : base(1, false, TargetFlags.None)
+			public TrapDissolverUnlockTarget(Item tool, TrapDissolverProfile profile, Func<Mobile, object, Item, bool> extraHandler) : base(2, false, TargetFlags.None)
 			{
 				m_Tool = tool;
 				m_Profile = profile;

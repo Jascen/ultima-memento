@@ -45,6 +45,7 @@ namespace Server.Misc
 			builder.Append("- Misc - 'Unlock' behaviors have changed:<br>");
 			builder.Append("       - Code was centralized<br>");
 			builder.Append("       - All forms of unlocking now work on L1/L2 TMap chests but Lockpicks are is required for L3+<br>");
+			builder.Append("       - Keys/Lockpicks usage range is now 2, up from 1<br>");
 			builder.Append("- Preference - Add preference to change double-click to auto-select Talk option when possible<br>");
 			builder.Append("- Quest - 'Seeking Brave Adventurers' quest now uses gump buttons instead of context menu options<br>");
 			builder.Append("- Skill - Taming now indicates if your skill is too low to succeed<br>");
