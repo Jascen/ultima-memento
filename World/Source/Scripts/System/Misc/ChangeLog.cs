@@ -72,6 +72,7 @@ namespace Server.Misc
 			builder.Append("- Quest - Fix issue where museum book couldn't go past 25th item<br>");
 			builder.Append("- Spell - Syth and Jedi spells now properly consume the displayed crystal cost, down from 200% or 300%<br>");
 			builder.Append("- Spell - Insult implementation and displayed info now match<br>");
+			builder.Append("- Temptations - Fix issue where Permadeath characters would not get default starting cap after rebirth<br>");
 
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

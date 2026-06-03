@@ -500,6 +500,7 @@ namespace Server.Misc
 
 		private static void ApplyCharacterDefaults(PlayerMobile newChar, AccessLevel accessLevel, bool female, int hue, bool createBackpack)
 		{
+			newChar.StatCap = 250;
 			newChar.Player = true;
 			newChar.Young = false;
 			newChar.AccessLevel = accessLevel;
@@ -586,7 +587,6 @@ namespace Server.Misc
 			m_Mobile = newChar;
 
 			{
-				newChar.StatCap = 250;
 				ApplyCharacterDefaults(newChar, args.Account.AccessLevel, args.Female, args.Hue, true);
 				ApplyHairStyling(newChar, args.HairID, args.HairHue, args.BeardID, args.BeardHue);
 
