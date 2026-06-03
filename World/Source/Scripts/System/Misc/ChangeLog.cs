@@ -58,6 +58,7 @@ namespace Server.Misc
 			builder.Append("<br>");
 			builder.Append("Fixes<br>");
 			builder.Append("- Avatar - Skill-based starter bags are now randomly placed in the backpack<br>");
+			builder.Append("- Avatar - Completing Titan of Ether now properly rewards +50 stat cap<br>");
 			builder.Append("- Gump - Fix issue where Chemist Bar (Alchemist Pouch) buttons didn't work<br>");
 			builder.Append("- Gump - Foe Requiem in song book matches the skill requirement (50 instead of 80)<br>");
 			builder.Append("- Gump - Fix potion alignment for plants<br>");

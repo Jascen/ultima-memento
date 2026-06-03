@@ -39,7 +39,7 @@ namespace Server.Items
 
 			m.IsTitanOfEther = true;
 			m.RefreshSkillCap();
-			m.StatCap = 300;
+			m.StatCap += 50;
 
 			Server.Items.QuestSouvenir.GiveReward( m, "Obelisk Tip", 0, 0x185F );
 			Server.Items.QuestSouvenir.GiveReward( m, "Breath of Air", 0, 0x1860 );
