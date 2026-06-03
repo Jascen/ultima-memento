@@ -1200,6 +1200,8 @@ namespace Server.Misc
 				case "the Mines of Morinia": location = GetAreaEntrance( 0, dungeon, Map.Sosaria, out placer, out xc, out yc ); world = "Sosaria"; break;
 				case "the Perinian Depths": location = GetAreaEntrance( 0, dungeon, Map.Sosaria, out placer, out xc, out yc ); world = "Sosaria"; break;
 				case "the Ratmen Lair": location = GetAreaEntrance( 0, dungeon, Map.Sosaria, out placer, out xc, out yc ); world = "Sosaria"; break;
+				case "the Montor Sewers": location = GetAreaEntrance( 0, dungeon, Map.Sosaria, out placer, out xc, out yc ); world = "Sosaria"; break;
+				case "the Ruins of the Black Blade": location = GetAreaEntrance( 0, dungeon, Map.Sosaria, out placer, out xc, out yc ); world = "Sosaria"; break;
 
 				// Ambrosia
 				case "the Cave of the Zuluu": location = GetAreaEntrance( 0, dungeon, Map.Sosaria, out placer, out xc, out yc ); world = "Ambrosia"; break;
@@ -1230,6 +1232,7 @@ namespace Server.Misc
 				case "the Lodoria Catacombs": location = GetAreaEntrance( 0, dungeon, Map.Lodor, out placer, out xc, out yc ); world = "Lodoria"; break;
 				case "the Undersea Pass": location = GetAreaEntrance( 0, dungeon, Map.Lodor, out placer, out xc, out yc ); world = "Lodoria"; break;
 				case "the Volcanic Cave": location = GetAreaEntrance( 0, dungeon, Map.Lodor, out placer, out xc, out yc ); world = "Lodoria"; break;
+				case "the Lizardman Cave": location = GetAreaEntrance( 0, dungeon, Map.Lodor, out placer, out xc, out yc ); world = "Lodoria"; break;
 
 				// Serpent Island
 				case "Dungeon Ankh": location = GetAreaEntrance( 0, dungeon, Map.SerpentIsland, out placer, out xc, out yc ); world = "Serpent Island"; break;
@@ -1258,7 +1261,9 @@ namespace Server.Misc
 				case "the Temple of Osirus": location = GetAreaEntrance( 0, dungeon, Map.Lodor, out placer, out xc, out yc ); world = "Isles of Dread"; break;
 
 				// Savaged Empire
+				case "the Dungeon of the Lich King": 
 				case "Dungeon of the Lich King": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
+				case "the Dungeon of the Mad Archmage": 
 				case "Dungeon of the Mad Archmage": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
 				case "Dungeon Rock": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
 				case "the Azure Castle": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
@@ -1270,6 +1275,9 @@ namespace Server.Misc
 				case "the Tomb of Kazibal": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
 				case "the Tombs": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
 				case "the Undersea Castle": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
+				case "the Cave of the Ancient Wyrm": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
+				case "the Great Pyramid": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
+				case "the Spider Cave": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
 
 				// Kuldar
 				case "the Crypts of Kuldar": location = GetAreaEntrance( 0, dungeon, Map.Sosaria, out placer, out xc, out yc ); world = "Kuldar"; break;
