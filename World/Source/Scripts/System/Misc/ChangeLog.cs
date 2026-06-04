@@ -19,6 +19,7 @@ namespace Server.Misc
 			builder.Append("- Ability - Magic Protection now adds 14 magic damage absorb, up from setting 6<br>");
 			builder.Append("- Ability - Greater Magic Protection now adds 20 magic damage absorb, up from setting 8<br>");
 			builder.Append("- Achievements - Add entrances for several missing dungeons<br>");
+			builder.Append("- Avatar - Add messaging to indicate `The Avatar's Ascent` in your backpack opens the Avatar Shop gump<br>");
 			builder.Append("- Craft - Every 5 points past GM now increases the Min or Max intensity bonus by 5% on Exceptional crafts<br>");
 			builder.Append("- Craft - Targeting oneself with Breakdown now auto-targets the Crafting Container<br>");
 			builder.Append("- Gump - Add tooltips for bee hives<br>");
