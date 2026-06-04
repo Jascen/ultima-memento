@@ -155,37 +155,42 @@ namespace Joeku.MOTD
 	{
 		public static void EventSink_OnLogin( LoginEventArgs e )
 		{
-			if( CheckLogin( e.Mobile ) )
-				SendGump( e.Mobile );
-			else if ( (e.Mobile).Region is StartRegion )
-			{
-				if ( ((e.Mobile).Region).Name == "the Forest" )
-					(e.Mobile).SendGump( new WelcomeGump( (e.Mobile) ) );
-				else
-					(e.Mobile).SendGump( new MonsterGump( (e.Mobile) ) );
-			}
+			PlayerMobile player = e.Mobile as PlayerMobile;
+			if ( player == null ) return;
 
-			Mobile from = e.Mobile;
+			ShowMessage( player );
 
-			if ( from is PlayerMobile )
-			{
-				if ( Server.Misc.PlayerSettings.GetQuickConfig( from, 2 ) )
-					(from).SendGump( new QuickBar( from ) );
+			if ( Server.Misc.PlayerSettings.GetQuickConfig( player, 2 ) )
+				player.SendGump( new QuickBar( player ) );
 
-				if ( Server.Misc.PlayerSettings.GetReagentConfig( from, 2 ) )
-					(from).SendGump( new RegBar( from ) );
-			}
+			if ( Server.Misc.PlayerSettings.GetReagentConfig( player, 2 ) )
+				player.SendGump( new RegBar( player ) );
 		}
 
-		public static bool CheckLogin( Mobile m )
+		public static void ShowMessage( PlayerMobile player )
 		{
-			if ( m.Region != null && m.Region is StartRegion )
-				return false;
+			if ( player == null ) return;
 
-			if( ((PlayerMobile)m).Preferences.MessageOfTheDay )
-				return false;
+			player.CloseGump( typeof( Server.Engines.Avatar.AvatarShopGump ) );
+			player.CloseGump( typeof( WelcomeGump ) );
+			player.CloseGump( typeof( MonsterGump ) );
 
-			return true;
+			if ( player.Region is StartRegion )
+			{
+				if ( player.Region.Name == "the Forest" )
+				{
+					if ( player.Avatar.Active )
+						player.SendGump( new Server.Engines.Avatar.AvatarShopGump( player ) );
+					else
+						player.SendGump( new WelcomeGump( player ) );
+				}
+				else
+					player.SendGump( new MonsterGump( player ) );
+			}
+			else if ( player.Preferences.MessageOfTheDay )
+			{
+				SendGump( player );
+			}
 		}
 
 		[Usage( "MOTD" )]
