@@ -1470,7 +1470,7 @@ namespace Server.Items
 					defender.FixedEffect( 0x37B9, 10, 5 );
 
 				//factor *= 2.0;
-				percentageBonus += 100;
+				percentageBonus += this is BaseRanged ? 50 : 100;
 
 				if ( Utility.Random( 5 ) == 1 && attacker is PlayerMobile )
 				{
