@@ -93,6 +93,7 @@ namespace Server.Spells.Research
 				}
 
 				m.MagicDamageAbsorb = 0;
+				Fifth.MagicReflectSpell.RemoveReflect( m );
 				m_Table.Remove( m );
 				m.PlaySound( 0x1F8 );
 

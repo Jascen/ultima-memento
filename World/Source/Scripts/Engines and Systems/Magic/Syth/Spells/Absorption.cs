@@ -57,6 +57,7 @@ namespace Server.Spells.Syth
 				int min = 15;
 				int max = (int)( GetSythDamage( Caster ) / 4 );
 				Caster.MagicDamageAbsorb = Utility.RandomMinMax( min, max );
+				Fifth.MagicReflectSpell.AddReflect( Caster );
 				Point3D air = new Point3D( ( Caster.X+1 ), ( Caster.Y+1 ), ( Caster.Z+5 ) );
 				Effects.SendLocationParticles(EffectItem.Create(air, Caster.Map, EffectItem.DefaultDuration), 0x3789, 9, 32, 0xB00, 0, 5022, 0);
 				Caster.PlaySound( 0x64C );

@@ -30,45 +30,47 @@ namespace Server.Spells.Undead
 			{
 				SpellHelper.Turn( Caster, m );
 				
-				SpellHelper.CheckReflect( 3, Caster, ref m );
-				
-				if ( m.Spell != null )
-					m.Spell.OnCasterHurt();
-				
-				m.Paralyzed = false;
-				BuffInfo.CleanupIcons( m, true );
-				
-				if ( CheckResisted( m ) )
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( 3, ref source, ref m ) )
 				{
-					m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
-				}
-				else
-				{
-					int level;
+					if ( m.Spell != null )
+						m.Spell.OnCasterHurt();
 					
-					if ( Caster.InRange( m, 2 ) && Caster.Map == m.Map )
+					m.Paralyzed = false;
+					BuffInfo.CleanupIcons( m, true );
+					
+					if ( CheckResisted( m ) )
 					{
-						int total = (Caster.Skills.Necromancy.Fixed + Caster.Skills.Poisoning.Fixed + Server.Items.BasePotion.EnhancePotions( Caster )) / 2;
-						
-						if ( total >= 1000 )
-							level = 3;
-						else if ( total > 850 )
-							level = 2;
-						else if ( total > 650 )
-							level = 1;
-						else
-							level = 0;
+						m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
 					}
 					else
 					{
-						level = 0;
+						int level;
+						
+						if ( Caster.InRange( m, 2 ) && Caster.Map == m.Map )
+						{
+							int total = (Caster.Skills.Necromancy.Fixed + Caster.Skills.Poisoning.Fixed + Server.Items.BasePotion.EnhancePotions( Caster )) / 2;
+							
+							if ( total >= 1000 )
+								level = 3;
+							else if ( total > 850 )
+								level = 2;
+							else if ( total > 650 )
+								level = 1;
+							else
+								level = 0;
+						}
+						else
+						{
+							level = 0;
+						}
+						
+						m.ApplyPoison( Caster, Poison.GetPoison( level ) );
 					}
 					
-					m.ApplyPoison( Caster, Poison.GetPoison( level ) );
+					m.FixedParticles( 0x374A, 10, 15, 5021, EffectLayer.Waist );
+					m.PlaySound( 0x474 );	
 				}
-				
-				m.FixedParticles( 0x374A, 10, 15, 5021, EffectLayer.Waist );
-				m.PlaySound( 0x474 );
 			}
 			
 			FinishSequence();

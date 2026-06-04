@@ -90,18 +90,19 @@ namespace Server.Spells.Elementalism
 
 				SpellHelper.Turn( from, target );
 
-				SpellHelper.CheckReflect( (int)this.Circle, ref from, ref target );
-
-				int damage = (int)((Caster.Skills[CastSkill].Value + Caster.Int) / 5);
+				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref from, ref target ) )
+				{
+					int damage = (int)((Caster.Skills[CastSkill].Value + Caster.Int) / 5);
 				
-				if ( damage > 60 )
-					damage = 60;
+					if ( damage > 60 )
+						damage = 60;
 
-				damage = damage + nBenefit;
+					damage = damage + nBenefit;
 
-				Timer.DelayCall( TimeSpan.FromSeconds( 1.0 ),
-					new TimerStateCallback( AosDelay_Callback ),
-					new object[]{ Caster, target, m, damage } );
+					Timer.DelayCall( TimeSpan.FromSeconds( 1.0 ),
+						new TimerStateCallback( AosDelay_Callback ),
+						new object[]{ Caster, target, m, damage } );
+				}
 			}
 
 			FinishSequence();

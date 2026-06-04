@@ -67,23 +67,25 @@ namespace Server.Spells.Research
 			{
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( CirclePower, Caster, ref m );
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m ) )
+				{
+					TimeSpan duration = TimeSpan.FromSeconds( (DamagingSkill( Caster ) / 4) );
 
-				TimeSpan duration = TimeSpan.FromSeconds( (DamagingSkill( Caster ) / 4) );
+					m.Paralyze( duration );
 
-				m.Paralyze( duration );
+					BuffInfo.RemoveBuff( m, BuffIcon.Sleep );
+					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Sleep, 1063646, duration, m ) );
 
-				BuffInfo.RemoveBuff( m, BuffIcon.Sleep );
-				BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Sleep, 1063646, duration, m ) );
+					m.PlaySound( 0x657 );
 
-				m.PlaySound( 0x657 );
+					m.FixedParticles( 0x3039, 9, 32, 5008, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0xB72 ), 0, EffectLayer.Waist );
 
-				m.FixedParticles( 0x3039, 9, 32, 5008, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0xB72 ), 0, EffectLayer.Waist );
+					new SleepyTimer( m, duration ).Start();
+					Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
 
-				new SleepyTimer( m, duration ).Start();
-				Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
-
-				HarmfulSpell( m );
+					HarmfulSpell( m );
+				}
 			}
 
 			FinishSequence();

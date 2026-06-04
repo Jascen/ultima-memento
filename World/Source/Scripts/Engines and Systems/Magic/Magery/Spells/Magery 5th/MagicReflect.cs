@@ -25,6 +25,23 @@ namespace Server.Spells.Fifth
 		{
 		}
 
+		private static readonly Hashtable m_Registry = new Hashtable();
+
+		public static bool HasReflect( Mobile m )
+		{
+			return m_Registry.Contains( m );
+		}
+
+		public static void AddReflect( Mobile m )
+		{
+			m_Registry.Add( m, true );
+		}
+
+		public static void RemoveReflect( Mobile m )
+		{
+			m_Registry.Remove( m );
+		}
+
 		public override bool CheckCast()
 		{
 			DefensiveSpell.EndDefense( Caster );
@@ -64,6 +81,7 @@ namespace Server.Spells.Fifth
 				{
 					int value = (int)( ( Spell.ItemSkillValue( Caster, SkillName.Magery, false ) + Spell.ItemSkillValue( Caster, SkillName.Psychology, false ) ) / 4 );
 					Caster.MagicDamageAbsorb = value;
+					Fifth.MagicReflectSpell.AddReflect( Caster );
 					Item diamond = Caster.Backpack.FindItemByType( typeof ( Diamond ) );
 					if ( diamond != null ){ diamond.Consume(); }
 

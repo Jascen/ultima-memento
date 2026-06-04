@@ -19,7 +19,7 @@ namespace Server.Items
 			if (!CheckMana(attacker, true)) return;
 			ClearCurrentAbility(attacker);
 			attacker.SendMessage("You feel like you are protected from most magic!");
-			attacker.MagicDamageAbsorb = 6;
+			attacker.MagicDamageAbsorb += 14;
 		}
 	}
 }

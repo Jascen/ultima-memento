@@ -39,16 +39,17 @@ namespace Server.Spells.Undead
 
 				SpellHelper.Turn( source, m );
 
-				SpellHelper.CheckReflect( 3, ref source, ref m );
+				if ( SpellHelper.ResolveMagicDefense( 3, ref source, ref m ) )
+				{
+					double damage;
 
-				double damage;
+					damage = GetNewAosDamage( 19, 1, 5, m );
 
-				damage = GetNewAosDamage( 19, 1, 5, m );
+					m.FixedParticles( 0x376A, 9, 10, 5029, 38, 0, EffectLayer.LeftFoot );
+					m.PlaySound( 0x5C6 );
 
-				m.FixedParticles( 0x376A, 9, 10, 5029, 38, 0, EffectLayer.LeftFoot );
-				m.PlaySound( 0x5C6 );
-
-				SpellHelper.Damage( this, m, damage, 0, 100, 0, 0, 0 );
+					SpellHelper.Damage( this, m, damage, 0, 100, 0, 0, 0 );
+				}
 			}
 
 			FinishSequence();

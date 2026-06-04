@@ -43,20 +43,22 @@ namespace Server.Spells.HolyMan
 			{
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( (int)SpellCircle.Fourth, Caster, ref m );
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( (int)SpellCircle.Fourth, ref source, ref m ) )
+				{
+					double damage;
 
-				double damage;
+					int nBenefit = (int)( (Caster.Skills[SkillName.Healing].Value / 10) + (Caster.Skills[SkillName.Spiritualism].Value / 10) );
 
-				int nBenefit = (int)( (Caster.Skills[SkillName.Healing].Value / 10) + (Caster.Skills[SkillName.Spiritualism].Value / 10) );
+					if ( holyundead.Slays(m) || holydemons.Slays(m) )
+						nBenefit = nBenefit * 2;
 
-				if ( holyundead.Slays(m) || holydemons.Slays(m) )
-					nBenefit = nBenefit * 2;
+					damage = GetNewAosDamage( 23, 1, 4, m ) + nBenefit;
 
-				damage = GetNewAosDamage( 23, 1, 4, m ) + nBenefit;
+					m.BoltEffect( 0 );
 
-				m.BoltEffect( 0 );
-
-				SpellHelper.Damage( this, m, damage, 0, 0, 0, 0, 100 );
+					SpellHelper.Damage( this, m, damage, 0, 0, 0, 0, 100 );
+				}
 			}
 
 			FinishSequence();

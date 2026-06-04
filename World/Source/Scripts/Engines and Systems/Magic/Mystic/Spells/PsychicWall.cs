@@ -55,6 +55,7 @@ namespace Server.Spells.Mystic
 			{
 				int value = (int)( Caster.Skills[SkillName.FistFighting].Value / 2 );
 				Caster.MagicDamageAbsorb = value;
+				Fifth.MagicReflectSpell.AddReflect( Caster );
 				Caster.FixedParticles( 0x3039, 10, 15, 5038, 0, 2, EffectLayer.Head );
 				Caster.PlaySound( 0x5BC );
 				BuffInfo.RemoveBuff( Caster, BuffIcon.PsychicWall );

@@ -97,18 +97,19 @@ namespace Server.Spells.Research
 
 						SpellHelper.Turn( Caster, m );
 
-						SpellHelper.CheckReflect( CirclePower, Caster, ref m );
+						if ( SpellHelper.ResolveMagicAbsorption( CirclePower, m ) )
+						{
+							TimeSpan duration = TimeSpan.FromSeconds( (DamagingSkill( Caster ) / 4) );
 
-						TimeSpan duration = TimeSpan.FromSeconds( (DamagingSkill( Caster ) / 4) );
+							m.Paralyze( duration );
 
-						m.Paralyze( duration );
+							BuffInfo.RemoveBuff( m, BuffIcon.MassSleep );
+							BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.MassSleep, 1063650, duration, m ) );
 
-						BuffInfo.RemoveBuff( m, BuffIcon.MassSleep );
-						BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.MassSleep, 1063650, duration, m ) );
+							new SleepyTimer( m, duration, Caster ).Start();
 
-						new SleepyTimer( m, duration, Caster ).Start();
-
-						HarmfulSpell( m );
+							HarmfulSpell( m );
+						}
 					}
 					Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
 				}

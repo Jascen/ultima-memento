@@ -49,11 +49,13 @@ namespace Server.Spells.Research
 
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( (int) CirclePower, Caster, ref m );
-
-				InternalTimer t = new InternalTimer( this, attacker, defender, m );
-				t.Start();
-				Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( (int) CirclePower, ref source, ref m ) )
+				{
+					InternalTimer t = new InternalTimer( this, attacker, defender, m );
+					t.Start();
+					Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
+				}
 			}
 
 			FinishSequence();

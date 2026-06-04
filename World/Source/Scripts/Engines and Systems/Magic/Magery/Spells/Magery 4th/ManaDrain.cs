@@ -58,50 +58,52 @@ namespace Server.Spells.Fourth
 			{
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
-
-				if ( m.Spell != null )
-					m.Spell.OnCasterHurt();
-
-				m.Paralyzed = false;
-				BuffInfo.CleanupIcons( m, true );
-
-				if ( Core.AOS )
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
 				{
-					int toDrain = 40 + (int)( Spell.ItemSkillValue( Caster, DamageSkill, false ) - GetResistSkill( m ) );
+					if ( m.Spell != null )
+						m.Spell.OnCasterHurt();
 
-					if ( toDrain < 0 )
-						toDrain = 0;
-					else if ( toDrain > m.Mana )
-						toDrain = m.Mana;
+					m.Paralyzed = false;
+					BuffInfo.CleanupIcons( m, true );
 
-					if ( m_Table.ContainsKey( m ) )
-						toDrain = 0;
-
-					m.FixedParticles( 0x3789, 10, 25, 5032, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
-					m.PlaySound( 0x1F8 );
-
-					if ( toDrain > 0 )
+					if ( Core.AOS )
 					{
-						m.Mana -= toDrain;
+						int toDrain = 40 + (int)( Spell.ItemSkillValue( Caster, DamageSkill, false ) - GetResistSkill( m ) );
 
-						m_Table[m] = Timer.DelayCall( TimeSpan.FromSeconds( 5.0 ), new TimerStateCallback( AosDelay_Callback ), new object[]{ m, toDrain } );
+						if ( toDrain < 0 )
+							toDrain = 0;
+						else if ( toDrain > m.Mana )
+							toDrain = m.Mana;
+
+						if ( m_Table.ContainsKey( m ) )
+							toDrain = 0;
+
+						m.FixedParticles( 0x3789, 10, 25, 5032, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
+						m.PlaySound( 0x1F8 );
+
+						if ( toDrain > 0 )
+						{
+							m.Mana -= toDrain;
+
+							m_Table[m] = Timer.DelayCall( TimeSpan.FromSeconds( 5.0 ), new TimerStateCallback( AosDelay_Callback ), new object[]{ m, toDrain } );
+						}
 					}
-				}
-				else
-				{
-					if ( CheckResisted( m ) )
-						m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
-					else if ( m.Mana >= 100 )
-						m.Mana -= Utility.Random( 1, 100 );
 					else
-						m.Mana -= Utility.Random( 1, m.Mana );
+					{
+						if ( CheckResisted( m ) )
+							m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
+						else if ( m.Mana >= 100 )
+							m.Mana -= Utility.Random( 1, 100 );
+						else
+							m.Mana -= Utility.Random( 1, m.Mana );
 
-					m.FixedParticles( 0x374A, 10, 15, 5032, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
-					m.PlaySound( 0x1F8 );
+						m.FixedParticles( 0x374A, 10, 15, 5032, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
+						m.PlaySound( 0x1F8 );
+					}
+
+					HarmfulSpell( m );
 				}
-
-				HarmfulSpell( m );
 			}
 
 			FinishSequence();

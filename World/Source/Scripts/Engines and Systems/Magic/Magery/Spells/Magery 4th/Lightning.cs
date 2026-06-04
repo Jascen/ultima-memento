@@ -39,28 +39,30 @@ namespace Server.Spells.Fourth
 			{
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
-
-				double damage;
-
-				int nBenefit = 0;
-				if ( Caster is PlayerMobile )
-					nBenefit = (int)(Caster.Skills[SkillName.Magery].Value / 5);
-
-				damage = GetNewAosDamage( 23, 1, 4, m ) + nBenefit;
-
-				if ( Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ) > 0 )
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
 				{
-					Point3D blast = new Point3D( ( m.X ), ( m.Y ), m.Z+10 );
-					Effects.SendLocationEffect( blast, m.Map, 0x2A4E, 30, 10, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0 );
-					m.PlaySound( 0x029 );
-				}
-				else
-				{
-					m.BoltEffect( 0 );
-				}
+					double damage;
 
-				SpellHelper.Damage( this, m, damage, 0, 0, 0, 0, 100 );
+					int nBenefit = 0;
+					if ( Caster is PlayerMobile )
+						nBenefit = (int)(Caster.Skills[SkillName.Magery].Value / 5);
+
+					damage = GetNewAosDamage( 23, 1, 4, m ) + nBenefit;
+
+					if ( Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ) > 0 )
+					{
+						Point3D blast = new Point3D( ( m.X ), ( m.Y ), m.Z+10 );
+						Effects.SendLocationEffect( blast, m.Map, 0x2A4E, 30, 10, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0 );
+						m.PlaySound( 0x029 );
+					}
+					else
+					{
+						m.BoltEffect( 0 );
+					}
+
+					SpellHelper.Damage( this, m, damage, 0, 0, 0, 0, 100 );
+				}
 			}
 
 			FinishSequence();

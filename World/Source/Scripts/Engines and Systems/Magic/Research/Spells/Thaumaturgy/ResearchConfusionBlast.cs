@@ -84,27 +84,28 @@ namespace Server.Spells.Research
 
 						SpellHelper.Turn( Caster, m );
 
-						SpellHelper.CheckReflect( CirclePower, Caster, ref m );
-
-						double duration = DamagingSkill( Caster )/12;
+						if ( SpellHelper.ResolveMagicAbsorption( CirclePower, m ) )
+						{
+							double duration = DamagingSkill( Caster )/12;
 							if ( duration > 20 ){ duration = 20.0; }
 							if ( duration < 5 ){ duration = 5.0; }
 
-						if ( m is BaseCreature )
-						{
-							BaseCreature mon = (BaseCreature)m;
-							mon.Pacify( Caster, DateTime.Now + TimeSpan.FromSeconds( duration ) );
-						}
-						else if ( m != Caster )
-						{
-							m.Paralyze( TimeSpan.FromSeconds( duration ) );
-							Timer.DelayCall( TimeSpan.FromSeconds( duration ), new TimerStateCallback( Recover_Callback ), m );
-							BuffInfo.RemoveBuff( m, BuffIcon.Confusion );
-							BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Confusion, 1063684, TimeSpan.FromSeconds( duration ), m ) );
-						}
+							if ( m is BaseCreature )
+							{
+								BaseCreature mon = (BaseCreature)m;
+								mon.Pacify( Caster, DateTime.Now + TimeSpan.FromSeconds( duration ) );
+							}
+							else if ( m != Caster )
+							{
+								m.Paralyze( TimeSpan.FromSeconds( duration ) );
+								Timer.DelayCall( TimeSpan.FromSeconds( duration ), new TimerStateCallback( Recover_Callback ), m );
+								BuffInfo.RemoveBuff( m, BuffIcon.Confusion );
+								BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Confusion, 1063684, TimeSpan.FromSeconds( duration ), m ) );
+							}
 
-						Effects.SendLocationEffect( m.Location, m.Map, 0x3039, 85, 10, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0x9B5 ), 0 );
-						Effects.PlaySound( m.Location, m.Map, 0x5C9 );
+							Effects.SendLocationEffect( m.Location, m.Map, 0x3039, 85, 10, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0x9B5 ), 0 );
+							Effects.PlaySound( m.Location, m.Map, 0x5C9 );
+						}
 					}
 				}
 			}

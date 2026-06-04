@@ -44,25 +44,27 @@ namespace Server.Spells.Second
 			{
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
-
-				int nBenefit = 0;
-				if ( Caster is PlayerMobile )
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
 				{
-					nBenefit = (int)( Spell.ItemSkillValue( Caster, SkillName.Magery, false ) / 5 );
+					int nBenefit = 0;
+					if ( Caster is PlayerMobile )
+					{
+						nBenefit = (int)( Spell.ItemSkillValue( Caster, SkillName.Magery, false ) / 5 );
+					}
+					
+					double damage = GetNewAosDamage( 17, 1, 5, m ) + nBenefit;
+
+					if ( !m.InRange( Caster, 2 ) )
+						damage *= 0.25; // 1/4 damage at > 2 tile range
+					else if ( !m.InRange( Caster, 1 ) )
+						damage *= 0.50; // 1/2 damage at 2 tile range
+
+					m.FixedParticles( 0x374A, 10, 30, 5013, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 2, EffectLayer.Waist );
+					m.PlaySound( 0x0FC );
+
+					SpellHelper.Damage( this, m, damage, 0, 0, 100, 0, 0 );
 				}
-				
-				double damage = GetNewAosDamage( 17, 1, 5, m ) + nBenefit;
-
-				if ( !m.InRange( Caster, 2 ) )
-					damage *= 0.25; // 1/4 damage at > 2 tile range
-				else if ( !m.InRange( Caster, 1 ) )
-					damage *= 0.50; // 1/2 damage at 2 tile range
-
-				m.FixedParticles( 0x374A, 10, 30, 5013, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 2, EffectLayer.Waist );
-				m.PlaySound( 0x0FC );
-
-				SpellHelper.Damage( this, m, damage, 0, 0, 100, 0, 0 );
 			}
 
 			FinishSequence();

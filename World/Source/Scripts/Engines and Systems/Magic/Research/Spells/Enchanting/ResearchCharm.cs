@@ -89,21 +89,23 @@ namespace Server.Spells.Research
 				{
 					SpellHelper.Turn( Caster, m );
 
-					SpellHelper.CheckReflect( CirclePower, Caster, ref m );
+					Mobile source = Caster;
+					if ( SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m ) )
+					{
+						TimeSpan duration = TimeSpan.FromSeconds( (DamagingSkill( Caster ) / 4) );
 
-					TimeSpan duration = TimeSpan.FromSeconds( (DamagingSkill( Caster ) / 4) );
+						if ( bc.FightMode == FightMode.Closest ){ bc.FightMode = FightMode.CharmMonster; }
+						else if ( bc.FightMode == FightMode.Aggressor ){ bc.FightMode = FightMode.CharmAnimal; }
 
-					if ( bc.FightMode == FightMode.Closest ){ bc.FightMode = FightMode.CharmMonster; }
-					else if ( bc.FightMode == FightMode.Aggressor ){ bc.FightMode = FightMode.CharmAnimal; }
+						m.PlaySound( 0x20B );
 
-					m.PlaySound( 0x20B );
+						m.FixedParticles( 0x3039, 9, 32, 5008, 0x48F, 0, EffectLayer.Waist );
 
-					m.FixedParticles( 0x3039, 9, 32, 5008, 0x48F, 0, EffectLayer.Waist );
+						new CharmTimer( m, duration ).Start();
+						Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
 
-					new CharmTimer( m, duration ).Start();
-					Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
-
-					HarmfulSpell( m );
+						HarmfulSpell( m );
+					}
 				}
 
 				FinishSequence();

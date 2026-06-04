@@ -60,16 +60,17 @@ namespace Server.Spells.Mystic
 
 				SpellHelper.Turn( from, target );
 
-				SpellHelper.CheckReflect( 5, ref from, ref target );
-
-				int damage = (int)((Caster.Skills[SkillName.FistFighting].Value + Caster.Int) / 4);
+				if ( SpellHelper.ResolveMagicDefense( 5, ref from, ref target ) )
+				{
+					int damage = (int)((Caster.Skills[SkillName.FistFighting].Value + Caster.Int) / 4);
 				
-				if ( damage > 60 )
-					damage = 60;
+					if ( damage > 60 )
+						damage = 60;
 
-				Timer.DelayCall( TimeSpan.FromSeconds( 0.1 ),
-					new TimerStateCallback( AosDelay_Callback ),
-					new object[]{ Caster, target, m, damage } );
+					Timer.DelayCall( TimeSpan.FromSeconds( 0.1 ),
+						new TimerStateCallback( AosDelay_Callback ),
+						new object[]{ Caster, target, m, damage } );
+				}
 			}
 
 			FinishSequence();

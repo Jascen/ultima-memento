@@ -65,18 +65,19 @@ namespace Server.Spells.Fifth
 
 				SpellHelper.Turn( from, target );
 
-				SpellHelper.CheckReflect( (int)this.Circle, ref from, ref target );
-
-				int damage = (int)( ( Spell.ItemSkillValue( Caster, SkillName.Magery, false ) + Caster.Int ) / 5 );
+				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref from, ref target ) )
+				{
+					int damage = (int)( ( Spell.ItemSkillValue( Caster, SkillName.Magery, false ) + Caster.Int ) / 5 );
 				
-				if ( damage > 60 )
-					damage = 60;
+					if ( damage > 60 )
+						damage = 60;
 
-				damage = damage + nBenefit;
+					damage = damage + nBenefit;
 
-				Timer.DelayCall( TimeSpan.FromSeconds( 1.0 ),
-					new TimerStateCallback( AosDelay_Callback ),
-					new object[]{ Caster, target, m, damage } );
+					Timer.DelayCall( TimeSpan.FromSeconds( 1.0 ),
+						new TimerStateCallback( AosDelay_Callback ),
+						new object[]{ Caster, target, m, damage } );
+				}
 			}
 
 			FinishSequence();

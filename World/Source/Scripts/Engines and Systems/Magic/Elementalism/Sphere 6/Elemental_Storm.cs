@@ -40,10 +40,12 @@ namespace Server.Spells.Elementalism
 
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( (int) this.Circle, Caster, ref m );
-
-				InternalTimer t = new InternalTimer( this, attacker, defender, m );
-				t.Start();
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( (int) this.Circle, ref source, ref m ) )
+				{
+					InternalTimer t = new InternalTimer( this, attacker, defender, m );
+					t.Start();
+				}
 			}
 
 			FinishSequence();

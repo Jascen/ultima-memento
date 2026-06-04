@@ -48,17 +48,18 @@ namespace Server.Spells.Research
 
 				SpellHelper.Turn( source, m );
 
-				SpellHelper.CheckReflect( CirclePower, ref source, ref m );
+				if ( SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m ) )
+				{
+					double damage = DamagingSkill( Caster )/2.5;
+						if ( damage > 100 ){ damage = 100.0; }
+						if ( damage < 12 ){ damage = 12.0; }
 
-				double damage = DamagingSkill( Caster )/2.5;
-					if ( damage > 100 ){ damage = 100.0; }
-					if ( damage < 12 ){ damage = 12.0; }
+					m.FixedParticles(0x5562, 10, 30, 5052, Server.Misc.PlayerSettings.GetMySpellHue(true, Caster, 0), 0, EffectLayer.Head);
+					m.PlaySound(0x44B);
 
-                m.FixedParticles(0x5562, 10, 30, 5052, Server.Misc.PlayerSettings.GetMySpellHue(true, Caster, 0), 0, EffectLayer.Head);
-                m.PlaySound(0x44B);
-
-				SpellHelper.Damage( this, m, damage, 0, 100, 0, 0, 0 );
-				Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
+					SpellHelper.Damage( this, m, damage, 0, 100, 0, 0, 0 );
+					Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
+				}
 			}
 
 			FinishSequence();

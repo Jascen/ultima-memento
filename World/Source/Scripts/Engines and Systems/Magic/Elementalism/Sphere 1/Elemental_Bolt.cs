@@ -40,46 +40,47 @@ namespace Server.Spells.Elementalism
 
 				SpellHelper.Turn( source, m );
 
-				SpellHelper.CheckReflect( (int)this.Circle, ref source, ref m );
-
-				int nBenefit = (int)(Caster.Skills[CastSkill].Value / 5);
-
-				double damage = GetNewAosDamage( 10, 1, 4, m ) + nBenefit;
-
-				int hit = 0x3818;
-				int snd = 0x211;
-				int hue = 0;
-
-				string elm = ElementalSpell.GetElement( Caster );
-
-				if ( elm == "air" )
+				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
 				{
-					hit = 0x3818;
-					snd = 0x211;
-					SpellHelper.Damage( this, m, damage, 50, 0, 0, 0, 50 );
-				}
-				else if ( elm == "earth" )
-				{
-					hit = 0x4F49;
-					snd = 0x658;
-					SpellHelper.Damage( this, m, damage, 50, 0, 0, 50, 0 );
-				}
-				else if ( elm == "fire" )
-				{
-					hit = 0x4D17;
-					snd = 0x15E;
-					SpellHelper.Damage( this, m, damage, 50, 50, 0, 0, 0 );
-				}
-				else if ( elm == "water" )
-				{
-					hit = 0x4F49;
-					snd = 0x027;
-					hue = 0xB3D;
-					SpellHelper.Damage( this, m, damage, 50, 0, 50, 0, 0 );
-				}
+					int nBenefit = (int)(Caster.Skills[CastSkill].Value / 5);
 
-				Effects.SendMovingEffect( source, m, hit, 5, 0, false, false, hue, 0 );
-				source.PlaySound( snd );
+					double damage = GetNewAosDamage( 10, 1, 4, m ) + nBenefit;
+
+					int hit = 0x3818;
+					int snd = 0x211;
+					int hue = 0;
+
+					string elm = ElementalSpell.GetElement( Caster );
+
+					if ( elm == "air" )
+					{
+						hit = 0x3818;
+						snd = 0x211;
+						SpellHelper.Damage( this, m, damage, 50, 0, 0, 0, 50 );
+					}
+					else if ( elm == "earth" )
+					{
+						hit = 0x4F49;
+						snd = 0x658;
+						SpellHelper.Damage( this, m, damage, 50, 0, 0, 50, 0 );
+					}
+					else if ( elm == "fire" )
+					{
+						hit = 0x4D17;
+						snd = 0x15E;
+						SpellHelper.Damage( this, m, damage, 50, 50, 0, 0, 0 );
+					}
+					else if ( elm == "water" )
+					{
+						hit = 0x4F49;
+						snd = 0x027;
+						hue = 0xB3D;
+						SpellHelper.Damage( this, m, damage, 50, 0, 50, 0, 0 );
+					}
+
+					Effects.SendMovingEffect( source, m, hit, 5, 0, false, false, hue, 0 );
+					source.PlaySound( snd );
+				}
 			}
 
 			FinishSequence();

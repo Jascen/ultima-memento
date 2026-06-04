@@ -58,6 +58,7 @@ namespace Server.Spells.DeathKnight
 				int value = (int)( GetKarmaPower( Caster ) / 4 );
 
 				Caster.MagicDamageAbsorb = value;
+				Fifth.MagicReflectSpell.AddReflect( Caster );
 
 				Caster.FixedParticles( 0x375A, 10, 15, 5037, EffectLayer.Waist );
 				Caster.PlaySound( 0x1E9 );

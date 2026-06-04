@@ -31,34 +31,36 @@ namespace Server.Spells.Undead
 			{
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( 7, Caster, ref m );
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( 7, ref source, ref m ) )
+				{
+					if ( m.Spell != null )
+						m.Spell.OnCasterHurt();
 
-				if ( m.Spell != null )
-					m.Spell.OnCasterHurt();
+					m.Paralyzed = false;
+					BuffInfo.CleanupIcons( m, true );
 
-				m.Paralyzed = false;
-				BuffInfo.CleanupIcons( m, true );
+					int toDrain = 0;
 
-				int toDrain = 0;
+						toDrain = (int)(GetDamageSkill( Caster ) - GetResistSkill( m )) + Server.Items.BasePotion.EnhancePotions( Caster );
 
-					toDrain = (int)(GetDamageSkill( Caster ) - GetResistSkill( m )) + Server.Items.BasePotion.EnhancePotions( Caster );
+						if ( !m.Player )
+							toDrain /= 2;
 
-					if ( !m.Player )
-						toDrain /= 2;
+						if ( toDrain < 0 )
+							toDrain = 0;
+						else if ( toDrain > m.Mana )
+							toDrain = m.Mana;
 
-					if ( toDrain < 0 )
-						toDrain = 0;
-					else if ( toDrain > m.Mana )
-						toDrain = m.Mana;
+					if ( toDrain > (Caster.ManaMax - Caster.Mana) )
+						toDrain = Caster.ManaMax - Caster.Mana;
 
-				if ( toDrain > (Caster.ManaMax - Caster.Mana) )
-					toDrain = Caster.ManaMax - Caster.Mana;
+					m.Mana -= toDrain;
+					Caster.Mana += toDrain + 25;
 
-				m.Mana -= toDrain;
-				Caster.Mana += toDrain + 25;
-
-				m.PlaySound( 0x19C );
-				m.FixedParticles( 0x3709, 1, 30, 9904, 1108, 6, EffectLayer.RightFoot );
+					m.PlaySound( 0x19C );
+					m.FixedParticles( 0x3709, 1, 30, 9904, 1108, 6, EffectLayer.RightFoot );
+				}
 			}
 
 			FinishSequence();

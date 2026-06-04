@@ -625,43 +625,16 @@ namespace Server.Spells
 		}
 
 		//magic reflection
-		public static void CheckReflect( int circle, Mobile caster, ref Mobile target )
+		public static bool CheckMagicAbsorbed( int circle, Mobile target )
 		{
-			CheckReflect( circle, ref caster, ref target );
-		}
-
-		public static void CheckReflect( int circle, ref Mobile caster, ref Mobile target )
-		{
-			if( target.MagicDamageAbsorb > 0 )
+			if( 0 < target.MagicDamageAbsorb )
 			{
-				++circle;
-
-				target.MagicDamageAbsorb -= circle;
-
-				// This order isn't very intuitive, but you have to nullify reflect before target gets switched
-
-				bool reflect = (target.MagicDamageAbsorb >= 0);
-
-				if( target is BaseCreature )
-					((BaseCreature)target).CheckReflect( caster, ref reflect );
-
-				if( target.MagicDamageAbsorb <= 0 )
-				{
-					target.MagicDamageAbsorb = 0;
-					DefensiveSpell.Nullify( target );
-				}
-
-				if( reflect )
-				{
-					target.FixedEffect( 0x37B9, 10, 5 );
-
-					Mobile temp = caster;
-					caster = target;
-					target = temp;
-				}
+				target.MagicDamageAbsorb -= 2 * circle;
 
 				if ( target.MagicDamageAbsorb < 1 )
 				{
+					target.MagicDamageAbsorb = 0;
+					DefensiveSpell.Nullify( target );
 					BuffInfo.RemoveBuff( target, BuffIcon.Absorption );
 					BuffInfo.RemoveBuff( target, BuffIcon.PsychicWall );
 					BuffInfo.RemoveBuff( target, BuffIcon.Deflection );
@@ -670,11 +643,32 @@ namespace Server.Spells
 					BuffInfo.RemoveBuff( target, BuffIcon.MagicReflection );
 					BuffInfo.RemoveBuff( target, BuffIcon.ElementalEcho );
 				}
+
+				return true;
+			}
+
+			return false;
+		}
+		
+		public static void DoReflect( ref Mobile caster, ref Mobile target )
+		{
+			if( target is PlayerMobile )
+			{
+				// This order isn't very intuitive, but you have to nullify reflect before target gets switched
+				bool reflect = Fifth.MagicReflectSpell.HasReflect( target );
+				if( reflect )
+				{
+					target.FixedEffect( 0x37B9, 10, 5 );
+					Fifth.MagicReflectSpell.RemoveReflect( target );
+
+					Mobile temp = caster;
+					caster = target;
+					target = temp;
+				}
 			}
 			else if( target is BaseCreature )
 			{
 				bool reflect = false;
-
 				((BaseCreature)target).CheckReflect( caster, ref reflect );
 
 				if( reflect )
@@ -686,6 +680,23 @@ namespace Server.Spells
 					target = temp;
 				}
 			}
+		}
+
+		public static bool ResolveMagicDefense( int circle, ref Mobile caster, ref Mobile target )
+		{
+			DoReflect( ref caster, ref target );
+
+			return !CheckMagicAbsorbed( circle, target );
+		}
+
+		public static bool ResolveMagicDefense( int circle, Mobile caster, ref Mobile target )
+		{
+			return ResolveMagicDefense( circle, ref caster, ref target );
+		}
+
+		public static bool ResolveMagicAbsorption( int circle, Mobile target )
+		{
+			return !CheckMagicAbsorbed( circle, target );
 		}
 
 		public static void Damage( Spell spell, Mobile target, double damage )

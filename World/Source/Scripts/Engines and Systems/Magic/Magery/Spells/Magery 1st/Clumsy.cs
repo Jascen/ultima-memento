@@ -35,25 +35,27 @@ namespace Server.Spells.First
 			{
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
+				{
+					SpellHelper.AddStatCurse( Caster, m, StatType.Dex );
 
-				SpellHelper.AddStatCurse( Caster, m, StatType.Dex );
+					if ( m.Spell != null )
+						m.Spell.OnCasterHurt();
 
-				if ( m.Spell != null )
-					m.Spell.OnCasterHurt();
+					m.Paralyzed = false;
+					BuffInfo.CleanupIcons( m, true );
 
-				m.Paralyzed = false;
-				BuffInfo.CleanupIcons( m, true );
+					m.FixedParticles( 0x3779, 10, 15, 5002, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
+					m.PlaySound( 0x1DF );
 
-				m.FixedParticles( 0x3779, 10, 15, 5002, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
-				m.PlaySound( 0x1DF );
+					int percentage = (int)(SpellHelper.GetOffsetScalar( Caster, m, true )*100);
+					TimeSpan length = SpellHelper.GetDuration( Caster, m );
 
-				int percentage = (int)(SpellHelper.GetOffsetScalar( Caster, m, true )*100);
-				TimeSpan length = SpellHelper.GetDuration( Caster, m );
+					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Clumsy, 1075831, length, m, percentage.ToString() ) );
 
-				BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Clumsy, 1075831, length, m, percentage.ToString() ) );
-
-				HarmfulSpell( m );
+					HarmfulSpell( m );
+				}
 			}
 
 			FinishSequence();

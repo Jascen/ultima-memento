@@ -91,6 +91,7 @@ namespace Server.Spells.Elementalism
 			{
 				int value = (int)( ( Caster.Skills[CastSkill].Value * 2 ) / 4 );
 				Caster.MagicDamageAbsorb = value;
+				Fifth.MagicReflectSpell.AddReflect( Caster );
 				int hue = 0;
 				Item rock = null;
 

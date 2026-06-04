@@ -84,742 +84,743 @@ namespace Server.Spells.Magical
 				else if ( circle == 8 && dmg > 59 ){ dmg = 59; }
 				else { dmg = 10; }
 
-				SpellHelper.CheckReflect( circle, ref source, ref m );
+				if ( SpellHelper.ResolveMagicDefense( circle, ref source, ref m ) )
+				{
+					dmg = GetNewAosDamage( dmg, 1, 5, m );
 
-				dmg = GetNewAosDamage( dmg, 1, 5, m );
-
-				if ( m.CheckSkill( SkillName.MagicResist, 0, 125 ) )
-				{
-					dmg = (int)( dmg / 2 );
-					m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
-				}
-
-				if ( m is BaseCreature && Utility.RandomBool() && ((BaseCreature)m).GetMaster() != null )
-					dmg = dmg * 2;
-
-				int phy = 0;
-				int fir = 0;
-				int cld = 0;
-				int psn = 0;
-				int egy = 0;
-
-				int spells = Utility.RandomMinMax( 1, 62 );
-				int wizardry = Wizardry( Caster );
-
-/* air */		if ( wizardry == 1 ){ spells = Utility.RandomList( 1, 3, 5, 8, 9, 50 ); }
-/* cold */		else if ( wizardry == 3 ){ spells = Utility.RandomList( 27, 28, 29, 30, 31, 32, 33, 62, 61 ); }
-/* fire */		else if ( wizardry == 4 ){ spells = Utility.RandomList( 7, 13, 17, 18, 20, 22, 23, 24, 25, 26, 56 ); }
-/* main */		else if ( wizardry == 5 ){ spells = Utility.RandomList( 2, 4, 5, 6, 12, 11, 14, 15, 25, 45 ); }
-/* nature */	else if ( wizardry == 6 ){ spells = Utility.RandomList( 11, 19, 34, 41, 44, 46, 47, 48, 49, 50, 51, 53, 57, 59 ); }
-/* necro */		else if ( wizardry == 7 ){ spells = Utility.RandomList( 6, 10, 15, 21, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 55, 58 ); }
-/* storm */		else if ( wizardry == 8 ){ spells = Utility.RandomList( 3, 5, 8, 9, 16, 50 ); }
-/* water */		else if ( wizardry == 9 ){ spells = Utility.RandomList( 52, 52, 52, 52, 52, 52, 3, 5, 8, 9, 16, 50, 54, 60 ); }
-
-				if ( spells == 1 ) // magic arrow
-				{
-					source.MovingParticles( m, 0x36E4, 5, 0, false, false, 0, 0, 3600, 0, 0, 0 );
-					source.PlaySound( 0x1E5 );
-					phy = 100;
-				}
-				else if ( spells == 2 ) // harm
-				{
-					m.FixedParticles( 0x374A, 10, 30, 5013, 0, 2, EffectLayer.Waist );
-					m.PlaySound( 0x0FC );
-					phy = 20;
-					fir = 20;
-					cld = 20;
-					psn = 20;
-					egy = 20;
-				}
-				else if ( spells == 3 ) // lightning
-				{
-					m.FixedParticles( 0x2A4E, 10, 15, 5038, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 2, EffectLayer.Head );
-					//Effects.SendLocationEffect( m.Location, m.Map, 0x2A4E, 30, 10, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0 );
-					m.PlaySound( 0x029 );
-					egy = 100;
-				}
-				else if ( spells == 4 ) // mind blast
-				{
-					m.FixedParticles( 0x374A, 10, 15, 5038, 1181, 2, EffectLayer.Head );
-					m.PlaySound( 0x213 );
-					phy = 50;
-					egy = 50;
-				}
-				else if ( spells == 5 ) // energy bolt
-				{
-					source.MovingParticles( m, 0x3818, 7, 0, false, true, 0, 0, 3043, 4043, 0x211, 0 );
-					m.PlaySound( 0x20A );
-					egy = 100;
-				}
-				else if ( spells == 6 ) // web
-				{
-					source.MovingParticles( m, 0x10D3, 7, 0, false, false, 0, 0, 0 );
-					m.PlaySound( 0x62D );
-					double webbed = ((double)(Caster.Fame/200));
-						if ( webbed > 15.0 ){ webbed = 15.0; }
-					m.Paralyze( TimeSpan.FromSeconds( webbed ) );
-					phy = 100;
-				}
-				else if ( spells == 7 ) // radiation
-				{
-					m.FixedParticles( 0x3400, 10, 30, 5013, 0xB96, 2, EffectLayer.Waist );
-					//Effects.SendLocationEffect( m.Location, m.Map, 0x3400, 60, 0xB96, 0 );
-					m.PlaySound( 0x108 );
-					egy = 100;
-				}
-				else if ( spells == 8 ) // electricity
-				{
-					if ( Utility.RandomBool() )
+					if ( m.CheckSkill( SkillName.MagicResist, 0, 125 ) )
 					{
-						m.FixedParticles( Utility.RandomList( 0x3967, 0x3979 ), 10, 30, 5013, 0, 2, EffectLayer.Waist );
+						dmg = (int)( dmg / 2 );
+						m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
+					}
+
+					if ( m is BaseCreature && Utility.RandomBool() && ((BaseCreature)m).GetMaster() != null )
+						dmg = dmg * 2;
+
+					int phy = 0;
+					int fir = 0;
+					int cld = 0;
+					int psn = 0;
+					int egy = 0;
+
+					int spells = Utility.RandomMinMax( 1, 62 );
+					int wizardry = Wizardry( Caster );
+
+	/* air */		if ( wizardry == 1 ){ spells = Utility.RandomList( 1, 3, 5, 8, 9, 50 ); }
+	/* cold */		else if ( wizardry == 3 ){ spells = Utility.RandomList( 27, 28, 29, 30, 31, 32, 33, 62, 61 ); }
+	/* fire */		else if ( wizardry == 4 ){ spells = Utility.RandomList( 7, 13, 17, 18, 20, 22, 23, 24, 25, 26, 56 ); }
+	/* main */		else if ( wizardry == 5 ){ spells = Utility.RandomList( 2, 4, 5, 6, 12, 11, 14, 15, 25, 45 ); }
+	/* nature */	else if ( wizardry == 6 ){ spells = Utility.RandomList( 11, 19, 34, 41, 44, 46, 47, 48, 49, 50, 51, 53, 57, 59 ); }
+	/* necro */		else if ( wizardry == 7 ){ spells = Utility.RandomList( 6, 10, 15, 21, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 55, 58 ); }
+	/* storm */		else if ( wizardry == 8 ){ spells = Utility.RandomList( 3, 5, 8, 9, 16, 50 ); }
+	/* water */		else if ( wizardry == 9 ){ spells = Utility.RandomList( 52, 52, 52, 52, 52, 52, 3, 5, 8, 9, 16, 50, 54, 60 ); }
+
+					if ( spells == 1 ) // magic arrow
+					{
+						source.MovingParticles( m, 0x36E4, 5, 0, false, false, 0, 0, 3600, 0, 0, 0 );
+						source.PlaySound( 0x1E5 );
+						phy = 100;
+					}
+					else if ( spells == 2 ) // harm
+					{
+						m.FixedParticles( 0x374A, 10, 30, 5013, 0, 2, EffectLayer.Waist );
+						m.PlaySound( 0x0FC );
+						phy = 20;
+						fir = 20;
+						cld = 20;
+						psn = 20;
+						egy = 20;
+					}
+					else if ( spells == 3 ) // lightning
+					{
+						m.FixedParticles( 0x2A4E, 10, 15, 5038, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 2, EffectLayer.Head );
+						//Effects.SendLocationEffect( m.Location, m.Map, 0x2A4E, 30, 10, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0 );
+						m.PlaySound( 0x029 );
+						egy = 100;
+					}
+					else if ( spells == 4 ) // mind blast
+					{
+						m.FixedParticles( 0x374A, 10, 15, 5038, 1181, 2, EffectLayer.Head );
+						m.PlaySound( 0x213 );
+						phy = 50;
+						egy = 50;
+					}
+					else if ( spells == 5 ) // energy bolt
+					{
+						source.MovingParticles( m, 0x3818, 7, 0, false, true, 0, 0, 3043, 4043, 0x211, 0 );
+						m.PlaySound( 0x20A );
+						egy = 100;
+					}
+					else if ( spells == 6 ) // web
+					{
+						source.MovingParticles( m, 0x10D3, 7, 0, false, false, 0, 0, 0 );
+						m.PlaySound( 0x62D );
+						double webbed = ((double)(Caster.Fame/200));
+							if ( webbed > 15.0 ){ webbed = 15.0; }
+						m.Paralyze( TimeSpan.FromSeconds( webbed ) );
+						phy = 100;
+					}
+					else if ( spells == 7 ) // radiation
+					{
+						m.FixedParticles( 0x3400, 10, 30, 5013, 0xB96, 2, EffectLayer.Waist );
+						//Effects.SendLocationEffect( m.Location, m.Map, 0x3400, 60, 0xB96, 0 );
+						m.PlaySound( 0x108 );
+						egy = 100;
+					}
+					else if ( spells == 8 ) // electricity
+					{
+						if ( Utility.RandomBool() )
+						{
+							m.FixedParticles( Utility.RandomList( 0x3967, 0x3979 ), 10, 30, 5013, 0, 2, EffectLayer.Waist );
+							//Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x3967, 0x3979 ), 30, 10 );
+							m.PlaySound( 0x5C3 );
+						}
+						else
+						{
+							m.FixedParticles( 0x5547, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+							m.PlaySound( 0x665 );
+						}
+						egy = 100;
+					}
+					else if ( spells == 9 ) // electrical storm
+					{
+						m.FixedParticles( Utility.RandomList( 0x3967, 0x3979 ), 10, 30, 5013, 0, 2, EffectLayer.Head );
 						//Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x3967, 0x3979 ), 30, 10 );
 						m.PlaySound( 0x5C3 );
+						m.BoltEffect( 0 );
+						egy = 100;
 					}
-					else
+					else if ( spells == 10 ) // dark void
 					{
-						m.FixedParticles( 0x5547, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-						m.PlaySound( 0x665 );
-					}
-					egy = 100;
-				}
-				else if ( spells == 9 ) // electrical storm
-				{
-					m.FixedParticles( Utility.RandomList( 0x3967, 0x3979 ), 10, 30, 5013, 0, 2, EffectLayer.Head );
-					//Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x3967, 0x3979 ), 30, 10 );
-					m.PlaySound( 0x5C3 );
-					m.BoltEffect( 0 );
-					egy = 100;
-				}
-				else if ( spells == 10 ) // dark void
-				{
-					m.FixedParticles( 0x3400, 10, 30, 5052, Utility.RandomList( 0x496, 0x844, 0x9C1 ), 0, EffectLayer.Head );
-					//Effects.SendLocationEffect( m.Location, m.Map, 0x3400, 60, Utility.RandomList( 0x496, 0x844, 0x9C1 ), 0 );
-					m.PlaySound( 0x108 );
+						m.FixedParticles( 0x3400, 10, 30, 5052, Utility.RandomList( 0x496, 0x844, 0x9C1 ), 0, EffectLayer.Head );
+						//Effects.SendLocationEffect( m.Location, m.Map, 0x3400, 60, Utility.RandomList( 0x496, 0x844, 0x9C1 ), 0 );
+						m.PlaySound( 0x108 );
 
-					int drain = ((int)(Caster.Fame/500));
+						int drain = ((int)(Caster.Fame/500));
 
-					m.Mana = m.Mana - drain;
-						if ( m.Mana < 0 ){ m.Mana = 0; }
+						m.Mana = m.Mana - drain;
+							if ( m.Mana < 0 ){ m.Mana = 0; }
 
-					m.Stam = m.Stam - drain;
-						if ( m.Stam < 0 ){ m.Stam = 0; }
+						m.Stam = m.Stam - drain;
+							if ( m.Stam < 0 ){ m.Stam = 0; }
 
-					m.SendMessage( "You feel your soul draining!" );
-					phy = 20;
-					fir = 20;
-					cld = 20;
-					psn = 20;
-					egy = 20;
-				}
-				else if ( spells == 11 ) // acid
-				{
-					m.FixedParticles( 0x1A84, 10, 30, 5052, 0x48E, 0, EffectLayer.Head );
-					//Effects.SendLocationEffect( m.Location, m.Map, 0x1A84, 30, 10, 0x48F, 1167 );
-					m.PlaySound( 0x026 );
-					phy = 20;
-					psn = 60;
-					egy = 20;
-				}
-				else if ( spells == 12 ) // magical sparkles
-				{
-					int sparks = Utility.RandomMinMax(1,4);
+						m.SendMessage( "You feel your soul draining!" );
+						phy = 20;
+						fir = 20;
+						cld = 20;
+						psn = 20;
+						egy = 20;
+					}
+					else if ( spells == 11 ) // acid
+					{
+						m.FixedParticles( 0x1A84, 10, 30, 5052, 0x48E, 0, EffectLayer.Head );
+						//Effects.SendLocationEffect( m.Location, m.Map, 0x1A84, 30, 10, 0x48F, 1167 );
+						m.PlaySound( 0x026 );
+						phy = 20;
+						psn = 60;
+						egy = 20;
+					}
+					else if ( spells == 12 ) // magical sparkles
+					{
+						int sparks = Utility.RandomMinMax(1,4);
 
-					if ( sparks == 1 )
-					{
-						m.FixedParticles( 0x3039, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.Head );
+						if ( sparks == 1 )
+						{
+							m.FixedParticles( 0x3039, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.Head );
+						}
+						else if ( sparks == 2 )
+						{
+							m.FixedParticles( 0x5469, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.Head );
+						}
+						else if ( sparks == 3 )
+						{
+							m.FixedParticles( 0x3F29, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.LeftFoot );
+						}
+						else
+						{
+							m.FixedParticles( 0x54E1, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.Head );
+						}
+						m.PlaySound( Utility.RandomList( 0x1DF, 0x1E2, 0x1E8, 0x1ED, 0x1F1, 0x1F7, 0x1FD, 0x203, 0x209, 0x20B, 0x5BC, 0x5C4, 0x5C5, 0x5C9 ) );
+						phy = 20;
+						fir = 20;
+						cld = 20;
+						psn = 20;
+						egy = 20;
 					}
-					else if ( sparks == 2 )
+					else if ( spells == 13 ) // fire tornado
 					{
-						m.FixedParticles( 0x5469, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.Head );
-					}
-					else if ( sparks == 3 )
-					{
-						m.FixedParticles( 0x3F29, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.LeftFoot );
-					}
-					else
-					{
-						m.FixedParticles( 0x54E1, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.Head );
-					}
-					m.PlaySound( Utility.RandomList( 0x1DF, 0x1E2, 0x1E8, 0x1ED, 0x1F1, 0x1F7, 0x1FD, 0x203, 0x209, 0x20B, 0x5BC, 0x5C4, 0x5C5, 0x5C9 ) );
-					phy = 20;
-					fir = 20;
-					cld = 20;
-					psn = 20;
-					egy = 20;
-				}
-				else if ( spells == 13 ) // fire tornado
-				{
-					m.FixedParticles( 0x3F29, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-					m.PlaySound( 0x345 );
-					fir = 100;
-				}
-				else if ( spells == 14 ) // magic tentacles
-				{
-					m.FixedParticles( 0x5475, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.LeftFoot );
-					m.PlaySound( Utility.RandomList( 0x1DF, 0x1E2, 0x1E8, 0x1ED, 0x1F1, 0x1F7, 0x1FD, 0x203, 0x209, 0x20B, 0x5BC, 0x5C4, 0x5C5, 0x5C9 ) );
-					phy = 20;
-					fir = 20;
-					cld = 20;
-					psn = 20;
-					egy = 20;
-				}
-				else if ( spells == 15 ) // vortex
-				{
-					m.FixedParticles( 0x5508, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.Head );
-					m.PlaySound( 0x665 );
-					phy = 50;
-					egy = 50;
-				}
-				else if ( spells == 16 ) // shoot lightning
-				{
-					source.MovingParticles( m, 0x3818, 5, 0, false, false, 0, 0, 3600, 0, 0, 0 );
-					m.PlaySound( 0x211 );
-					egy = 100;
-				}
-
-				else if ( spells == 17 ) // fire bolt
-				{
-					source.MovingParticles( m, 0x4D17, 5, 0, false, false, 0, 0, 3600, 0, 0, 0 );
-					m.PlaySound( 0x15E );
-					fir = 100;
-				}
-				else if ( spells == 18 ) // fireball
-				{
-					if ( circle > 5 )
-					{
-						m.FixedParticles( 0x5562, 10, 30, 5052, 0, 0, EffectLayer.Head );
-						m.PlaySound( 0x44B );
-					}
-					else
-					{
-						source.MovingParticles( m, 0x36D4, 7, 0, false, true, 0, 0, 9502, 4019, 0x160, 0 );
-						m.PlaySound( Core.AOS ? 0x15E : 0x44B );
-					}
-					fir = 100;
-				}
-				else if ( spells == 19 ) // devastate
-				{
-					m.FixedParticles( 0x2A4E, 10, 30, 5052, 0, 0, EffectLayer.Head );
-					//Effects.SendLocationEffect( m.Location, m.Map, 0x2A4E, 30, 10, 0, 0 );
-					m.PlaySound( 0x029 );
-					fir = 100;
-				}
-				else if ( spells == 20 ) // meteors
-				{
-					Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB38, 0 );
-					if ( circle > 3 )
-					{
-						Point3D blast2 = new Point3D( ( m.X-1 ), ( m.Y ), m.Z );
-						Effects.SendLocationEffect( blast2, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB38, 0 );
-					}
-					if ( circle > 5 )
-					{
-						Point3D blast3 = new Point3D( ( m.X+1 ), ( m.Y ), m.Z );
-						Effects.SendLocationEffect( blast3, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB38, 0 );
-					}
-					if ( circle > 6 )
-					{
-						Point3D blast4 = new Point3D( ( m.X ), ( m.Y-1 ), m.Z );
-						Effects.SendLocationEffect( blast4, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB38, 0 );
-					}
-					if ( circle > 7 )
-					{
-						Point3D blast5 = new Point3D( ( m.X ), ( m.Y+1 ), m.Z );
-						Effects.SendLocationEffect( blast5, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB38, 0 );
-					}
-					m.PlaySound( 0x65A );
-					phy = 50;
-					fir = 50;
-				}
-				else if ( spells == 21 ) // destruction
-				{
-					m.FixedParticles( 0x36B0, 10, 30, 5052, 0xAB3, 0, EffectLayer.Head );
-					//Effects.SendLocationEffect( m.Location, m.Map, 0x36B0, 60, 0xAB3, 0 );
-					m.PlaySound( 0x664 );
-					phy = 50;
-					fir = 50;
-				}
-				else if ( spells == 22 ) // flame bolt
-				{
-					source.MovingParticles( m, 0x3818, 5, 0, false, false, 0xAD2, 0, 3600, 0, 0, 0 );
-					m.PlaySound( 0x658 );
-					fir = 100;
-				}
-				else if ( spells == 23 ) // flame strike
-				{
-					if ( circle > 5 && Utility.RandomBool() )
-					{
-						m.FixedParticles( 0x551A, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						m.FixedParticles( 0x3F29, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
 						m.PlaySound( 0x345 );
+						fir = 100;
 					}
-					else
+					else if ( spells == 14 ) // magic tentacles
 					{
-						m.FixedParticles( 0x3709, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						m.FixedParticles( 0x5475, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.LeftFoot );
+						m.PlaySound( Utility.RandomList( 0x1DF, 0x1E2, 0x1E8, 0x1ED, 0x1F1, 0x1F7, 0x1FD, 0x203, 0x209, 0x20B, 0x5BC, 0x5C4, 0x5C5, 0x5C9 ) );
+						phy = 20;
+						fir = 20;
+						cld = 20;
+						psn = 20;
+						egy = 20;
+					}
+					else if ( spells == 15 ) // vortex
+					{
+						m.FixedParticles( 0x5508, 10, 30, 5052, Utility.RandomList( 0, 0x48D, 0x48E, 0x48F, 0x490, 0x491 ), 0, EffectLayer.Head );
+						m.PlaySound( 0x665 );
+						phy = 50;
+						egy = 50;
+					}
+					else if ( spells == 16 ) // shoot lightning
+					{
+						source.MovingParticles( m, 0x3818, 5, 0, false, false, 0, 0, 3600, 0, 0, 0 );
+						m.PlaySound( 0x211 );
+						egy = 100;
+					}
+
+					else if ( spells == 17 ) // fire bolt
+					{
+						source.MovingParticles( m, 0x4D17, 5, 0, false, false, 0, 0, 3600, 0, 0, 0 );
+						m.PlaySound( 0x15E );
+						fir = 100;
+					}
+					else if ( spells == 18 ) // fireball
+					{
+						if ( circle > 5 )
+						{
+							m.FixedParticles( 0x5562, 10, 30, 5052, 0, 0, EffectLayer.Head );
+							m.PlaySound( 0x44B );
+						}
+						else
+						{
+							source.MovingParticles( m, 0x36D4, 7, 0, false, true, 0, 0, 9502, 4019, 0x160, 0 );
+							m.PlaySound( Core.AOS ? 0x15E : 0x44B );
+						}
+						fir = 100;
+					}
+					else if ( spells == 19 ) // devastate
+					{
+						m.FixedParticles( 0x2A4E, 10, 30, 5052, 0, 0, EffectLayer.Head );
+						//Effects.SendLocationEffect( m.Location, m.Map, 0x2A4E, 30, 10, 0, 0 );
+						m.PlaySound( 0x029 );
+						fir = 100;
+					}
+					else if ( spells == 20 ) // meteors
+					{
+						Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB38, 0 );
+						if ( circle > 3 )
+						{
+							Point3D blast2 = new Point3D( ( m.X-1 ), ( m.Y ), m.Z );
+							Effects.SendLocationEffect( blast2, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB38, 0 );
+						}
+						if ( circle > 5 )
+						{
+							Point3D blast3 = new Point3D( ( m.X+1 ), ( m.Y ), m.Z );
+							Effects.SendLocationEffect( blast3, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB38, 0 );
+						}
+						if ( circle > 6 )
+						{
+							Point3D blast4 = new Point3D( ( m.X ), ( m.Y-1 ), m.Z );
+							Effects.SendLocationEffect( blast4, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB38, 0 );
+						}
+						if ( circle > 7 )
+						{
+							Point3D blast5 = new Point3D( ( m.X ), ( m.Y+1 ), m.Z );
+							Effects.SendLocationEffect( blast5, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB38, 0 );
+						}
+						m.PlaySound( 0x65A );
+						phy = 50;
+						fir = 50;
+					}
+					else if ( spells == 21 ) // destruction
+					{
+						m.FixedParticles( 0x36B0, 10, 30, 5052, 0xAB3, 0, EffectLayer.Head );
+						//Effects.SendLocationEffect( m.Location, m.Map, 0x36B0, 60, 0xAB3, 0 );
+						m.PlaySound( 0x664 );
+						phy = 50;
+						fir = 50;
+					}
+					else if ( spells == 22 ) // flame bolt
+					{
+						source.MovingParticles( m, 0x3818, 5, 0, false, false, 0xAD2, 0, 3600, 0, 0, 0 );
+						m.PlaySound( 0x658 );
+						fir = 100;
+					}
+					else if ( spells == 23 ) // flame strike
+					{
+						if ( circle > 5 && Utility.RandomBool() )
+						{
+							m.FixedParticles( 0x551A, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+							m.PlaySound( 0x345 );
+						}
+						else
+						{
+							m.FixedParticles( 0x3709, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+							m.PlaySound( 0x208 );
+						}
+						fir = 100;
+					}
+					else if ( spells == 24 ) // ignite
+					{
+						Point3D blast1 = new Point3D( ( m.X ), ( m.Y ), m.Z );
+						Effects.SendLocationEffect( blast1, m.Map, 0x3728, 85, 10, 0xB70, 0 );
+						if ( circle > 3 )
+						{
+							Point3D blast2 = new Point3D( ( m.X-1 ), ( m.Y ), m.Z );
+							Effects.SendLocationEffect( blast2, m.Map, 0x3728, 85, 10, 0xB70, 0 );
+						}
+						if ( circle > 5 )
+						{
+							Point3D blast3 = new Point3D( ( m.X+1 ), ( m.Y ), m.Z );
+							Effects.SendLocationEffect( blast3, m.Map, 0x3728, 85, 10, 0xB70, 0 );
+						}
+						if ( circle > 6 )
+						{
+							Point3D blast4 = new Point3D( ( m.X ), ( m.Y-1 ), m.Z );
+							Effects.SendLocationEffect( blast4, m.Map, 0x3728, 85, 10, 0xB70, 0 );
+						}
+						if ( circle > 7 )
+						{
+							Point3D blast5 = new Point3D( ( m.X ), ( m.Y+1 ), m.Z );
+							Effects.SendLocationEffect( blast5, m.Map, 0x3728, 85, 10, 0xB70, 0 );
+						}
 						m.PlaySound( 0x208 );
+						fir = 100;
 					}
-					fir = 100;
-				}
-				else if ( spells == 24 ) // ignite
-				{
-					Point3D blast1 = new Point3D( ( m.X ), ( m.Y ), m.Z );
-					Effects.SendLocationEffect( blast1, m.Map, 0x3728, 85, 10, 0xB70, 0 );
-					if ( circle > 3 )
+					else if ( spells == 25 ) // explosion
 					{
-						Point3D blast2 = new Point3D( ( m.X-1 ), ( m.Y ), m.Z );
-						Effects.SendLocationEffect( blast2, m.Map, 0x3728, 85, 10, 0xB70, 0 );
-					}
-					if ( circle > 5 )
-					{
-						Point3D blast3 = new Point3D( ( m.X+1 ), ( m.Y ), m.Z );
-						Effects.SendLocationEffect( blast3, m.Map, 0x3728, 85, 10, 0xB70, 0 );
-					}
-					if ( circle > 6 )
-					{
-						Point3D blast4 = new Point3D( ( m.X ), ( m.Y-1 ), m.Z );
-						Effects.SendLocationEffect( blast4, m.Map, 0x3728, 85, 10, 0xB70, 0 );
-					}
-					if ( circle > 7 )
-					{
-						Point3D blast5 = new Point3D( ( m.X ), ( m.Y+1 ), m.Z );
-						Effects.SendLocationEffect( blast5, m.Map, 0x3728, 85, 10, 0xB70, 0 );
-					}
-					m.PlaySound( 0x208 );
-					fir = 100;
-				}
-				else if ( spells == 25 ) // explosion
-				{
-					Point3D blast1 = new Point3D( ( m.X ), ( m.Y ), m.Z );
-					Effects.SendLocationEffect( blast1, m.Map, Utility.RandomList( 0x36BD, 0x3822 ), 85, 10, 0, 0 );
-					if ( circle > 3 )
-					{
-						Point3D blast2 = new Point3D( ( m.X-1 ), ( m.Y ), m.Z );
-						Effects.SendLocationEffect( blast2, m.Map, Utility.RandomList( 0x36BD, 0x3822 ), 85, 10, 0, 0 );
-					}
-					if ( circle > 5 )
-					{
-						Point3D blast3 = new Point3D( ( m.X+1 ), ( m.Y ), m.Z );
-						Effects.SendLocationEffect( blast3, m.Map, Utility.RandomList( 0x36BD, 0x3822 ), 85, 10, 0, 0 );
-					}
-					if ( circle > 6 )
-					{
-						Point3D blast4 = new Point3D( ( m.X ), ( m.Y-1 ), m.Z );
-						Effects.SendLocationEffect( blast4, m.Map, Utility.RandomList( 0x36BD, 0x3822 ), 85, 10, 0, 0 );
-					}
-					if ( circle > 7 )
-					{
-						Point3D blast5 = new Point3D( ( m.X ), ( m.Y+1 ), m.Z );
-						Effects.SendLocationEffect( blast5, m.Map, Utility.RandomList( 0x36BD, 0x3822 ), 85, 10, 0, 0 );
-					}
-					m.PlaySound( 0x307 );
-					phy = 50;
-					fir = 50;
-				}
-				else if ( spells == 26 ) // steam
-				{
-					m.FixedParticles( 0x3400, 10, 30, 5052, 0x9C4, 0, EffectLayer.Head );
-					//Effects.SendLocationEffect( m.Location, m.Map, 0x3400, 60, 10, 0x9C4, 0 );
-					m.PlaySound( 0x108 );
-					fir = 100;
-				}
-
-				else if ( spells == 27 ) // ice bolt
-				{
-					source.MovingParticles( m, 0x4D18, 5, 0, false, false, 0, 0, 3600, 0, 0, 0 );
-					m.PlaySound( 0x650 );
-					cld = 100;
-				}
-				else if ( spells == 28 ) // icicle
-				{
-					source.MovingParticles( m, 0x28EF, 5, 0, false, false, 0xB77, 0, 3600, 0, 0, 0 );
-					m.PlaySound( 0x1E5 );
-					phy = 25;
-					cld = 75;
-				}
-				else if ( spells == 29 ) // hail storm
-				{
-					m.FixedParticles( Utility.RandomList(0x384E,0x3859), 20, 10, 5044, 0, 0, EffectLayer.Head );
-					m.PlaySound( 0x64F );
-					phy = 50;
-					cld = 50;
-				}
-				else if ( spells == 30 ) // frost strike
-				{
-					m.FixedParticles( 0x23B32, 10, 30, 5052, 0x809, 0, EffectLayer.LeftFoot );
-					m.PlaySound( 0x64F );
-					phy = 25;
-					cld = 75;
-				}
-				else if ( spells == 31 ) // avalanche
-				{
-					Point3D blast1 = new Point3D( ( m.X ), ( m.Y ), m.Z );
-					Effects.SendLocationEffect( blast1, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB77, 0 );
-					if ( circle > 3 )
-					{
-						Point3D blast2 = new Point3D( ( m.X-1 ), ( m.Y ), m.Z );
-						Effects.SendLocationEffect( blast2, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB77, 0 );
-					}
-					if ( circle > 5 )
-					{
-						Point3D blast3 = new Point3D( ( m.X+1 ), ( m.Y ), m.Z );
-						Effects.SendLocationEffect( blast3, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB77, 0 );
-					}
-					if ( circle > 6 )
-					{
-						Point3D blast4 = new Point3D( ( m.X ), ( m.Y-1 ), m.Z );
-						Effects.SendLocationEffect( blast4, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB77, 0 );
-					}
-					if ( circle > 7 )
-					{
-						Point3D blast5 = new Point3D( ( m.X ), ( m.Y+1 ), m.Z );
-						Effects.SendLocationEffect( blast5, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB77, 0 );
-					}
-					m.PlaySound( 0x65A );
-					phy = 50;
-					cld = 50;
-				}
-				else if ( spells == 32 ) // snow ball
-				{
-					source.MovingParticles( m, 0x36E4, 7, 0, false, true, 0xBB3, 0, 9502, 4019, 0x160, 0 );
-					m.PlaySound( 0x650 );
-					phy = 50;
-					cld = 50;
-				}
-				else if ( spells == 33 ) // cold
-				{
-					m.FixedParticles( 0x5590, 10, 30, 5052, 0xB77, 0, EffectLayer.Head );
-					m.PlaySound( Utility.RandomList(0x10B,0x5590) );
-					cld = 100;
-				}
-
-				else if ( spells == 34 ) // poison bolt
-				{
-					source.MovingParticles( m, 0x4F49, 5, 0, false, false, 0, 0, 3600, 0, 0, 0 );
-					m.PlaySound( 0x658 );
-					cld = 100;
-				}
-				else if ( spells == 35 ) // physic blast
-				{
-					m.FixedParticles( 0x3822, 20, 10, 5044, 0xAF1, 0, EffectLayer.Head );
-					m.PlaySound( 0x658 );
-					phy = 100;
-				}
-				else if ( spells == 36 ) // evil lightning
-				{
-					m.FixedParticles( 0x55A6, 20, 10, 5044, EffectLayer.Head );
-					m.PlaySound( 0x653 );
-					egy = 100;
-				}
-				else if ( spells == 37 ) // strike
-				{
-					m.FixedParticles( 0x36BD, 20, 10, 5044, EffectLayer.Head );
-					m.PlaySound( 0x307 );
-					phy = 50;
-					fir = 25;
-					egy = 25;
-				}
-				else if ( spells == 38 ) // mind rot
-				{
-					m.PlaySound( 0x1FB );
-					m.PlaySound( 0x258 );
-					m.FixedParticles( 0x373A, 1, 17, 9903, 15, 4, EffectLayer.Head );
-					phy = 50;
-					psn = 50;
-				}
-				else if ( spells == 39 ) // pain spike
-				{
-					m.FixedParticles( 0x37C4, 1, 8, 9916, 39, 3, EffectLayer.Head );
-					m.FixedParticles( 0x37C4, 1, 8, 9502, 39, 4, EffectLayer.Head );
-					m.PlaySound( 0x210 );
-					phy = 50;
-					psn = 50;
-				}
-				else if ( spells == 40 ) // strangle
-				{
-					m.PlaySound( 0x22F );
-					m.FixedParticles( 0x36CB, 1, 9, 9911, 67, 5, EffectLayer.Head );
-					m.FixedParticles( 0x374A, 1, 17, 9502, 1108, 4, (EffectLayer)255 );
-					phy = 75;
-					psn = 25;
-				}
-				else if ( spells == 41 ) // wither
-				{
-					Effects.PlaySound( m.Location, m.Map, 0x1FB );
-					m.PlaySound( 0x10B );
-					m.FixedParticles( 0x37CC, 1, 9, 9911, 0x916, 5, EffectLayer.Waist );
-					phy = 100;
-				}
-				else if ( spells == 42 ) // poison strike
-				{
-					m.FixedParticles( 0x36B0, 1, 9, 9911, 9915, 5, EffectLayer.Waist );
-					m.PlaySound( 0x229 );
-					psn = 100;
-					poisoned = true;
-				}
-				else if ( spells == 43 ) // poison
-				{
-					m.FixedParticles( 0x374A, 10, 15, 5021, 0, 0, EffectLayer.Waist );
-					m.PlaySound( 0x205 );
-					psn = 100;
-					poisoned = true;
-				}
-				else if ( spells == 44 ) // poison
-				{
-					m.FixedParticles( 0x3400, 10, 30, 5052, 0, 0, EffectLayer.Waist );
-					m.PlaySound( 0x108 );
-					psn = 100;
-					poisoned = true;
-				}
-				else if ( spells == 45 ) // poison
-				{
-					m.FixedParticles( 0x36B0, 10, 30, 5052, 9915, 0, EffectLayer.Waist );
-					m.PlaySound( 0x229 );
-					psn = 100;
-					poisoned = true;
-				}
-				else if ( spells == 46 ) // venom vine
-				{
-					m.FixedParticles( 0x5475, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-					m.PlaySound( 0x64F );
-					phy = 50;
-					psn = 50;
-					poisoned = true;
-				}
-				else if ( spells == 47 ) // vines
-				{
-					m.FixedParticles( 0x5487, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-					m.PlaySound( 0x64F );
-					phy = 100;
-				}
-				else if ( spells == 48 ) // leaves
-				{
-					m.FixedParticles( 0x54F4, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-					m.PlaySound( 0x10B );
-
-					if ( m is PlayerMobile && Utility.RandomBool() )
-					{
-						IMount mount = m.Mount;
-
-						if ( mount != null )
+						Point3D blast1 = new Point3D( ( m.X ), ( m.Y ), m.Z );
+						Effects.SendLocationEffect( blast1, m.Map, Utility.RandomList( 0x36BD, 0x3822 ), 85, 10, 0, 0 );
+						if ( circle > 3 )
 						{
-							m.SendLocalizedMessage( 1062315 ); // You fall off your mount!
-							Server.Mobiles.EtherealMount.EthyDismount( m );
-							mount.Rider = null;
+							Point3D blast2 = new Point3D( ( m.X-1 ), ( m.Y ), m.Z );
+							Effects.SendLocationEffect( blast2, m.Map, Utility.RandomList( 0x36BD, 0x3822 ), 85, 10, 0, 0 );
 						}
-						m.Animate( 22, 5, 1, true, false, 0 );
-					}
-					phy = 100;
-				}
-				else if ( spells == 49 ) // magical
-				{
-					m.FixedParticles( 0x3039, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-					m.PlaySound( Utility.RandomList( 0x1DF, 0x1E2, 0x1E8, 0x1ED, 0x1F1, 0x1F7, 0x1FD, 0x203, 0x209, 0x20B, 0x5BC, 0x5C4, 0x5C5, 0x5C9 ) );
-					phy = 20;
-					fir = 20;
-					cld = 20;
-					psn = 20;
-					egy = 20;
-				}
-				else if ( spells == 50 ) // air
-				{
-					if ( circle > 5 )
-					{
-						m.FixedParticles( 0x5492, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-						//Effects.SendLocationEffect( m.Location, m.Map, 0x5492, 30, 10, 0, 0 );
-					}
-					else
-					{
-						m.FixedParticles( 0x5590, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-						//Effects.SendLocationEffect( m.Location, m.Map, 0x5590, 30, 10, 0, 0 );
-					}
-					m.PlaySound( Utility.RandomList(0x10B,0x5590) );
-					if ( m is PlayerMobile && Utility.RandomBool() )
-					{
-						IMount mount = m.Mount;
-
-						if ( mount != null )
+						if ( circle > 5 )
 						{
-							m.SendLocalizedMessage( 1062315 ); // You fall off your mount!
-							Server.Mobiles.EtherealMount.EthyDismount( m );
-							mount.Rider = null;
+							Point3D blast3 = new Point3D( ( m.X+1 ), ( m.Y ), m.Z );
+							Effects.SendLocationEffect( blast3, m.Map, Utility.RandomList( 0x36BD, 0x3822 ), 85, 10, 0, 0 );
 						}
-						m.Animate( 22, 5, 1, true, false, 0 );
-					}
-					phy = 100;
-				}
-				else if ( spells == 51 ) // stone hands
-				{
-					m.FixedParticles( 0x3837, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-					//Effects.SendLocationEffect( m.Location, m.Map, 0x3837, 23, 10, 0, 0 );
-					m.PlaySound( 0x65A );
-					phy = 50;
-				}
-				else if ( spells == 52 ) // water
-				{
-					if ( Utility.RandomBool() )
-					{
-						m.FixedParticles( 0x1A84, 10, 30, 5052, 0xB3D, 0, EffectLayer.Waist );
-						m.PlaySound( 0x026 );
-					}
-					else
-					{
-						m.FixedParticles( 0x5558, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-						m.PlaySound( 0x026 );
-					}
-					phy = 75;
-					cld = 25;
-				}
-				else if ( spells == 53 ) // weed
-				{
-					m.FixedParticles( 0x3400, 10, 30, 5052, 0xB97, 0, EffectLayer.LeftFoot );
-					//Effects.SendLocationEffect( m.Location, m.Map, 0x3400, 60, 0xB97, 0 );
-					m.PlaySound( 0x64F );
-					double weed = ((double)(Caster.Fame/200));
-						if ( weed > 15.0 ){ weed = 15.0; }
-					m.Paralyze( TimeSpan.FromSeconds( weed ) );
-					phy = 75;
-					psn = 25;
-				}
-				else if ( spells == 54 ) // water globe
-				{
-					if ( Utility.RandomBool() )
-					{
-						m.FixedParticles( 0x37E5, 10, 30, 5052, 0, 0, EffectLayer.Head );
-						//Effects.SendLocationEffect( m.Location, m.Map, 0x37E5, 85, 10, 0, 0 );
-						m.PlaySound( 0x5BF );
-					}
-					else
-					{
-						m.FixedParticles( 0x559A, 10, 30, 5052, 0, 0, EffectLayer.Head );
-						//Point3D blast = new Point3D( ( m.X ), ( m.Y ), m.Z+12 );
-						//Effects.SendLocationEffect( blast, m.Map, 0x559A, 85, 10, 0, 0 );
-						m.PlaySound( 0x56D );
-					}
-					phy = 50;
-					cld = 50;
-				}
-				else if ( spells == 55 ) // poison field
-				{
-					m.FixedParticles( Utility.RandomList(0x3915,0x3924), 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-					//Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList(0x3915,0x3924), 85, 10, 0, 0 );
-					m.PlaySound( 0x5BC );
-					psn = 100;
-					poisoned = true;
-				}
-				else if ( spells == 56 ) // fire field
-				{
-					if ( Utility.RandomBool() )
-					{
-						m.FixedParticles( Utility.RandomList(0x3998,0x398D), 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-						m.PlaySound( 0x356 );
-					}
-					else
-					{
-						m.FixedParticles( 0x55B1, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-						m.PlaySound( 0x5CF );
-					}
-					fir = 100;
-				}
-				else if ( spells == 57 ) // bird wings
-				{
-					m.FixedParticles( 0x3FE5, 10, 30, 5052, 0xB60, 0, EffectLayer.Head );
-					//Point3D blast = new Point3D( ( m.X ), ( m.Y ), m.Z+15 );
-					//Effects.SendLocationEffect( blast, m.Map, 0x3FE5, 85, 10, 0xB60, 0 );
-					m.PlaySound( 0x64D );
-					phy = 100;
-				}
-				else if ( spells == 58 ) // throwing skull
-				{
-					source.MovingParticles( m, 0x3FF9, 7, 0, false, true, 0, 0, 9502, 4019, 0x160, 0 );
-					source.PlaySound( 0x658 );
-
-					int drain = ((int)(Caster.Fame/500));
-
-					m.Mana = m.Mana - drain;
-						if ( m.Mana < 0 ){ m.Mana = 0; }
-
-					m.Stam = m.Stam - drain;
-						if ( m.Stam < 0 ){ m.Stam = 0; }
-
-					m.SendMessage( "You feel your soul draining!" );
-					phy = 20;
-					fir = 20;
-					cld = 20;
-					psn = 20;
-					egy = 20;
-				}
-				else if ( spells == 59 ) // insects
-				{
-					m.FixedParticles( 0x554F, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-					//Effects.SendLocationEffect( m.Location, m.Map, 0x554F, 85, 10, 0, 0 );
-					m.PlaySound( Utility.RandomList(0x5CC,0x5CB) );
-					phy = 50;
-					psn = 50;
-					if ( Utility.RandomBool() ){ poisoned = true; }
-				}
-				else if ( spells == 60 ) // water splash
-				{
-					if ( Utility.RandomBool() )
-					{
-						m.FixedParticles( 0x5536, 10, 30, 5052, 0, 0, EffectLayer.Head );
-						m.PlaySound( 0x5CA );
-					}
-					else
-					{
-						m.FixedParticles( 0x23B2, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-						m.PlaySound( 0x026 );
-					}
-					if ( m is PlayerMobile && Utility.RandomBool() )
-					{
-						IMount mount = m.Mount;
-
-						if ( mount != null )
+						if ( circle > 6 )
 						{
-							m.SendLocalizedMessage( 1062315 ); // You fall off your mount!
-							Server.Mobiles.EtherealMount.EthyDismount( m );
-							mount.Rider = null;
+							Point3D blast4 = new Point3D( ( m.X ), ( m.Y-1 ), m.Z );
+							Effects.SendLocationEffect( blast4, m.Map, Utility.RandomList( 0x36BD, 0x3822 ), 85, 10, 0, 0 );
 						}
-						m.Animate( 22, 5, 1, true, false, 0 );
+						if ( circle > 7 )
+						{
+							Point3D blast5 = new Point3D( ( m.X ), ( m.Y+1 ), m.Z );
+							Effects.SendLocationEffect( blast5, m.Map, Utility.RandomList( 0x36BD, 0x3822 ), 85, 10, 0, 0 );
+						}
+						m.PlaySound( 0x307 );
+						phy = 50;
+						fir = 50;
 					}
-					phy = 50;
-					cld = 50;
-				}
-				else if ( spells == 61 ) // ice storm
-				{
-					if ( circle < 6 )
+					else if ( spells == 26 ) // steam
 					{
-						m.FixedParticles( Utility.RandomList(0x384E,0x3859), 10, 30, 5052, 0xB79, 0, EffectLayer.LeftFoot );
+						m.FixedParticles( 0x3400, 10, 30, 5052, 0x9C4, 0, EffectLayer.Head );
+						//Effects.SendLocationEffect( m.Location, m.Map, 0x3400, 60, 10, 0x9C4, 0 );
+						m.PlaySound( 0x108 );
+						fir = 100;
 					}
-					else
+
+					else if ( spells == 27 ) // ice bolt
 					{
-						m.FixedParticles( 0x55BB, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						source.MovingParticles( m, 0x4D18, 5, 0, false, false, 0, 0, 3600, 0, 0, 0 );
+						m.PlaySound( 0x650 );
+						cld = 100;
 					}
-					m.PlaySound( 0x5CE );
-					phy = 50;
-					cld = 50;
-				}
-				else if ( spells == 62 ) // ice spike
-				{
-					m.FixedParticles( 0x5571, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
-					m.PlaySound( 0x65D );
-					phy = 50;
-					cld = 50;
-				}
-
-				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-				if ( poisoned )
-				{
-					switch( circle )
+					else if ( spells == 28 ) // icicle
 					{
-						case 4: m.ApplyPoison( m, Poison.Lesser );	break;
-						case 5: m.ApplyPoison( m, Poison.Regular );	break;
-						case 6: m.ApplyPoison( m, Poison.Greater );	break;
-						case 7: m.ApplyPoison( m, Poison.Deadly );	break;
-						case 8: m.ApplyPoison( m, Poison.Lethal );	break;
+						source.MovingParticles( m, 0x28EF, 5, 0, false, false, 0xB77, 0, 3600, 0, 0, 0 );
+						m.PlaySound( 0x1E5 );
+						phy = 25;
+						cld = 75;
 					}
-				}
+					else if ( spells == 29 ) // hail storm
+					{
+						m.FixedParticles( Utility.RandomList(0x384E,0x3859), 20, 10, 5044, 0, 0, EffectLayer.Head );
+						m.PlaySound( 0x64F );
+						phy = 50;
+						cld = 50;
+					}
+					else if ( spells == 30 ) // frost strike
+					{
+						m.FixedParticles( 0x23B32, 10, 30, 5052, 0x809, 0, EffectLayer.LeftFoot );
+						m.PlaySound( 0x64F );
+						phy = 25;
+						cld = 75;
+					}
+					else if ( spells == 31 ) // avalanche
+					{
+						Point3D blast1 = new Point3D( ( m.X ), ( m.Y ), m.Z );
+						Effects.SendLocationEffect( blast1, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB77, 0 );
+						if ( circle > 3 )
+						{
+							Point3D blast2 = new Point3D( ( m.X-1 ), ( m.Y ), m.Z );
+							Effects.SendLocationEffect( blast2, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB77, 0 );
+						}
+						if ( circle > 5 )
+						{
+							Point3D blast3 = new Point3D( ( m.X+1 ), ( m.Y ), m.Z );
+							Effects.SendLocationEffect( blast3, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB77, 0 );
+						}
+						if ( circle > 6 )
+						{
+							Point3D blast4 = new Point3D( ( m.X ), ( m.Y-1 ), m.Z );
+							Effects.SendLocationEffect( blast4, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB77, 0 );
+						}
+						if ( circle > 7 )
+						{
+							Point3D blast5 = new Point3D( ( m.X ), ( m.Y+1 ), m.Z );
+							Effects.SendLocationEffect( blast5, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB77, 0 );
+						}
+						m.PlaySound( 0x65A );
+						phy = 50;
+						cld = 50;
+					}
+					else if ( spells == 32 ) // snow ball
+					{
+						source.MovingParticles( m, 0x36E4, 7, 0, false, true, 0xBB3, 0, 9502, 4019, 0x160, 0 );
+						m.PlaySound( 0x650 );
+						phy = 50;
+						cld = 50;
+					}
+					else if ( spells == 33 ) // cold
+					{
+						m.FixedParticles( 0x5590, 10, 30, 5052, 0xB77, 0, EffectLayer.Head );
+						m.PlaySound( Utility.RandomList(0x10B,0x5590) );
+						cld = 100;
+					}
 
-				SpellHelper.Damage( this, m, dmg, phy, fir, cld, psn, egy );
+					else if ( spells == 34 ) // poison bolt
+					{
+						source.MovingParticles( m, 0x4F49, 5, 0, false, false, 0, 0, 3600, 0, 0, 0 );
+						m.PlaySound( 0x658 );
+						cld = 100;
+					}
+					else if ( spells == 35 ) // physic blast
+					{
+						m.FixedParticles( 0x3822, 20, 10, 5044, 0xAF1, 0, EffectLayer.Head );
+						m.PlaySound( 0x658 );
+						phy = 100;
+					}
+					else if ( spells == 36 ) // evil lightning
+					{
+						m.FixedParticles( 0x55A6, 20, 10, 5044, EffectLayer.Head );
+						m.PlaySound( 0x653 );
+						egy = 100;
+					}
+					else if ( spells == 37 ) // strike
+					{
+						m.FixedParticles( 0x36BD, 20, 10, 5044, EffectLayer.Head );
+						m.PlaySound( 0x307 );
+						phy = 50;
+						fir = 25;
+						egy = 25;
+					}
+					else if ( spells == 38 ) // mind rot
+					{
+						m.PlaySound( 0x1FB );
+						m.PlaySound( 0x258 );
+						m.FixedParticles( 0x373A, 1, 17, 9903, 15, 4, EffectLayer.Head );
+						phy = 50;
+						psn = 50;
+					}
+					else if ( spells == 39 ) // pain spike
+					{
+						m.FixedParticles( 0x37C4, 1, 8, 9916, 39, 3, EffectLayer.Head );
+						m.FixedParticles( 0x37C4, 1, 8, 9502, 39, 4, EffectLayer.Head );
+						m.PlaySound( 0x210 );
+						phy = 50;
+						psn = 50;
+					}
+					else if ( spells == 40 ) // strangle
+					{
+						m.PlaySound( 0x22F );
+						m.FixedParticles( 0x36CB, 1, 9, 9911, 67, 5, EffectLayer.Head );
+						m.FixedParticles( 0x374A, 1, 17, 9502, 1108, 4, (EffectLayer)255 );
+						phy = 75;
+						psn = 25;
+					}
+					else if ( spells == 41 ) // wither
+					{
+						Effects.PlaySound( m.Location, m.Map, 0x1FB );
+						m.PlaySound( 0x10B );
+						m.FixedParticles( 0x37CC, 1, 9, 9911, 0x916, 5, EffectLayer.Waist );
+						phy = 100;
+					}
+					else if ( spells == 42 ) // poison strike
+					{
+						m.FixedParticles( 0x36B0, 1, 9, 9911, 9915, 5, EffectLayer.Waist );
+						m.PlaySound( 0x229 );
+						psn = 100;
+						poisoned = true;
+					}
+					else if ( spells == 43 ) // poison
+					{
+						m.FixedParticles( 0x374A, 10, 15, 5021, 0, 0, EffectLayer.Waist );
+						m.PlaySound( 0x205 );
+						psn = 100;
+						poisoned = true;
+					}
+					else if ( spells == 44 ) // poison
+					{
+						m.FixedParticles( 0x3400, 10, 30, 5052, 0, 0, EffectLayer.Waist );
+						m.PlaySound( 0x108 );
+						psn = 100;
+						poisoned = true;
+					}
+					else if ( spells == 45 ) // poison
+					{
+						m.FixedParticles( 0x36B0, 10, 30, 5052, 9915, 0, EffectLayer.Waist );
+						m.PlaySound( 0x229 );
+						psn = 100;
+						poisoned = true;
+					}
+					else if ( spells == 46 ) // venom vine
+					{
+						m.FixedParticles( 0x5475, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						m.PlaySound( 0x64F );
+						phy = 50;
+						psn = 50;
+						poisoned = true;
+					}
+					else if ( spells == 47 ) // vines
+					{
+						m.FixedParticles( 0x5487, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						m.PlaySound( 0x64F );
+						phy = 100;
+					}
+					else if ( spells == 48 ) // leaves
+					{
+						m.FixedParticles( 0x54F4, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						m.PlaySound( 0x10B );
+
+						if ( m is PlayerMobile && Utility.RandomBool() )
+						{
+							IMount mount = m.Mount;
+
+							if ( mount != null )
+							{
+								m.SendLocalizedMessage( 1062315 ); // You fall off your mount!
+								Server.Mobiles.EtherealMount.EthyDismount( m );
+								mount.Rider = null;
+							}
+							m.Animate( 22, 5, 1, true, false, 0 );
+						}
+						phy = 100;
+					}
+					else if ( spells == 49 ) // magical
+					{
+						m.FixedParticles( 0x3039, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						m.PlaySound( Utility.RandomList( 0x1DF, 0x1E2, 0x1E8, 0x1ED, 0x1F1, 0x1F7, 0x1FD, 0x203, 0x209, 0x20B, 0x5BC, 0x5C4, 0x5C5, 0x5C9 ) );
+						phy = 20;
+						fir = 20;
+						cld = 20;
+						psn = 20;
+						egy = 20;
+					}
+					else if ( spells == 50 ) // air
+					{
+						if ( circle > 5 )
+						{
+							m.FixedParticles( 0x5492, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+							//Effects.SendLocationEffect( m.Location, m.Map, 0x5492, 30, 10, 0, 0 );
+						}
+						else
+						{
+							m.FixedParticles( 0x5590, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+							//Effects.SendLocationEffect( m.Location, m.Map, 0x5590, 30, 10, 0, 0 );
+						}
+						m.PlaySound( Utility.RandomList(0x10B,0x5590) );
+						if ( m is PlayerMobile && Utility.RandomBool() )
+						{
+							IMount mount = m.Mount;
+
+							if ( mount != null )
+							{
+								m.SendLocalizedMessage( 1062315 ); // You fall off your mount!
+								Server.Mobiles.EtherealMount.EthyDismount( m );
+								mount.Rider = null;
+							}
+							m.Animate( 22, 5, 1, true, false, 0 );
+						}
+						phy = 100;
+					}
+					else if ( spells == 51 ) // stone hands
+					{
+						m.FixedParticles( 0x3837, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						//Effects.SendLocationEffect( m.Location, m.Map, 0x3837, 23, 10, 0, 0 );
+						m.PlaySound( 0x65A );
+						phy = 50;
+					}
+					else if ( spells == 52 ) // water
+					{
+						if ( Utility.RandomBool() )
+						{
+							m.FixedParticles( 0x1A84, 10, 30, 5052, 0xB3D, 0, EffectLayer.Waist );
+							m.PlaySound( 0x026 );
+						}
+						else
+						{
+							m.FixedParticles( 0x5558, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+							m.PlaySound( 0x026 );
+						}
+						phy = 75;
+						cld = 25;
+					}
+					else if ( spells == 53 ) // weed
+					{
+						m.FixedParticles( 0x3400, 10, 30, 5052, 0xB97, 0, EffectLayer.LeftFoot );
+						//Effects.SendLocationEffect( m.Location, m.Map, 0x3400, 60, 0xB97, 0 );
+						m.PlaySound( 0x64F );
+						double weed = ((double)(Caster.Fame/200));
+							if ( weed > 15.0 ){ weed = 15.0; }
+						m.Paralyze( TimeSpan.FromSeconds( weed ) );
+						phy = 75;
+						psn = 25;
+					}
+					else if ( spells == 54 ) // water globe
+					{
+						if ( Utility.RandomBool() )
+						{
+							m.FixedParticles( 0x37E5, 10, 30, 5052, 0, 0, EffectLayer.Head );
+							//Effects.SendLocationEffect( m.Location, m.Map, 0x37E5, 85, 10, 0, 0 );
+							m.PlaySound( 0x5BF );
+						}
+						else
+						{
+							m.FixedParticles( 0x559A, 10, 30, 5052, 0, 0, EffectLayer.Head );
+							//Point3D blast = new Point3D( ( m.X ), ( m.Y ), m.Z+12 );
+							//Effects.SendLocationEffect( blast, m.Map, 0x559A, 85, 10, 0, 0 );
+							m.PlaySound( 0x56D );
+						}
+						phy = 50;
+						cld = 50;
+					}
+					else if ( spells == 55 ) // poison field
+					{
+						m.FixedParticles( Utility.RandomList(0x3915,0x3924), 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						//Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList(0x3915,0x3924), 85, 10, 0, 0 );
+						m.PlaySound( 0x5BC );
+						psn = 100;
+						poisoned = true;
+					}
+					else if ( spells == 56 ) // fire field
+					{
+						if ( Utility.RandomBool() )
+						{
+							m.FixedParticles( Utility.RandomList(0x3998,0x398D), 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+							m.PlaySound( 0x356 );
+						}
+						else
+						{
+							m.FixedParticles( 0x55B1, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+							m.PlaySound( 0x5CF );
+						}
+						fir = 100;
+					}
+					else if ( spells == 57 ) // bird wings
+					{
+						m.FixedParticles( 0x3FE5, 10, 30, 5052, 0xB60, 0, EffectLayer.Head );
+						//Point3D blast = new Point3D( ( m.X ), ( m.Y ), m.Z+15 );
+						//Effects.SendLocationEffect( blast, m.Map, 0x3FE5, 85, 10, 0xB60, 0 );
+						m.PlaySound( 0x64D );
+						phy = 100;
+					}
+					else if ( spells == 58 ) // throwing skull
+					{
+						source.MovingParticles( m, 0x3FF9, 7, 0, false, true, 0, 0, 9502, 4019, 0x160, 0 );
+						source.PlaySound( 0x658 );
+
+						int drain = ((int)(Caster.Fame/500));
+
+						m.Mana = m.Mana - drain;
+							if ( m.Mana < 0 ){ m.Mana = 0; }
+
+						m.Stam = m.Stam - drain;
+							if ( m.Stam < 0 ){ m.Stam = 0; }
+
+						m.SendMessage( "You feel your soul draining!" );
+						phy = 20;
+						fir = 20;
+						cld = 20;
+						psn = 20;
+						egy = 20;
+					}
+					else if ( spells == 59 ) // insects
+					{
+						m.FixedParticles( 0x554F, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						//Effects.SendLocationEffect( m.Location, m.Map, 0x554F, 85, 10, 0, 0 );
+						m.PlaySound( Utility.RandomList(0x5CC,0x5CB) );
+						phy = 50;
+						psn = 50;
+						if ( Utility.RandomBool() ){ poisoned = true; }
+					}
+					else if ( spells == 60 ) // water splash
+					{
+						if ( Utility.RandomBool() )
+						{
+							m.FixedParticles( 0x5536, 10, 30, 5052, 0, 0, EffectLayer.Head );
+							m.PlaySound( 0x5CA );
+						}
+						else
+						{
+							m.FixedParticles( 0x23B2, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+							m.PlaySound( 0x026 );
+						}
+						if ( m is PlayerMobile && Utility.RandomBool() )
+						{
+							IMount mount = m.Mount;
+
+							if ( mount != null )
+							{
+								m.SendLocalizedMessage( 1062315 ); // You fall off your mount!
+								Server.Mobiles.EtherealMount.EthyDismount( m );
+								mount.Rider = null;
+							}
+							m.Animate( 22, 5, 1, true, false, 0 );
+						}
+						phy = 50;
+						cld = 50;
+					}
+					else if ( spells == 61 ) // ice storm
+					{
+						if ( circle < 6 )
+						{
+							m.FixedParticles( Utility.RandomList(0x384E,0x3859), 10, 30, 5052, 0xB79, 0, EffectLayer.LeftFoot );
+						}
+						else
+						{
+							m.FixedParticles( 0x55BB, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						}
+						m.PlaySound( 0x5CE );
+						phy = 50;
+						cld = 50;
+					}
+					else if ( spells == 62 ) // ice spike
+					{
+						m.FixedParticles( 0x5571, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
+						m.PlaySound( 0x65D );
+						phy = 50;
+						cld = 50;
+					}
+
+					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+					if ( poisoned )
+					{
+						switch( circle )
+						{
+							case 4: m.ApplyPoison( m, Poison.Lesser );	break;
+							case 5: m.ApplyPoison( m, Poison.Regular );	break;
+							case 6: m.ApplyPoison( m, Poison.Greater );	break;
+							case 7: m.ApplyPoison( m, Poison.Deadly );	break;
+							case 8: m.ApplyPoison( m, Poison.Lethal );	break;
+						}
+					}
+
+					SpellHelper.Damage( this, m, dmg, phy, fir, cld, psn, egy );
+				}
 			}
 
 			FinishSequence();

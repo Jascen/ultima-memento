@@ -53,6 +53,7 @@ namespace Server.Spells.Jedi
 				int min = 15;
 				int max = (int)( GetJediDamage( Caster ) / 4 );
 				Caster.MagicDamageAbsorb = Utility.RandomMinMax( min, max );
+				Fifth.MagicReflectSpell.AddReflect( Caster );
 				Point3D air = new Point3D( ( Caster.X+1 ), ( Caster.Y+1 ), ( Caster.Z+5 ) );
 				Effects.SendLocationParticles(EffectItem.Create(air, Caster.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, 0xB41, 0, 5022, 0);
 				Effects.PlaySound(Caster.Location, Caster.Map, 0x0F9);

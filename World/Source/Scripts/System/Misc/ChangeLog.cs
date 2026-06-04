@@ -16,6 +16,8 @@ namespace Server.Misc
 			builder.Append(Version() + "<br>");
 
 			builder.Append("Changes<br>");
+			builder.Append("- Ability - Magic Protection now adds 14 magic damage absorb, up from setting 6<br>");
+			builder.Append("- Ability - Greater Magic Protection now adds 20 magic damage absorb, up from setting 8<br>");
 			builder.Append("- Achievements - Add entrances for several missing dungeons<br>");
 			builder.Append("- Craft - Every 5 points past GM now increases the Min or Max intensity bonus by 5% on Exceptional crafts<br>");
 			builder.Append("- Craft - Targeting oneself with Breakdown now auto-targets the Crafting Container<br>");
@@ -48,6 +50,11 @@ namespace Server.Misc
 			builder.Append("       - All forms of unlocking now work on L1/L2 TMap chests but Lockpicks are is required for L3+<br>");
 			builder.Append("       - Keys/Lockpicks usage range is now 2, up from 1<br>");
 			builder.Append("       - The LP key artifact now has a 5 minute cooldown between uses (tracked per-key)<br>");
+			builder.Append("- Misc - 'Absorb' behaviors have changed:<br>");
+			builder.Append("       - Melee Absorb no longer reflects damage<br>");
+			builder.Append("       - Magic Absorb abilities no longer reflect damage<br>");
+			builder.Append("       - Magic Absorb spells only reflect the first spell<br>");
+			builder.Append("       - Magic Absorb is now reduced by 2 per spell circle, up from 1<br>");
 			builder.Append("- Preference - Add preference to change double-click to auto-select Talk option when possible<br>");
 			builder.Append("- Quest - 'Seeking Brave Adventurers' quest now uses gump buttons instead of context menu options<br>");
 			builder.Append("- Skill - Taming now indicates if your skill is too low to succeed<br>");

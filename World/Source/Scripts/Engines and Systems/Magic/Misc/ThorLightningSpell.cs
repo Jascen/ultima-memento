@@ -38,31 +38,33 @@ namespace Server.Spells.Magical
 			{
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
-
-				double damage;
-
-				if ( Core.AOS )
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
 				{
-					damage = GetNewAosDamage( 23, 1, 4, m );
-				}
-				else
-				{
-					damage = Utility.Random( 12, 9 );
+					double damage;
 
-					if ( CheckResisted( m ) )
+					if ( Core.AOS )
 					{
-						damage *= 0.75;
+						damage = GetNewAosDamage( 23, 1, 4, m );
+					}
+					else
+					{
+						damage = Utility.Random( 12, 9 );
 
-						m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
+						if ( CheckResisted( m ) )
+						{
+							damage *= 0.75;
+
+							m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
+						}
+
+						damage *= GetDamageScalar( m );
 					}
 
-					damage *= GetDamageScalar( m );
+					m.BoltEffect( 0 );
+
+					SpellHelper.Damage( this, m, damage, 0, 0, 0, 0, 100 );
 				}
-
-				m.BoltEffect( 0 );
-
-				SpellHelper.Damage( this, m, damage, 0, 0, 0, 0, 100 );
 			}
 
 			FinishSequence();

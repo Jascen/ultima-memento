@@ -43,36 +43,38 @@ namespace Server.Spells.Fifth
 			{
 				SpellHelper.Turn( Caster, m );
 
-				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
+				Mobile source = Caster;
+				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
+				{
+					double duration;
 
-				double duration;
+					int nBenefit = 0;
+					if ( Caster is PlayerMobile )
+						nBenefit = (int)(Caster.Skills[SkillName.Magery].Value / 2);
 
-				int nBenefit = 0;
-				if ( Caster is PlayerMobile )
-					nBenefit = (int)(Caster.Skills[SkillName.Magery].Value / 2);
+					int secs = (int)((Spell.ItemSkillValue( Caster, DamageSkill, false ) / 10) - (GetResistSkill( m ) / 10)) + nBenefit;
+					
+					if( !Core.SE )
+						secs += 2;
 
-				int secs = (int)((Spell.ItemSkillValue( Caster, DamageSkill, false ) / 10) - (GetResistSkill( m ) / 10)) + nBenefit;
-				
-				if( !Core.SE )
-					secs += 2;
+					if ( !m.Player )
+						secs *= 3;
 
-				if ( !m.Player )
-					secs *= 3;
+					if ( secs < 0 )
+						secs = 0;
 
-				if ( secs < 0 )
-					secs = 0;
+					duration = secs;
 
-				duration = secs;
+					m.Paralyze( TimeSpan.FromSeconds( duration ) );
 
-				m.Paralyze( TimeSpan.FromSeconds( duration ) );
+					BuffInfo.RemoveBuff( m, BuffIcon.Paralyze );
+					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Paralyze, 1063621, TimeSpan.FromSeconds( duration ), m ) );
 
-				BuffInfo.RemoveBuff( m, BuffIcon.Paralyze );
-				BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Paralyze, 1063621, TimeSpan.FromSeconds( duration ), m ) );
+					m.PlaySound( 0x204 );
+					m.FixedEffect( 0x376A, 6, 1, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0 );
 
-				m.PlaySound( 0x204 );
-				m.FixedEffect( 0x376A, 6, 1, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0 );
-
-				HarmfulSpell( m );
+					HarmfulSpell( m );
+				}
 			}
 
 			FinishSequence();
