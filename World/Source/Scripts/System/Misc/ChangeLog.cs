@@ -82,6 +82,7 @@ namespace Server.Misc
 			builder.Append("- Skill - Fix issue causing Parrying activation to penalize 125 high skill users who have < 80 dexterity<br>");
 			builder.Append("- Spell - Syth and Jedi spells now properly consume the displayed crystal cost, down from 200% or 300%<br>");
 			builder.Append("- Spell - Insult implementation and displayed info now match<br>");
+			builder.Append("- Spell - Fix issue where magic absorb treated magery spells as one circle lower<br>");
 			builder.Append("- Temptations - Fix issue where Permadeath characters would not get default starting cap after rebirth<br>");
 
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
