@@ -33,7 +33,7 @@ namespace Server.SkillHandlers
 
 			// Apply a reduction for players with < 125 skill
 			const int SKILL_PENALTY_THRESHOLD = 125;
-			if (skill.Fixed < SKILL_PENALTY_THRESHOLD || m.Dex < DEXTERITY_PENALTY_THRESHOLD)
+			if (skill.Fixed < SKILL_PENALTY_THRESHOLD && m.Dex < DEXTERITY_PENALTY_THRESHOLD)
 				value *= (float)m.Dex / DEXTERITY_PENALTY_THRESHOLD;
 
 			// Guarantee at least 1 point is provided
