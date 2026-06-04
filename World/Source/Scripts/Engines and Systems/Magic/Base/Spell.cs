@@ -388,8 +388,8 @@ namespace Server.Spells
 
 				if( atkSlayer != null && atkSlayer.Slays( defender ) || atkSlayer2 != null && atkSlayer2.Slays( defender ) )
 				{
-					defender.FixedEffect( 0x37B9, 10, 5 );	//TODO: Confirm this displays on OSIs
-					scalar = 2.0;
+					defender.FixedEffect( 0x37B9, 10, 5 ); //TODO: Confirm this displays on OSIs
+					scalar = 1.5;
 				}
 
 				TransformContext context = TransformationSpellHelper.GetContext( defender );
@@ -412,7 +412,7 @@ namespace Server.Spells
 				SlayerEntry defSlayer2 = SlayerGroup.GetEntryByName( defISlayer.Slayer2 );
 
 				if( defSlayer != null && defSlayer.Group.OppositionSuperSlays( m_Caster ) || defSlayer2 != null && defSlayer2.Group.OppositionSuperSlays( m_Caster ) )
-					scalar = 2.0;
+					scalar = 1.5;
 			}
 
 			return scalar;
