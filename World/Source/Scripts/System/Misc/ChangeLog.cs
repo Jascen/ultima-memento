@@ -91,6 +91,7 @@ namespace Server.Misc
 			builder.Append("- Spell - Insult implementation and displayed info now match<br>");
 			builder.Append("- Spell - Fix issue where magic absorb treated magery spells as one circle lower<br>");
 			builder.Append("- Temptations - Fix issue where Permadeath characters would not get default starting cap after rebirth<br>");
+			builder.Append(SEPARATOR_LINE);
 
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -169,6 +170,7 @@ namespace Server.Misc
 			builder.Append("- Spell - Mages Ballad and Army's Paeon buffs now use the correct tooltip<br>");
 			builder.Append("- Spell - Difficulty checks now correctly match the spell circle<br>");
 			builder.Append("- Spell - Reactive Armor and defensive spell checks no longer incorrectly check Melee Damage Absorb<br>");
+			builder.Append(SEPARATOR_LINE);
 
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
