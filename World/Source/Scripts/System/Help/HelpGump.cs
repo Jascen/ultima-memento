@@ -234,6 +234,7 @@ namespace Server.Engines.Help
 			Setting_DoubleClickToTalk_Info,
 			Setting_VendorContainerSell,
 			Setting_VendorContainerSell_Info,
+			Changelog_PageBase = 9000,
 		}
 
 		public static void Initialize()
@@ -289,7 +290,7 @@ namespace Server.Engines.Help
 			return false;
 		}
 
-		public HelpGump( Mobile mobile, int page ) : base( 50, 50 )
+		public HelpGump( Mobile mobile, int page, int secondaryPageNumber = 0 ) : base( 50, 50 )
 		{
 			if ( false == ( mobile is PlayerMobile ) ) return;
 
@@ -738,7 +739,8 @@ namespace Server.Engines.Help
 
 			AddAction(nav_x, r, from, "Change log", PageActionType.Navigate_Changelog, NAVIGATION_ITEM_WIDTH);
 			r += e;
-			if ( page == (int)PageActionType.Navigate_Changelog ){ AddHtml( 252, 71, 739, 630, @"<BODY><BASEFONT Color=" + color + ">" + Server.Misc.ChangeLog.Versions() + "</BASEFONT></BODY>", (bool)false, (bool)true); }
+			if ( page == (int)PageActionType.Navigate_Changelog )
+				AddChangelogPanel( color, secondaryPageNumber );
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -795,6 +797,34 @@ namespace Server.Engines.Help
 					: UNCHECKED_BOX;
 			AddButton(x, y, isSelected, isSelected, (int)actionType, GumpButtonType.Reply, 0);
 			AddHtml( x+40, y + 3, width, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">" + name + "</BASEFONT></BODY>", (bool)false, (bool)false);
+		}
+
+		private void AddChangelogPanel( string color, int changelogPage )
+		{
+			var releaseCount = ChangeLog.RELEASE_COUNT;
+			var releaseIndex = changelogPage;
+
+			if ( releaseIndex < 0 ) releaseIndex = 0;
+			else if ( releaseIndex >= releaseCount ) releaseIndex = releaseCount - 1;
+
+			var releaseText = ChangeLog.GetRelease( releaseIndex );
+			AddHtml( 252, 71, 739, 600, string.Format( @"<BODY><BASEFONT Color={0}>{1}</BASEFONT></BODY>", color, releaseText ), false, true );
+
+			const int FOOTER_Y = 675;
+
+			if ( releaseIndex > 0 )
+			{
+				AddButton( 252, FOOTER_Y, 4014, 4016, (int)PageActionType.Changelog_PageBase + ( releaseIndex - 1 ), GumpButtonType.Reply, 0 );
+				AddHtml( 287, FOOTER_Y + 3, 80, 20, string.Format( @"<BODY><BASEFONT Color={0}>Prev</BASEFONT></BODY>", color ), false, false );
+			}
+
+			AddHtml( 500, FOOTER_Y + 3, 240, 20, string.Format( @"<BODY><BASEFONT Color={0}><CENTER>Release {1} of {2}</CENTER></BASEFONT></BODY>", color, releaseIndex + 1, releaseCount ), false, false );
+
+			if ( releaseIndex < releaseCount - 1 )
+			{
+				AddButton( 920, FOOTER_Y, 4005, 4007, (int)PageActionType.Changelog_PageBase + ( releaseIndex + 1 ), GumpButtonType.Reply, 0 );
+				AddHtml( 955, FOOTER_Y + 3, 80, 20, string.Format( @"<BODY><BASEFONT Color={0}>Next</BASEFONT></BODY>", color ), false, false );
+			}
 		}
 
 		private void AddMagicToolbarRowHeader(int x, int y)
@@ -941,6 +971,13 @@ namespace Server.Engines.Help
 			from.SendSound( 0x4A ); 
 
 			from.CloseGump( typeof(Server.Engines.Help.HelpGump) );
+
+			if ( pressed >= (int)PageActionType.Changelog_PageBase && pressed < (int)PageActionType.Changelog_PageBase + ChangeLog.RELEASE_COUNT )
+			{
+				var releaseIndex = pressed - (int)PageActionType.Changelog_PageBase;
+				from.SendGump( new HelpGump( from, (int)PageActionType.Navigate_Changelog, releaseIndex ) );
+				return;
+			}
 
 			if ( ShowHelpInfoWindow( from, actionType ) ) return;
 			
