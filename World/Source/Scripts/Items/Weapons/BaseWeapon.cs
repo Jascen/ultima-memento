@@ -1717,8 +1717,12 @@ namespace Server.Items
 				}
 
 				if ( damaged )
-					--HitPoints;
-
+				{
+					if ( 0 < HitPoints )
+						--HitPoints;
+					else
+						--MaxHitPoints;
+				}
 
 				if ( MaxHitPoints < 1 )
 					Delete();
@@ -2597,7 +2601,7 @@ namespace Server.Items
 		{
 			base.Serialize( writer );
 
-			writer.Write( (int) 12 ); // version
+			writer.Write( (int) 13 ); // version
 
 			SaveFlag flags = SaveFlag.None;
 
@@ -2770,6 +2774,7 @@ namespace Server.Items
 
 			switch ( version )
 			{
+				case 13:
 				case 12:
 				case 11:
 				case 10:
@@ -3096,6 +3101,10 @@ namespace Server.Items
 			{
 				m_AosSkillBonuses.SetValues(3, SkillName.Alchemy, 0);
 				m_AosSkillBonuses.SetValues(4, SkillName.Tracking, 5);
+			}
+			if (version == 12 && 0 < m_MaxHits)
+			{
+				m_Hits = m_MaxHits;
 			}
 		}
 		#endregion

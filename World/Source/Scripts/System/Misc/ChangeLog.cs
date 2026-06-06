@@ -82,6 +82,7 @@ namespace Server.Misc
 			builder.Append("- Item - Fix issue where Transmutation potions could mix<br>");
 			builder.Append("- Item - Only small pumpkins are stackable<br>");
 			builder.Append("- Item - Only one pair of pants can be equipped at a time<br>");
+			builder.Append("- Item - Fix an issue where weapon damage would never deduct max durability<br>");
 			builder.Append("- Quest - Fix issue where journal quests could have invalid villains<br>");
 			builder.Append("- Quest - Fix issue where museum book couldn't go past 25th item<br>");
 			builder.Append("- Skill - Fix issue causing Parrying activation to penalize 125 high skill users who have < 80 dexterity<br>");
