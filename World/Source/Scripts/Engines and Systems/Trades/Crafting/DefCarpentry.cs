@@ -201,6 +201,16 @@ namespace Server.Engines.Craft
 			AddCraft( typeof( ShepherdsCrook ), 1044295, 1023713, 78.9, 103.9, typeof( Board ), 1015101, 7, 1044351 );
 			AddCraft( typeof( QuarterStaff ), 1044295, 1023721, 73.6, 98.6, typeof( Board ), 1015101, 6, 1044351 );
 			AddCraft( typeof( GnarledStaff ), 1044295, 1025112, 78.9, 103.9, typeof( Board ), 1015101, 7, 1044351 );
+
+			index = AddCraft( typeof( WizardStaff ), 1044295, "stave", 55.3, 95.3, typeof( Board ), 1015101, 10, 1044351 );
+			AddOrSkill( index, 70.0, 80.0, SkillName.Elementalism, SkillName.Magery, SkillName.Necromancy );
+
+			index = AddCraft( typeof( WizardStick ), 1044295, "sceptre", 45.3, 95.3, typeof( Board ), 1015101, 5, 1044351 );
+			AddOrSkill( index, 50.0, 60.0, SkillName.Elementalism, SkillName.Magery, SkillName.Necromancy );
+
+			index = AddCraft( typeof( BlackStaff ), 1044295, "wizard staff", 45.3, 95.3, typeof( Board ), 1015101, 10, 1044351 );
+			AddOrSkill( index, 60.0, 70.0, SkillName.Elementalism, SkillName.Magery, SkillName.Necromancy );
+
 			AddCraft( typeof( WoodenShield ), 1044295, 1027034, 52.6, 77.6, typeof( Board ), 1015101, 9, 1044351 );
 
 			index = AddCraft( typeof( Bokuto ), 1044295, 1030227, 70.0, 95.0, typeof( Board ), 1015101, 6, 1044351 );

@@ -297,33 +297,6 @@ namespace Server.Engines.Craft
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			#region Wizards
-
-			index = AddCraft( typeof( WizardStaff ), 1011383, "(E) stave", 55.3, 95.3, typeof( IronIngot ), 1044036, 10, 1044037 );
-			AddSkill( index, SkillName.Elementalism, 70.0, 80.0 );
-			index = AddCraft( typeof( WizardStick ), 1011383, "(E) sceptre", 45.3, 95.3, typeof( IronIngot ), 1044036, 5, 1044037 );
-			AddSkill( index, SkillName.Elementalism, 50.0, 60.0 );
-			index = AddCraft( typeof( BlackStaff ), 1011383, "(E) wizard staff", 45.3, 95.3, typeof( IronIngot ), 1044036, 10, 1044037 );
-			AddSkill( index, SkillName.Elementalism, 60.0, 70.0 );
-
-			index = AddCraft( typeof( WizardStaff ), 1011383, "(M) stave", 55.3, 95.3, typeof( IronIngot ), 1044036, 10, 1044037 );
-			AddSkill( index, SkillName.Magery, 70.0, 80.0 );
-			index = AddCraft( typeof( WizardStick ), 1011383, "(M) sceptre", 45.3, 95.3, typeof( IronIngot ), 1044036, 5, 1044037 );
-			AddSkill( index, SkillName.Magery, 50.0, 60.0 );
-			index = AddCraft( typeof( BlackStaff ), 1011383, "(M) wizard staff", 45.3, 95.3, typeof( IronIngot ), 1044036, 10, 1044037 );
-			AddSkill( index, SkillName.Magery, 60.0, 70.0 );
-
-			index = AddCraft( typeof( WizardStaff ), 1011383, "(N) stave", 55.3, 95.3, typeof( IronIngot ), 1044036, 10, 1044037 );
-			AddSkill( index, SkillName.Necromancy, 70.0, 80.0 );
-			index = AddCraft( typeof( WizardStick ), 1011383, "(N) sceptre", 45.3, 95.3, typeof( IronIngot ), 1044036, 5, 1044037 );
-			AddSkill( index, SkillName.Necromancy, 50.0, 60.0 );
-			index = AddCraft( typeof( BlackStaff ), 1011383, "(N) wizard staff", 45.3, 95.3, typeof( IronIngot ), 1044036, 10, 1044037 );
-			AddSkill( index, SkillName.Necromancy, 60.0, 70.0 );
-
-			#endregion
-
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 			#region Wooden Items
 
 			AddCraft( typeof( ClockFrame ), 1044042, 1024173, 0.0, 50.0, typeof( Board ), 1015101, 6, 1044351 );
