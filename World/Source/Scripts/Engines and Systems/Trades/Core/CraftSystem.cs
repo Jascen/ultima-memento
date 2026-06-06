@@ -492,6 +492,12 @@ namespace Server.Engines.Craft
 			craftItem.AddSkill(skillToMake, minSkill, maxSkill);
 		}
 
+		public void AddOrSkill( int index, double minSkill, double maxSkill, params SkillName[] skills )
+		{
+			CraftItem craftItem = m_CraftItems.GetAt( index );
+			craftItem.AddOrSkillGroup( minSkill, maxSkill, skills );
+		}
+
 		private void AddRecipeBase( int index, int id )
 		{
 			CraftItem craftItem = m_CraftItems.GetAt( index );

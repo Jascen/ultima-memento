@@ -162,6 +162,8 @@ namespace Server.Engines.Craft
 
 		public void DrawSkill()
 		{
+			int row = 0;
+
 			for ( int i = 0; i < m_CraftItem.Skills.Count; i++ )
 			{
 				CraftSkill skill = m_CraftItem.Skills.GetAt( i );
@@ -170,8 +172,22 @@ namespace Server.Engines.Craft
 				if ( minSkill < 0 )
 					minSkill = 0;
 
-				AddHtmlLocalized( 170, 132 + (i * 20), 200, 18, 1044060 + (int)skill.SkillToMake, LabelColor, false, false );
-				AddLabel( 430, 132 + (i * 20), LabelHue, String.Format( "{0:F1}", minSkill ) );
+				AddHtmlLocalized( 170, 132 + (row * 20), 200, 18, 1044060 + (int)skill.SkillToMake, LabelColor, false, false );
+				AddLabel( 430, 132 + (row * 20), LabelHue, String.Format( "{0:F1}", minSkill ) );
+				row++;
+			}
+
+			for ( int g = 0; g < m_CraftItem.OrSkillGroups.Count; g++ )
+			{
+				var orGroup = m_CraftItem.OrSkillGroups.GetAt( g );
+				double minSkill = orGroup.MinSkill;
+
+				if ( minSkill < 0 )
+					minSkill = 0;
+
+				AddHtml( 170, 132 + (row * 20), 200, 40, TextDefinition.GetColorizedText(orGroup.GetDisplayName(), HtmlColors.WHITE), false, false );
+				AddLabel( 430, 132 + (row * 20), LabelHue, String.Format( "{0:F1}", minSkill ) );
+				row++;
 			}
 
 			CraftSubResCol res = m_CraftSystem.CraftSubRes;

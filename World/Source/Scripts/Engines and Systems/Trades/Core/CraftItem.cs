@@ -23,6 +23,7 @@ namespace Server.Engines.Craft
 	{
 		private CraftResCol m_arCraftRes;
 		private CraftSkillCol m_arCraftSkill;
+		private CraftOrSkillGroupCol m_arCraftOrSkillGroups;
 		private Type m_Type;
 
 		private string m_GroupNameString;
@@ -107,6 +108,7 @@ namespace Server.Engines.Craft
 		{
 			m_arCraftRes = new CraftResCol();
 			m_arCraftSkill = new CraftSkillCol();
+			m_arCraftOrSkillGroups = new CraftOrSkillGroupCol();
 
 			m_Type = type;
 
@@ -132,6 +134,36 @@ namespace Server.Engines.Craft
 		{
 			CraftSkill craftSkill = new CraftSkill( skillToMake, minSkill, maxSkill );
 			m_arCraftSkill.Add( craftSkill );
+		}
+
+		public void AddOrSkillGroup( double minSkill, double maxSkill, params SkillName[] skills )
+		{
+			var group = new CraftOrSkillGroup( minSkill, maxSkill, skills );
+			m_arCraftOrSkillGroups.Add( group );
+		}
+
+		public bool MeetsSkillRequirements( Mobile from, bool checkGainRange )
+		{
+			for ( int i = 0; i < m_arCraftSkill.Count; i++ )
+			{
+				var craftSkill = m_arCraftSkill.GetAt( i );
+				var val = from.Skills[craftSkill.SkillToMake].Value;
+
+				if ( val < craftSkill.MinSkill )
+					return false;
+
+				if ( checkGainRange && craftSkill.MaxSkill <= val )
+					return false;
+			}
+
+			for ( int i = 0; i < m_arCraftOrSkillGroups.Count; i++ )
+			{
+				var craftSkill = m_arCraftOrSkillGroups.GetAt( i );
+				if ( !craftSkill.MeetsRequirement( from, checkGainRange ) )
+					return false;
+			}
+
+			return true;
 		}
 
 		public int Mana
@@ -209,6 +241,11 @@ namespace Server.Engines.Craft
 		public CraftSkillCol Skills
 		{
 			get { return m_arCraftSkill; }
+		}
+
+		public CraftOrSkillGroupCol OrSkillGroups
+		{
+			get { return m_arCraftOrSkillGroups; }
 		}
 
 		public bool ConsumeAttributes( Mobile from, ref object message, bool consume )
@@ -930,6 +967,12 @@ namespace Server.Engines.Craft
 						}
 					}
 				}
+			}
+
+			for ( int g = 0; g < m_arCraftOrSkillGroups.Count; g++ )
+			{
+				if ( !m_arCraftOrSkillGroups.GetAt( g ).MeetsRequirement( from, false ) )
+					allRequiredSkills = false;
 			}
 
 			double chance;

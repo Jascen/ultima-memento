@@ -24,6 +24,7 @@ namespace Server.Misc
 			builder.Append("- Avatar - Can now be enabled via the Gypsy Tarot Gump<br>");
 			builder.Append("- Craft - Every 5 points past GM now increases the Min or Max intensity bonus by 5% on Exceptional crafts<br>");
 			builder.Append("- Craft - Targeting oneself with Breakdown now auto-targets the Crafting Container<br>");
+			builder.Append("- Craft - Crafting recipes now support requiring one of multiple skills to craft an item<br>");
 			builder.Append("- Combat - Spellbook slayers now add 50% more damage, down from 100%<br>");
 			builder.Append("- Combat - Ranged weapon slayers now add 50% more damage, down from 100%<br>");
 			builder.Append("- Gump - Add tooltips for bee hives<br>");
