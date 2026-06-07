@@ -937,6 +937,7 @@ namespace Server.Misc
 					builder.Append("- Craft - Wizard Staffs, Wizard Staves, and Wizard Sceptres are now Carpentry recipes<br>");
 					builder.Append("- Combat - Spellbook slayers now add 50% more damage, down from 100%<br>");
 					builder.Append("- Combat - Ranged weapon slayers now add 50% more damage, down from 100%<br>");
+					builder.Append("- Gather - Targeting yourself with a harvesting tool will attempt to harvest the nearest resource<br>");
 					builder.Append("- Gump - Add tooltips for bee hives<br>");
 					builder.Append("- Gump - Add tooltips for plants<br>");
 					builder.Append("- Gump - Add search button to Craft gump<br>");

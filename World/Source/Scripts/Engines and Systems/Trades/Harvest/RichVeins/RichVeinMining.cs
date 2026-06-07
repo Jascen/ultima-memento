@@ -1,6 +1,7 @@
 ﻿using Server.Items;
 using Server.Mobiles;
 using System;
+using System.Collections.Generic;
 
 namespace Server.Engines.Harvest
 {
@@ -140,6 +141,21 @@ namespace Server.Engines.Harvest
             }
 
             return base.GetHarvestDetails(from, tool, toHarvest, out tileID, out map, out loc);
+        }
+
+        protected override IEnumerable<object> GetNearbySpecialHarvestTargetsAt(Mobile from, Item tool, int x, int y)
+        {
+            Map map = from.Map;
+            if (map == null || map == Map.Internal) yield break;
+
+            IPooledEnumerable eable = map.GetItemsInRange(new Point3D(x, y, from.Z), 0);
+            foreach (Item item in eable)
+            {
+                if (item is RichVeinMineable && item.X == x && item.Y == y && !item.Deleted)
+                    yield return item;
+            }
+
+            eable.Free();
         }
 
         public override Type GetResourceType(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestResource resource)

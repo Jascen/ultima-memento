@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Server;
 using Server.Items;
 using Server.Targeting;
 using Server.Gumps;
-using Server.Mobiles;
 using Server.Misc;
 using Server.Regions;
+using System.Linq;
 
 namespace Server.Engines.Harvest
 {
@@ -86,6 +84,124 @@ namespace Server.Engines.Harvest
 
 		public virtual void OnBadHarvestTarget( Mobile from, Item tool, object toHarvest )
 		{
+		}
+
+		public virtual void OnNoNearbyHarvest( Mobile from, Item tool )
+		{
+			if ( m_Definitions.Count > 0 && m_Definitions[0].NoResourcesMessage != null )
+				m_Definitions[0].SendMessageTo( from, m_Definitions[0].NoResourcesMessage );
+		}
+
+		protected virtual void TryCreateHarvestArrow( Mobile from, IPoint3D location )
+		{
+			from.QuestArrow = new HarvestArrow( from, location );
+			from.QuestArrow.Update();
+		}
+
+		public virtual bool TryStartNearbyHarvest( Mobile from, Item tool )
+		{
+			if ( !CheckHarvest( from, tool ) ) return false;
+
+			var maxRange = Definitions.Max(x => x.MaxRange);
+			foreach ( var target in GetNearbyHarvestTargets( from, tool, maxRange ) )
+			{
+				if ( !IsValidHarvestTarget( from, tool, target ) ) continue;
+
+				if ( target is StaticTarget )
+				{
+					var staticItem = (Static)target;
+					TryCreateHarvestArrow( from, staticItem.GetWorldLocation() );
+				}
+				else if ( target is IPoint3D )
+				{
+					TryCreateHarvestArrow( from, (IPoint3D)target );
+				}
+
+				StartHarvesting( from, tool, target );
+				return true;
+			}
+
+			return false;
+		}
+
+		public virtual bool IsValidHarvestTarget( Mobile from, Item tool, object toHarvest )
+		{
+			int tileID;
+			Map map;
+			Point3D loc;
+
+			if ( !GetHarvestDetails( from, tool, toHarvest, out tileID, out map, out loc ) )
+				return false;
+
+			HarvestDefinition def = GetDefinition( tileID );
+
+			if ( def == null )
+				return false;
+
+			if ( from.Map != map || !from.InRange( loc, def.MaxRange ) )
+				return false;
+
+			if ( !from.InLOS( loc ) )
+				return false;
+
+			HarvestBank bank = def.GetBank( map, loc.X, loc.Y );
+
+			if ( bank == null || bank.Current <= 0 )
+				return false;
+
+			return CheckHarvest( from, tool, def, toHarvest );
+		}
+
+		protected virtual IEnumerable<object> GetNearbyHarvestTargets( Mobile from, Item tool, int range )
+		{
+			Map map = from.Map;
+
+			if ( map == null || map == Map.Internal )
+				yield break;
+
+			for ( var dx = -range; dx <= range; dx++ )
+			{
+				for ( var dy = -range; dy <= range; dy++ )
+				{
+					var x = from.X + dx;
+					var y = from.Y + dy;
+
+					foreach ( var special in GetNearbySpecialHarvestTargetsAt( from, tool, x, y ) )
+						yield return special;
+
+					var tileTarget = GetHarvestTargetAt( from, tool, map, x, y );
+
+					if ( tileTarget != null )
+						yield return tileTarget;
+				}
+			}
+		}
+
+		protected virtual IEnumerable<object> GetNearbySpecialHarvestTargetsAt( Mobile from, Item tool, int x, int y )
+		{
+			yield break;
+		}
+
+		protected virtual object GetHarvestTargetAt( Mobile from, Item tool, Map map, int x, int y )
+		{
+			StaticTile[] statics = map.Tiles.GetStaticTiles( x, y, true );
+
+			for ( int i = 0; i < statics.Length; i++ )
+			{
+				var tile = statics[i];
+				var tileID = ( tile.ID & 0x3FFF ) | 0x4000;
+
+				if ( GetDefinition( tileID ) != null )
+					return new StaticTarget( new Point3D( x, y, tile.Z ), tile.ID );
+			}
+
+			var landTile = map.Tiles.GetLandTile( x, y );
+			var landID = landTile.ID & TileData.MaxLandValue;
+
+			if ( GetDefinition( landID ) != null )
+				return new LandTarget( new Point3D( x, y, landTile.Z ), map );
+
+			return null;
 		}
 
 		public virtual object GetLock( Mobile from, Item tool, HarvestDefinition def, object toHarvest )

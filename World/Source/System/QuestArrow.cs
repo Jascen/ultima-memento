@@ -26,25 +26,9 @@ namespace Server
 {
 	public class QuestArrow
 	{
-		private Mobile m_Mobile;
-		private Mobile m_Target;
+		private readonly Mobile m_Mobile;
+		private readonly IPoint3D m_Target;
 		private bool m_Running;
-
-		public Mobile Mobile
-		{
-			get
-			{
-				return m_Mobile;
-			}
-		}
-
-		public Mobile Target
-		{
-			get
-			{
-				return m_Target;
-			}
-		}
 
 		public bool Running
 		{
@@ -70,7 +54,7 @@ namespace Server
 				return;
 
 			if ( ns.HighSeas )
-				ns.Send( new SetArrowHS( x, y, m_Target.Serial ) );
+				ns.Send( new SetArrowHS( x, y, GetTargetSerialHS() ) );
 			else
 				ns.Send( new SetArrow( x, y ) );
 		}
@@ -91,7 +75,7 @@ namespace Server
 
 			if ( ns != null ) {
 				if ( ns.HighSeas )
-					ns.Send( new CancelArrowHS( x, y, m_Target.Serial ) );
+					ns.Send( new CancelArrowHS( x, y, GetTargetSerialHS() ) );
 				else
 					ns.Send( new CancelArrow() );
 			}
@@ -108,7 +92,17 @@ namespace Server
 		{
 		}
 
-		public QuestArrow( Mobile m, Mobile t )
+		private Serial GetTargetSerialHS()
+		{
+			if (m_Target is IEntity)
+				return ((IEntity)m_Target).Serial;
+
+			// HS requires a serial for the target
+			// Fall back to the Mobile itself
+			return m_Mobile.Serial;
+		}
+
+		public QuestArrow( Mobile m, IPoint3D t )
 		{
 			m_Running = true;
 			m_Mobile = m;

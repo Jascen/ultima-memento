@@ -22,6 +22,14 @@ namespace Server.Engines.Harvest
 
 		protected override void OnTarget( Mobile from, object targeted )
 		{
+			if ( targeted == from )
+			{
+				if ( !m_System.TryStartNearbyHarvest( from, m_Tool ) )
+					m_System.OnNoNearbyHarvest( from, m_Tool );
+
+				return;
+			}
+
 			if ( m_System is Lumberjacking && targeted is IChopable )
 				((IChopable)targeted).OnChop( from );
 			else if ( m_System is Lumberjacking && targeted is IAxe && m_Tool is BaseAxe )
