@@ -8174,7 +8174,7 @@ namespace Server.Mobiles
 				list.Add( "(familiar)" );
 			else if ( this is PackBeast )
 				list.Add( "(Pack Animal)" );
-			else if ( this is GolemPorter || this is GolemFighter )
+			else if ( this is GolemPorter || this is GolemFighter || this is Golem )
 				list.Add( "(automaton)" );
 			else if ( this is Robot )
 				list.Add( "(robot)" );
