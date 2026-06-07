@@ -107,7 +107,7 @@ namespace Server.Engines.Harvest
 			{
 				if ( !IsValidHarvestTarget( from, tool, target ) ) continue;
 
-				if ( target is StaticTarget )
+				if ( target is Static )
 				{
 					var staticItem = (Static)target;
 					TryCreateHarvestArrow( from, staticItem.GetWorldLocation() );
