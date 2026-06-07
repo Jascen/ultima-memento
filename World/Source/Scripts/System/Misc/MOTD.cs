@@ -187,7 +187,7 @@ namespace Joeku.MOTD
 				else
 					player.SendGump( new MonsterGump( player ) );
 			}
-			else if ( player.Preferences.MessageOfTheDay )
+			else if ( !player.Preferences.MessageOfTheDay )
 			{
 				SendGump( player );
 			}
