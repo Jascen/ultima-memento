@@ -3,7 +3,7 @@ using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 
 namespace Server.Engines.Avatar
 {
@@ -40,6 +40,7 @@ namespace Server.Engines.Avatar
 				EventSink.PlayerDeath += Instance.OnPlayerDeath;
 				EventSink.SkillGain += Instance.OnSkillGain;
 				CustomEventSink.CombatQuestCompleted += Instance.OnCombatQuestCompleted;
+				CustomEventSink.PlayerDeleted += Instance.OnPlayerDeleted;
 			}
 		}
 
@@ -257,6 +258,29 @@ namespace Server.Engines.Avatar
 			context.PointsSaved += context.PointsFarmed + context.RivalBonusPoints;
 			context.PointsFarmed = 0;
 			context.RivalBonusPoints = 0;
+		}
+
+		private void OnPlayerDeleted(PlayerDeletedArgs e)
+		{
+			var player = e.Mobile;
+			if (player == null) return;
+
+			var context = GetContextOrDefault(player);
+			if (context.Active)
+			{
+				m_Context.Remove(player.Serial);
+				Console.WriteLine("Removed context for player '{0}' ({1})", player.Name, player.Serial);
+			}
+
+			// Prune deleted players
+			foreach (var key in m_Context.Keys.ToList())
+			{
+				Mobile mobile;
+				if (World.Mobiles.TryGetValue(key, out mobile) && mobile is PlayerMobile) continue;
+
+				m_Context.Remove(key);
+				Console.WriteLine("Pruned context for deleted serial '{0}' ({1})", key, mobile != null ? mobile.GetType().Name : "DELETED");
+			}
 		}
 
 		private void OnSkillGain(SkillGainArgs e)
