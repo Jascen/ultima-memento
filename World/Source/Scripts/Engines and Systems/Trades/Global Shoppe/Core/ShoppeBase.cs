@@ -140,20 +140,8 @@ namespace Server.Engines.GlobalShoppe
 				{
 					var craftItem = group.CraftItems.GetAt(j);
 
-					bool hasSkills = true;
-					for (int k = 0; k < craftItem.Skills.Count; k++)
-					{
-						CraftSkill skill = craftItem.Skills.GetAt(k);
-						if (
-							from.Skills[skill.SkillToMake].Value < skill.MinSkill // Filter items you can't succeed on
-						)
-						{
-							hasSkills = false;
-							break;
-						}
-					}
-
-					if (hasSkills) yield return craftItem;
+					if ( craftItem.MeetsSkillRequirements( from, false ) )
+						yield return craftItem;
 				}
 			}
 		}
