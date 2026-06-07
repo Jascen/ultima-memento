@@ -452,7 +452,12 @@ namespace Server.Items
 			if ( book.HaveOil >= book.NeedOil ){ HaveIngredients++; }
 			if ( book.HaveMetalQty >= book.NeedMetalQty ){ HaveIngredients++; }
 
-			if ( HaveIngredients < 7 ){ return false; }
+			if ( HaveIngredients < 7 )
+			{
+				tinker.SayTo(m, "I can't build this. You're still missing materials!");
+
+				return false;
+			}
 
 			int FighterGolem = 0;
 

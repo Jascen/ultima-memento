@@ -949,6 +949,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Completing Vordo's quest now enables fast travel for that area<br>");
 					builder.Append("- Misc - Autoloot and ammo recovery will now try to place ammo in an equipped quiver<br>");
 					builder.Append("- Misc - Character creation items for Arms Lore are now based on your other skills<br>");
+					builder.Append("- Misc - Add rejection message when turning in an incomplete golem manual<br>");
 					builder.Append("- Item - Mannequins can now be crafted by Carpenters<br>");
 					builder.Append("- Item - Hoards/Pedestals can now drop a Bag of Holding even if you already have one<br>");
 					builder.Append("- Item - Hue vacuum tube is still usable on, but no longer removes the dye from stackable items<br>");
