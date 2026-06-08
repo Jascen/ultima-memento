@@ -2981,10 +2981,15 @@ namespace Server.Misc
 
 		public static bool HealThySelf( Mobile from )
 		{
-			if ( from.Mana > 20 && !Server.Items.MortalStrike.IsWounded( from ) && Utility.RandomMinMax( 1, 4 ) == 1  )
+			if ( Server.Items.MortalStrike.IsWounded( from ) ) return false;
+
+			var manaPercent = 100 * from.Mana / from.ManaMax;
+			if ( manaPercent < 20 ) return false;
+
+			if ( Utility.RandomMinMax( 1, 4 ) == 1 )
 			{
-				from.Mana = from.Mana - 20;
-				from.Hits = from.HitsMax;
+				from.Hits = from.HitsMax * manaPercent / 100; // Restore hp% to mana%
+				from.Mana /= 2; // Reduce mana by half
 				from.FixedParticles( 0x376A, 9, 32, 5030, EffectLayer.Waist );
 				from.PlaySound( 0x202 );
 				return true;
