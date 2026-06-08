@@ -8164,7 +8164,12 @@ namespace Server.Mobiles
 				list.Add( 1072269 ); // Quest Giver
 
 			if ( DisplayWeight && Controlled )
-				list.Add( TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString() ); // Weight: ~1_WEIGHT~ stones
+			{
+				if ( Backpack != null )
+					list.Add( 1072241, "{0}\t{1}\t{2}\t{3}", Backpack.TotalItems, Backpack.MaxItems, Backpack.TotalWeight, Backpack.MaxWeight ); // Contents: ~1_COUNT~/~2_MAXCOUNT items, ~3_WEIGHT~/~4_MAXWEIGHT~ stones
+				else
+					list.Add( TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString() ); // Weight: ~1_WEIGHT~ stones
+			}
 
 			if ( m_ControlOrder == OrderType.Guard )
 				list.Add( 1080078 ); // guarding

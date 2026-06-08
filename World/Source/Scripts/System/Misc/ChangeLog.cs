@@ -975,6 +975,7 @@ namespace Server.Misc
 					builder.Append("       - Magic Absorb abilities no longer reflect damage<br>");
 					builder.Append("       - Magic Absorb spells only reflect the first spell<br>");
 					builder.Append("       - Magic Absorb is now reduced by 2 per spell circle, up from 1<br>");
+					builder.Append("- Pets - Add item count and weight to pack animal tooltips<br>");
 					builder.Append("- Preference - Add preference to change double-click to auto-select Talk option when possible<br>");
 					builder.Append("- Quest - 'Seeking Brave Adventurers' quest now uses gump buttons instead of context menu options<br>");
 					builder.Append("- Skill - Taming now indicates if your skill is too low to succeed<br>");
