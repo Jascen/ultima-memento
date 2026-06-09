@@ -1213,9 +1213,9 @@ namespace Server.Mobiles
 				return true;
 			}
 
-			bool unlimitedGold = !ShouldUseVendorGoldSafeguard( from );
+			bool useVendorGoldSafeguard = ShouldUseVendorGoldSafeguard( from );
 
-			from.SendGump( new VendorContainerSellGump( this, container, items, coins, unlimitedGold, pm.Preferences ) );
+			from.SendGump( new VendorContainerSellGump( this, container, items, coins, useVendorGoldSafeguard, pm.Preferences ) );
 			return true;
 		}
 

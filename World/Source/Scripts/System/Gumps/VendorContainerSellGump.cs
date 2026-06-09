@@ -20,7 +20,7 @@ namespace Server.Gumps
 		private readonly Serial m_ContainerSerial;
 		private readonly List<SellItemState> m_Items;
 
-		public VendorContainerSellGump(BaseVendor vendor, Container container, List<SellItemState> items, int vendorGold, bool unlimitedGold, PlayerPreferenceContext preferences)
+		public VendorContainerSellGump(BaseVendor vendor, Container container, List<SellItemState> items, int vendorGold, bool useVendorGoldSafeguard, PlayerPreferenceContext preferences)
 			: base(50, 50)
 		{
 			m_Vendor = vendor;
@@ -44,8 +44,14 @@ namespace Server.Gumps
 			int gumpHeight = LIST_START_Y + rowsThisPage * rowHeight + FOOTER_HEIGHT;
 			var footerYStart = gumpHeight - FOOTER_HEIGHT;
 
-			int listedGold = 0;
 			var checkStateVendorGold = vendorGold;
+			var checkStates = new bool[items.Count];
+			for (int i = 0; i < items.Count; i++)
+			{
+				var state = items[i];
+				checkStates[i] = GetDefaultCheckState(state, ref checkStateVendorGold, useVendorGoldSafeguard, selection);
+			}
+
 			for (int page = 0; page < pageCount; page++)
 			{
 				AddPage(page + 1);
@@ -66,13 +72,12 @@ namespace Server.Gumps
 				{
 					SellItemState state = items[i];
 					Item item = state.Item;
-					listedGold += state.Price;
 					int row = i - start;
 
 					x = startX;
 					y = startY + row * rowHeight;
 
-					var isChecked = GetDefaultCheckState(state, ref checkStateVendorGold, unlimitedGold, selection);
+					var isChecked = checkStates[i];
 
 					AddCheck(x, y, 210, 211, isChecked, i);
 					x += 30;
@@ -116,7 +121,9 @@ namespace Server.Gumps
 				AddHtml(PADDING, y, GUMP_WIDTH - (PADDING * 2), 20, TextDefinition.GetColorizedText(string.Format("{0} has: {1:n0} gold", vendor.Name, vendorGold), HtmlColors.WHITE), false, false);
 
 				y += 20;
-				AddHtml(PADDING, y, GUMP_WIDTH - (PADDING * 2), 20, TextDefinition.GetColorizedText(string.Format("All your items are worth: {0:n0} gp", listedGold), HtmlColors.WHITE), false, false);
+
+				var selectedItemWorth = vendorGold - checkStateVendorGold;
+				AddHtml(PADDING, y, GUMP_WIDTH - (PADDING * 2), 20, TextDefinition.GetColorizedText(string.Format("All your items are worth: {0:n0} gp", selectedItemWorth), HtmlColors.WHITE), false, false);
 
 				y += 20;
 				int pageNumber = page + 1;
@@ -128,7 +135,7 @@ namespace Server.Gumps
 			}
 		}
 
-		private static bool GetDefaultCheckState(SellItemState item, ref int vendorGold, bool unlimitedGold, VendorContainerSellSelectionBehavior selection)
+		private static bool GetDefaultCheckState(SellItemState item, ref int vendorGold, bool useVendorGoldSafeguard, VendorContainerSellSelectionBehavior selection)
 		{
 			switch (selection)
 			{
@@ -137,8 +144,7 @@ namespace Server.Gumps
 				case VendorContainerSellSelectionBehavior.AsManyAsPossible:
 				default:
 					{
-						if (unlimitedGold) return true;
-						if (vendorGold < item.Price) return false;
+						if (useVendorGoldSafeguard && vendorGold < item.Price) return false;
 
 						vendorGold -= item.Price;
 						return true;
