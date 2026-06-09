@@ -945,6 +945,7 @@ namespace Server.Misc
 					builder.Append("- Gump - Major refactor on Spell Bars for extensibility<br>");
 					builder.Append("- Gump - Change log is now multiple pages and shows one Release per page<br>");
 					builder.Append("- Gump - Locked recipes now have tooltip hints<br>");
+					builder.Append("- Gump - Locked resources now clarify skill requirements<br>");
 					builder.Append("- Housekeeping - The following spells had a minor change that should not impact anything:<br>");
 					builder.Append("               - Elemental Blast/Storm, Mindblast, Explosion, Psionic Blast, Hail Storm<br>");
 					builder.Append("- Housekeeping - Deleted Players are now pruned from the Avatar system<br>");

@@ -337,7 +337,10 @@ namespace Server.Engines.Craft
 				}
 
 				if ( m_From.Skills[m_CraftSystem.MainSkill].Value < subResource.RequiredSkill )
+				{
 					AddImage( 220 + 9, 80+5+moveDown + (index * 20), 2092 ); // Lock
+					AddTooltip("Your skill is too low to use this resource.");
+				}
 				else
 					AddButton( 220, 80+moveDown + (index * 20), 4005, 4007, GetButtonID( 5, i ), GumpButtonType.Reply, 0 );
 
