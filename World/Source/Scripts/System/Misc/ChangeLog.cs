@@ -936,6 +936,7 @@ namespace Server.Misc
 					builder.Append("- Craft - Crafting recipes now support requiring one of multiple skills to craft an item<br>");
 					builder.Append("- Craft - Wizard Staffs, Wizard Staves, and Wizard Sceptres are now Carpentry recipes<br>");
 					builder.Append("- Craft - Tinkerers can now craft power crystals<br>");
+					builder.Append("- Craft - Carpenters with Tinkering and Lockpicking can now craft auto-locking pickboxes<br>");
 					builder.Append("- Combat - Spellbook slayers now add 50% more damage, down from 100%<br>");
 					builder.Append("- Combat - Ranged weapon slayers now add 50% more damage, down from 100%<br>");
 					builder.Append("- Gather - Targeting yourself with a harvesting tool will attempt to harvest the nearest resource<br>");

@@ -145,6 +145,53 @@ namespace Server.Engines.Craft
 			AddSkill( index, SkillName.Forensics, 75.0, 80.0 );
 			index = AddCraft( typeof( WoodenCasket ), 	"Chests", "casket", 90.0, 115.0, typeof( Board ), 1015101, 40, 1044351 );
 			AddSkill( index, SkillName.Forensics, 75.0, 80.0 );
+			
+			index = AddCraft( typeof( PickBoxEasy ), "Chests", "locked box (easy)", 21.0,  46.0, typeof( GoldIngot ), 1027146, 2, 1044037 );
+			AddSkill( index, SkillName.Tinkering, 30, 30 );
+			AddRes( index, typeof( Board ), 1015101, 2, 1044351 );
+			AddRes( index, typeof( ArcaneGem ), "arcane gem", 1, 1053098 );
+
+			index = AddCraft( typeof( PickBoxNormal ), "Chests", "locked box (normal)", 21.0,  46.0, typeof( GoldIngot ), 1027146, 2, 1044037 );
+			AddSkill( index, SkillName.Tinkering, 30, 30 );
+			AddSkill( index, SkillName.Lockpicking, 20, 20 );
+			AddRes( index, typeof( Board ), 1015101, 2, 1044351 );
+			AddRes( index, typeof( ArcaneGem ), "arcane gem", 2, 1053098 );
+
+			index = AddCraft( typeof( PickBoxDifficult ), "Chests", "locked box (difficult)", 21.0,  46.0, typeof( GoldIngot ), 1027146, 2, 1044037 );
+			AddSkill( index, SkillName.Tinkering, 30, 30 );
+			AddSkill( index, SkillName.Lockpicking, 30, 30 );
+			AddRes( index, typeof( Board ), 1015101, 2, 1044351 );
+			AddRes( index, typeof( ArcaneGem ), "arcane gem", 3, 1053098 );
+
+			index = AddCraft( typeof( PickBoxChallenging ), "Chests", "locked box (challenging)", 31.0,  56.0, typeof( GoldIngot ), 1027146, 2, 1044037 );
+			AddSkill( index, SkillName.Tinkering, 50, 50 );
+			AddSkill( index, SkillName.Lockpicking, 40, 40 );
+			AddRes( index, typeof( Board ), 1015101, 2, 1044351 );
+			AddRes( index, typeof( ArcaneGem ), "arcane gem", 4, 1053098 );
+
+			index = AddCraft( typeof( PickBoxHard ), "Chests", "locked box (hard)", 31.0,  56.0, typeof( GoldIngot ), 1027146, 2, 1044037 );
+			AddSkill( index, SkillName.Tinkering, 50, 50 );
+			AddSkill( index, SkillName.Lockpicking, 50, 50 );
+			AddRes( index, typeof( Board ), 1015101, 2, 1044351 );
+			AddRes( index, typeof( ArcaneGem ), "arcane gem", 10, 1053098 );
+
+			index = AddCraft( typeof( PickBoxVeryHard ), "Chests", "locked box (very hard)", 41.0,  66.0, typeof( GoldIngot ), 1027146, 2, 1044037 );
+			AddSkill( index, SkillName.Tinkering, 70, 70 );
+			AddSkill( index, SkillName.Lockpicking, 60, 60 );
+			AddRes( index, typeof( Board ), 1015101, 2, 1044351 );
+			AddRes( index, typeof( PowerCrystal ), "power crystal", 1, 1053098 );
+
+			index = AddCraft( typeof( PickBoxExtreme ), "Chests", "locked box (extreme)", 41.0,  66.0, typeof( GoldIngot ), 1027146, 2, 1044037 );
+			AddSkill( index, SkillName.Tinkering, 70, 70 );
+			AddSkill( index, SkillName.Lockpicking, 70, 70 );
+			AddRes( index, typeof( Board ), 1015101, 2, 1044351 );
+			AddRes( index, typeof( PowerCrystal ), "power crystal", 3, 1053098 );
+
+			index = AddCraft( typeof( PickBoxMaster ), "Chests", "locked box (master)", 51.0,  76.0, typeof( GoldIngot ), 1027146, 2, 1044037 );
+			AddSkill( index, SkillName.Tinkering, 90, 90 );
+			AddSkill( index, SkillName.Lockpicking, 80, 80 );
+			AddRes( index, typeof( Board ), 1015101, 2, 1044351 );
+			AddRes( index, typeof( PowerCrystal ), "power crystal", 10, 1053098 );
 
 			// 4
 			AddCraft( typeof( SmallCrate ),			"Crates", 1044309,	10.0,  35.0,	typeof( Board ), 1015101, 8 , 1044351 );
