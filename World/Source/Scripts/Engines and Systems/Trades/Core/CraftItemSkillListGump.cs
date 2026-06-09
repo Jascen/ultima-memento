@@ -64,7 +64,7 @@ namespace Server.Engines.Craft
 						if (!hasRecipe)
 						{
 							AddImage(LOCK_COLUMN_X + 8, y + 3, 2092); // Lock icon
-							AddTooltip("You don't know this recipe");
+							AddTooltip(((PlayerMobile)from).GetRecipeReason( craftItem.Recipe ));
 						}
 						else
 						{

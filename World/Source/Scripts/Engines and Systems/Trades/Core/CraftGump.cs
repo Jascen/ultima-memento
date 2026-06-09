@@ -502,19 +502,23 @@ namespace Server.Engines.Craft
 						if ( m_CraftSystem is DefInscription )
 						{
 							AddImage( 239, 66+moveDown + (index * 20), 2449 );
-							AddTooltip("This cannot be crafted.");
+							AddTooltip(((PlayerMobile)from).GetRecipeReason( craftItem.Recipe ));
 						}
 						else
 						{
 							AddImage( 239, 65+moveDown + (index * 20), 2092 );
+							AddTooltip(((PlayerMobile)from).GetRecipeReason( craftItem.Recipe ));
 							AddButton( 485, 60+moveDown + (index * 20), 4011, 4012, GetButtonID( 2, i ), GumpButtonType.Reply, 0 ); // ITEM LIST INFO BUTTON
 						}
 					}
 
-					if (0 < craftItem.NameNumber)
-						AddTooltip(craftItem.NameNumber);
-					else
-						AddTooltip(craftItem.NameString);
+					if ( !needsRecipe && false == m_CraftSystem is DefInscription )
+					{
+						if (0 < craftItem.NameNumber)
+							AddTooltip(craftItem.NameNumber);
+						else
+							AddTooltip(craftItem.NameString);
+					}
 				}
 
 				if ( craftItem.NameNumber > 0 )

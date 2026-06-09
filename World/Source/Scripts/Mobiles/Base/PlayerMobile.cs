@@ -4380,6 +4380,17 @@ namespace Server.Mobiles
 			m_AcquiredRecipes[recipeID] = true;
 		}
 
+		public string GetRecipeReason( Recipe r )
+		{
+			if (r.CraftSystem == DefInscription.CraftSystem) return "This magic is too difficult to copy.";
+			if (r.CraftSystem == DefBlacksmithy.CraftSystem)
+				return DefBlacksmithy.CraftSystem.IsWeaponRecipe(r)
+					? "Assist with the War Effort"
+					: "Blacksmith chain quest";
+
+			return "You don't know this recipe";
+		}
+
 		public virtual void ResetRecipes()
 		{
 			m_AcquiredRecipes = null;
