@@ -244,6 +244,10 @@ namespace Server.Engines.Craft
 			AddCraft( typeof( SextantParts ), 1044047, 1024185, 30.0, 80.0, typeof( IronIngot ), 1044036, 4, 1044037 );
 			AddCraft( typeof( Springs ), 1044047, 1024189, 5.0, 55.0, typeof( IronIngot ), 1044036, 2, 1044037 );
 
+			index = AddCraft( typeof( PowerCrystal ), 1044047, "power crystal", 45.0, 60.0, typeof( GoldIngot ), 1027146, 2, 1044037 );
+			AddOrSkill( index, 40.0, 50.0, SkillName.Elementalism, SkillName.Magery, SkillName.Necromancy );
+			AddRes( index, typeof( ArcaneGem ), "arcane gem", 3, 1053098 );
+
 			#endregion
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
