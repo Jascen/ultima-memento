@@ -41,11 +41,6 @@ namespace Server.Gumps
 
 			int rows = 0;
 
-			AddButton(x, y, 4011, 4011, 400, GumpButtonType.Reply, 0);
-			AddHtml( x+38, y + 3, 200, 20, @"<BODY><BASEFONT Color=" + mains + ">Basics</BASEFONT></BODY>", (bool)false, (bool)false);
-			y=y+d;
-			rows++;
-
 			if ( from.RaceID > 0 )
 			{
 				AddButton(x, y, 4011, 4011, 401, GumpButtonType.Reply, 0);
@@ -115,8 +110,7 @@ namespace Server.Gumps
 
 				if ( button >= 400 ) // BUILT IN HELP
 				{
-					if ( button == 400 ){ from.CloseGump( typeof( BeginnerBookGump ) ); from.SendGump( new BeginnerBookGump( from, 1 ) ); }
-					else if ( button == 401 ){ from.CloseGump( typeof( CreatureHelpGump ) ); from.SendGump( new CreatureHelpGump( from, 0 ) ); }
+					if ( button == 401 ){ from.CloseGump( typeof( CreatureHelpGump ) ); from.SendGump( new CreatureHelpGump( from, 0 ) ); }
 					else if ( button == 402 ){ from.CloseGump( typeof( FameKarma ) ); from.SendGump( new FameKarma( from, 0 ) ); }
 					else if ( button == 403 ){ from.CloseGump( typeof( ItemPropsGump ) ); from.SendGump( new ItemPropsGump( from, 0 ) ); }
 					else if ( button == 404 ){ from.CloseGump( typeof( NewSkillsGump ) ); from.SendGump( new NewSkillsGump( from, 0 ) ); }
