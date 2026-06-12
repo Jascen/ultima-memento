@@ -55,7 +55,7 @@ namespace Server.Spells.Fourth
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
+				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
 				{
 					SpellHelper.AddStatCurse( Caster, m, StatType.Str ); SpellHelper.DisableSkillCheck = true;
 					SpellHelper.AddStatCurse( Caster, m, StatType.Dex );

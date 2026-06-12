@@ -42,7 +42,7 @@ namespace Server.Spells.First
 
 				SpellHelper.Turn( source, m );
 
-				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
+				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
 				{
 					double damage;
 

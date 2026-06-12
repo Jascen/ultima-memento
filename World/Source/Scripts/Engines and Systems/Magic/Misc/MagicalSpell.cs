@@ -13,6 +13,7 @@ namespace Server.Spells.Magical
 		public override bool ClearHandsOnCast{ get{ return false; } }
 		public override double CastDelayFastScalar{ get{ return (Core.SE? base.CastDelayFastScalar : 0); } }
 		public abstract SpellCircle Circle { get; }
+		public int OneBasedCircle { get { return (int)Circle + 1; } }
 
 		public MagicalSpell( Mobile caster, Item scroll, SpellInfo info ) : base( caster, scroll, info )
 		{

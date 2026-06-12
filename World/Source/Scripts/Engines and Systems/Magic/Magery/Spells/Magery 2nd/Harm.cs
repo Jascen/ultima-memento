@@ -45,7 +45,7 @@ namespace Server.Spells.Second
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
+				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
 				{
 					int nBenefit = 0;
 					if ( Caster is PlayerMobile )

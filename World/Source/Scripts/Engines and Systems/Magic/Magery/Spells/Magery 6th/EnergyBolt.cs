@@ -41,7 +41,7 @@ namespace Server.Spells.Sixth
 
 				SpellHelper.Turn( Caster, m );
 
-				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
+				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
 				{
 					double damage;
 

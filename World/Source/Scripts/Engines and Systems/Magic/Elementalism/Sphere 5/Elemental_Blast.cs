@@ -90,7 +90,7 @@ namespace Server.Spells.Elementalism
 
 				SpellHelper.Turn( from, target );
 
-				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref from, ref target ) )
+				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref from, ref target ) )
 				{
 					int damage = (int)((Caster.Skills[CastSkill].Value + Caster.Int) / 5);
 				

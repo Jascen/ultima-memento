@@ -39,7 +39,7 @@ namespace Server.Spells.Elementalism
 
 				SpellHelper.Turn( source, m );
 
-				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
+				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
 				{
 					int nBenefit = (int)(Caster.Skills[CastSkill].Value / 5);
 					double damage = GetNewAosDamage( 19, 1, 5, m ) + nBenefit;

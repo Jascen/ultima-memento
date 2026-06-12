@@ -65,7 +65,7 @@ namespace Server.Spells.Fifth
 
 				SpellHelper.Turn( from, target );
 
-				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref from, ref target ) )
+				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref from, ref target ) )
 				{
 					int damage = (int)( ( Spell.ItemSkillValue( Caster, SkillName.Magery, false ) + Caster.Int ) / 5 );
 				

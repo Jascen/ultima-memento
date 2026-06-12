@@ -37,7 +37,7 @@ namespace Server.Spells.Elementalism
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.Circle, ref source, ref m ) )
+				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
 				{
 					int nBenefit = (int)(Caster.Skills[CastSkill].Value / 5);
 					
