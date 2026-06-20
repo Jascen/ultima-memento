@@ -67,7 +67,7 @@ namespace Server.Mobiles
 				return spell;
 			}
 
-			var checkSelf = m_Mobile.Combatant != null && 0 < m_Mobile.Combatant.MagicDamageAbsorb;
+			var checkSelf = m_Mobile.Combatant != null && MagicReflectSpell.HasReflect(m_Mobile.Combatant);
 
 			// 25% chance to cast Curse
 			if ( Utility.RandomDouble() > 0.75 )
