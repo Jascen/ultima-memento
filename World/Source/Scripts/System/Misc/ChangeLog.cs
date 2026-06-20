@@ -6,11 +6,11 @@ namespace Server.Misc
 	{
 		// Chronological index: 0 = oldest release, 11 = current release.
 		// When shipping a new version, increment RELEASE_COUNT and add a new case at the end.
-		public const int RELEASE_COUNT = 12;
+		public const int RELEASE_COUNT = 13;
 
 		public static string Version()
 		{
-			return "Version: 2.3.1";
+			return "Version: 2.4.0";
 		}
 
 		public static string GetRelease(int page)
@@ -1012,6 +1012,15 @@ namespace Server.Misc
 					builder.Append("- Spell - Insult implementation and displayed info now match<br>");
 					builder.Append("- Spell - Fix issue where magic absorb treated magery spells as one circle lower<br>");
 					builder.Append("- Temptations - Fix issue where Permadeath characters would not get default starting cap after rebirth<br>");
+					break;
+
+				// Version 2.4.0
+				case 12:
+				default:
+					builder.Append(Version());
+					builder.Append("<br>Changes<br>");
+
+					builder.Append("<br>Fixes<br>");
 					break;
 			}
 		}
