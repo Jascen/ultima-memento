@@ -44,7 +44,7 @@ namespace Server.SkillHandlers
 			m.MeleeDamageAbsorb += amount;
 
 			m.RevealingAction();
-			m.SendMessage("You raise your shield in preparation.");
+			m.PrivateOverheadMessage(MessageType.Regular, 1153, false, "You raise your shield in preparation.", m.NetState);
 
 			var duration = TimeSpan.FromSeconds(3);
 
@@ -56,7 +56,7 @@ namespace Server.SkillHandlers
 					if (0 < m.MeleeDamageAbsorb) m.MeleeDamageAbsorb = Math.Max(0, m.MeleeDamageAbsorb - amount);
 				}
 
-				m.SendMessage("You relax your stance.");
+				m.PrivateOverheadMessage(MessageType.Regular, 1153, false, "You relax your stance.", m.NetState);
 			});
 
 			return duration;
