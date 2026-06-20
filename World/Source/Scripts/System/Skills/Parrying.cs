@@ -1,6 +1,7 @@
 
 using System;
 using Server.Items;
+using Server.Network;
 
 namespace Server.SkillHandlers
 {
@@ -45,7 +46,7 @@ namespace Server.SkillHandlers
 			m.RevealingAction();
 			m.SendMessage("You raise your shield in preparation.");
 
-			var duration = TimeSpan.FromSeconds(5);
+			var duration = TimeSpan.FromSeconds(3);
 
 			Timer.DelayCall(duration, () =>
 			{

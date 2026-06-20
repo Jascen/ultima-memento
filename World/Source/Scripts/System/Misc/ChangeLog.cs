@@ -1019,6 +1019,7 @@ namespace Server.Misc
 				default:
 					builder.Append(Version());
 					builder.Append("<br>Changes<br>");
+					builder.Append("- Skill - Parrying absorption duration is now 3 seconds, down from 5<br>");
 
 					builder.Append("<br>Fixes<br>");
 					break;
