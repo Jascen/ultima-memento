@@ -46,9 +46,7 @@ namespace Server.SkillHandlers
 			m.RevealingAction();
 			m.PrivateOverheadMessage(MessageType.Regular, 1153, false, "You raise your shield in preparation.", m.NetState);
 
-			var duration = TimeSpan.FromSeconds(3);
-
-			Timer.DelayCall(duration, () =>
+			Timer.DelayCall(TimeSpan.FromSeconds(3), () =>
 			{
 				if (0 < m.MagicDamageAbsorb || 0 < m.MeleeDamageAbsorb)
 				{
@@ -59,7 +57,7 @@ namespace Server.SkillHandlers
 				m.PrivateOverheadMessage(MessageType.Regular, 1153, false, "You relax your stance.", m.NetState);
 			});
 
-			return duration;
+			return TimeSpan.FromSeconds(5);
 		}
 	}
 }
