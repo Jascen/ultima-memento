@@ -1019,6 +1019,8 @@ namespace Server.Misc
 				default:
 					builder.Append(Version());
 					builder.Append("<br>Changes<br>");
+					builder.Append("- Combat - Caster mobs now prioritize direct damage openers<br>");
+					builder.Append("- Combat - Caster mobs with notable health will attempt to Bless again<br>");
 					builder.Append("- Gump - Add tooltips to Shinobi spell icon descriptions<br>");
 					builder.Append("- Skill - Parrying absorption duration is now 3 seconds, down from 5<br>");
 					builder.Append("- Skill - Parrying activation is now an overhead message<br>");
