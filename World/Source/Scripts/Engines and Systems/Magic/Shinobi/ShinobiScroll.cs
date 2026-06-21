@@ -448,12 +448,15 @@ namespace Server.Items
 
 					AddItem(71, 205, 10126);
 					AddHtml( 110, 205, 48, 21, @"<BODY><BASEFONT Color=#111111><BIG>" + ShinobiInfo( ability, "skill" ) + "</BIG></BASEFONT></BODY>", (bool)false, (bool)false);
+					AddTooltip("Required skill");
 
 					AddItem(220, 208, 3822);
 					AddHtml( 254, 205, 48, 21, @"<BODY><BASEFONT Color=#111111><BIG>" + ShinobiInfo( ability, "points" ) + "</BIG></BASEFONT></BODY>", (bool)false, (bool)false);
+					AddTooltip("Required tithing");
 
 					AddItem(364, 204, 10231);
 					AddHtml( 402, 205, 48, 21, @"<BODY><BASEFONT Color=#111111><BIG>" + ShinobiInfo( ability, "mana" ) + "</BIG></BASEFONT></BODY>", (bool)false, (bool)false);
+					AddTooltip("Required mana");
 				}
 			}
 

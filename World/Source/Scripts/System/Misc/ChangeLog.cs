@@ -1019,8 +1019,10 @@ namespace Server.Misc
 				default:
 					builder.Append(Version());
 					builder.Append("<br>Changes<br>");
+					builder.Append("- Gump - Add tooltips to Shinobi spell icon descriptions<br>");
 					builder.Append("- Skill - Parrying absorption duration is now 3 seconds, down from 5<br>");
 					builder.Append("- Skill - Parrying activation is now an overhead message<br>");
+					builder.Append("- Spell - All spells now display their visuals regardless if absorbed<br>");
 
 					builder.Append("<br>Fixes<br>");
 					builder.Append("- Mobs - Fix case where AI would redundantly curse/poison<br>");
