@@ -70,7 +70,7 @@ namespace Server.Engines.MLQuests.Definitions
             Description = builder.ToString();
 
             Objectives.Add(DummyObjective.CraftAndMarkQuestItems);
-            Objectives.Add(new CraftObjective(20, typeof(WoodenKiteShield), "Kite Shield"));
+            Objectives.Add(new CraftObjective(20, typeof(WoodenKiteShield), "Tear Kite Shield"));
             Objectives.Add(new DummyObjective(""));
             Objectives.Add(new DummyObjective("* Click yourself to view your Quest Log"));
             Objectives.Add(new DummyObjective(""));

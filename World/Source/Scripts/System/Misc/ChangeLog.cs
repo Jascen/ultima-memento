@@ -1031,6 +1031,7 @@ namespace Server.Misc
 
 					builder.Append("<br>Fixes<br>");
 					builder.Append("- Item - Leather Dye Tubs now work on leather<br>");
+					builder.Append("- Quest - Kite shield blacksmith quest now clarifies the item type name<br>");
 					builder.Append("- Mobs - Fix case where AI would redundantly curse/poison<br>");
 					break;
 			}
