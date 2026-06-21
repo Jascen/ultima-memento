@@ -103,8 +103,13 @@ namespace Server.Engines.MLQuests.Definitions
             Rewards.Add(new ConstructibleItemReward("Ringmail Armor Recipes",
                 player =>
                 {
-                    return DefBlacksmithy.CraftSystem.GetRecipeScrolls(
+                    return DefBlacksmithy.CraftSystem.AddRecipeScrolls(
                         player,
+						new FancyStoneChest
+						{
+							Name = "Ringmail Armor Recipes",
+							Hue = Server.Utilities.HueUtilities.RandomBrightMetalHue()
+						},
                         typeof(RingmailGloves),
                         typeof(RingmailLegs),
                         typeof(RingmailArms),
@@ -223,8 +228,13 @@ namespace Server.Engines.MLQuests.Definitions
             Rewards.Add(new ConstructibleItemReward("Chain Armor Recipes",
                 player =>
                 {
-                    return DefBlacksmithy.CraftSystem.GetRecipeScrolls(
+                    return DefBlacksmithy.CraftSystem.AddRecipeScrolls(
                         player,
+						new FancyStoneChest
+						{
+							Name = "Chain Armor Recipes",
+							Hue = Server.Utilities.HueUtilities.RandomBrightMetalHue()
+						},
                         typeof(ChainCoif),
                         typeof(ChainLegs),
                         typeof(ChainChest),
@@ -335,8 +345,13 @@ namespace Server.Engines.MLQuests.Definitions
             Rewards.Add(new ConstructibleItemReward("Plate Armor Recipes",
                 player =>
                 {
-                    return DefBlacksmithy.CraftSystem.GetRecipeScrolls(
+                    return DefBlacksmithy.CraftSystem.AddRecipeScrolls(
                         player,
+						new FancyStoneChest
+						{
+							Name = "Plate Armor Recipes",
+							Hue = Server.Utilities.HueUtilities.RandomBrightMetalHue()
+						},
                         typeof(PlateArms),
                         typeof(PlateGloves),
                         typeof(PlateGorget),
@@ -455,8 +470,13 @@ namespace Server.Engines.MLQuests.Definitions
             Rewards.Add(new ConstructibleItemReward("Animal Armor Recipes",
                 player =>
                 {
-                    return DefBlacksmithy.CraftSystem.GetRecipeScrolls(
+                    return DefBlacksmithy.CraftSystem.AddRecipeScrolls(
                         player,
+						new FancyStoneChest
+						{
+							Name = "Animal Armor Recipes",
+							Hue = Server.Utilities.HueUtilities.RandomBrightMetalHue()
+						},
                         typeof(HorseArmor),
                         typeof(DragonBardingDeed)
                     );
@@ -565,8 +585,13 @@ namespace Server.Engines.MLQuests.Definitions
             Rewards.Add(new ConstructibleItemReward("Royal Armor Recipes",
                 player =>
                 {
-                    return DefBlacksmithy.CraftSystem.GetRecipeScrolls(
+                    return DefBlacksmithy.CraftSystem.AddRecipeScrolls(
                         player,
+						new FancyStoneChest
+						{
+							Name = "Royal Armor Recipes",
+							Hue = Server.Utilities.HueUtilities.RandomBrightMetalHue()
+						},
                         typeof(RoyalBoots),
                         typeof(RoyalGloves),
                         typeof(RoyalGorget),
@@ -684,8 +709,13 @@ namespace Server.Engines.MLQuests.Definitions
             Rewards.Add(new ConstructibleItemReward("Trident Recipe",
                 player =>
                 {
-                    return DefBlacksmithy.CraftSystem.GetRecipeScrolls(
+                    return DefBlacksmithy.CraftSystem.AddRecipeScrolls(
                         player,
+						new FancyStoneChest
+						{
+							Name = "Trident Recipe",
+							Hue = Server.Utilities.HueUtilities.RandomBrightMetalHue()
+						},
                         typeof(Pitchfork)
                     );
                 })

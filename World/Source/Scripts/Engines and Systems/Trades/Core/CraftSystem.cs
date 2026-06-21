@@ -310,23 +310,17 @@ namespace Server.Engines.Craft
 			return new RecipeScroll(craftItem.Recipe, player);
 		}
 
-		public Bag GetRecipeScrolls(PlayerMobile player, params Type[] types)
+		public BaseContainer AddRecipeScrolls(PlayerMobile player, BaseContainer container, params Type[] types)
 		{
-			var bag = new Bag();
-
-			// This is dirty, but I'm in a rush
-			if (this is DefBlacksmithy)
-				bag.Hue = Utility.RandomMetalHue();
-
 			foreach(var type in types)
 			{
 				var scroll = GetRecipeScroll(player, type);
 				if (scroll ==  null) continue;
 
-				bag.AddItem(scroll);
+				container.AddItem(scroll);
 			}
 
-			return bag;
+			return container;
 		}
 
 		public Bag GetRandomRecipeScrolls(PlayerMobile player, int count, Func<Recipe, bool> predicate)
