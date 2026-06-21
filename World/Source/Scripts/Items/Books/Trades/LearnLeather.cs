@@ -1,15 +1,10 @@
-using System;
-using Server;
-using Server.Items;
-using System.Text;
-using Server.Mobiles;
 using Server.Gumps;
 using Server.Misc;
 using Server.Network;
 
 namespace Server.Items
 {
-	public class LearnLeatherBook : Item
+	public class LearnLeatherBook : Item, IShowableBook
 	{
 		public override Catalogs DefaultCatalog{ get{ return Catalogs.Book; } }
 
@@ -143,19 +138,22 @@ namespace Server.Items
 					m_Mobile.SendSound( 0x55 );
 			}
 		}
+		public void ShowBookGump( Mobile from )
+		{
+			from.CloseGump( typeof( LearnLeatherGump ) );
+			from.SendGump( new LearnLeatherGump( from, this, 1 ) );
+		}
 
 		public override void OnDoubleClick( Mobile e )
 		{
-			if ( !IsChildOf( e.Backpack ) && this.Weight != -50.0 ) 
+			if ( !e.InRange(GetWorldLocation(), 2 ) )
 			{
-				e.SendMessage( "This must be in your backpack to read." );
+				e.SendMessage("That is too far away to read.");
+				return;
 			}
-			else
-			{
-				e.CloseGump( typeof( LearnLeatherGump ) );
-				e.SendGump( new LearnLeatherGump( e, this, 1 ) );
-				Server.Gumps.MyLibrary.readBook ( this, e );
-			}
+
+			ShowBookGump( e );
+			Server.Gumps.MyLibrary.readBook( this, e );
 		}
 
 		public LearnLeatherBook(Serial serial) : base(serial)

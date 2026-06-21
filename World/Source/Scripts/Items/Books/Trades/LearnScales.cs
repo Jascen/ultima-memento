@@ -1,15 +1,10 @@
-using System;
-using Server;
-using Server.Items;
-using System.Text;
-using Server.Mobiles;
 using Server.Gumps;
 using Server.Network;
 using Server.Misc;
 
 namespace Server.Items
 {
-	public class LearnScalesBook : Item
+	public class LearnScalesBook : Item, IShowableBook
 	{
 		public override Catalogs DefaultCatalog{ get{ return Catalogs.Book; } }
 
@@ -117,18 +112,22 @@ namespace Server.Items
 			}
 		}
 
+		public void ShowBookGump( Mobile from )
+		{
+			from.CloseGump( typeof( LearnScalesGump ) );
+			from.SendGump( new LearnScalesGump( from, this, 1 ) );
+		}
+
 		public override void OnDoubleClick( Mobile e )
 		{
-			if ( !IsChildOf( e.Backpack ) && this.Weight != -50.0 ) 
+			if ( !e.InRange(GetWorldLocation(), 2 ) )
 			{
-				e.SendMessage( "This must be in your backpack to read." );
+				e.SendMessage("That is too far away to read.");
+				return;
 			}
-			else
-			{
-				e.CloseGump( typeof( LearnScalesGump ) );
-				e.SendGump( new LearnScalesGump( e, this, 1 ) );
-				Server.Gumps.MyLibrary.readBook ( this, e );
-			}
+
+			ShowBookGump( e );
+			Server.Gumps.MyLibrary.readBook( this, e );
 		}
 
 		public LearnScalesBook(Serial serial) : base(serial)

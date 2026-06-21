@@ -1,15 +1,9 @@
-using System;
-using Server;
-using System.Collections;
-using System.Collections.Generic;
-using Server.Misc;
 using Server.Network;
 using Server.Gumps;
-using Server.Mobiles;
 
 namespace Server.Items
 {
-	public class SwordsAndShackles : Item
+	public class SwordsAndShackles : Item, IShowableBook
 	{
 		[Constructable]
 		public SwordsAndShackles() : base( 0x529D )
@@ -20,14 +14,22 @@ namespace Server.Items
 			Name = "Skulls and Shackles";
 		}
 
+		public void ShowBookGump( Mobile from )
+		{
+			from.CloseGump( typeof( SwordsAndShacklesGump ) );
+			from.SendGump( new SwordsAndShacklesGump( from, 1 ) );
+		}
+
 		public override void OnDoubleClick( Mobile from )
 		{
-			if ( from.InRange( this.GetWorldLocation(), 4 ) || this.Weight == -50.0 )
+			if ( !from.InRange(GetWorldLocation(), 2 ) )
 			{
-				from.CloseGump( typeof( SwordsAndShacklesGump ) );
-				from.SendGump( new SwordsAndShacklesGump( from, 1 ) );
-				Server.Gumps.MyLibrary.readBook ( this, from );
+				from.SendMessage("That is too far away to read.");
+				return;
 			}
+
+			ShowBookGump( from );
+			Server.Gumps.MyLibrary.readBook( this, from );
 		}
 
 		public SwordsAndShackles( Serial serial ) : base( serial )

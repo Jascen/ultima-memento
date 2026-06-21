@@ -1,14 +1,9 @@
-using System;
-using Server;
-using Server.Items;
-using System.Text;
-using Server.Mobiles;
 using Server.Gumps;
 using Server.Network;
 
 namespace Server.Items
 {
-	public class LearnReagentsBook : Item
+	public class LearnReagentsBook : Item, IShowableBook
 	{
 		[Constructable]
 		public LearnReagentsBook( ) : base( 0x02DD )
@@ -139,19 +134,23 @@ namespace Server.Items
 			}
 		}
 
+		public void ShowBookGump( Mobile from )
+		{
+			from.CloseGump( typeof( LearnReagentsGump ) );
+			from.SendGump( new LearnReagentsGump( from ) );
+		}
+
 		public override void OnDoubleClick( Mobile e )
 		{
-			if ( !IsChildOf( e.Backpack ) && this.Weight != -50.0 ) 
+			if ( !e.InRange(GetWorldLocation(), 2 ) )
 			{
-				e.SendMessage( "This must be in your backpack to read." );
+				e.SendMessage("That is too far away to read.");
+				return;
 			}
-			else
-			{
-				e.CloseGump( typeof( LearnReagentsGump ) );
-				e.SendGump( new LearnReagentsGump( e ) );
-				e.PlaySound( 0x249 );
-				Server.Gumps.MyLibrary.readBook ( this, e );
-			}
+
+			ShowBookGump( e );
+			e.PlaySound( 0x249 );
+			Server.Gumps.MyLibrary.readBook ( this, e );
 		}
 
 		public LearnReagentsBook(Serial serial) : base(serial)

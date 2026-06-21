@@ -1,17 +1,12 @@
 using System;
-using Server;
-using Server.Items;
-using System.Text;
-using Server.Mobiles;
 using Server.Gumps;
 using Server.Misc;
 using Server.Network;
-using System.Collections;
 using System.Globalization;
 
 namespace Server.Items
 {
-	public class DynamicBook : Item
+	public class DynamicBook : Item, IShowableBook
 	{
 		[Constructable]
 		public DynamicBook( ) : base( 0x1C11 )
@@ -202,40 +197,44 @@ namespace Server.Items
 			}
 		}
 
-		public override void OnDoubleClick( Mobile e )
+		public void ShowBookGump( Mobile e )
 		{
-			if ( this.Weight == -50.0 || ( e.InRange( this.GetWorldLocation(), 5 ) && e.CanSee( this ) && e.InLOS( this ) ) )
+			if ( ItemID == 0x4CDF )
 			{
-				if ( ItemID == 0x4CDF )
-				{
-					e.CloseGump( typeof( DynamicBookGump ) );
-					e.CloseGump( typeof( DynamicSythGump ) );
-					e.CloseGump( typeof( DynamicJediGump ) );
-					e.SendGump( new DynamicSythGump( e, this ) );
-					e.SendSound( 0x54D );
-				}
-				else if ( ItemID == 0x543C )
-				{
-					e.CloseGump( typeof( DynamicBookGump ) );
-					e.CloseGump( typeof( DynamicSythGump ) );
-					e.CloseGump( typeof( DynamicJediGump ) );
-					e.SendGump( new DynamicJediGump( e, this ) );
-					e.SendSound( 0x54D );
-				}
-				else
-				{
-					e.CloseGump( typeof( DynamicSythGump ) );
-					e.CloseGump( typeof( DynamicBookGump ) );
-					e.CloseGump( typeof( DynamicJediGump ) );
-					e.SendGump( new DynamicBookGump( e, this ) );
-					e.SendSound( 0x55 );
-				}
-				Server.Gumps.MyLibrary.readBook ( this, e );
+				e.CloseGump( typeof( DynamicBookGump ) );
+				e.CloseGump( typeof( DynamicSythGump ) );
+				e.CloseGump( typeof( DynamicJediGump ) );
+				e.SendGump( new DynamicSythGump( e, this ) );
+				e.SendSound( 0x54D );
+			}
+			else if ( ItemID == 0x543C )
+			{
+				e.CloseGump( typeof( DynamicBookGump ) );
+				e.CloseGump( typeof( DynamicSythGump ) );
+				e.CloseGump( typeof( DynamicJediGump ) );
+				e.SendGump( new DynamicJediGump( e, this ) );
+				e.SendSound( 0x54D );
 			}
 			else
 			{
-				e.SendMessage( "That is too far away to read." );
+				e.CloseGump( typeof( DynamicSythGump ) );
+				e.CloseGump( typeof( DynamicBookGump ) );
+				e.CloseGump( typeof( DynamicJediGump ) );
+				e.SendGump( new DynamicBookGump( e, this ) );
+				e.SendSound( 0x55 );
 			}
+		}
+
+		public override void OnDoubleClick( Mobile e )
+		{
+			if (!e.InRange( this.GetWorldLocation(), 5 ) || !e.CanSee( this ) || !e.InLOS( this ) )
+			{
+				e.SendMessage( "That is too far away to read." );
+				return;
+			}
+
+			ShowBookGump( e );
+			Server.Gumps.MyLibrary.readBook ( this, e );
 		}
 
 		public DynamicBook(Serial serial) : base(serial)

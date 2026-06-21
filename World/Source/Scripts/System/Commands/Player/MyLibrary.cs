@@ -6,6 +6,11 @@ using Server.Items;
 
 namespace Server.Gumps 
 {
+	public interface IShowableBook
+	{
+		void ShowBookGump( Mobile from );
+	}
+
     public class MyLibrary : Gump
     {
 		public int m_Origin;
@@ -116,42 +121,26 @@ namespace Server.Gumps
 					else if ( button == 404 ){ from.CloseGump( typeof( NewSkillsGump ) ); from.SendGump( new NewSkillsGump( from, 0 ) ); }
 					else { from.CloseGump( typeof( WeaponAbilityBook.AbilityBookGump ) ); from.SendGump( new WeaponAbilityBook.AbilityBookGump( from ) ); }
 				}
-				else if ( refer >= 300 ) // SKULLS & SHACKLES
+				else
 				{
-					Item item = null;
 					Type itemType = ScriptCompiler.FindTypeByName( book );
-					item = (Item)Activator.CreateInstance(itemType);
-					item.Weight = -50.0;
-					item.OnDoubleClick(from);
-					item.Delete();
-				}
-				else if ( refer >= 200 ) // SCROLLS
-				{
-					Item item = null;
-					Type itemType = ScriptCompiler.FindTypeByName( book );
-					item = (Item)Activator.CreateInstance(itemType);
-					item.Weight = -50.0;
-					item.OnDoubleClick(from);
-					item.Delete();
-				}
-				else if ( refer >= 100 ) // DYNAMIC BOOKS
-				{
-					Item item = null;
-					Type itemType = ScriptCompiler.FindTypeByName( book );
-					item = (Item)Activator.CreateInstance(itemType);
-					item.Weight = -50.0;
-					item.OnDoubleClick(from);
-					item.Delete();
-				}
-				else // LORE BOOKS
-				{
-					Item item = null;
-					Type itemType = ScriptCompiler.FindTypeByName( book );
-					item = (Item)Activator.CreateInstance(itemType);
-					item.Weight = -50.0;
-					if ( item is LoreBook ){ LoreBook lore = (LoreBook)item; lore.writeBook( refer ); }
-					item.OnDoubleClick(from);
-					item.Delete();
+					Item item = (Item)Activator.CreateInstance(itemType);
+					if ( item is IShowableBook )
+					{
+						IShowableBook showable = (IShowableBook)item;
+						showable.ShowBookGump(from);
+					}
+					else
+					{
+						item.OnDoubleClick(from);
+						item.Delete();
+					}
+
+					if ( item is LoreBook )
+					{
+						LoreBook lore = (LoreBook)item;
+						lore.writeBook( refer );
+					}
 				}
 			}
 			else if ( m_Origin > 0 ){ from.SendGump( new Server.Engines.Help.HelpGump( from, 1 ) ); }
