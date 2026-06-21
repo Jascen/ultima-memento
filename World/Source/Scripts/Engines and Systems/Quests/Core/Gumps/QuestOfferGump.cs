@@ -36,7 +36,7 @@ namespace Server.Engines.MLQuests.Gumps
 			if (hasRewards)
 			{
 				BuildPage();
-				AddRewardsPage(quest);
+				AddRewardsPage(quest, false);
 			}
 		}
 

@@ -64,6 +64,7 @@ namespace Server.Engines.MLQuests
 
 		public virtual bool IsChainTriggered { get { return false; } }
 		public virtual Type NextQuest { get { return null; } }
+		public virtual Type QuestRecipient { get { return null; } }
 
 		public TextDefinition Title { get; protected set; }
 		public TextDefinition Description { get; protected set; }
