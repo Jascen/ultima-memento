@@ -120,16 +120,18 @@ namespace Server.Engines.MLQuests.Definitions
             );
         }
 
+        public override Type QuestRecipient { get { return typeof(BritainGuildmasterSmithGuy); } }
+
         public override IEnumerable<Type> GetQuestGivers()
         {
-            yield return typeof(BritainGuildmasterSmithGuy);  // Quest Giver & Recipient
+            yield return QuestRecipient;  // Quest Giver & Recipient
         }
 
         public override void Generate()
         {
             base.Generate();
 
-            PutSpawner(new Spawner(1, 5, 10, 0, 0, "BritainGuildmasterSmithGuy"), new Point3D(2981, 1023, 0), Map.Sosaria);
+            PutSpawner(new Spawner(1, 5, 10, 0, 0, QuestRecipient.Name), new Point3D(2981, 1023, 0), Map.Sosaria);
         }
     }
 
@@ -244,16 +246,18 @@ namespace Server.Engines.MLQuests.Definitions
             );
         }
 
+        public override Type QuestRecipient { get { return typeof(MontorSmithGirl); } }
+
         public override IEnumerable<Type> GetQuestGivers()
         {
-            yield return typeof(MontorSmithGirl);  // Quest Giver & Recipient
+            yield return QuestRecipient;  // Quest Giver & Recipient
         }
 
         public override void Generate()
         {
             base.Generate();
 
-            PutSpawner(new Spawner(1, 5, 10, 0, 0, "MontorSmithGirl"), new Point3D(3155, 2600, 5), Map.Sosaria);
+            PutSpawner(new Spawner(1, 5, 10, 0, 0, QuestRecipient.Name), new Point3D(3155, 2600, 5), Map.Sosaria);
         }
     }
 
@@ -369,16 +373,18 @@ namespace Server.Engines.MLQuests.Definitions
             );
         }
 
+        public override Type QuestRecipient { get { return typeof(DevilGuardSmithGuy); } }
+
         public override IEnumerable<Type> GetQuestGivers()
         {
-            yield return typeof(DevilGuardSmithGuy);  // Quest Giver & Recipient
+            yield return QuestRecipient;  // Quest Giver & Recipient
         }
 
         public override void Generate()
         {
             base.Generate();
 
-            PutSpawner(new Spawner(1, 5, 10, 0, 0, "DevilGuardSmithGuy"), new Point3D(1612, 1451, 7), Map.Sosaria);
+            PutSpawner(new Spawner(1, 5, 10, 0, 0, QuestRecipient.Name), new Point3D(1612, 1451, 7), Map.Sosaria);
         }
     }
 
@@ -484,16 +490,18 @@ namespace Server.Engines.MLQuests.Definitions
             );
         }
 
+        public override Type QuestRecipient { get { return typeof(YewSmithGuy); } }
+
         public override IEnumerable<Type> GetQuestGivers()
         {
-            yield return typeof(YewSmithGuy);  // Quest Giver & Recipient
+            yield return QuestRecipient;  // Quest Giver & Recipient
         }
 
         public override void Generate()
         {
             base.Generate();
 
-            PutSpawner(new Spawner(1, 5, 10, 0, 0, "YewSmithGuy"), new Point3D(2478, 890, 7), Map.Sosaria);
+            PutSpawner(new Spawner(1, 5, 10, 0, 0, QuestRecipient.Name), new Point3D(2478, 890, 7), Map.Sosaria);
         }
     }
 
@@ -604,16 +612,18 @@ namespace Server.Engines.MLQuests.Definitions
             );
         }
 
+        public override Type QuestRecipient { get { return typeof(MoonSmithGuy); } }
+
         public override IEnumerable<Type> GetQuestGivers()
         {
-            yield return typeof(MoonSmithGuy); // Quest Giver & Recipient
+            yield return QuestRecipient;  // Quest Giver & Recipient
         }
 
         public override void Generate()
         {
             base.Generate();
 
-            PutSpawner(new Spawner(1, 5, 10, 0, 0, "MoonSmithGuy"), new Point3D(856, 712, 5), Map.Sosaria);
+            PutSpawner(new Spawner(1, 5, 10, 0, 0, QuestRecipient.Name), new Point3D(856, 712, 5), Map.Sosaria);
         }
     }
 
@@ -722,16 +732,18 @@ namespace Server.Engines.MLQuests.Definitions
             );
         }
 
+        public override Type QuestRecipient { get { return typeof(GreySmithGuy); } }
+
         public override IEnumerable<Type> GetQuestGivers()
         {
-            yield return typeof(GreySmithGuy);  // Quest Giver & Recipient
+            yield return QuestRecipient;  // Quest Giver & Recipient
         }
 
         public override void Generate()
         {
             base.Generate();
 
-            PutSpawner(new Spawner(1, 5, 10, 0, 0, "GreySmithGuy"), new Point3D(917, 2097, 5), Map.Sosaria);
+            PutSpawner(new Spawner(1, 5, 10, 0, 0, QuestRecipient.Name), new Point3D(917, 2097, 5), Map.Sosaria);
         }
     }
 

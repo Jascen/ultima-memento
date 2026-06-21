@@ -1027,6 +1027,7 @@ namespace Server.Misc
 					builder.Append("- Quest - Blacksmith recipes are now in chests instead of bags<br>");
 					builder.Append("- Quest - Blacksmith reward chests are now named and brightly colored<br>");
 					builder.Append("- Quest - All Blacksmith quests can now be started at the same time<br>");
+					builder.Append("- Quest - All Blacksmith quests now show a return destination<br>");
 					builder.Append("- Skill - Parrying absorption duration is now 3 seconds, down from 5<br>");
 					builder.Append("- Skill - Parrying activation is now an overhead message<br>");
 					builder.Append("- Spell - All spells now display their visuals regardless if absorbed<br>");
