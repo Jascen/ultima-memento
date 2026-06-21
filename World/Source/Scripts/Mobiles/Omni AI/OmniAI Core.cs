@@ -764,9 +764,9 @@ namespace Server.Mobiles
 
 			//Default
 			if ( harm )
-				return ( IsGoodGuy( from ) && !(IsGoodGuy( to )) ) | ( !(IsGoodGuy( from )) && IsGoodGuy( to ) );
+				return ( IsGoodGuy( from ) && !(IsGoodGuy( to )) ) || ( !(IsGoodGuy( from )) && IsGoodGuy( to ) );
 			else
-				return  ( IsGoodGuy( from ) && IsGoodGuy( to ) ) | ( !(IsGoodGuy( from )) && !(IsGoodGuy( to )) );
+				return  ( IsGoodGuy( from ) && IsGoodGuy( to ) ) || ( !(IsGoodGuy( from )) && !(IsGoodGuy( to )) );
 		}
 
 		public static bool IsGoodGuy( Mobile m )
