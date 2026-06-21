@@ -361,9 +361,9 @@ namespace Server.Engines.MLQuests
 					string rewardName = (rewardItem.Name != null) ? rewardItem.Name : String.Concat("#", rewardItem.LabelNumber);
 
 					if (rewardItem.Stackable)
-						Player.SendLocalizedMessage(1115917, String.Concat(rewardItem.Amount, "\t", rewardName)); // You receive a reward: ~1_QUANTITY~ ~2_ITEM~
+						Player.LocalOverheadMessage(Network.MessageType.Regular, 1153, 1115917, String.Concat(rewardItem.Amount, "\t", rewardName)); // You receive a reward: ~1_QUANTITY~ ~2_ITEM~
 					else
-						Player.SendLocalizedMessage(1074360, rewardName); // You receive a reward: ~1_REWARD~
+						Player.LocalOverheadMessage(Network.MessageType.Regular, 1153, 1074360, rewardName); // You receive a reward: ~1_REWARD~
 				}
 			}
 
