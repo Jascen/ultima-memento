@@ -1025,6 +1025,7 @@ namespace Server.Misc
 					builder.Append("- Spell - All spells now display their visuals regardless if absorbed<br>");
 
 					builder.Append("<br>Fixes<br>");
+					builder.Append("- Item - Leather Dye Tubs now work on leather<br>");
 					builder.Append("- Mobs - Fix case where AI would redundantly curse/poison<br>");
 					break;
 			}

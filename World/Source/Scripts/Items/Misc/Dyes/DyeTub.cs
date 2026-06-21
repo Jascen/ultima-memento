@@ -378,7 +378,7 @@ namespace Server.Items
 							from.PlaySound( 0x23E );
 						}
 					}
-					else if ( item is BaseArmor && ( CraftResources.GetType( item.Resource ) == CraftResourceType.Fabric || item is ElvenBoots ) && m_Tub.AllowLeather )
+					else if ( item is BaseArmor && ( CraftResources.GetType( item.Resource ) == CraftResourceType.Leather || item is ElvenBoots ) && m_Tub.AllowLeather )
 					{
 						if ( !from.InRange( m_Tub.GetWorldLocation(), 1 ) || !from.InRange( item.GetWorldLocation(), 1 ) )
 						{
