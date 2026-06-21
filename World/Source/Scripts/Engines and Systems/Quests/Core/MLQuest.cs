@@ -207,7 +207,7 @@ namespace Server.Engines.MLQuests
 					checkQuest = MLQuestSystem.FindQuest(checkQuest.NextQuest);
 
 					// Block if a subsequent Quest is already in progress
-					if (checkQuest != null && context.IsDoingQuest(checkQuest)) return false;
+					if (checkQuest != null && checkQuest.IsChainTriggered && context.IsDoingQuest(checkQuest)) return false;
 				}
 			}
 
