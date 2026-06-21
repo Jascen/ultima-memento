@@ -37,36 +37,35 @@ namespace Server.Spells.Elementalism
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
+
+				string elm = ElementalSpell.GetElement( Caster );
+
+				if ( elm == "air" )
+					Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB04-1, 0 );
+				else if ( elm == "earth" )
+					Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB5E-1, 0 );
+				else if ( elm == "fire" )
+					Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB71-1, 0 );
+				else if ( elm == "water" )
+					Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x384E, 0x3859 ), 85, 10, 0, 0 );
+
+				Effects.PlaySound( m.Location, m.Map, 0x656 );
+
+				if ( hitThrough )
 				{
 					int nBenefit = (int)(Caster.Skills[CastSkill].Value / 5);
 
 					double damage = GetNewAosDamage( 23, 1, 4, m ) + nBenefit;
 
-					string elm = ElementalSpell.GetElement( Caster );
-
 					if ( elm == "air" )
-					{
-						Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB04-1, 0 );
 						SpellHelper.Damage( this, m, damage, 50, 0, 0, 0, 50 );
-					}
 					else if ( elm == "earth" )
-					{
-						Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB5E-1, 0 );
 						SpellHelper.Damage( this, m, damage, 100, 0, 0, 0, 0 );
-					}
 					else if ( elm == "fire" )
-					{
-						Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x33E5, 0x33F5 ), 85, 10, 0xB71-1, 0 );
 						SpellHelper.Damage( this, m, damage, 50, 50, 0, 0, 0 );
-					}
 					else if ( elm == "water" )
-					{
-						Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList( 0x384E, 0x3859 ), 85, 10, 0, 0 );
 						SpellHelper.Damage( this, m, damage, 50, 0, 50, 0, 0 );
-					}
-
-					Effects.PlaySound( m.Location, m.Map, 0x656 );
 				}
 			}
 

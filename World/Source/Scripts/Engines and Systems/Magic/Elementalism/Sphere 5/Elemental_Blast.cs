@@ -32,38 +32,46 @@ namespace Server.Spells.Elementalism
 			Mobile target = (Mobile)states[1];
 			Mobile defender = (Mobile)states[2];
 			int damage = (int)states[3];
+			bool applyEffect = (bool)states[4];
 
-			if ( caster.HarmfulCheck( defender ) )
+			string elm = ElementalSpell.GetElement( caster );
+			Point3D loc = new Point3D( 0, 0, 0 );
+
+			if ( elm == "air" )
 			{
-				string elm = ElementalSpell.GetElement( caster );
-				Point3D loc = new Point3D( 0, 0, 0 );
+				loc = new Point3D( target.X+2, target.Y+2, target.Z+20 );
+				Effects.SendLocationEffect( loc, target.Map, 0x5547, 30, 10, 0, 0 );
+				target.PlaySound( 0x211 );
+			}
+			else if ( elm == "earth" )
+			{
+				loc = new Point3D( target.X+2, target.Y+2, target.Z+15 );
+				Effects.SendLocationEffect( loc, target.Map, 0x3822, 30, 10, 0xAC0-1, 0 );
+				target.PlaySound( 0x11C );
+			}
+			else if ( elm == "fire" )
+			{
+				loc = new Point3D( target.X+2, target.Y+2, target.Z+10 );
+				Effects.SendLocationEffect( loc, target.Map, 0x36B0, 30, 10, 0, 0 );
+				target.PlaySound( 0x11B );
+			}
+			else if ( elm == "water" )
+			{
+				loc = new Point3D( target.X+2, target.Y+2, target.Z+20 );
+				Effects.SendLocationEffect( loc, target.Map, 0x5558, 30, 10, 0, 0 );
+				target.PlaySound( 0x026 );
+			}
 
+			if ( applyEffect && caster.HarmfulCheck( defender ) )
+			{
 				if ( elm == "air" )
-				{
-					loc = new Point3D( target.X+2, target.Y+2, target.Z+20 );
-					Effects.SendLocationEffect( loc, target.Map, 0x5547, 30, 10, 0, 0 );
-					target.PlaySound( 0x211 );
 					SpellHelper.Damage( this, target, Utility.RandomMinMax( damage, damage + 4 ), 0, 0, 0, 0, 100 );
-				}
 				else if ( elm == "earth" )
-				{
-					loc = new Point3D( target.X+2, target.Y+2, target.Z+15 );
-					Effects.SendLocationEffect( loc, target.Map, 0x3822, 30, 10, 0xAC0-1, 0 );
-					target.PlaySound( 0x11C );
 					SpellHelper.Damage( this, target, Utility.RandomMinMax( damage, damage + 4 ), 100, 0, 0, 0, 0 );
-				}
 				else if ( elm == "fire" )
-				{
-					loc = new Point3D( target.X+2, target.Y+2, target.Z+10 );
-					Effects.SendLocationEffect( loc, target.Map, 0x36B0, 30, 10, 0, 0 );
-					target.PlaySound( 0x11B );
 					SpellHelper.Damage( this, target, Utility.RandomMinMax( damage, damage + 4 ), 0, 100, 0, 0, 0 );
-				}
 				else if ( elm == "water" )
 				{
-					loc = new Point3D( target.X+2, target.Y+2, target.Z+20 );
-					Effects.SendLocationEffect( loc, target.Map, 0x5558, 30, 10, 0, 0 );
-					target.PlaySound( 0x026 );
 					AddWater( target );
 					SpellHelper.Damage( this, target, Utility.RandomMinMax( damage, damage + 4 ), 0, 0, 100, 0, 0 );
 				}
@@ -90,19 +98,18 @@ namespace Server.Spells.Elementalism
 
 				SpellHelper.Turn( from, target );
 
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref from, ref target ) )
-				{
-					int damage = (int)((Caster.Skills[CastSkill].Value + Caster.Int) / 5);
-				
-					if ( damage > 60 )
-						damage = 60;
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref from, ref target );
 
-					damage = damage + nBenefit;
+				int damage = (int)((Caster.Skills[CastSkill].Value + Caster.Int) / 5);
+			
+				if ( damage > 60 )
+					damage = 60;
 
-					Timer.DelayCall( TimeSpan.FromSeconds( 1.0 ),
-						new TimerStateCallback( AosDelay_Callback ),
-						new object[]{ Caster, target, m, damage } );
-				}
+				damage = damage + nBenefit;
+
+				Timer.DelayCall( TimeSpan.FromSeconds( 1.0 ),
+					new TimerStateCallback( AosDelay_Callback ),
+					new object[]{ Caster, target, m, damage, hitThrough } );
 			}
 
 			FinishSequence();

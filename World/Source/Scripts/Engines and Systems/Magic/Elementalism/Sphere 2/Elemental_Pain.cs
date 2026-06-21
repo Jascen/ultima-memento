@@ -37,7 +37,35 @@ namespace Server.Spells.Elementalism
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
+
+				string elm = ElementalSpell.GetElement( Caster );
+				Point3D loc = new Point3D( m.X+2, m.Y+2, m.Z+20 );
+
+				if ( elm == "air" )
+				{
+					loc = new Point3D( m.X+2, m.Y+2, m.Z+15 );
+					Effects.SendLocationEffect( loc, m.Map, 0x2007, 30, 10, 0xB62-1, 0 );
+					m.PlaySound( 0x5C6 );
+				}
+				else if ( elm == "earth" )
+				{
+					loc = new Point3D( m.X+2, m.Y+2, m.Z+25 );
+					Effects.SendLocationEffect( loc, m.Map, 0x384E, 30, 10, 0xB26-1, 0 );
+					m.PlaySound( 0x308 );
+				}
+				else if ( elm == "fire" )
+				{
+					Effects.SendLocationEffect( loc, m.Map, 0x5475, 30, 10, 0xB71-1, 0 );
+					m.PlaySound( 0x658 );
+				}
+				else if ( elm == "water" )
+				{
+					Effects.SendLocationEffect( loc, m.Map, 0x1A84, 30, 10, 0xB78-1, 0 );
+					m.PlaySound( 0x027 );
+				}
+
+				if ( hitThrough )
 				{
 					int nBenefit = (int)(Caster.Skills[CastSkill].Value / 5);
 					
@@ -48,34 +76,14 @@ namespace Server.Spells.Elementalism
 					else if ( !m.InRange( Caster, 1 ) )
 						damage *= 0.50; // 1/2 damage at 2 tile range
 
-					string elm = ElementalSpell.GetElement( Caster );
-
-					Point3D loc = new Point3D( m.X+2, m.Y+2, m.Z+20 );
-
 					if ( elm == "air" )
-					{
-						loc = new Point3D( m.X+2, m.Y+2, m.Z+15 );
-						Effects.SendLocationEffect( loc, m.Map, 0x2007, 30, 10, 0xB62-1, 0 );
-						m.PlaySound( 0x5C6 );
 						SpellHelper.Damage( this, m, damage, 50, 0, 0, 0, 50 );
-					}
 					else if ( elm == "earth" )
-					{
-						loc = new Point3D( m.X+2, m.Y+2, m.Z+25 );
-						Effects.SendLocationEffect( loc, m.Map, 0x384E, 30, 10, 0xB26-1, 0 );
-						m.PlaySound( 0x308 );
 						SpellHelper.Damage( this, m, damage, 100, 0, 0, 0, 0 );
-					}
 					else if ( elm == "fire" )
-					{
-						Effects.SendLocationEffect( loc, m.Map, 0x5475, 30, 10, 0xB71-1, 0 );
-						m.PlaySound( 0x658 );
 						SpellHelper.Damage( this, m, damage, 0, 100, 0, 0, 0 );
-					}
 					else if ( elm == "water" )
 					{
-						Effects.SendLocationEffect( loc, m.Map, 0x1A84, 30, 10, 0xB78-1, 0 );
-						m.PlaySound( 0x027 );
 						AddWater( m );
 						SpellHelper.Damage( this, m, damage, 0, 0, 100, 0, 0 );
 					}

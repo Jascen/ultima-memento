@@ -37,7 +37,12 @@ namespace Server.Spells.Third
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
+
+				m.FixedParticles( 0x374A, 10, 15, 5021, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Waist );
+				m.PlaySound( 0x205 );
+
+				if ( hitThrough )
 				{
 					if ( m.Spell != null )
 						m.Spell.OnCasterHurt();
@@ -75,9 +80,6 @@ namespace Server.Spells.Third
 
 						m.ApplyPoison( Caster, Poison.GetPoison( level ) );
 					}
-
-					m.FixedParticles( 0x374A, 10, 15, 5021, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Waist );
-					m.PlaySound( 0x205 );
 
 					HarmfulSpell( m );
 				}

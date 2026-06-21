@@ -68,7 +68,12 @@ namespace Server.Spells.Research
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m );
+
+				m.PlaySound( 0x657 );
+				m.FixedParticles( 0x3039, 9, 32, 5008, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0xB72 ), 0, EffectLayer.Waist );
+
+				if ( hitThrough )
 				{
 					TimeSpan duration = TimeSpan.FromSeconds( (DamagingSkill( Caster ) / 4) );
 
@@ -76,10 +81,6 @@ namespace Server.Spells.Research
 
 					BuffInfo.RemoveBuff( m, BuffIcon.Sleep );
 					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Sleep, 1063646, duration, m ) );
-
-					m.PlaySound( 0x657 );
-
-					m.FixedParticles( 0x3039, 9, 32, 5008, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0xB72 ), 0, EffectLayer.Waist );
 
 					new SleepyTimer( m, duration ).Start();
 					Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );

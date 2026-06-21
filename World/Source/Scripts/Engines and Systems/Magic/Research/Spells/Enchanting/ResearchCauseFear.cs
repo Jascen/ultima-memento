@@ -62,12 +62,14 @@ namespace Server.Spells.Research
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m );
+
+				m.FixedParticles( 0x3789, 10, 25, 5032, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0xBB3 ), 0, EffectLayer.Head );
+				m.PlaySound( 0x19D );
+
+				if ( hitThrough )
 				{
 					TimeSpan duration = TimeSpan.FromSeconds( (DamagingSkill( Caster ) / 4) );
-
-					m.FixedParticles( 0x3789, 10, 25, 5032, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0xBB3 ), 0, EffectLayer.Head );
-					m.PlaySound( 0x19D );
 
 					if ( m is PlayerMobile )
 					{

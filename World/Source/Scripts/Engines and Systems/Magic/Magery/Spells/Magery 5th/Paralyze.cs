@@ -44,10 +44,13 @@ namespace Server.Spells.Fifth
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
-				{
-					double duration;
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
 
+				m.PlaySound( 0x204 );
+				m.FixedEffect( 0x376A, 6, 1, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0 );
+
+				if ( hitThrough )
+				{
 					int nBenefit = 0;
 					if ( Caster is PlayerMobile )
 						nBenefit = (int)(Caster.Skills[SkillName.Magery].Value / 2);
@@ -63,15 +66,12 @@ namespace Server.Spells.Fifth
 					if ( secs < 0 )
 						secs = 0;
 
-					duration = secs;
+					double duration = secs;
 
 					m.Paralyze( TimeSpan.FromSeconds( duration ) );
 
 					BuffInfo.RemoveBuff( m, BuffIcon.Paralyze );
 					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Paralyze, 1063621, TimeSpan.FromSeconds( duration ), m ) );
-
-					m.PlaySound( 0x204 );
-					m.FixedEffect( 0x376A, 6, 1, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0 );
 
 					HarmfulSpell( m );
 				}

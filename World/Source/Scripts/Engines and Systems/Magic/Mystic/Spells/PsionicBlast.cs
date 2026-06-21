@@ -35,15 +35,14 @@ namespace Server.Spells.Mystic
 			Mobile target = (Mobile)states[1];
 			Mobile defender = (Mobile)states[2];
 			int damage = (int)states[3];
+			bool applyEffect = (bool)states[4];
 
-			if ( caster.HarmfulCheck( defender ) )
-			{
+			Point3D boom = new Point3D( target.X+1, target.Y+2, target.Z+5);
+			Effects.SendLocationEffect( boom, target.Map, 0x3822, 60, 10, 0xB74, 0 );
+			target.PlaySound( 0x658 );
+
+			if ( applyEffect && caster.HarmfulCheck( defender ) )
 				SpellHelper.Damage( this, target, Utility.RandomMinMax( damage, damage + 4 ), 0, 0, 0, 0, 100 );
-
-				Point3D boom = new Point3D( target.X+1, target.Y+2, target.Z+5);
-				Effects.SendLocationEffect( boom, target.Map, 0x3822, 60, 10, 0xB74, 0 );
-				target.PlaySound( 0x658 );
-			}
 		}
 
 		public override bool DelayedDamage{ get{ return !Core.AOS; } }
@@ -60,17 +59,16 @@ namespace Server.Spells.Mystic
 
 				SpellHelper.Turn( from, target );
 
-				if ( SpellHelper.ResolveMagicDefense( 5, ref from, ref target ) )
-				{
-					int damage = (int)((Caster.Skills[SkillName.FistFighting].Value + Caster.Int) / 4);
-				
-					if ( damage > 60 )
-						damage = 60;
+				bool hitThrough = SpellHelper.ResolveMagicDefense( 5, ref from, ref target );
 
-					Timer.DelayCall( TimeSpan.FromSeconds( 0.1 ),
-						new TimerStateCallback( AosDelay_Callback ),
-						new object[]{ Caster, target, m, damage } );
-				}
+				int damage = (int)((Caster.Skills[SkillName.FistFighting].Value + Caster.Int) / 4);
+			
+				if ( damage > 60 )
+					damage = 60;
+
+				Timer.DelayCall( TimeSpan.FromSeconds( 0.1 ),
+					new TimerStateCallback( AosDelay_Callback ),
+					new object[]{ Caster, target, m, damage, hitThrough } );
 			}
 
 			FinishSequence();

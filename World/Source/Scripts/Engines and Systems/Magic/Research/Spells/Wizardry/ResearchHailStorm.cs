@@ -50,12 +50,13 @@ namespace Server.Spells.Research
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int) CirclePower, ref source, ref m ) )
-				{
-					InternalTimer t = new InternalTimer( this, attacker, defender, m );
-					t.Start();
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int) CirclePower, ref source, ref m );
+
+				InternalTimer t = new InternalTimer( this, attacker, defender, m, hitThrough );
+				t.Start();
+
+				if ( hitThrough )
 					Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
-				}
 			}
 
 			FinishSequence();
@@ -66,13 +67,15 @@ namespace Server.Spells.Research
 			private ResearchSpell m_Spell;
 			private Mobile m_Target;
 			private Mobile m_Attacker, m_Defender;
+			private bool m_ApplyEffect;
 
-			public InternalTimer( ResearchSpell spell, Mobile attacker, Mobile defender, Mobile target ): base( TimeSpan.FromSeconds( Core.AOS ? 3.0 : 2.5 ) )
+			public InternalTimer( ResearchSpell spell, Mobile attacker, Mobile defender, Mobile target, bool applyEffect ): base( TimeSpan.FromSeconds( Core.AOS ? 3.0 : 2.5 ) )
 			{
 				m_Spell = spell;
 				m_Attacker = attacker;
 				m_Defender = defender;
 				m_Target = target;
+				m_ApplyEffect = applyEffect;
 
 				if ( m_Spell != null )
 					m_Spell.StartDelayedDamageContext( attacker, this );
@@ -82,20 +85,20 @@ namespace Server.Spells.Research
 
 			protected override void OnTick()
 			{
-				if ( m_Attacker.HarmfulCheck( m_Defender ) )
+				m_Target.FixedParticles( 0x55BB, 10, 30, 5052, Server.Misc.PlayerSettings.GetMySpellHue( true, m_Attacker, 0 ), 0, EffectLayer.LeftFoot );
+				m_Target.PlaySound( 0x5CE );
+
+				if ( m_ApplyEffect && m_Attacker.HarmfulCheck( m_Defender ) )
 				{
 					double damage = DamagingSkill( m_Attacker )/2;
 						if ( damage > 125 ){ damage = 125.0; }
 						if ( damage < 28 ){ damage = 28.0; }
 
-					m_Target.FixedParticles( 0x55BB, 10, 30, 5052, Server.Misc.PlayerSettings.GetMySpellHue( true, m_Attacker, 0 ), 0, EffectLayer.LeftFoot );
-					m_Target.PlaySound( 0x5CE );
-
 					SpellHelper.Damage( m_Spell, m_Target, damage, 0, 0, 100, 0, 0 );
-
-					if ( m_Spell != null )
-						m_Spell.RemoveDelayedDamageContext( m_Attacker );
 				}
+
+				if ( m_Spell != null )
+					m_Spell.RemoveDelayedDamageContext( m_Attacker );
 			}
 		}
 

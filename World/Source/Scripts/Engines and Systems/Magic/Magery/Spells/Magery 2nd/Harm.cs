@@ -45,7 +45,12 @@ namespace Server.Spells.Second
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
+
+				m.FixedParticles( 0x374A, 10, 30, 5013, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 2, EffectLayer.Waist );
+				m.PlaySound( 0x0FC );
+
+				if ( hitThrough )
 				{
 					int nBenefit = 0;
 					if ( Caster is PlayerMobile )
@@ -59,9 +64,6 @@ namespace Server.Spells.Second
 						damage *= 0.25; // 1/4 damage at > 2 tile range
 					else if ( !m.InRange( Caster, 1 ) )
 						damage *= 0.50; // 1/2 damage at 2 tile range
-
-					m.FixedParticles( 0x374A, 10, 30, 5013, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 2, EffectLayer.Waist );
-					m.PlaySound( 0x0FC );
 
 					SpellHelper.Damage( this, m, damage, 0, 0, 100, 0, 0 );
 				}

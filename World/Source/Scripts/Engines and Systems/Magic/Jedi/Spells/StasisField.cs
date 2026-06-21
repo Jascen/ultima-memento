@@ -47,10 +47,13 @@ namespace Server.Spells.Jedi
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m ) )
-				{
-					double duration;
+				bool hitThrough = SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m );
 
+				m.PlaySound( 0x204 );
+				m.FixedEffect( 0x376A, 6, 1, 0xB41, 0 );
+
+				if ( hitThrough )
+				{
 					int secs = (int)((GetJediDamage( Caster )/25) - (GetResistSkill( m ) / 10) + (Caster.Skills[SkillName.Psychology].Value / 2) );
 					
 					if( !Core.SE )
@@ -62,15 +65,12 @@ namespace Server.Spells.Jedi
 					if ( secs < 0 )
 						secs = 0;
 
-					duration = secs;
+					double duration = secs;
 
 					m.Paralyze( TimeSpan.FromSeconds( duration ) );
 
 					BuffInfo.RemoveBuff( m, BuffIcon.StasisField );
 					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.StasisField, 1063528, TimeSpan.FromSeconds( duration ), m ) );
-
-					m.PlaySound( 0x204 );
-					m.FixedEffect( 0x376A, 6, 1, 0xB41, 0 );
 
 					HarmfulSpell( m );
 				}

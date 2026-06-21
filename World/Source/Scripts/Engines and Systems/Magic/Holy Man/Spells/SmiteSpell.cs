@@ -44,18 +44,18 @@ namespace Server.Spells.HolyMan
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)SpellCircle.Fourth, ref source, ref m ) )
-				{
-					double damage;
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)SpellCircle.Fourth, ref source, ref m );
 
+				m.BoltEffect( 0 );
+
+				if ( hitThrough )
+				{
 					int nBenefit = (int)( (Caster.Skills[SkillName.Healing].Value / 10) + (Caster.Skills[SkillName.Spiritualism].Value / 10) );
 
 					if ( holyundead.Slays(m) || holydemons.Slays(m) )
 						nBenefit = nBenefit * 2;
 
-					damage = GetNewAosDamage( 23, 1, 4, m ) + nBenefit;
-
-					m.BoltEffect( 0 );
+					double damage = GetNewAosDamage( 23, 1, 4, m ) + nBenefit;
 
 					SpellHelper.Damage( this, m, damage, 0, 0, 0, 0, 100 );
 				}

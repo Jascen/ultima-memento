@@ -36,17 +36,19 @@ namespace Server.Spells.First
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
+
+				m.FixedParticles( 0x3779, 10, 15, 5004, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
+				m.PlaySound( 0x1E4 );
+
+				if ( hitThrough )
 				{
-				SpellHelper.AddStatCurse( Caster, m, StatType.Int );
+					SpellHelper.AddStatCurse( Caster, m, StatType.Int );
 					if ( m.Spell != null )
 						m.Spell.OnCasterHurt();
 
 					m.Paralyzed = false;
 					BuffInfo.CleanupIcons( m, true );
-
-					m.FixedParticles( 0x3779, 10, 15, 5004, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
-					m.PlaySound( 0x1E4 );
 
 					int percentage = (int)(SpellHelper.GetOffsetScalar( Caster, m, true )*100);
 					TimeSpan length = SpellHelper.GetDuration( Caster, m );

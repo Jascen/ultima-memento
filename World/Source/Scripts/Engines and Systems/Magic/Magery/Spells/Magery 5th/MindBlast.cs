@@ -37,14 +37,13 @@ namespace Server.Spells.Fifth
 			Mobile target = (Mobile)states[1];
 			Mobile defender = (Mobile)states[2];
 			int damage = (int)states[3];
+			bool applyEffect = (bool)states[4];
 
-			if ( caster.HarmfulCheck( defender ) )
-			{
+			target.FixedParticles( 0x374A, 10, 15, 5038, PlayerSettings.GetMySpellHue( true, caster, 1181 ), 2, EffectLayer.Head );
+			target.PlaySound( 0x213 );
+
+			if ( applyEffect && caster.HarmfulCheck( defender ) )
 				SpellHelper.Damage( this, target, Utility.RandomMinMax( damage, damage + 4 ), 0, 0, 100, 0, 0 );
-
-				target.FixedParticles( 0x374A, 10, 15, 5038, PlayerSettings.GetMySpellHue( true, caster, 1181 ), 2, EffectLayer.Head );
-				target.PlaySound( 0x213 );
-			}
 		}
 
 		public override bool DelayedDamage{ get{ return !Core.AOS; } }
@@ -65,19 +64,18 @@ namespace Server.Spells.Fifth
 
 				SpellHelper.Turn( from, target );
 
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref from, ref target ) )
-				{
-					int damage = (int)( ( Spell.ItemSkillValue( Caster, SkillName.Magery, false ) + Caster.Int ) / 5 );
-				
-					if ( damage > 60 )
-						damage = 60;
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref from, ref target );
 
-					damage = damage + nBenefit;
+				int damage = (int)( ( Spell.ItemSkillValue( Caster, SkillName.Magery, false ) + Caster.Int ) / 5 );
+			
+				if ( damage > 60 )
+					damage = 60;
 
-					Timer.DelayCall( TimeSpan.FromSeconds( 1.0 ),
-						new TimerStateCallback( AosDelay_Callback ),
-						new object[]{ Caster, target, m, damage } );
-				}
+				damage = damage + nBenefit;
+
+				Timer.DelayCall( TimeSpan.FromSeconds( 1.0 ),
+					new TimerStateCallback( AosDelay_Callback ),
+					new object[]{ Caster, target, m, damage, hitThrough } );
 			}
 
 			FinishSequence();

@@ -39,7 +39,11 @@ namespace Server.Spells.Magical
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
+
+				m.BoltEffect( 0 );
+
+				if ( hitThrough )
 				{
 					double damage;
 
@@ -60,8 +64,6 @@ namespace Server.Spells.Magical
 
 						damage *= GetDamageScalar( m );
 					}
-
-					m.BoltEffect( 0 );
 
 					SpellHelper.Damage( this, m, damage, 0, 0, 0, 0, 100 );
 				}

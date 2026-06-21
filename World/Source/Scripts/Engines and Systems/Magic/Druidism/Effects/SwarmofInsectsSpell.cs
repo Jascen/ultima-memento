@@ -31,12 +31,14 @@ namespace Server.Spells.Herbalist
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( 7, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( 7, ref source, ref m );
+
+				m.FixedParticles( 0x91B, 1, 240, 9916, 0, 3, EffectLayer.Head );
+				m.PlaySound( 0x1E5 );
+
+				if ( hitThrough )
 				{
 					CheckResisted( m ); // Check magic resist for skill, but do not use return value
-
-					m.FixedParticles( 0x91B, 1, 240, 9916, 0, 3, EffectLayer.Head );
-					m.PlaySound( 0x1E5 );
 
 					double damage = ((Caster.Skills[CastSkill].Value + m.Skills[DamageSkill].Value) / 10) + (int)(Server.Items.BasePotion.EnhancePotions( m )/2);
 

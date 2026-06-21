@@ -41,13 +41,16 @@ namespace Server.Spells.DeathKnight
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( 4, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( 4, ref source, ref m );
+
+				m.FixedEffect( 0x376A, 6, 1 );
+				m.BoltEffect( 0 );
+
+				if ( hitThrough )
 				{
 					double duration = 7.0 + ( GetKarmaPower( m ) * 0.2 );
 
 					m.Paralyze( TimeSpan.FromSeconds( duration ) );
-					m.FixedEffect( 0x376A, 6, 1 );
-					m.BoltEffect( 0 );
 				}
 
 				DrainSoulsInLantern( Caster, RequiredTithing );

@@ -84,18 +84,7 @@ namespace Server.Spells.Magical
 				else if ( circle == 8 && dmg > 59 ){ dmg = 59; }
 				else { dmg = 10; }
 
-				if ( SpellHelper.ResolveMagicDefense( circle, ref source, ref m ) )
-				{
-					dmg = GetNewAosDamage( dmg, 1, 5, m );
-
-					if ( m.CheckSkill( SkillName.MagicResist, 0, 125 ) )
-					{
-						dmg = (int)( dmg / 2 );
-						m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
-					}
-
-					if ( m is BaseCreature && Utility.RandomBool() && ((BaseCreature)m).GetMaster() != null )
-						dmg = dmg * 2;
+				bool hitThrough = SpellHelper.ResolveMagicDefense( circle, ref source, ref m );
 
 					int phy = 0;
 					int fir = 0;
@@ -155,9 +144,12 @@ namespace Server.Spells.Magical
 					{
 						source.MovingParticles( m, 0x10D3, 7, 0, false, false, 0, 0, 0 );
 						m.PlaySound( 0x62D );
-						double webbed = ((double)(Caster.Fame/200));
-							if ( webbed > 15.0 ){ webbed = 15.0; }
-						m.Paralyze( TimeSpan.FromSeconds( webbed ) );
+						if ( hitThrough )
+						{
+							double webbed = ((double)(Caster.Fame/200));
+								if ( webbed > 15.0 ){ webbed = 15.0; }
+							m.Paralyze( TimeSpan.FromSeconds( webbed ) );
+						}
 						phy = 100;
 					}
 					else if ( spells == 7 ) // radiation
@@ -196,15 +188,18 @@ namespace Server.Spells.Magical
 						//Effects.SendLocationEffect( m.Location, m.Map, 0x3400, 60, Utility.RandomList( 0x496, 0x844, 0x9C1 ), 0 );
 						m.PlaySound( 0x108 );
 
-						int drain = ((int)(Caster.Fame/500));
+						if ( hitThrough )
+						{
+							int drain = ((int)(Caster.Fame/500));
 
-						m.Mana = m.Mana - drain;
-							if ( m.Mana < 0 ){ m.Mana = 0; }
+							m.Mana = m.Mana - drain;
+								if ( m.Mana < 0 ){ m.Mana = 0; }
 
-						m.Stam = m.Stam - drain;
-							if ( m.Stam < 0 ){ m.Stam = 0; }
+							m.Stam = m.Stam - drain;
+								if ( m.Stam < 0 ){ m.Stam = 0; }
 
-						m.SendMessage( "You feel your soul draining!" );
+							m.SendMessage( "You feel your soul draining!" );
+						}
 						phy = 20;
 						fir = 20;
 						cld = 20;
@@ -553,28 +548,32 @@ namespace Server.Spells.Magical
 						m.FixedParticles( 0x36B0, 1, 9, 9911, 9915, 5, EffectLayer.Waist );
 						m.PlaySound( 0x229 );
 						psn = 100;
-						poisoned = true;
+						if ( hitThrough )
+							poisoned = true;
 					}
 					else if ( spells == 43 ) // poison
 					{
 						m.FixedParticles( 0x374A, 10, 15, 5021, 0, 0, EffectLayer.Waist );
 						m.PlaySound( 0x205 );
 						psn = 100;
-						poisoned = true;
+						if ( hitThrough )
+							poisoned = true;
 					}
 					else if ( spells == 44 ) // poison
 					{
 						m.FixedParticles( 0x3400, 10, 30, 5052, 0, 0, EffectLayer.Waist );
 						m.PlaySound( 0x108 );
 						psn = 100;
-						poisoned = true;
+						if ( hitThrough )
+							poisoned = true;
 					}
 					else if ( spells == 45 ) // poison
 					{
 						m.FixedParticles( 0x36B0, 10, 30, 5052, 9915, 0, EffectLayer.Waist );
 						m.PlaySound( 0x229 );
 						psn = 100;
-						poisoned = true;
+						if ( hitThrough )
+							poisoned = true;
 					}
 					else if ( spells == 46 ) // venom vine
 					{
@@ -582,7 +581,8 @@ namespace Server.Spells.Magical
 						m.PlaySound( 0x64F );
 						phy = 50;
 						psn = 50;
-						poisoned = true;
+						if ( hitThrough )
+							poisoned = true;
 					}
 					else if ( spells == 47 ) // vines
 					{
@@ -595,7 +595,7 @@ namespace Server.Spells.Magical
 						m.FixedParticles( 0x54F4, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
 						m.PlaySound( 0x10B );
 
-						if ( m is PlayerMobile && Utility.RandomBool() )
+						if ( hitThrough && m is PlayerMobile && Utility.RandomBool() )
 						{
 							IMount mount = m.Mount;
 
@@ -632,7 +632,7 @@ namespace Server.Spells.Magical
 							//Effects.SendLocationEffect( m.Location, m.Map, 0x5590, 30, 10, 0, 0 );
 						}
 						m.PlaySound( Utility.RandomList(0x10B,0x5590) );
-						if ( m is PlayerMobile && Utility.RandomBool() )
+						if ( hitThrough && m is PlayerMobile && Utility.RandomBool() )
 						{
 							IMount mount = m.Mount;
 
@@ -673,9 +673,12 @@ namespace Server.Spells.Magical
 						m.FixedParticles( 0x3400, 10, 30, 5052, 0xB97, 0, EffectLayer.LeftFoot );
 						//Effects.SendLocationEffect( m.Location, m.Map, 0x3400, 60, 0xB97, 0 );
 						m.PlaySound( 0x64F );
-						double weed = ((double)(Caster.Fame/200));
-							if ( weed > 15.0 ){ weed = 15.0; }
-						m.Paralyze( TimeSpan.FromSeconds( weed ) );
+						if ( hitThrough )
+						{
+							double weed = ((double)(Caster.Fame/200));
+								if ( weed > 15.0 ){ weed = 15.0; }
+							m.Paralyze( TimeSpan.FromSeconds( weed ) );
+						}
 						phy = 75;
 						psn = 25;
 					}
@@ -703,7 +706,8 @@ namespace Server.Spells.Magical
 						//Effects.SendLocationEffect( m.Location, m.Map, Utility.RandomList(0x3915,0x3924), 85, 10, 0, 0 );
 						m.PlaySound( 0x5BC );
 						psn = 100;
-						poisoned = true;
+						if ( hitThrough )
+							poisoned = true;
 					}
 					else if ( spells == 56 ) // fire field
 					{
@@ -732,15 +736,18 @@ namespace Server.Spells.Magical
 						source.MovingParticles( m, 0x3FF9, 7, 0, false, true, 0, 0, 9502, 4019, 0x160, 0 );
 						source.PlaySound( 0x658 );
 
-						int drain = ((int)(Caster.Fame/500));
+						if ( hitThrough )
+						{
+							int drain = ((int)(Caster.Fame/500));
 
-						m.Mana = m.Mana - drain;
-							if ( m.Mana < 0 ){ m.Mana = 0; }
+							m.Mana = m.Mana - drain;
+								if ( m.Mana < 0 ){ m.Mana = 0; }
 
-						m.Stam = m.Stam - drain;
-							if ( m.Stam < 0 ){ m.Stam = 0; }
+							m.Stam = m.Stam - drain;
+								if ( m.Stam < 0 ){ m.Stam = 0; }
 
-						m.SendMessage( "You feel your soul draining!" );
+							m.SendMessage( "You feel your soul draining!" );
+						}
 						phy = 20;
 						fir = 20;
 						cld = 20;
@@ -754,7 +761,7 @@ namespace Server.Spells.Magical
 						m.PlaySound( Utility.RandomList(0x5CC,0x5CB) );
 						phy = 50;
 						psn = 50;
-						if ( Utility.RandomBool() ){ poisoned = true; }
+						if ( hitThrough && Utility.RandomBool() ){ poisoned = true; }
 					}
 					else if ( spells == 60 ) // water splash
 					{
@@ -768,7 +775,7 @@ namespace Server.Spells.Magical
 							m.FixedParticles( 0x23B2, 10, 30, 5052, 0, 0, EffectLayer.LeftFoot );
 							m.PlaySound( 0x026 );
 						}
-						if ( m is PlayerMobile && Utility.RandomBool() )
+						if ( hitThrough && m is PlayerMobile && Utility.RandomBool() )
 						{
 							IMount mount = m.Mount;
 
@@ -807,20 +814,33 @@ namespace Server.Spells.Magical
 
 					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-					if ( poisoned )
+					if ( hitThrough )
 					{
-						switch( circle )
-						{
-							case 4: m.ApplyPoison( m, Poison.Lesser );	break;
-							case 5: m.ApplyPoison( m, Poison.Regular );	break;
-							case 6: m.ApplyPoison( m, Poison.Greater );	break;
-							case 7: m.ApplyPoison( m, Poison.Deadly );	break;
-							case 8: m.ApplyPoison( m, Poison.Lethal );	break;
-						}
-					}
+						dmg = GetNewAosDamage( dmg, 1, 5, m );
 
-					SpellHelper.Damage( this, m, dmg, phy, fir, cld, psn, egy );
-				}
+						if ( m.CheckSkill( SkillName.MagicResist, 0, 125 ) )
+						{
+							dmg = (int)( dmg / 2 );
+							m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
+						}
+
+						if ( m is BaseCreature && Utility.RandomBool() && ((BaseCreature)m).GetMaster() != null )
+							dmg = dmg * 2;
+
+						if ( poisoned )
+						{
+							switch( circle )
+							{
+								case 4: m.ApplyPoison( m, Poison.Lesser );	break;
+								case 5: m.ApplyPoison( m, Poison.Regular );	break;
+								case 6: m.ApplyPoison( m, Poison.Greater );	break;
+								case 7: m.ApplyPoison( m, Poison.Deadly );	break;
+								case 8: m.ApplyPoison( m, Poison.Lethal );	break;
+							}
+						}
+
+						SpellHelper.Damage( this, m, dmg, phy, fir, cld, psn, egy );
+					}
 			}
 
 			FinishSequence();

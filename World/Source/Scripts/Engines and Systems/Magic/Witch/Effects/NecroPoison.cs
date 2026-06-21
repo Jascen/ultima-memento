@@ -31,7 +31,12 @@ namespace Server.Spells.Undead
 				SpellHelper.Turn( Caster, m );
 				
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( 3, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( 3, ref source, ref m );
+
+				m.FixedParticles( 0x374A, 10, 15, 5021, EffectLayer.Waist );
+				m.PlaySound( 0x474 );
+
+				if ( hitThrough )
 				{
 					if ( m.Spell != null )
 						m.Spell.OnCasterHurt();
@@ -67,9 +72,6 @@ namespace Server.Spells.Undead
 						
 						m.ApplyPoison( Caster, Poison.GetPoison( level ) );
 					}
-					
-					m.FixedParticles( 0x374A, 10, 15, 5021, EffectLayer.Waist );
-					m.PlaySound( 0x474 );	
 				}
 			}
 			

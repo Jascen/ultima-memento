@@ -42,18 +42,18 @@ namespace Server.Spells.First
 
 				SpellHelper.Turn( source, m );
 
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
-				{
-					double damage;
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
 
+				source.MovingParticles( m, 0x36E4, 5, 0, false, false, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, 3600, 0, 0, 0 );
+				source.PlaySound( 0x1E5 );
+
+				if ( hitThrough )
+				{
 					int nBenefit = 0;
 					if ( Caster is PlayerMobile )
 						nBenefit = (int)(Caster.Skills[SkillName.Magery].Value / 5);
 					
-					damage = GetNewAosDamage( 10, 1, 4, m ) + nBenefit;
-
-					source.MovingParticles( m, 0x36E4, 5, 0, false, false, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, 3600, 0, 0, 0 );
-					source.PlaySound( 0x1E5 );
+					double damage = GetNewAosDamage( 10, 1, 4, m ) + nBenefit;
 
 					SpellHelper.Damage( this, m, damage, 0, 100, 0, 0, 0 );
 				}

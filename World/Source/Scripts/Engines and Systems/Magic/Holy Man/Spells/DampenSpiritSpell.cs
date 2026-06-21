@@ -41,7 +41,12 @@ namespace Server.Spells.HolyMan
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)SpellCircle.Seventh, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)SpellCircle.Seventh, ref source, ref m );
+
+				m.FixedParticles( 0x374A, 10, 15, 5028, EffectLayer.Waist );
+				m.PlaySound( 0x1FB );
+
+				if ( hitThrough )
 				{
 					if ( m.Spell != null )
 						m.Spell.OnCasterHurt();
@@ -71,9 +76,6 @@ namespace Server.Spells.HolyMan
 
 					m.Mana -= toDrain;
 					Caster.Mana += toDrain;
-
-					m.FixedParticles( 0x374A, 10, 15, 5028, EffectLayer.Waist );
-					m.PlaySound( 0x1FB );
 
 					HarmfulSpell( m );
 				}

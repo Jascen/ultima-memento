@@ -39,7 +39,13 @@ namespace Server.Spells.Seventh
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
+
+				m.FixedParticles( 0x374A, 1, 15, 5054, PlayerSettings.GetMySpellHue( true, Caster, 23 ), 7, EffectLayer.Head );
+				m.PlaySound( 0x1F9 );
+				Caster.FixedParticles( 0x0000, 10, 5, 2054, PlayerSettings.GetMySpellHue( true, Caster, 23 ), 7, EffectLayer.Head );
+
+				if ( hitThrough )
 				{
 					if ( m.Spell != null )
 						m.Spell.OnCasterHurt();
@@ -62,11 +68,6 @@ namespace Server.Spells.Seventh
 
 					m.Mana -= toDrain;
 					Caster.Mana += MyServerSettings.PlayerLevelMod( toDrain, Caster );
-
-					m.FixedParticles( 0x374A, 1, 15, 5054, PlayerSettings.GetMySpellHue( true, Caster, 23 ), 7, EffectLayer.Head );
-					m.PlaySound( 0x1F9 );
-
-					Caster.FixedParticles( 0x0000, 10, 5, 2054, PlayerSettings.GetMySpellHue( true, Caster, 23 ), 7, EffectLayer.Head );
 
 					HarmfulSpell( m );
 				}

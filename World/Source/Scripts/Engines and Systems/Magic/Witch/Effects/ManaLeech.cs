@@ -32,7 +32,12 @@ namespace Server.Spells.Undead
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( 7, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( 7, ref source, ref m );
+
+				m.PlaySound( 0x19C );
+				m.FixedParticles( 0x3709, 1, 30, 9904, 1108, 6, EffectLayer.RightFoot );
+
+				if ( hitThrough )
 				{
 					if ( m.Spell != null )
 						m.Spell.OnCasterHurt();
@@ -57,9 +62,6 @@ namespace Server.Spells.Undead
 
 					m.Mana -= toDrain;
 					Caster.Mana += toDrain + 25;
-
-					m.PlaySound( 0x19C );
-					m.FixedParticles( 0x3709, 1, 30, 9904, 1108, 6, EffectLayer.RightFoot );
 				}
 			}
 

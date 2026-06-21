@@ -59,7 +59,20 @@ namespace Server.Spells.Fourth
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
+
+				if ( Core.AOS )
+				{
+					m.FixedParticles( 0x3789, 10, 25, 5032, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
+					m.PlaySound( 0x1F8 );
+				}
+				else
+				{
+					m.FixedParticles( 0x374A, 10, 15, 5032, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
+					m.PlaySound( 0x1F8 );
+				}
+
+				if ( hitThrough )
 				{
 					if ( m.Spell != null )
 						m.Spell.OnCasterHurt();
@@ -79,9 +92,6 @@ namespace Server.Spells.Fourth
 						if ( m_Table.ContainsKey( m ) )
 							toDrain = 0;
 
-						m.FixedParticles( 0x3789, 10, 25, 5032, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
-						m.PlaySound( 0x1F8 );
-
 						if ( toDrain > 0 )
 						{
 							m.Mana -= toDrain;
@@ -97,9 +107,6 @@ namespace Server.Spells.Fourth
 							m.Mana -= Utility.Random( 1, 100 );
 						else
 							m.Mana -= Utility.Random( 1, m.Mana );
-
-						m.FixedParticles( 0x374A, 10, 15, 5032, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Head );
-						m.PlaySound( 0x1F8 );
 					}
 
 					HarmfulSpell( m );

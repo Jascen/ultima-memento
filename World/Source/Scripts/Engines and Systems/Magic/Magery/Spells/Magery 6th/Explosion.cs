@@ -45,11 +45,10 @@ namespace Server.Spells.Sixth
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int) this.Circle, ref source, ref m ) )
-				{
-					InternalTimer t = new InternalTimer( this, attacker, defender, m );
-					t.Start();
-				}
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int) this.Circle, ref source, ref m );
+
+				InternalTimer t = new InternalTimer( this, attacker, defender, m, hitThrough );
+				t.Start();
 			}
 
 			FinishSequence();
@@ -60,14 +59,16 @@ namespace Server.Spells.Sixth
 			private MagerySpell m_Spell;
 			private Mobile m_Target;
 			private Mobile m_Attacker, m_Defender;
+			private bool m_ApplyEffect;
 
-			public InternalTimer( MagerySpell spell, Mobile attacker, Mobile defender, Mobile target )
+			public InternalTimer( MagerySpell spell, Mobile attacker, Mobile defender, Mobile target, bool applyEffect )
 				: base( TimeSpan.FromSeconds( Core.AOS ? 3.0 : 2.5 ) )
 			{
 				m_Spell = spell;
 				m_Attacker = attacker;
 				m_Defender = defender;
 				m_Target = target;
+				m_ApplyEffect = applyEffect;
 
 				if ( m_Spell != null )
 					m_Spell.StartDelayedDamageContext( attacker, this );
@@ -77,31 +78,29 @@ namespace Server.Spells.Sixth
 
 			protected override void OnTick()
 			{
-				if ( m_Attacker.HarmfulCheck( m_Defender ) )
+				if ( Utility.RandomBool() )
 				{
-					double damage;
+					m_Target.FixedParticles( 0x36BD, 20, 10, 5044, PlayerSettings.GetMySpellHue( true, m_Attacker, 0 ), 0, EffectLayer.Head );
+				}
+				else
+				{
+					Effects.SendLocationEffect( m_Target.Location, m_Target.Map, 0x3822, 60, 10, PlayerSettings.GetMySpellHue( true, m_Attacker, 0 ), 0 );
+				}
+				m_Target.PlaySound( 0x307 );
 
+				if ( m_ApplyEffect && m_Attacker.HarmfulCheck( m_Defender ) )
+				{
 					int nBenefit = 0;
 					if ( m_Attacker is PlayerMobile )
 						nBenefit = (int)(m_Attacker.Skills[SkillName.Magery].Value / 5);
 
-					damage = m_Spell.GetNewAosDamage( 40, 1, 5, m_Defender ) + nBenefit;
-
-					if ( Utility.RandomBool() )
-					{
-						m_Target.FixedParticles( 0x36BD, 20, 10, 5044, PlayerSettings.GetMySpellHue( true, m_Attacker, 0 ), 0, EffectLayer.Head );
-					}
-					else
-					{
-						Effects.SendLocationEffect( m_Target.Location, m_Target.Map, 0x3822, 60, 10, PlayerSettings.GetMySpellHue( true, m_Attacker, 0 ), 0 );
-					}
-					m_Target.PlaySound( 0x307 );
+					double damage = m_Spell.GetNewAosDamage( 40, 1, 5, m_Defender ) + nBenefit;
 
 					SpellHelper.Damage( m_Spell, m_Target, damage, 0, 100, 0, 0, 0 );
-
-					if ( m_Spell != null )
-						m_Spell.RemoveDelayedDamageContext( m_Attacker );
 				}
+
+				if ( m_Spell != null )
+					m_Spell.RemoveDelayedDamageContext( m_Attacker );
 			}
 		}
 

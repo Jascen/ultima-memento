@@ -46,14 +46,16 @@ namespace Server.Spells.Research
 
 				SpellHelper.Turn( source, m );
 
-				if ( SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( CirclePower, ref source, ref m );
+
+				source.MovingParticles( m, 0x36E4, 7, 0, false, true, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0xBB3 ), 0, 9502, 4019, 0x160, 0 );
+				source.PlaySound( 0x650 );
+
+				if ( hitThrough )
 				{
 					double damage = DamagingSkill( Caster )/3;
 						if ( damage > 80 ){ damage = 80.0; }
 						if ( damage < 2 ){ damage = 2.0; }
-
-					source.MovingParticles( m, 0x36E4, 7, 0, false, true, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0xBB3 ), 0, 9502, 4019, 0x160, 0 );
-					source.PlaySound( 0x650 );
 
 					SpellHelper.Damage( this, m, damage, 0, 0, 100, 0, 0 );
 					Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );

@@ -38,7 +38,9 @@ namespace Server.Spells.Herbalist
 				SpellHelper.Turn( Caster, m );
 				
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( 3, ref source, ref m ) )
+				bool hitThrough = SpellHelper.ResolveMagicDefense( 3, ref source, ref m );
+
+				if ( hitThrough )
 				{
 					if ( m.Spell != null )
 						m.Spell.OnCasterHurt();
@@ -85,11 +87,13 @@ namespace Server.Spells.Herbalist
 							BuffInfo.RemoveBuff( m, BuffIcon.Firefly );
 							BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.Firefly, 1063668, TimeSpan.FromSeconds( seconds ), m ) );
 						}
-						m.FixedParticles( 0x373A, 10, 15, 5012, EffectLayer.Waist );
-						m.PlaySound( 0x1E0 );
 					}
 				}
-}
+
+				m.FixedParticles( 0x373A, 10, 15, 5012, EffectLayer.Waist );
+				m.PlaySound( 0x1E0 );
+			}
+
 			FinishSequence();
 		}
 

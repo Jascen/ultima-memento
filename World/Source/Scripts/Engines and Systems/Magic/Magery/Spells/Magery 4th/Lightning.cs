@@ -40,26 +40,26 @@ namespace Server.Spells.Fourth
 				SpellHelper.Turn( Caster, m );
 
 				Mobile source = Caster;
-				if ( SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m ) )
-				{
-					double damage;
+				bool hitThrough = SpellHelper.ResolveMagicDefense( (int)this.OneBasedCircle, ref source, ref m );
 
+				if ( Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ) > 0 )
+				{
+					Point3D blast = new Point3D( ( m.X ), ( m.Y ), m.Z+10 );
+					Effects.SendLocationEffect( blast, m.Map, 0x2A4E, 30, 10, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0 );
+					m.PlaySound( 0x029 );
+				}
+				else
+				{
+					m.BoltEffect( 0 );
+				}
+
+				if ( hitThrough )
+				{
 					int nBenefit = 0;
 					if ( Caster is PlayerMobile )
 						nBenefit = (int)(Caster.Skills[SkillName.Magery].Value / 5);
 
-					damage = GetNewAosDamage( 23, 1, 4, m ) + nBenefit;
-
-					if ( Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ) > 0 )
-					{
-						Point3D blast = new Point3D( ( m.X ), ( m.Y ), m.Z+10 );
-						Effects.SendLocationEffect( blast, m.Map, 0x2A4E, 30, 10, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0 );
-						m.PlaySound( 0x029 );
-					}
-					else
-					{
-						m.BoltEffect( 0 );
-					}
+					double damage = GetNewAosDamage( 23, 1, 4, m ) + nBenefit;
 
 					SpellHelper.Damage( this, m, damage, 0, 0, 0, 0, 100 );
 				}
