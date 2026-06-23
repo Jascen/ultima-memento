@@ -1021,6 +1021,8 @@ namespace Server.Misc
 					builder.Append("<br>Changes<br>");
 					builder.Append("- Combat - Caster mobs now prioritize direct damage openers<br>");
 					builder.Append("- Combat - Caster mobs with notable health will attempt to Bless again<br>");
+					builder.Append("- Combat - Caster mobs now choreograph their summoning sequence<br>");
+					builder.Append("- Combat - Caster mobs now summon 1 mob at a time, down from 3<br>");
 					builder.Append("- Gump - Add tooltips to Shinobi spell icon descriptions<br>");
 					builder.Append("- Item - Learn the Trade scrolls can now be opened from a small distance<br>");
 					builder.Append("- Quest - Quest rewards now display as an overhead message rather than system message<br>");
