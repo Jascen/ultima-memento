@@ -287,13 +287,17 @@ namespace Server
 
 				if( obj is BaseWeapon )
 				{
-					AosAttributes attrs = ((BaseWeapon)obj).Attributes;
+					var weapon = (BaseWeapon)obj;
+					AosAttributes attrs = weapon.Attributes;
 
 					if( attrs != null )
 						value += attrs[attribute];
 
 					if( attribute == AosAttribute.Luck )
-						value += ((BaseWeapon)obj).GetLuckBonus();
+						value += weapon.GetLuckBonus();
+
+					if (attribute == AosAttribute.AttackChance )
+						value += weapon.GetHitChanceBonus();
 				}
 				else if( obj is BaseArmor )
 				{

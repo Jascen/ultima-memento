@@ -960,12 +960,17 @@ namespace Server.Gumps
             ///////////////////////////////////////////////////////////////////////////////////
             var colEF = new YPosition(45, 35);
 
+			var weapon = from.Weapon as BaseWeapon;
+			var weaponDamage = AosAttributes.GetValue(from, AosAttribute.WeaponDamage);
+			if ( weapon != null )
+				weaponDamage += weapon.GetDamageBonus();
+
             AddStatLine(500, 615, 80, "Hit Chance", string.Format("{0}/{1}%", AosAttributes.GetValue(from, AosAttribute.AttackChance), 45), "Increases chance to land weapon attacks", color, colEF);
             AddStatLine(500, 615, 80, "Defend Chance", string.Format("{0}/{1}%", AosAttributes.GetValue(from, AosAttribute.DefendChance), 45), "Increases chance to dodge weapon attacks", color, colEF);
             AddStatLine(500, 615, 80, "Swing Speed", string.Format("{0}s", new DateTime(SwingSpeed.Ticks).ToString("s.ff")), "Duration between weapon attacks", color, colEF);
             AddStatLine(500, 615, 80, "Swing Speed +", string.Format("{0}/{1}%", AosAttributes.GetValue(from, AosAttribute.WeaponSpeed), 60), "Increases attack speed of weapon attacks", color, colEF); // Soft cap at 60, Hard cap at 100
             AddStatLine(500, 615, 80, "Bandage Speed", string.Format("{0:0.0}s", new DateTime(TimeSpan.FromMilliseconds(BandageSpeedMilliseconds).Ticks).ToString("s.ff")), null, color, colEF);
-            AddStatLine(500, 615, 80, "Damage Increase", string.Format("{0}/{1}%", AosAttributes.GetValue(from, AosAttribute.WeaponDamage), 100), "Increases damage of weapon attacks", color, colEF);
+            AddStatLine(500, 615, 80, "Damage Increase", string.Format("{0}/{1}%", weaponDamage, 100), "Increases damage of weapon attacks", color, colEF);
             AddStatLine(500, 615, 80, "Reflect Damage", string.Format("{0}/{1}%", AosAttributes.GetValue(from, AosAttribute.ReflectPhysical), 100), "Percent of received physical damage that the attacker also receives", color, colEF);
             AddStatLine(500, 615, 80, "Fast Cast", string.Format("{0}", AosAttributes.GetValue(from, AosAttribute.CastSpeed)), string.Format("Cast Speed Increase: Pure Knights ({0}) / Otherwise ({1})", 4, 2), color, colEF);
             AddStatLine(500, 615, 80, "Cast Recovery", string.Format("{0}", AosAttributes.GetValue(from, AosAttribute.CastRecovery)), null, color, colEF);
