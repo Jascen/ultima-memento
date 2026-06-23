@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Server;
 using Server.Gumps;
 using Server.Network;
 using Server.Spells.Necromancy;
@@ -13,6 +12,8 @@ namespace Server.SkillHandlers
 {
 	public class Tracking
 	{
+		private static readonly Dictionary<Mobile, LastTrackState> m_LastTrack = new Dictionary<Mobile, LastTrackState>();
+
 		public static void Initialize()
 		{
 			SkillInfo.Table[(int)SkillName.Tracking].Callback = new SkillUseCallback( OnUse );
@@ -20,13 +21,54 @@ namespace Server.SkillHandlers
 
 		public static TimeSpan OnUse( Mobile m )
 		{
-			m.SendLocalizedMessage( 1011350 ); // What do you wish to track?
+			if ( m is PlayerMobile )
+			{
+				LastTrackState lastTrack;
+				m_LastTrack.TryGetValue( m, out lastTrack );
 
-			m.CloseGump( typeof( TrackWhatGump ) );
-			m.CloseGump( typeof( TrackWhoGump ) );
-			m.SendGump( new TrackWhatGump( m ) );
+				// Only show prompt if the user is not moving or we can't auto-select something for them
+				if ( lastTrack == null || lastTrack.CategoryType < 0 || DateTime.Now - m.LastMoveTime > m.ComputeMovementSpeed( m.Direction ) )
+				{
+					m.SendLocalizedMessage( 1011350 ); // What do you wish to track?
 
-			return TimeSpan.FromSeconds( 5.0 ); // 10 second delay before beign able to re-use a skill
+					m.CloseGump( typeof( TrackWhatGump ) );
+					m.CloseGump( typeof( TrackWhoGump ) );
+					m.SendGump( new TrackWhatGump( m ) );
+				}
+				else
+				{
+					var success = m.CheckSkillExplicit( SkillName.Tracking, 0.0, 21.1 );
+
+					if ( lastTrack.Target == null || !TrackWhoGump.TryTrackMobile( success, m, lastTrack.Target, lastTrack.CategoryType ) )
+						TrackWhoGump.DisplayTo( success, m, lastTrack.CategoryType );
+				}
+			}
+
+			return TimeSpan.FromSeconds( 5.0 );
+		}
+
+		private class LastTrackState
+		{
+			public int CategoryType;
+			public Mobile Target;
+		}
+
+		public static void SetLastCategory( Mobile from, int categoryType )
+		{
+			LastTrackState state;
+			if ( !m_LastTrack.TryGetValue( from, out state ) )
+				m_LastTrack[from] = state = new LastTrackState();
+
+			state.CategoryType = categoryType;
+		}
+
+		public static void SetLastTarget( Mobile from, Mobile target )
+		{
+			LastTrackState state;
+			if ( !m_LastTrack.TryGetValue( from, out state ) )
+				m_LastTrack[from] = state = new LastTrackState();
+
+			state.Target = target;
 		}
 
 		public class TrackingInfo
@@ -212,7 +254,11 @@ namespace Server.SkillHandlers
 		{
 			m_From.SendSound( 0x4A ); 
 			if ( info.ButtonID >= 1 && info.ButtonID <= 32 )
-				TrackWhoGump.DisplayTo( m_Success, m_From, info.ButtonID - 1 );
+			{
+				var type = info.ButtonID - 1;
+				Tracking.SetLastCategory( m_From, type );
+				TrackWhoGump.DisplayTo( m_Success, m_From, type );
+			}
 		}
 	}
 
@@ -281,6 +327,30 @@ namespace Server.SkillHandlers
 			}
 		}
 
+		public static bool TryTrackMobile( bool success, Mobile from, Mobile target, int type )
+		{
+			if ( !success || target == null || target.Deleted )
+				return false;
+
+			if ( type < 0 || type >= m_Delegates.Length )
+				return false;
+
+			Map map = from.Map;
+
+			if ( map == null || target.Map != map )
+				return false;
+
+			from.CheckSkillExplicit( SkillName.Tracking, 21.1, 125.0 ); // Passive gain
+
+			var range = 25 + (int)(from.Skills[SkillName.Tracking].Value/2);
+
+			if ( !from.InRange( target, range ) || !IsTrackable( from, target, m_Delegates[type] ) )
+				return false;
+
+			BeginTracking( from, target, range );
+			return true;
+		}
+
 		public static void DisplayTo( bool success, Mobile from, int type )
 		{
 			if ( !success )
@@ -294,6 +364,9 @@ namespace Server.SkillHandlers
 			if ( map == null )
 				return;
 
+			if ( type < 0 || type >= m_Delegates.Length )
+				return;
+
 			TrackTypeDelegate check = m_Delegates[type];
 
 			from.CheckSkill( SkillName.Tracking, 21.1, 100.0 ); // Passive gain
@@ -304,25 +377,8 @@ namespace Server.SkillHandlers
 
 			foreach ( Mobile m in from.GetMobilesInRange( range ) )
 			{
-				bool canTrack = false;
-
-				if ( Worlds.IsPlayerInTheLand( m.Map, m.Location, m.X, m.Y ) && Worlds.IsPlayerInTheLand( from.Map, from.Location, from.X, from.Y ) )
-				{
-					canTrack = true; // THEY ARE BOTH IN THE MAJOR LAND AREA SO THEY CAN TRACK EACH OTHER
-				}
-				else if ( Server.Misc.Worlds.GetRegionName( m.Map, m.Location ) == Server.Misc.Worlds.GetRegionName( from.Map, from.Location ) )
-				{
-					canTrack = true; // THEY ARE BOTH IN THE SAME CAVE OR DUNGEON SO THEY CAN TRACK EACH OTHER
-				}
-
-				if ( canTrack )
-				{
-					if ( ( m.WhisperHue == 666 || m.WhisperHue == 999 ) && m.Hidden && check( m ) ) // ADD HIDDEN SEA MONSTERS
-						list.Add( m );
-
-					if ( m != from && m.Alive && !(m is SpellCritter) && !(m is CorpseCritter) && ( (!m.Hidden || MyServerSettings.LineOfSight( m, true )) || m.AccessLevel == AccessLevel.Player || from.AccessLevel > m.AccessLevel) && check( m ) && CheckDifficulty( from, m ) )
-						list.Add( m );
-				}
+				if ( IsTrackable( from, m, check ) )
+					list.Add( m );
 			}
 
 			if ( list.Count > 0 )
@@ -336,6 +392,38 @@ namespace Server.SkillHandlers
 			{
 				from.SendLocalizedMessage( 1018092 ); // You see no evidence of those in the area.
 			}
+		}
+
+		private static bool IsTrackable( Mobile from, Mobile m, TrackTypeDelegate check )
+		{
+			bool canTrack = false;
+
+			if ( Worlds.IsPlayerInTheLand( m.Map, m.Location, m.X, m.Y ) && Worlds.IsPlayerInTheLand( from.Map, from.Location, from.X, from.Y ) )
+			{
+				canTrack = true; // THEY ARE BOTH IN THE MAJOR LAND AREA SO THEY CAN TRACK EACH OTHER
+			}
+			else if ( Server.Misc.Worlds.GetRegionName( m.Map, m.Location ) == Server.Misc.Worlds.GetRegionName( from.Map, from.Location ) )
+			{
+				canTrack = true; // THEY ARE BOTH IN THE SAME CAVE OR DUNGEON SO THEY CAN TRACK EACH OTHER
+			}
+
+			if ( !canTrack )
+				return false;
+
+			if ( ( m.WhisperHue == 666 || m.WhisperHue == 999 ) && m.Hidden && check( m ) ) // ADD HIDDEN SEA MONSTERS
+				return true;
+
+			if ( m != from && m.Alive && !(m is SpellCritter) && !(m is CorpseCritter) && ( (!m.Hidden || MyServerSettings.LineOfSight( m, true )) || m.AccessLevel == AccessLevel.Player || from.AccessLevel > m.AccessLevel) && check( m ) && CheckDifficulty( from, m ) )
+				return true;
+
+			return false;
+		}
+
+		private static void BeginTracking( Mobile from, Mobile target, int range )
+		{
+			from.QuestArrow = new TrackArrow( from, target, range * 2 );
+
+			Tracking.AddInfo( from, target );
 		}
 
 		// Tracking players uses tracking and searching vs. hiding and stealth 
@@ -547,10 +635,8 @@ namespace Server.SkillHandlers
 			{
 				Mobile m = m_List[index];
 
-				m_From.QuestArrow = new TrackArrow( m_From, m, m_Range * 2 );
-
-				if ( Core.SE )
-					Tracking.AddInfo( m_From, m );
+				Tracking.SetLastTarget( m_From, m );
+				BeginTracking( m_From, m, m_Range );
 			}
 		}
 	}

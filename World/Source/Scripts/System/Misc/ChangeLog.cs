@@ -1039,6 +1039,7 @@ namespace Server.Misc
 					builder.Append("- Quest - All Blacksmith quests now show a return destination<br>");
 					builder.Append("- Skill - Parrying absorption duration is now 3 seconds, down from 5<br>");
 					builder.Append("- Skill - Parrying activation is now an overhead message<br>");
+					builder.Append("- Skill - Activating Tracking now auto-selects last tracked options when moving<br>");
 					builder.Append("- Spell - All spells now display their visuals regardless if absorbed<br>");
 
 					builder.Append("<br>Fixes<br>");
