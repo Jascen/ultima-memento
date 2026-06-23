@@ -547,7 +547,7 @@ namespace Server.Mobiles
 				}
 
 				int px, py;
-				bool teleportAway = ( m_Mobile.Hits < (m_Mobile.Hits / 10) );
+				bool teleportAway = m_Mobile.Hits < (m_Mobile.HitsMax / 10);
 
 				if ( teleportAway )
 				{
