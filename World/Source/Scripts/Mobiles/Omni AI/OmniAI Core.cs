@@ -577,14 +577,14 @@ namespace Server.Mobiles
 				}
 
 				// Try finding a path to the target
-				IPoint3D goal = new Point3D( toTarget.X, toTarget.Y, 0 );
+				IPoint3D goal = new Point3D( px, py, 0 );
 				Spells.SpellHelper.GetSurfaceTop(ref goal);
 				var goalPoint = new Point3D(goal.X, goal.Y, goal.Z);
 				var path = new MovementPath( m_Mobile, goalPoint );
 				if ( path.Success )
 				{
-					var x = goalPoint.X;
-					var y = goalPoint.Y;
+					var x = m_Mobile.X;
+					var y = m_Mobile.Y;
 					var points = new List<Point3D>();
 					foreach ( Direction d in path.Directions )
 					{
