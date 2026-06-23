@@ -5866,7 +5866,10 @@ namespace Server.Mobiles
 		{
 			base.OnCombatantChange();
 
-			TryEmpower(Combatant);
+			if ( Combatant == null )
+				IsEmpowered = false;
+			else
+				TryEmpower(Combatant);
 		}
 
 		public void ResetEmpower()
