@@ -1,16 +1,8 @@
-using System;
-using Server; 
-using System.Collections;
-using Server.ContextMenus;
-using System.Collections.Generic;
 using Server.Misc;
 using Server.Network;
-using Server.Items;
 using Server.Gumps;
 using Server.Mobiles;
-using Server.Commands;
-using System.Globalization;
-using Server.Regions;
+using Server.Utilities;
 
 namespace Server.Items
 {
@@ -58,27 +50,20 @@ namespace Server.Items
 
 		public override bool OnDragDrop( Mobile from, Item dropped )
 		{          		
-			int iAmount = 0;
 			string sEnd = ".";
 
 			if ( from != null && Weight < 1.5 )
 			{
 				if ( dropped is Gold && NeedGold > HaveGold )
 				{
-					int WhatIsDropped = dropped.Amount;
-					int WhatIsNeeded = NeedGold - HaveGold;
-					int WhatIsExtra = WhatIsDropped - WhatIsNeeded; if ( WhatIsExtra < 1 ){ WhatIsExtra = 0; }
-					int WhatIsTaken = WhatIsDropped - WhatIsExtra;
-
-					if ( WhatIsExtra > 0 ){ from.AddToBackpack( new Gold( WhatIsExtra ) ); }
-					iAmount = WhatIsTaken;
+					var iAmount = ItemUtilities.ConsumeClamped(dropped, NeedGold - HaveGold);
 
 					if ( iAmount > 1 ){ sEnd = "s."; }
 
-					HaveGold = HaveGold + iAmount;
+					HaveGold += iAmount;
 					from.SendMessage( "You added " + iAmount.ToString() + " gold coin" + sEnd );
-					dropped.Delete();
-					return true;
+
+					return dropped.Deleted;
 				}
 			}
 

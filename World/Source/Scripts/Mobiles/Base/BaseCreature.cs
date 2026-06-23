@@ -20,6 +20,7 @@ using System.IO;
 using Server.Engines.MLQuests;
 using Custom.Jerbal.Jako;
 using System.Linq;
+using Server.Utilities;
 
 namespace Server.Mobiles
 {
@@ -5496,9 +5497,7 @@ namespace Server.Mobiles
 					
 					this.InvalidateProperties();
 
-					dropped.Amount -= cost;
-					if (dropped.Amount < 1)
-						dropped.Delete();
+					var iAmount = ItemUtilities.ConsumeClamped(dropped, cost);
 
 					// If it wasn't deleted, bounce it back
 					return dropped.Deleted;

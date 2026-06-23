@@ -3,6 +3,7 @@ using Server.Engines.Craft;
 using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
+using Server.Utilities;
 using System.Collections.Generic;
 
 namespace Server.Engines.GlobalShoppe
@@ -71,13 +72,9 @@ namespace Server.Engines.GlobalShoppe
 			if (dropped is Gold)
 			{
 				var context = GetOrCreateContext(from);
-				if (!context.FeePaid && ShoppeConstants.SHOPPE_FEE <= dropped.Amount)
+				if (!context.FeePaid && ItemUtilities.ConsumeRequired(dropped, ShoppeConstants.SHOPPE_FEE))
 				{
 					context.FeePaid = true;
-					dropped.Amount -= ShoppeConstants.SHOPPE_FEE;
-					if (dropped.Amount < 1)
-						dropped.Delete();
-
 					OnDoubleClick(from);
 
 					return dropped.Deleted;

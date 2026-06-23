@@ -1,14 +1,6 @@
-using System;
-using Server;
-using Server.Mobiles;
-using Server.Targeting;
-using System.Collections;
 using Server.Network;
-using System.Text;
-using Server.Items;
-using System.Collections.Generic;
-using Server.ContextMenus;
 using Server.Misc;
+using Server.Utilities;
 
 namespace Server.Items
 {
@@ -27,24 +19,17 @@ namespace Server.Items
 			if ( dropped is Gold )
 			{
 				int nPenalty = AssassinFunctions.QuestFailure( from );
-
-				if ( dropped.Amount >= nPenalty )
+				if ( ItemUtilities.ConsumeRequired(dropped, nPenalty) )
 				{
 					PlayerSettings.ClearQuestInfo( from, "AssassinQuest" );
 					AssassinFunctions.QuestTimeAllowed( from );
 					from.PrivateOverheadMessage(MessageType.Regular, 1153, false, "Your failure in this task has been forgiven.", from.NetState);
-					dropped.Delete();
 				}
-				else
-				{
-					from.AddToBackpack ( dropped );
-				}
+
+				return dropped.Deleted;
 			}
-			else
-			{
-				from.AddToBackpack ( dropped );
-			}
-			return true;
+
+			return false;
 		}			
 
 		public BoxOfAtonement( Serial serial ) : base( serial )

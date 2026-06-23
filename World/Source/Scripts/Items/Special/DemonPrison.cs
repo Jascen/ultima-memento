@@ -1,17 +1,12 @@
-using System;
-using Server; 
 using System.Collections;
-using Server.ContextMenus;
-using System.Collections.Generic;
 using Server.Misc;
 using Server.Network;
 using Server.Items;
 using Server.Gumps;
 using Server.Mobiles;
-using Server.Commands;
-using System.Globalization;
 using Server.Regions;
 using Server.Targeting;
+using Server.Utilities;
 
 namespace Server.Items
 {
@@ -89,10 +84,8 @@ namespace Server.Items
 					else
 					{
 						int cost = m_DemonPrison.NeedGold - m_DemonPrison.HaveGold;
-						int coin = gold.Amount;
-
-						if ( cost >= coin ){ m_DemonPrison.HaveGold = m_DemonPrison.HaveGold + coin; gold.Delete(); }
-						else { m_DemonPrison.HaveGold = m_DemonPrison.HaveGold + cost; gold.Amount = gold.Amount - cost; }
+						var iAmount = ItemUtilities.ConsumeClamped(gold, cost);
+						m_DemonPrison.HaveGold += iAmount;
 
 						from.PlaySound( 0x1FA );
 						from.SendMessage( "The gold has been added to the shard." );
