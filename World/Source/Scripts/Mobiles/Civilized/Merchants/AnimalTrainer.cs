@@ -1,17 +1,13 @@
-using System;
 using System.Collections.Generic;
-using Server;
 using Server.ContextMenus;
 using Server.Gumps;
 using Server.Items;
 using Server.Network;
 using Server.Targeting;
-using Server.Misc;
 using Server.Regions;
-using Server.Spells.Syth;
-using Server.Spells.Jedi;
-using Server.Spells.Mystic;
 using System.Collections;
+using Server.Utilities;
+using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -99,6 +95,7 @@ namespace Server.Mobiles
 			base.GetContextMenuEntries( from, list ); 
 			list.Add( new ClaimingGumpEntry( from, this ) ); 
 			list.Add( new RidingGumpEntry( from, this ) ); 
+			list.Add( new SearchForPetsEntry( this, from ) );
 		}
 
 		public class RidingGumpEntry : ContextMenuEntry
@@ -210,7 +207,7 @@ namespace Server.Mobiles
 			private AnimalTrainer m_Trainer;
 			private Mobile m_From;
 
-			public ClaimAllEntry( AnimalTrainer trainer, Mobile from ) : base( 6127, 12 )
+			public ClaimAllEntry( AnimalTrainer trainer, Mobile from ) : base( 6127, 12 ) // Claim All Pets
 			{
 				m_Trainer = trainer;
 				m_From = from;
@@ -750,6 +747,41 @@ namespace Server.Mobiles
 			base.Deserialize( reader );
 
 			int version = reader.ReadInt();
+		}
+	}
+
+	public class SearchForPetsEntry : ContextMenuEntry
+	{
+		private readonly Mobile m_Trainer;
+		private readonly Mobile m_From;
+
+		public SearchForPetsEntry( Mobile trainer, Mobile from ) : base( 6134, 12 ) // Search
+		{
+			m_Trainer = trainer;
+			m_From = from;
+		}
+
+		public override void OnClick()
+		{
+			var missingPets = WorldUtilities
+				.ForEachMobile<BaseCreature>(mobile => MobileUtilities.TryGetMasterPlayer(mobile) == m_From
+					&& mobile.Map != Map.Internal
+					&& (!mobile.InRange(m_From, 5) || mobile.Map != m_From.Map)
+				).ToList();
+
+			if ( 0 < missingPets.Count )
+			{
+				m_Trainer.SayTo(m_From, "Look who I found!");
+				foreach ( var pet in missingPets )
+				{
+					pet.Hidden = false;
+					pet.MoveToWorld(m_From.Location, m_From.Map);
+				}
+			}
+			else
+			{
+				m_Trainer.SayTo(m_From, "Sorry, I searched the whole world but couldn't find any other pets.");
+			}
 		}
 	}
 }

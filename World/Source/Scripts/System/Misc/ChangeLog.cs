@@ -1028,6 +1028,7 @@ namespace Server.Misc
 					builder.Append("- Gump - '[Status' gump now properly includes weapon damage from Quality Level<br>");
 					builder.Append("- Gump - '[Status' gump now properly includes hit chance from Accuracy Level<br>");
 					builder.Append("- Item - Learn the Trade scrolls can now be opened from a small distance<br>");
+					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Quest - Quest rewards now display as an overhead message rather than system message<br>");
 					builder.Append("- Quest - Blacksmith recipes are now in chests instead of bags<br>");
 					builder.Append("- Quest - Blacksmith reward chests are now named and brightly colored<br>");

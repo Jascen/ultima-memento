@@ -131,6 +131,7 @@ namespace Server.Mobiles
 			base.GetContextMenuEntries( from, list ); 
 			list.Add( new ClaimingGumpEntry( from, this ) ); 
 			list.Add( new RidingGumpEntry( from, this ) ); 
+			list.Add( new SearchForPetsEntry( this, from ) );
 		}
 
 		public class RidingGumpEntry : ContextMenuEntry
