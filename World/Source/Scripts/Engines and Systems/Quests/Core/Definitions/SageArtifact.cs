@@ -75,9 +75,11 @@ namespace Server.Engines.MLQuests.Definitions
             Rewards.Add(new DummyReward("The location of a powerful artefact"));
         }
 
+        public override Type QuestRecipient { get { return typeof(Sage); } }
+
         public override IEnumerable<Type> GetQuestGivers()
         {
-            yield return typeof(Sage);
+            yield return QuestRecipient;
             yield return typeof(Citizens);
         }
 

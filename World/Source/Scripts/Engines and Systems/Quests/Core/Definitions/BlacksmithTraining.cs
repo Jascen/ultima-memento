@@ -61,9 +61,11 @@ namespace Server.Engines.MLQuests.Definitions
             CompletionMessage = builder.ToString();
         }
 
+        public override Type QuestRecipient { get { return typeof(Blacksmith); } }
+
         public override IEnumerable<Type> GetQuestGivers()
         {
-            yield return typeof(Blacksmith); // Quest Giver - Any Blacksmith
+            yield return QuestRecipient; // Quest Giver - Any Blacksmith
         }
 
         public override bool CanOffer(IQuestGiver quester, PlayerMobile pm, MLQuestContext context, bool message)

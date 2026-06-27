@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using Server.Engines.MLQuests;
 
 namespace Server.Mobiles
 {
+	[QuesterName("Any Blacksmith")]
 	public class Blacksmith : BaseVendor
 	{
 		private List<SBInfo> m_SBInfos = new List<SBInfo>();
