@@ -437,12 +437,20 @@ namespace Server.Misc
 			{
 				SkillInfo info = skill.Info;
 
-				if ( from.StrLock == StatLockType.Up && (info.StrGain / MyServerSettings.StatGain()) > Utility.RandomDouble() )
-					GainStat( from, Stat.Str );
-				else if ( from.DexLock == StatLockType.Up && (info.DexGain / MyServerSettings.StatGain()) > Utility.RandomDouble() )
-					GainStat( from, Stat.Dex );
-				else if ( from.IntLock == StatLockType.Up && (info.IntGain / MyServerSettings.StatGain()) > Utility.RandomDouble() )
-					GainStat( from, Stat.Int );
+				if ( from.StrLock == StatLockType.Up
+					&& (info.StrGain / MyServerSettings.StatGain()) > Utility.RandomDouble()
+					&& GainStat( from, Stat.Str ) )
+					return;
+				
+				if ( from.DexLock == StatLockType.Up
+					&& (info.DexGain / MyServerSettings.StatGain()) > Utility.RandomDouble()
+					&& GainStat( from, Stat.Dex ) )
+					return;
+
+				if ( from.IntLock == StatLockType.Up
+					&& (info.IntGain / MyServerSettings.StatGain()) > Utility.RandomDouble()
+					&& GainStat( from, Stat.Int ) )
+					return;
 			}
 		}
 
@@ -567,7 +575,7 @@ namespace Server.Misc
 			return 0 < remaining.TotalSeconds ? remaining : TimeSpan.Zero;
 		}
 
-		public static void GainStat( Mobile from, Stat stat )
+		private static bool GainStat( Mobile from, Stat stat )
 		{
 			var isAvatar = from is PlayerMobile && ((PlayerMobile)from).Avatar.Active;
 
@@ -577,10 +585,10 @@ namespace Server.Misc
 				{
 					if ( from is BaseCreature && ((BaseCreature)from).Controlled ) {
 						if ( (from.LastStrGain + m_PetStatGainDelay) >= DateTime.Now )
-							return;
+							return false;
 					}
 					else if( !isAvatar && (from.LastStrGain + m_StatGainDelay) >= DateTime.Now )
-						return;
+						return false;
 
 					from.LastStrGain = DateTime.Now;
 					break;
@@ -589,10 +597,10 @@ namespace Server.Misc
 				{
 					if ( from is BaseCreature && ((BaseCreature)from).Controlled ) {
 						if ( (from.LastDexGain + m_PetStatGainDelay) >= DateTime.Now )
-							return;
+							return false;
 					}
 					else if( !isAvatar && (from.LastDexGain + m_StatGainDelay) >= DateTime.Now )
-						return;
+						return false;
 
 					from.LastDexGain = DateTime.Now;
 					break;
@@ -601,11 +609,11 @@ namespace Server.Misc
 				{
 					if ( from is BaseCreature && ((BaseCreature)from).Controlled ) {
 						if ( (from.LastIntGain + m_PetStatGainDelay) >= DateTime.Now )
-							return;
+							return false;
 					}
 
 					else if( !isAvatar && (from.LastIntGain + m_StatGainDelay) >= DateTime.Now )
-						return;
+						return false;
 
 					from.LastIntGain = DateTime.Now;
 					break;
@@ -615,6 +623,7 @@ namespace Server.Misc
 			bool atrophy = ( (from.RawStatTotal / (double)from.StatCap) >= Utility.RandomDouble() );
 
 			IncreaseStat( from, stat, atrophy );
+			return true;
 		}
 	}
 }
