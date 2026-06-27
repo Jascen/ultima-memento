@@ -48,7 +48,15 @@ namespace Server.Engines.MLQuests.Definitions
             Rewards.Add(new ConstructibleItemReward("3 New Weapon Recipes",
                 player =>
                 {
-                    return DefBlacksmithy.CraftSystem.GetRandomRecipeScrolls(player, 3, recipe => !player.HasRecipe(recipe) && DefBlacksmithy.CraftSystem.IsWeaponRecipe(recipe));
+                    return DefBlacksmithy.CraftSystem.GetRandomRecipeScrolls(
+						player, 
+						new FancyStoneChest
+						{
+							Name = "Weapon Recipes",
+							Hue = Server.Utilities.HueUtilities.RandomBrightMetalHue()
+						}, 3, 
+						recipe => !player.HasRecipe(recipe) && DefBlacksmithy.CraftSystem.IsWeaponRecipe(recipe)
+					);
                 })
             );
         }
