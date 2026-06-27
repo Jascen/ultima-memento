@@ -34,7 +34,7 @@ namespace Server.Commands
 
 			Register( "ClearFacet", AccessLevel.Administrator, new CommandEventHandler( ClearFacet_OnCommand ) );
 
-			Register( "Where", AccessLevel.Counselor, new CommandEventHandler( Where_OnCommand ) );
+			Register( "Where", AccessLevel.Player, new CommandEventHandler( Where_OnCommand ) );
 
 			Register( "AutoPageNotify", AccessLevel.Counselor, new CommandEventHandler( APN_OnCommand ) );
 			Register( "APN", AccessLevel.Counselor, new CommandEventHandler( APN_OnCommand ) );
