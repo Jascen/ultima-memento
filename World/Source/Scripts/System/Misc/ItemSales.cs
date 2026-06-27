@@ -3761,6 +3761,8 @@ namespace Server
 			new ItemSalesInfo( typeof(	StrawHat	),	7	,	15	,	0	,	false	,	false	,	World.None	,	Category.None	,	Material.Cloth	,	Market.Tailor	),
 			new ItemSalesInfo( typeof(	StuddedArms	),	87	,	15	,	0	,	false	,	false	,	World.None	,	Category.Armor	,	Material.Leather	,	Market.Leather	),
 			new ItemSalesInfo( typeof(	StuddedBustierArms	),	120	,	15	,	0	,	false	,	false	,	World.None	,	Category.Armor	,	Material.Leather	,	Market.Leather	),
+			new ItemSalesInfo( typeof(	HideChest	),	128	,	15	,	0	,	false	,	false	,	World.None	,	Category.Armor	,	Material.Leather	,	Market.Leather	),
+			new ItemSalesInfo( typeof(	StuddedHideChest	),	128	,	15	,	0	,	false	,	false	,	World.None	,	Category.Armor	,	Material.Leather	,	Market.Leather	),
 			new ItemSalesInfo( typeof(	StuddedChest	),	128	,	15	,	0	,	false	,	false	,	World.None	,	Category.Armor	,	Material.Leather	,	Market.Leather	),
 			new ItemSalesInfo( typeof(	StuddedDo	),	130	,	15	,	0	,	false	,	false	,	World.Orient	,	Category.Armor	,	Material.Leather	,	Market.Monk	),
 			new ItemSalesInfo( typeof(	StuddedGloves	),	79	,	15	,	0	,	false	,	false	,	World.None	,	Category.Armor	,	Material.Leather	,	Market.Leather	),
