@@ -1,5 +1,3 @@
-using System;
-using Server;
 using Server.Mobiles;
 
 namespace Server.Items 
@@ -34,11 +32,6 @@ namespace Server.Items
 		{ 
 			base.Deserialize( reader ); 
 			int version = reader.ReadInt(); 
-			if ( Name != "Silver Griffon" )
-				Name = "Silver Griffon";
-
-			ItemID = 0x4C59;
-			Hue = 0x99B;
 		} 
 	}
 }

@@ -34,8 +34,6 @@ namespace Server.Items
 		{ 
 			base.Deserialize( reader ); 
 			int version = reader.ReadInt(); 
-			if ( Name != "Undead Horse" )
-				Name = "Undead Horse";
 		} 
 	}
 }

@@ -1,5 +1,3 @@
-using System;
-using Server;
 using Server.Mobiles;
 
 namespace Server.Items 
@@ -36,7 +34,6 @@ namespace Server.Items
 		{ 
 			base.Deserialize( reader ); 
 			int version = reader.ReadInt(); 
-			Hue = 0;
 		} 
 	}
 }

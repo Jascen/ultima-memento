@@ -1,5 +1,3 @@
-using System;
-using Server;
 using Server.Mobiles;
 
 namespace Server.Items 
@@ -34,10 +32,6 @@ namespace Server.Items
 		{ 
 			base.Deserialize( reader ); 
 			int version = reader.ReadInt(); 
-			if ( Name != "Dread Horse" )
-				Name = "Dread Horse";
-			ItemID = 0x2617;
-			Hue = 0xAB4;
 		} 
 	}
 }
