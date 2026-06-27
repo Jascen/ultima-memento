@@ -18,6 +18,9 @@ namespace Server.Engines.MLQuests.Objectives
 			return true;
 		}
 
+		/// <summary>
+		/// Write information to the Objective page 
+		/// </summary>
 		public abstract void WriteToGump( Gump g, ref int y );
 
 		public abstract BaseObjectiveInstance CreateInstance( MLQuestInstance instance );
@@ -108,6 +111,9 @@ namespace Server.Engines.MLQuests.Objectives
 			return true;
 		}
 
+		/// <summary>
+		/// Should only be called after IsComplete() is checked to be true ???
+		/// </summary>
 		public virtual void OnClaimReward()
 		{
 		}

@@ -32,6 +32,9 @@ namespace Server.Engines.MLQuests
 
 		public readonly List<MLQuestInstance> Instances;
 
+		/// <summary>
+		/// Quest Chains should likely only set this on the Final step
+		/// </summary>
 		public bool OneTimeOnly { get; protected set; }
 
 		public bool HasRestartDelay { get; protected set; }
