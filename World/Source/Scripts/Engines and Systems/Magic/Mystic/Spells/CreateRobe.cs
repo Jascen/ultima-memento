@@ -1,6 +1,6 @@
 using System;
 using Server.Items;
-using System.Collections;
+using Server.Utilities;
 
 namespace Server.Spells.Mystic
 {
@@ -26,16 +26,8 @@ namespace Server.Spells.Mystic
 		{
 			if ( CheckSequence() )
 			{
-				ArrayList targets = new ArrayList();
-				foreach ( Item item in World.Items.Values )
-				if ( item is MysticMonkRobe )
+				foreach ( Item item in WorldUtilities.ForEachItem<MysticMonkRobe>( item => item.Owner == Caster ) )
 				{
-					if ( ((MysticMonkRobe)item).Owner == Caster )
-						targets.Add( item );
-				}
-				for ( int i = 0; i < targets.Count; ++i )
-				{
-					Item item = ( Item )targets[ i ];
 					item.Delete();
 				}
 
