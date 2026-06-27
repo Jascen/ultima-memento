@@ -1281,32 +1281,8 @@ namespace Server
 
 		public static string AddArtyPoints( Item var, string text )
 		{
-			if ( var is BaseGiftArmor && (((BaseGiftArmor)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftArmor)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftClothing && (((BaseGiftClothing)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftClothing)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftJewel && (((BaseGiftJewel)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftJewel)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftShield && (((BaseGiftShield)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftShield)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftAxe && (((BaseGiftAxe)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftAxe)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftKnife && (((BaseGiftKnife)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftKnife)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftBashing && (((BaseGiftBashing)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftBashing)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftWhip && (((BaseGiftWhip)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftWhip)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftPoleArm && (((BaseGiftPoleArm)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftPoleArm)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftRanged && (((BaseGiftRanged)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftRanged)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftSpear && (((BaseGiftSpear)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftSpear)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftStaff && (((BaseGiftStaff)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftStaff)var).m_Points).ToString() + "<BR>";
-			else if ( var is BaseGiftSword && (((BaseGiftSword)var).m_Points) > 0 )
-				text += "Enchantment Points: " + (((BaseGiftSword)var).m_Points).ToString() + "<BR>";
+			if ( var is IGiftable && ((IGiftable)var).Points > 0 )
+				text += "Enchantment Points: " + ((IGiftable)var).Points.ToString() + "<BR>";
 
 			return text;
 		}

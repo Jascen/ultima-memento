@@ -1,5 +1,3 @@
-using System;
-
 namespace Server.Items
 {
 	public class MysticMonkRobe : BaseGiftOuterTorso
@@ -19,7 +17,7 @@ namespace Server.Items
 
 		public override bool CanEquip( Mobile from )
 		{
-			if ( m_Owner != from )
+			if ( Owner != from )
 			{
 				from.SendMessage( "You cannot seem to wear the robe!" );
 				return false;

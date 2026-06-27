@@ -1,10 +1,5 @@
 using System;
-using Server; 
 using Server.Network;
-using System.Collections;
-using System.Globalization;
-using Server.Items;
-using Server.Misc;
 using Server.Gumps;
 
 namespace Server.Items
@@ -214,100 +209,15 @@ namespace Server.Items
 
 					if ( sName != "" )
 					{
-						Item reward = null;
 						Type itemType = ScriptCompiler.FindTypeByName( sType );
-						reward = (Item)Activator.CreateInstance(itemType);
-
-						if ( reward is BaseGiftAxe )
+						var reward = (Item)Activator.CreateInstance(itemType);
+						if ( reward is IGiftable )
 						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftAxe)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftAxe)reward).m_Owner = from; }
-							((BaseGiftAxe)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftAxe)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftAxe)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftRanged )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftRanged)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftRanged)reward).m_Owner = from; }
-							((BaseGiftRanged)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftRanged)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftRanged)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftSpear )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftSpear)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftSpear)reward).m_Owner = from; }
-							((BaseGiftSpear)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftSpear)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftSpear)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftClothing )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftClothing)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftClothing)reward).m_Owner = from; }
-							((BaseGiftClothing)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftClothing)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftClothing)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftJewel )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftJewel)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftJewel)reward).m_Owner = from; }
-							((BaseGiftJewel)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftJewel)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftJewel)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftArmor )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftArmor)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftArmor)reward).m_Owner = from; }
-							((BaseGiftArmor)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftArmor)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftArmor)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftShield )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftShield)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftShield)reward).m_Owner = from; }
-							((BaseGiftShield)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftShield)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftShield)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftKnife )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftKnife)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftKnife)reward).m_Owner = from; }
-							((BaseGiftKnife)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftKnife)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftKnife)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftBashing )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftBashing)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftBashing)reward).m_Owner = from; }
-							((BaseGiftBashing)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftBashing)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftBashing)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftWhip )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftWhip)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftWhip)reward).m_Owner = from; }
-							((BaseGiftWhip)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftWhip)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftWhip)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftPoleArm )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftPoleArm)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftPoleArm)reward).m_Owner = from; }
-							((BaseGiftPoleArm)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftPoleArm)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftPoleArm)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftStaff )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftStaff)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftStaff)reward).m_Owner = from; }
-							((BaseGiftStaff)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftStaff)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftStaff)reward).m_Points = m_Book.m_Points;
-						}
-						if ( reward is BaseGiftSword )
-						{
-							if ( m_Book.m_Owner != null ){ ((BaseGiftSword)reward).m_Owner = m_Book.m_Owner; } else { ((BaseGiftSword)reward).m_Owner = from; }
-							((BaseGiftSword)reward).m_Gifter = m_Book.m_FromWho;
-							((BaseGiftSword)reward).m_How = m_Book.m_HowGiven;
-							((BaseGiftSword)reward).m_Points = m_Book.m_Points;
+							var gift = (IGiftable)reward;
+							gift.Owner = m_Book.m_Owner ?? from;
+							gift.Gifter = m_Book.m_FromWho;
+							gift.How = m_Book.m_HowGiven;
+							gift.Points = m_Book.m_Points;
 						}
 
 						reward.Name = sArty;

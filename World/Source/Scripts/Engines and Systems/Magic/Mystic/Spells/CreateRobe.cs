@@ -1,7 +1,5 @@
 using System;
 using Server.Items;
-using System.Collections.Generic;
-using Server.Misc;
 using System.Collections;
 
 namespace Server.Spells.Mystic
@@ -32,7 +30,7 @@ namespace Server.Spells.Mystic
 				foreach ( Item item in World.Items.Values )
 				if ( item is MysticMonkRobe )
 				{
-					if ( ((MysticMonkRobe)item).m_Owner == Caster )
+					if ( ((MysticMonkRobe)item).Owner == Caster )
 						targets.Add( item );
 				}
 				for ( int i = 0; i < targets.Count; ++i )
@@ -42,10 +40,10 @@ namespace Server.Spells.Mystic
 				}
 
 				MysticMonkRobe robe = new MysticMonkRobe( 2422 );
-				robe.m_Owner = Caster;
-				robe.m_Gifter = "Mystical Monk's Robe";
-				robe.m_How = "Belongs to";
-				robe.m_Points = Math.Max(0, (int)(Caster.Skills[SkillName.FistFighting].Value * 2) - 50);
+				robe.Owner = Caster;
+				robe.Gifter = "Mystical Monk's Robe";
+				robe.How = "Belongs to";
+				robe.Points = Math.Max(0, (int)(Caster.Skills[SkillName.FistFighting].Value * 2) - 50);
 				Caster.AddToBackpack( robe );
 
 				Caster.FixedParticles( 0x376A, 1, 62, 9923, 3, 3, EffectLayer.Waist );

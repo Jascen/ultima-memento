@@ -1169,102 +1169,17 @@ namespace Server.Mobiles
 
 					if ( sName != "" )
 					{
-						Item reward = null;
 						Type itemType = ScriptCompiler.FindTypeByName( sType );
-						reward = (Item)Activator.CreateInstance(itemType);
+						var reward = (Item)Activator.CreateInstance(itemType);
 
 						int points = tribute.MyItemPower;
-
-						if ( reward is BaseGiftAxe )
+						if ( reward is IGiftable )
 						{
-							((BaseGiftAxe)reward).m_Owner = from;
-							((BaseGiftAxe)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftAxe)reward).m_How = "Tribute To";
-							((BaseGiftAxe)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftRanged )
-						{
-							((BaseGiftRanged)reward).m_Owner = from;
-							((BaseGiftRanged)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftRanged)reward).m_How = "Tribute To";
-							((BaseGiftRanged)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftSpear )
-						{
-							((BaseGiftSpear)reward).m_Owner = from;
-							((BaseGiftSpear)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftSpear)reward).m_How = "Tribute To";
-							((BaseGiftSpear)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftClothing )
-						{
-							((BaseGiftClothing)reward).m_Owner = from;
-							((BaseGiftClothing)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftClothing)reward).m_How = "Tribute To";
-							((BaseGiftClothing)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftJewel )
-						{
-							((BaseGiftJewel)reward).m_Owner = from;
-							((BaseGiftJewel)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftJewel)reward).m_How = "Tribute To";
-							((BaseGiftJewel)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftArmor )
-						{
-							((BaseGiftArmor)reward).m_Owner = from;
-							((BaseGiftArmor)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftArmor)reward).m_How = "Tribute To";
-							((BaseGiftArmor)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftShield )
-						{
-							((BaseGiftShield)reward).m_Owner = from;
-							((BaseGiftShield)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftShield)reward).m_How = "Tribute To";
-							((BaseGiftShield)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftKnife )
-						{
-							((BaseGiftKnife)reward).m_Owner = from;
-							((BaseGiftKnife)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftKnife)reward).m_How = "Tribute To";
-							((BaseGiftKnife)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftBashing )
-						{
-							((BaseGiftBashing)reward).m_Owner = from;
-							((BaseGiftBashing)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftBashing)reward).m_How = "Tribute To";
-							((BaseGiftBashing)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftWhip )
-						{
-							((BaseGiftWhip)reward).m_Owner = from;
-							((BaseGiftWhip)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftWhip)reward).m_How = "Tribute To";
-							((BaseGiftWhip)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftPoleArm )
-						{
-							((BaseGiftPoleArm)reward).m_Owner = from;
-							((BaseGiftPoleArm)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftPoleArm)reward).m_How = "Tribute To";
-							((BaseGiftPoleArm)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftStaff )
-						{
-							((BaseGiftStaff)reward).m_Owner = from;
-							((BaseGiftStaff)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftStaff)reward).m_How = "Tribute To";
-							((BaseGiftStaff)reward).m_Points = points;
-						}
-						if ( reward is BaseGiftSword )
-						{
-							((BaseGiftSword)reward).m_Owner = from;
-							((BaseGiftSword)reward).m_Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
-							((BaseGiftSword)reward).m_How = "Tribute To";
-							((BaseGiftSword)reward).m_Points = points;
+							var gift = (IGiftable)reward;
+							gift.Owner = from;
+							gift.Gifter = "From " + m_Giver.Name + " " + m_Giver.Title;
+							gift.How = "Tribute To";
+							gift.Points = points;
 						}
 
 						reward.Name = sArty;

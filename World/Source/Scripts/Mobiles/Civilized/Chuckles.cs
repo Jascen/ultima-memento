@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using Server;
-using Server.Targeting;
 using Server.Items;
 using Server.Network;
-using Server.ContextMenus;
-using Server.Gumps;
 using Server.Misc;
-using Server.Mobiles;
 
 namespace Server.Mobiles
 {
@@ -55,7 +49,7 @@ namespace Server.Mobiles
 				case 16: m.Say("What do you call an angry princess just awakened from a long sleep? Slapping beauty!"); break;
 				case 17: m.Say("How did the prince get into the castle when the drawbridge was broken? He used a rowmoat!"); break;
 				case 18: m.Say("How did the girl dragon win the beauty contest? She was the beast of the show!"); break;
-				case 19: m.Say("Why did the dinosaur live longer than the dragon? Because it didn’t smoke!"); break;
+				case 19: m.Say("Why did the dinosaur live longer than the dragon? Because it didnï¿½t smoke!"); break;
 				case 20: m.Say("What did the dragon say when it saw the Knight? 'Not more tinned food!'"); break;
 				case 21: m.Say("What do you do with a green dragon? Wait until it ripens!"); break;
 				case 22: m.PlaySound( m.Female ? 780 : 1051 ); m.Say( "*claps*" ); break;
@@ -142,10 +136,10 @@ namespace Server.Mobiles
 						hat.Name = "Magical Jester Hat";
 						hat.Hue = 0;
 						hat.ItemID = Utility.RandomList( 0x171C, 0x4C15 );
-						hat.m_Owner = from;
-						hat.m_Gifter = "Chuckles the Jester";
-						hat.m_How = "Given to";
-						hat.m_Points = Utility.RandomMinMax( 80, 100 );
+						hat.Owner = from;
+						hat.Gifter = "Chuckles the Jester";
+						hat.How = "Given to";
+						hat.Points = Utility.RandomMinMax( 80, 100 );
 
 						from.AddToBackpack ( hat );
 						from.SendMessage( "Chuckles gave you one of his hats!" );
@@ -156,10 +150,10 @@ namespace Server.Mobiles
 						coat.Name = "Magical Jester Suit";
 						coat.Hue = 0;
 						coat.ItemID = Utility.RandomList( 0x1f9f, 0x1fa0, 0x4C16, 0x4C17, 0x2B6B );
-						coat.m_Owner = from;
-						coat.m_Gifter = "Chuckles the Jester";
-						coat.m_How = "Given to";
-						coat.m_Points = Utility.RandomMinMax( 80, 100 );
+						coat.Owner = from;
+						coat.Gifter = "Chuckles the Jester";
+						coat.How = "Given to";
+						coat.Points = Utility.RandomMinMax( 80, 100 );
 
 						from.AddToBackpack ( coat );
 						from.SendMessage( "Chuckles gave you one of his suits!" );
