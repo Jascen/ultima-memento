@@ -1035,6 +1035,7 @@ namespace Server.Misc
 					builder.Append("- Item - Learn the Trade scrolls can now be opened from a small distance<br>");
 					builder.Append("- Item - All vendor-purchased ethereal mounts can now retain dye<br>");
 					builder.Append("- Item - Hide chests and Studded hide chests can now be sold to vendors<br>");
+					builder.Append("- Item - Arrows, Bolts, and Shafts now cost notably less to purchase (~3x cheaper)<br>");
 					builder.Append("- Misc - Multiple items that accept gold being dropped on them no longer delete excess gold<br>");
 					builder.Append("- Misc - Hunger and thirst no longer pointlessly decay when dead<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
