@@ -1027,6 +1027,7 @@ namespace Server.Misc
 					builder.Append("- Combat - Caster mobs are now smarter with teleport targeting in tight spaces<br>");
 					builder.Append("- Combat - Empowered mobs will now reduce strength after losing their target<br>");
 					builder.Append("- Command - '[Where' is now available to all players<br>");
+					builder.Append("- Gather - Double-clicking a harvesting tool may now indicate the self-target feature<br>");
 					builder.Append("- Gump - Add tooltips to Shinobi spell icon descriptions<br>");
 					builder.Append("- Gump - '[Status' gump now properly includes weapon damage from Quality Level<br>");
 					builder.Append("- Gump - '[Status' gump now properly includes hit chance from Accuracy Level<br>");

@@ -233,6 +233,10 @@ namespace Server.Engines.Harvest
 			if ( MySettings.S_AllowMacroResources )
 			{ 
 				from.Target = new HarvestTarget( tool, this );
+				if ( Utility.RandomDouble() < 0.1 )
+				{
+					from.SendMessage("Target yourself to automatically choose a nearby target");
+				}
 			}
 			else
 			{
