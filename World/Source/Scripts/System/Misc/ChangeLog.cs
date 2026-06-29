@@ -1035,6 +1035,7 @@ namespace Server.Misc
 					builder.Append("- Item - All vendor-purchased ethereal mounts can now retain dye<br>");
 					builder.Append("- Item - Hide chests and Studded hide chests can now be sold to vendors<br>");
 					builder.Append("- Misc - Multiple items that accept gold being dropped on them no longer delete excess gold<br>");
+					builder.Append("- Misc - Hunger and thirst no longer pointlessly decay when dead<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Quest - Quest rewards now display as an overhead message rather than system message<br>");
 					builder.Append("- Quest - Blacksmith recipes are now in chests instead of bags<br>");

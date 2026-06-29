@@ -62,7 +62,8 @@ namespace Server.Misc
 							InsideInn = true;
 					}
 
-					if ( m.Skills[SkillName.Camping].Value >= Utility.RandomMinMax( 1, 200 ) ){}
+					if ( !m.Alive ) {}
+					else if ( m.Skills[SkillName.Camping].Value >= Utility.RandomMinMax( 1, 200 ) ){}
 					else if ( InsideInn ){}
 					else if ( Server.Items.BaseRace.NoFood( m.RaceID ) ){ m.Hunger = 20; }
 					else if ( Server.Items.BaseRace.NoFoodOrDrink( m.RaceID ) ){ m.Thirst = 20; m.Hunger = 20; }
@@ -125,7 +126,8 @@ namespace Server.Misc
 							InsideInn = true;
 					}
 
-					if ( m.Skills[SkillName.Camping].Value >= Utility.RandomMinMax( 1, 200 ) ){}
+					if ( !m.Alive ) {}
+					else if ( m.Skills[SkillName.Camping].Value >= Utility.RandomMinMax( 1, 200 ) ){}
 					else if ( InsideInn ){}
 					else if ( Server.Items.BaseRace.NoFoodOrDrink( m.RaceID ) ){ m.Thirst = 20; m.Hunger = 20; }
 					else if ( Server.Items.BaseRace.BrainEater( m.RaceID ) ){ m.Thirst = 20; }
