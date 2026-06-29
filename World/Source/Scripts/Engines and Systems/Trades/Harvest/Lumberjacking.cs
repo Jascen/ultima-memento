@@ -123,6 +123,15 @@ namespace Server.Engines.Harvest
 			#endregion
 		}
 
+		public override bool BeginHarvesting( Mobile from, Item tool )
+		{
+			if ( !base.BeginHarvesting( from, tool ) )
+				return false;
+
+			from.SendMessage("What do you want to chop?");
+			return true;
+		}
+
 		public override bool CheckHarvest( Mobile from, Item tool )
 		{
 			if ( !base.CheckHarvest( from, tool ) )
