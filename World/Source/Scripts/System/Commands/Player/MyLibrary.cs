@@ -125,7 +125,13 @@ namespace Server.Gumps
 				{
 					Type itemType = ScriptCompiler.FindTypeByName( book );
 					Item item = (Item)Activator.CreateInstance(itemType);
-					if ( item is IShowableBook )
+					if ( item is LoreBook )
+					{
+						LoreBook lore = (LoreBook)item;
+						lore.writeBook( refer );
+						lore.ShowBookGump(from);
+					}
+					else if ( item is IShowableBook )
 					{
 						IShowableBook showable = (IShowableBook)item;
 						showable.ShowBookGump(from);
@@ -134,12 +140,6 @@ namespace Server.Gumps
 					{
 						item.OnDoubleClick(from);
 						item.Delete();
-					}
-
-					if ( item is LoreBook )
-					{
-						LoreBook lore = (LoreBook)item;
-						lore.writeBook( refer );
 					}
 				}
 			}
