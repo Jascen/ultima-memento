@@ -1,5 +1,3 @@
-using System;
-using Server;
 using Server.Network;
 
 namespace Server.Items
@@ -12,6 +10,7 @@ namespace Server.Items
 		public Blocker() : base( 0x21A4 )
 		{
 			Movable = false;
+			Visible = false;
 		}
 
 		public Blocker( Serial serial ) : base( serial )
@@ -31,7 +30,7 @@ namespace Server.Items
 		{
 			base.Serialize( writer );
 
-			writer.Write( (int) 0 );
+			writer.Write( (int) 1 );
 		}
 
 		public override void Deserialize( GenericReader reader )
@@ -39,6 +38,8 @@ namespace Server.Items
 			base.Deserialize( reader );
 
 			int version = reader.ReadInt();
+
+			if ( version < 1 ) Visible = false;
 		}
 
 		public sealed class GMItemPacket : Packet
