@@ -1051,6 +1051,7 @@ namespace Server.Misc
 					builder.Append("- Spell - All spells now display their visuals regardless if absorbed<br>");
 
 					builder.Append("<br>Fixes<br>");
+					builder.Append("- Craft - Fix issue where invalid heat sources were detected<br>");
 					builder.Append("- Item - Leather Dye Tubs now work on leather<br>");
 					builder.Append("- Item - Double-clicking an axe now provides a system message<br>");
 					builder.Append("- Misc - Fix issue where Dex/Int stat gains couldn't happen if Str gain was on cooldown<br>");
