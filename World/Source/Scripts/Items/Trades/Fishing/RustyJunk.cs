@@ -112,7 +112,7 @@ namespace Server.Items
 				if ( m_Rusted.Deleted )
 					return;
 
-				if ( Server.Engines.Craft.DefBlacksmithy.IsForge( targeted ) )
+				if ( Server.Engines.Craft.DefBlacksmithy.UseForge( targeted ) )
 				{
 					int weight = (int)(m_Rusted.Weight);
 						if ( weight < 1 ){ weight = 1; }

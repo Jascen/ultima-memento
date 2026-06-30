@@ -151,7 +151,7 @@ namespace Server.Items
 					return;
 				}
 				
-				if ( !Server.Engines.Craft.DefBlacksmithy.IsForge( targeted ) )
+				if ( !Server.Engines.Craft.DefBlacksmithy.UseForge( targeted ) && false == ( from == m_From && UseNearbyForge( from ) ) )
 				{
 					from.SendMessage("That is not a forge.");
 					return;

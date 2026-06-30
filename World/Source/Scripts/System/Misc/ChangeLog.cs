@@ -1032,6 +1032,7 @@ namespace Server.Misc
 					builder.Append("- Gump - '[Status' gump now properly includes weapon damage from Quality Level<br>");
 					builder.Append("- Gump - '[Status' gump now properly includes hit chance from Accuracy Level<br>");
 					builder.Append("- Housekeeping - Consolidate logic for gift items<br>");
+					builder.Append("- Housekeeping - Consolidate logic for forge/anvil usage checks<br>");
 					builder.Append("- Item - Learn the Trade scrolls can now be opened from a small distance<br>");
 					builder.Append("- Item - All vendor-purchased ethereal mounts can now retain dye<br>");
 					builder.Append("- Item - Hide chests and Studded hide chests can now be sold to vendors<br>");

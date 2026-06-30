@@ -3,6 +3,7 @@ using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
 using System.Linq;
+using Server.Utilities;
 
 namespace Server.Engines.Craft
 {
@@ -77,7 +78,7 @@ namespace Server.Engines.Craft
 		private static Type typeofAnvil = typeof( AnvilAttribute );
 		private static Type typeofForge = typeof( ForgeAttribute );
 
-		public static bool IsForge( object obj )
+		public static bool UseForge( object obj )
 		{
 			if ( Core.ML && obj is Mobile && ((Mobile)obj).IsDeadBondedPet )
 				return false;
@@ -102,67 +103,46 @@ namespace Server.Engines.Craft
 				}
 			}
 
-			return ( itemID == 4017 || (itemID >= 0x10DE && itemID <= 0x10E0) || (itemID >= 6522 && itemID <= 6569) || (itemID >= 0x544B && itemID <= 0x544E) );
+			return IsForgeId( itemID );
+		}
+
+		public static bool IsAnvilId( int id )
+		{
+			return id == 4015 || id == 4016 || id == 0x2DD5 || id == 0x2DD6 || id == 0x2B55 || id == 0x2B57 || id == 0x64ED || id == 0x64EE || id == 0x64EF || id == 0x64F0 || id == 0x64F1 || id == 0x64F2 || id == 0x64F3 || id == 0x64F4 || id == 0x64F5 || id == 0x64F6 || id == 0x64F7 || id == 0x64F8 || id == 0x64F9 || id == 0x64FA || id == 0x64FB || id == 0x64FC || id == 0x64FD || id == 0x64FE || id == 0x64FF || id == 0x6500 || id == 0x6501 || id == 0x6502 || id == 0x6503 || id == 0x6504 || id == 0x6505 || id == 0x6506 || id == 0x6507 || id == 0x6508 || id == 0x6509 || id == 0x650A || id == 0x650B || id == 0x650C || id == 0x650D || id == 0x650E || id == 0x650F || id == 0x6510 || id == 0x6511 || id == 0x6512 || id == 0x6513 || id == 0x6514 || id == 0x6515 || id == 0x6516 || id == 0x6517 || id == 0x6518;
+		}
+
+		public static bool IsForgeId( int id )
+		{
+			return id == 4017 || (id >= 0x10DE && id <= 0x10E0) || (id >= 6522 && id <= 6569) || id == 0x2DD8 || (id >= 0x544B && id <= 0x544E);
 		}
 
 		public static void CheckAnvilAndForge( Mobile from, int range, out bool anvil, out bool forge )
 		{
 			anvil = false;
 			forge = false;
-
-			Map map = from.Map;
-
-			if ( map == null )
-				return;
-
-			IPooledEnumerable eable = map.GetItemsInRange( from.Location, range );
-
-			foreach ( Item item in eable )
-			{
+			
+			bool isAnvil = false;
+			bool isForge = false;
+			WorldUtilities.ForEachNearbyItem( from, range, item => {
 				Type type = item.GetType();
+				isAnvil = isAnvil || IsAnvilId( item.ItemID ) || type.IsDefined( typeofAnvil, false );
+				isForge = isForge || IsForgeId( item.ItemID ) || type.IsDefined( typeofForge, false );
 
-				bool isAnvil = ( type.IsDefined( typeofAnvil, false ) || item.ItemID == 4015 || item.ItemID == 4016 || item.ItemID == 0x2DD5 || item.ItemID == 0x2DD6 || item.ItemID == 0x2B55 || item.ItemID == 0x2B57 || item.ItemID == 0x64ED|| item.ItemID == 0x64EE|| item.ItemID == 0x64EF|| item.ItemID == 0x64F0|| item.ItemID == 0x64F1|| item.ItemID == 0x64F2|| item.ItemID == 0x64F3|| item.ItemID == 0x64F4|| item.ItemID == 0x64F5|| item.ItemID == 0x64F6|| item.ItemID == 0x64F7|| item.ItemID == 0x64F8|| item.ItemID == 0x64F9|| item.ItemID == 0x64FA|| item.ItemID == 0x64FB|| item.ItemID == 0x64FC|| item.ItemID == 0x64FD|| item.ItemID == 0x64FE|| item.ItemID == 0x64FF|| item.ItemID == 0x6500|| item.ItemID == 0x6501|| item.ItemID == 0x6502|| item.ItemID == 0x6503|| item.ItemID == 0x6504|| item.ItemID == 0x6505|| item.ItemID == 0x6506|| item.ItemID == 0x6507|| item.ItemID == 0x6508|| item.ItemID == 0x6509|| item.ItemID == 0x650A|| item.ItemID == 0x650B|| item.ItemID == 0x650C|| item.ItemID == 0x650D|| item.ItemID == 0x650E|| item.ItemID == 0x650F|| item.ItemID == 0x6510|| item.ItemID == 0x6511|| item.ItemID == 0x6512|| item.ItemID == 0x6513|| item.ItemID == 0x6514|| item.ItemID == 0x6515|| item.ItemID == 0x6516|| item.ItemID == 0x6517|| item.ItemID == 0x6518 );
-				bool isForge = ( type.IsDefined( typeofForge, false ) || item.ItemID == 4017 || (item.ItemID >= 0x10DE && item.ItemID <= 0x10E0) || (item.ItemID >= 6522 && item.ItemID <= 6569) || item.ItemID == 0x2DD8 || (item.ItemID >= 0x544B && item.ItemID <= 0x544E) );
+				return isAnvil && isForge;
+			} );
 
-				if ( isAnvil || isForge )
-				{
-					if ( (from.Z + 16) < item.Z || (item.Z + 16) < from.Z || !from.InLOS( item ) )
-						continue;
-
-					anvil = anvil || isAnvil;
-					forge = forge || isForge;
-
-					if ( anvil && forge )
-						break;
-				}
-			}
-
-			eable.Free();
-
-			for ( int x = -range; (!anvil || !forge) && x <= range; ++x )
+			if ( !isAnvil || !isForge )
 			{
-				for ( int y = -range; (!anvil || !forge) && y <= range; ++y )
-				{
-					StaticTile[] tiles = map.Tiles.GetStaticTiles( from.X+x, from.Y+y, true );
+				WorldUtilities.ForEachNearbyStatic( from, range, id => {
+					isAnvil = isAnvil || IsAnvilId(id);
+					isForge = isForge || IsForgeId(id);
 
-					for ( int i = 0; (!anvil || !forge) && i < tiles.Length; ++i )
-					{
-						int id = tiles[i].ID;
-
-						bool isAnvil = ( id == 4015 || id == 4016 || id == 0x2DD5 || id == 0x2DD6 || id == 0x2B55 || id == 0x2B57 || id == 0x64ED || id == 0x64EE || id == 0x64EF || id == 0x64F0 || id == 0x64F1 || id == 0x64F2 || id == 0x64F3 || id == 0x64F4 || id == 0x64F5 || id == 0x64F6 || id == 0x64F7 || id == 0x64F8 || id == 0x64F9 || id == 0x64FA || id == 0x64FB || id == 0x64FC || id == 0x64FD || id == 0x64FE || id == 0x64FF || id == 0x6500 || id == 0x6501 || id == 0x6502 || id == 0x6503 || id == 0x6504 || id == 0x6505 || id == 0x6506 || id == 0x6507 || id == 0x6508 || id == 0x6509 || id == 0x650A || id == 0x650B || id == 0x650C || id == 0x650D || id == 0x650E || id == 0x650F || id == 0x6510 || id == 0x6511 || id == 0x6512 || id == 0x6513 || id == 0x6514 || id == 0x6515 || id == 0x6516 || id == 0x6517 || id == 0x6518 );
-						bool isForge = ( id == 4017 || (id >= 0x10DE && id <= 0x10E0) || (id >= 6522 && id <= 6569) || id == 0x2DD8 || (id >= 0x544B && id <= 0x544E) );
-
-						if ( isAnvil || isForge )
-						{
-							if ( (from.Z + 16) < tiles[i].Z || (tiles[i].Z + 16) < from.Z || !from.InLOS( new Point3D( from.X+x, from.Y+y, tiles[i].Z + (tiles[i].Height/2) + 1 ) ) )
-								continue;
-
-							anvil = anvil || isAnvil;
-							forge = forge || isForge;
-						}
-					}
-				}
+					return isAnvil && isForge;
+				} );
 			}
+
+			anvil = isAnvil;
+			forge = isForge;
 		}
 
 		public override int CanCraft( Mobile from, BaseTool tool, Type itemType )
