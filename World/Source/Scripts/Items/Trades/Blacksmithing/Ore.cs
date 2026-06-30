@@ -1,9 +1,6 @@
-using System;
-using Server.Items;
-using Server.Network;
 using Server.Targeting;
 using Server.Engines.Craft;
-using Server.Mobiles;
+using Server.Utilities;
 
 namespace Server.Items
 {
@@ -66,7 +63,8 @@ namespace Server.Items
 			if ( from.InRange( this.GetWorldLocation(), 2 ) )
 			{
 				from.SendLocalizedMessage( 501971 ); // Select the forge on which to smelt the ore, or another pile of ore with which to combine it.
-				from.Target = new InternalTarget( this );
+				if ( Utility.RandomDouble() < 0.1 ) from.SendMessage("Target yourself to automatically choose a nearby target");
+				from.Target = new InternalTarget( this, from );
 			}
 			else
 			{
@@ -136,11 +134,24 @@ namespace Server.Items
 
 		private class InternalTarget : Target
 		{
-			private BaseOre m_Ore;
+			private readonly BaseOre m_Ore;
+			private readonly Mobile m_From;
 
-			public InternalTarget( BaseOre ore ) :  base ( 2, false, TargetFlags.None )
+			public InternalTarget( BaseOre ore, Mobile from ) :  base ( 2, false, TargetFlags.None )
 			{
 				m_Ore = ore;
+				m_From = from;
+			}
+
+			private bool UseNearbyForge(Mobile from, int range)
+			{
+				if ( WorldUtilities.HasNearbyItem<Item>( from, range, item => DefBlacksmithy.UseForge(item) ) )
+					return true;
+
+				if ( WorldUtilities.HasNearbyStatic( from, range, id => DefBlacksmithy.UseForge(id) ) )
+					return true;
+
+				return false;
 			}
 
 			protected override void OnTarget( Mobile from, object targeted )
@@ -151,7 +162,7 @@ namespace Server.Items
 					return;
 				}
 				
-				if ( !Server.Engines.Craft.DefBlacksmithy.UseForge( targeted ) && false == ( from == m_From && UseNearbyForge( from ) ) )
+				if ( !Server.Engines.Craft.DefBlacksmithy.UseForge( targeted ) && false == ( targeted == m_From && UseNearbyForge( from, Range ) ) )
 				{
 					from.SendMessage("That is not a forge.");
 					return;

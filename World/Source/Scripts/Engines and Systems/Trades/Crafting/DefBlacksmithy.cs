@@ -92,6 +92,8 @@ namespace Server.Engines.Craft
 				itemID = ((Item)obj).ItemID;
 			else if ( obj is StaticTarget )
 				itemID = ((StaticTarget)obj).ItemID;
+			else if ( obj is int )
+				itemID = (int)obj;
 
 			if ( itemID >= 6896 && itemID <= 6898 )
 			{

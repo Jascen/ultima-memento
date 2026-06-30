@@ -1,7 +1,6 @@
 using System;
 using Server.Targeting;
-using Server.Items;
-using Server.Network;
+using Server.Utilities;
 
 namespace Server.Items
 {
@@ -612,6 +611,8 @@ namespace Server.Items
 			if ( !Movable )
 				return;
 
+			from.SendMessage( "Select the flour mill on which to grind the wheat." );
+			if ( Utility.RandomDouble() < 0.1 ) from.SendMessage("Target yourself to automatically choose a nearby target");
 			from.BeginTarget( 4, false, TargetFlags.None, new TargetCallback( OnTarget ) );
 		}
 
@@ -622,6 +623,9 @@ namespace Server.Items
 
 			IFlourMill mill = obj as IFlourMill;
 
+			if ( mill == null && from == obj )
+				mill = WorldUtilities.GetNearbyItem<Item>( from, 4, item => item is IFlourMill ) as IFlourMill;
+
 			if ( mill != null )
 			{
 				int needs = mill.MaxFlour - mill.CurFlour;
@@ -631,6 +635,10 @@ namespace Server.Items
 
 				mill.CurFlour += needs;
 				Consume( needs );
+			}
+			else
+			{
+				from.SendMessage( "That is not a flour mill." );
 			}
 		}
 

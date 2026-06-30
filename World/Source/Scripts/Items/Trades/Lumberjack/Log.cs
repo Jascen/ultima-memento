@@ -1,9 +1,5 @@
-using System;
-using Server.Items;
-using Server.Network;
 using Server.Targeting;
-using Server.Engines.Craft;
-using Server.Mobiles;
+using Server.Utilities;
 
 namespace Server.Items
 {
@@ -78,7 +74,8 @@ namespace Server.Items
 			if ( from.InRange( this.GetWorldLocation(), 2 ) )
 			{
 				from.SendMessage( "Select the saw mill on which to cut the logs." );
-				from.Target = new InternalTarget( this );
+				if ( Utility.RandomDouble() < 0.1 ) from.SendMessage("Target yourself to automatically choose a nearby target");
+				from.Target = new InternalTarget( this, from );
 			}
 			else
 			{
@@ -88,11 +85,13 @@ namespace Server.Items
 
 		private class InternalTarget : Target
 		{
-			private BaseLog m_Log;
+			private readonly BaseLog m_Log;
+			private readonly Mobile m_From;
 
-			public InternalTarget( BaseLog log ) :  base ( 2, false, TargetFlags.None )
+			public InternalTarget( BaseLog log, Mobile from ) :  base ( 2, false, TargetFlags.None )
 			{
 				m_Log = log;
+				m_From = from;
 			}
 
 			private bool IsSawmill( object obj )
@@ -112,6 +111,11 @@ namespace Server.Items
 				return false;
 			}
 
+			private bool IsSawmillNearby(Mobile from, int range)
+			{
+				return WorldUtilities.HasNearbyItem<Item>( from, range, item => IsSawmill(item) );
+			}
+
 			protected override void OnTarget(Mobile from, object targeted)
 			{
 				if (m_Log.Deleted) return;
@@ -122,13 +126,11 @@ namespace Server.Items
 					return;
 				}
 
-				if (!IsSawmill(targeted))
+				if (!IsSawmill(targeted) && false == ( targeted == m_From && IsSawmillNearby( from, Range ) ) )
 				{
 					from.SendMessage("That is not a saw mill.");
 					return;
 				}
-
-				if (((Item)targeted).Deleted) return; // Sawmill is gone...
 
 				double difficulty;
 				switch (m_Log.Resource)

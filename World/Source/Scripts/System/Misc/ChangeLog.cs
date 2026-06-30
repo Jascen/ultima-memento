@@ -1028,6 +1028,12 @@ namespace Server.Misc
 					builder.Append("- Combat - Empowered mobs will now reduce strength after losing their target<br>");
 					builder.Append("- Command - '[Where' is now available to all players<br>");
 					builder.Append("- Gather - Double-clicking a harvesting tool may now indicate the self-target feature<br>");
+					builder.Append("- Gather - Add automatic target resolution when *self-targeting* for refining resources<br>");
+					builder.Append("-        - Ore -> Forge<br>");
+					builder.Append("-        - Logs -> Sawmill<br>");
+					builder.Append("-        - Flax/Wool -> Spinning Wheel<br>");
+					builder.Append("-        - Thread -> Loom<br>");
+					builder.Append("-        - Wheat -> Flour Mill<br>");
 					builder.Append("- Gump - Add tooltips to Shinobi spell icon descriptions<br>");
 					builder.Append("- Gump - '[Status' gump now properly includes weapon damage from Quality Level<br>");
 					builder.Append("- Gump - '[Status' gump now properly includes hit chance from Accuracy Level<br>");
