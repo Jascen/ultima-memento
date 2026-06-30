@@ -1066,6 +1066,7 @@ namespace Server.Misc
 					builder.Append("- Craft - Fix issue where invalid heat sources were detected<br>");
 					builder.Append("- Item - Leather Dye Tubs now work on leather<br>");
 					builder.Append("- Item - Double-clicking an axe now provides a system message<br>");
+					builder.Append("- Item - Leggings can now be equipped over pants<br>");
 					builder.Append("- Misc - Fix issue where Dex/Int stat gains couldn't happen if Str gain was on cooldown<br>");
 					builder.Append("- Misc - Fix issue where where some Library books would show random books<br>");
 					builder.Append("- Mobs - Fix case where AI would redundantly curse/poison<br>");

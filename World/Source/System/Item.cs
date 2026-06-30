@@ -1742,12 +1742,12 @@ namespace Server
 
 		public virtual bool CheckConflictingLayer( Mobile m, Item item, Layer layer )
 		{
-			return ( m_Layer == layer );
+			return ( Layer == layer );
 		}
 
 		public virtual bool CanEquip( Mobile m )
 		{
-			return ( m_Layer != Layer.Invalid && m.FindItemOnLayer( m_Layer ) == null );
+			return ( Layer != Layer.Invalid && m.FindItemOnLayer( Layer ) == null );
 		}
 
 		public virtual void GetChildContextMenuEntries( Mobile from, List<ContextMenuEntry> list, Item item )
