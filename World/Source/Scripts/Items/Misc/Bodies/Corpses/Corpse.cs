@@ -1091,18 +1091,18 @@ namespace Server.Items
 					{
 						SetFlag( CorpseFlag.Carved, true );
 
-						if ( ItemID == 0x2006 )
+						if ( ItemID == 0x2006 && from is PlayerMobile )
 						{
-							ProcessDelta();
-							SendRemovePacket();
-							if ( m_Owner != null && m_Owner.RaceID < 1 )
+							if ( m_Owner != null && m_Owner.RaceID < 1 && ((PlayerMobile)from).Preferences.LegacyCarve )
 							{
+								ProcessDelta();
+								SendRemovePacket();
 								ItemID = Utility.Random( 0xECA, 9 ); // bone graphic
 								GumpID = 0x2A73;
 								DropSound = 0x48;
 								Hue = 0;
+								ProcessDelta();
 							}
-							ProcessDelta();
 						}
 
 						from.PlaySound( 0x3E3 );
@@ -1276,13 +1276,16 @@ namespace Server.Items
 
 				SetFlag( CorpseFlag.Carved, true );
 
-				ProcessDelta();
-				SendRemovePacket();
-				ItemID = Utility.Random( 0xECA, 9 ); // bone graphic
-				GumpID = 0x2A73;
-				DropSound = 0x48;
-				Hue = 0;
-				ProcessDelta();
+				if ( from is PlayerMobile && ((PlayerMobile)from).Preferences.LegacyCarve )
+				{
+					ProcessDelta();
+					SendRemovePacket();
+					ItemID = Utility.Random( 0xECA, 9 ); // bone graphic
+					GumpID = 0x2A73;
+					DropSound = 0x48;
+					Hue = 0;
+					ProcessDelta();
+				}
 			}
 			else if ( dead is BaseCreature )
 			{

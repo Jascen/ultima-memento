@@ -1038,6 +1038,7 @@ namespace Server.Misc
 					builder.Append("- Item - Arrows, Bolts, and Shafts now cost notably less to purchase (~3x cheaper)<br>");
 					builder.Append("- Misc - Multiple items that accept gold being dropped on them no longer delete excess gold<br>");
 					builder.Append("- Misc - Hunger and thirst no longer pointlessly decay when dead<br>");
+					builder.Append("- Misc - Humanoid corpses no longer turn to bones after being carved<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Quest - Quest rewards now display as an overhead message rather than system message<br>");
 					builder.Append("- Quest - Blacksmith recipes are now in chests instead of bags<br>");
@@ -1045,6 +1046,7 @@ namespace Server.Misc
 					builder.Append("- Quest - All Blacksmith quests can now be started at the same time<br>");
 					builder.Append("- Quest - All Blacksmith quests now show a return destination<br>");
 					builder.Append("- Quest - All remaining MLQuest engine quests now show a return destination<br>");
+					builder.Append("- Setting - Add setting to enable legacy humanoid carving behavior<br>");
 					builder.Append("- Skill - Parrying absorption duration is now 3 seconds, down from 5<br>");
 					builder.Append("- Skill - Parrying activation is now an overhead message<br>");
 					builder.Append("- Skill - Activating Tracking now auto-selects last tracked options when moving<br>");

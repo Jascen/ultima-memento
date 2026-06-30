@@ -213,6 +213,7 @@ namespace Server.Engines.Help
 			Setting_CreatureMagicFocus = 989,
 			Setting_CreatureType = 990,
 			Setting_CreatureSounds = 991,
+			Setting_LegacyCarve = 992,
 			MagicToolbar_AncientSpellBarI_Config = 1081,
 			MagicToolbar_AncientSpellBarII_Config = 1082,
 			MagicToolbar_AncientSpellBarIII_Config = 1083,
@@ -234,6 +235,7 @@ namespace Server.Engines.Help
 			Setting_DoubleClickToTalk_Info,
 			Setting_VendorContainerSell,
 			Setting_VendorContainerSell_Info,
+			Setting_LegacyCarve_Info,
 			Changelog_PageBase = 9000,
 		}
 
@@ -656,6 +658,9 @@ namespace Server.Engines.Help
 				if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
 
 				AddSetting(xs, g, from, "Container Sell", PageActionType.Setting_VendorContainerSell, PageActionType.Setting_VendorContainerSell_Info);
+				if ( xr == 1 ){ g += j; xr=0; xs=xm; } else { xr=1; xs=xo; }
+
+				AddSetting(xs, g, from, "Legacy Carve", PageActionType.Setting_LegacyCarve, PageActionType.Setting_LegacyCarve_Info);
 				// Last setting, don't add a row
 
 				// Section - Play Styles
@@ -939,6 +944,7 @@ namespace Server.Engines.Help
 				case PageActionType.Setting_SuppressVendorTooltips: return from.Preferences.SuppressVendorTooltip;
 				case PageActionType.Setting_SingleAttemptID: return from.Preferences.SingleAttemptID;
 				case PageActionType.Setting_ColorlessFabricBreakdown: return from.Preferences.ColorlessFabricBreakdown;
+				case PageActionType.Setting_LegacyCarve: return from.Preferences.LegacyCarve;
 
 				case PageActionType.Setting_Playstyle_Normal: return !from.Preferences.CharacterEvil && !from.Preferences.CharacterOriental && from.Preferences.CharacterBarbaric == 0;
 				case PageActionType.Setting_Playstyle_Evil: return from.Preferences.CharacterEvil;
@@ -2379,6 +2385,13 @@ namespace Server.Engines.Help
 				{
 					title = "Colorless Fabric Breakdown";
 					info = "When enabled, the fabric color will be stripped when it is broken down.";
+					break;
+				}
+
+				case PageActionType.Setting_LegacyCarve_Info:
+				{
+					title = "Legacy Carve";
+					info = "When enabled, carving humanoid corpses will turn them into bones. Warning: Enabling this setting may cause an awkward looting experience after carving.";
 					break;
 				}
 
