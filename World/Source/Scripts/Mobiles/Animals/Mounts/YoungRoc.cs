@@ -52,30 +52,29 @@ namespace Server.Mobiles
 			SetDex( 171, 270 );
 			SetInt( 301, 325 );
 
-			SetHits( 401, 600 );
+			SetHits( 300, 400 );
 			SetMana( 60 );
 
 			SetDamage( 18, 23 );
 
 			SetDamageType( ResistanceType.Physical, 100 );
 
-			SetResistance( ResistanceType.Physical, 45, 70 );
-			SetResistance( ResistanceType.Fire, 60, 80 );
-			SetResistance( ResistanceType.Cold, 5, 15 );
-			SetResistance( ResistanceType.Poison, 30, 40 );
-			SetResistance( ResistanceType.Energy, 30, 40 );
+			SetResistance( ResistanceType.Physical, 30, 40 );
+			SetResistance( ResistanceType.Fire, 20, 30 );
+			SetResistance( ResistanceType.Cold, 20, 30 );
+			SetResistance( ResistanceType.Poison, 20, 30 );
+			SetResistance( ResistanceType.Energy, 20, 30 );
 
 			SetSkill( SkillName.Anatomy, 75.1, 80.0 );
-			SetSkill( SkillName.MagicResist, 85.1, 100.0 );
-			SetSkill( SkillName.Tactics, 100.1, 110.0 );
-			SetSkill( SkillName.FistFighting, 100.1, 120.0 );
+			SetSkill( SkillName.Tactics, 70.1, 90.0 );
+			SetSkill( SkillName.FistFighting, 60.1, 90.0 );
 
 			Fame = 10000;
 			Karma = -10000;
 
 			Tamable = true;
-			ControlSlots = 3;
-			MinTameSkill = 98.7;
+			ControlSlots = 4;
+			MinTameSkill = 88.7;
 		}
 
 		public override void OnCarve( Mobile from, Corpse corpse, Item with )
@@ -98,7 +97,7 @@ namespace Server.Mobiles
 
 		public override void GenerateLoot()
 		{
-			AddLoot( LootPack.FilthyRich, 2 );
+			AddLoot( LootPack.FilthyRich, 1 );
 			AddLoot( LootPack.Gems, 2 );
 		}
 

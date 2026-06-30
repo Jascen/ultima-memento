@@ -77,22 +77,22 @@ namespace Server.Mobiles
 			Hue = GetHue();
 			BaseSoundID = 0x2EE;
 
-			SetStr( 1201, 1410 );
+			SetStr( 701, 910 );
 			SetDex( 171, 270 );
 			SetInt( 301, 325 );
 
-			SetHits( 901, 1100 );
+			SetHits( 600, 800 );
 			SetMana( 60 );
 
 			SetDamage( 20, 30 );
 
 			SetDamageType( ResistanceType.Physical, 100 );
 
-			SetResistance( ResistanceType.Physical, 55, 70 );
-			SetResistance( ResistanceType.Fire, 70, 90 );
-			SetResistance( ResistanceType.Cold, 15, 25 );
-			SetResistance( ResistanceType.Poison, 40, 50 );
-			SetResistance( ResistanceType.Energy, 40, 50 );
+			SetResistance( ResistanceType.Physical, 40, 60 );
+			SetResistance( ResistanceType.Fire, 30, 50 );
+			SetResistance( ResistanceType.Cold, 30, 50 );
+			SetResistance( ResistanceType.Poison, 30, 50 );
+			SetResistance( ResistanceType.Energy, 30, 50 );
 
 			SetSkill( SkillName.Anatomy, 75.1, 80.0 );
 			SetSkill( SkillName.MagicResist, 85.1, 100.0 );
@@ -120,7 +120,7 @@ namespace Server.Mobiles
 
 		public override void GenerateLoot()
 		{
-			AddLoot( LootPack.FilthyRich, 3 );
+			AddLoot( LootPack.FilthyRich, 2 );
 			AddLoot( LootPack.Gems, 2 );
 		}
 
