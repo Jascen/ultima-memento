@@ -1051,6 +1051,7 @@ namespace Server.Misc
 					builder.Append("- Spell - All spells now display their visuals regardless if absorbed<br>");
 
 					builder.Append("<br>Fixes<br>");
+					builder.Append("- Admin - Remove duplicate doors in Britain castle<br>");
 					builder.Append("- Craft - Fix issue where invalid heat sources were detected<br>");
 					builder.Append("- Item - Leather Dye Tubs now work on leather<br>");
 					builder.Append("- Item - Double-clicking an axe now provides a system message<br>");
