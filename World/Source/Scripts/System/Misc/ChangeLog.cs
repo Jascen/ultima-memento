@@ -1051,6 +1051,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Hunger and thirst no longer pointlessly decay when dead<br>");
 					builder.Append("- Misc - Humanoid corpses no longer turn to bones after being carved<br>");
 					builder.Append("- Misc - Fix inconsistent Syth and Death Knight checks<br>");
+					builder.Append("- Misc - Bag of Tricks now values Gold as 10 prank points each, up from 1<br>");
 					builder.Append("- Mob - Rocs and Roclings have been rebalanced<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Quest - Quest rewards now display as an overhead message rather than system message<br>");

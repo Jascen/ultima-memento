@@ -1,22 +1,18 @@
 using System;
-using Server; 
 using System.Collections;
-using Server.ContextMenus;
-using System.Collections.Generic;
-using Server.Misc;
 using Server.Network;
-using Server.Items;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Commands;
-using System.Globalization;
-using Server.Regions;
-using Server.Multis;
+using Server.Utilities;
 
 namespace Server.Items
 {
 	public class BagOfTricks : Item
 	{
+		const int GOLD_MULTIPLIER = 10;
+		const int MAX_PRANKS = 50000;
+
 		public override bool DisplayWeight { get { return false; } }
 
 		public int PrankPoints;
@@ -94,7 +90,7 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int)1 ); // version
+			writer.Write( (int)2 ); // version
             writer.Write( PrankPoints );
 		}
 
@@ -103,6 +99,7 @@ namespace Server.Items
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
             PrankPoints = reader.ReadInt();
+			if ( version < 2 ){ PrankPoints *= GOLD_MULTIPLIER; }
 		}
 
         public static void InvokeCommand( string c, Mobile from )
@@ -436,41 +433,30 @@ namespace Server.Items
 		{
 			if ( dropped is Gold )
 			{
-				int fool = 0;
-
-				foreach ( Mobile m in this.GetMobilesInRange( 20 ) )
-				{
-					if ( m is Jester || m is ChucklesJester )
-						++fool;
-				}
-
-				if ( fool == 0 )
-				{
-					from.SendMessage( "You need to be near a local jester to add pranks!" );
-				}
-				else if ( PrankPoints >= 50000 )
+				if ( MAX_PRANKS <= PrankPoints )
 				{
 					from.SendMessage( "That bag is already full of pranks." );
 				}
-				else if ( ( PrankPoints + dropped.Amount ) < 50000 )
+				else if ( !WorldUtilities.HasNearbyMobile<Mobile>(from, 20, m => m is Jester || m is ChucklesJester) )
 				{
-					from.SendMessage( "You add some more gold for pranks." );
-					PrankPoints = PrankPoints + dropped.Amount;
-					from.PlaySound( 0x2E6 );
-					dropped.Delete();
+					from.SendMessage( "You need to be near a local jester to add pranks!" );
 				}
 				else
 				{
-					int need = 50000 - PrankPoints;
-					from.SendMessage( "You add some more gold for pranks and now the bag is full." );
-					PrankPoints = 50000;
-					dropped.Amount = dropped.Amount - need;
-					from.PlaySound( 0x2E6 );
+					var remaining = Math.Max( 1, (MAX_PRANKS - PrankPoints) / GOLD_MULTIPLIER );
+					var added = ItemUtilities.ConsumeClamped(dropped, remaining);
+					if ( 0 < added )
+					{
+						PrankPoints = Math.Min( MAX_PRANKS, PrankPoints + added * GOLD_MULTIPLIER );
+						var message = MAX_PRANKS <= PrankPoints ? "You add some more gold for pranks and now the bag is full." : "You add some more gold for pranks.";
+						from.SendMessage( message );
+						from.PlaySound( 0x2E6 );
+						InvalidateProperties();
+					}
 				}
 			}
 
-			InvalidateProperties();
-			return false;
+			return dropped.Deleted;
 		}
 	}
 }

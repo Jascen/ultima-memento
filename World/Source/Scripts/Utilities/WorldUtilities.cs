@@ -76,6 +76,29 @@ namespace Server.Utilities
 		}
 
 		/// <summary>
+		/// Iterates over all mobiles in the range of a mobile and returns the first mobile that matches the predicate.
+		/// </summary>
+		/// <returns>The first mobile that matches the predicate, otherwise null.</returns>
+		public static Mobile ForEachNearbyMobile(Mobile from, int range, Func<Mobile, bool> stopPredicate = null)
+		{
+			if (from.Map == null) return null;
+
+			IPooledEnumerable eable = from.Map.GetMobilesInRange(from.Location, range);
+
+			foreach (Mobile mobile in eable)
+			{
+				if (stopPredicate != null && stopPredicate(mobile))
+				{
+					eable.Free();
+					return mobile;
+				}
+			}
+
+			eable.Free();
+			return null;
+		}
+
+		/// <summary>
 		/// Iterates over all static tiles in the range of a mobile and calls the stopPredicate for each static tile.
 		/// </summary>
 		/// <returns>True if the stopPredicate is true for any static tile, otherwise false.</returns>
@@ -116,9 +139,22 @@ namespace Server.Utilities
 			}) as T;
 		}
 
+		public static T GetNearbyMobile<T>(Mobile from, int range, Func<T, bool> predicate) where T : Mobile
+		{
+			return ForEachNearbyMobile(from, range, mobile =>
+			{
+				return mobile is T && predicate((T)mobile);
+			}) as T;
+		}
+
 		public static bool HasNearbyItem<T>(Mobile from, int range, Func<T, bool> predicate) where T : Item
 		{
 			return GetNearbyItem(from, range, predicate) != null;
+		}
+
+		public static bool HasNearbyMobile<T>(Mobile from, int range, Func<T, bool> predicate) where T : Mobile
+		{
+			return GetNearbyMobile(from, range, predicate) != null;
 		}
 
 		public static bool HasNearbyStatic(Mobile from, int range, Func<int, bool> stopPredicate)
