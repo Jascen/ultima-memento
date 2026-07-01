@@ -77,8 +77,23 @@ namespace Server.Misc
 			return MySettings.S_AllowAlienChoice && m is PlayerMobile && ((PlayerMobile)m).CharacterType == CharacterType.Alien;
 		}
 
+		public static bool isDeathKnight( Mobile m )
+		{
+			if ( m.Skills[SkillName.Knightship].Base < 50.0
+				|| m.Karma > -5000)
+				return false;
+
+			return m is PlayerMobile
+				&& m.Backpack != null && m.Backpack.FindItemByType<DeathKnightSpellbook>() != null;
+		}
+
 		public static bool isSyth ( Mobile m, bool checkSword )
 		{
+			if ( m.Skills[SkillName.Psychology].Base < 50.0
+				|| m.Skills[SkillName.Swords].Base < 50.0
+				|| m.Karma > -5000)
+				return false;
+
 			int points = 0;
 
 			Spellbook book = Spellbook.FindSyth( m );
@@ -125,9 +140,10 @@ namespace Server.Misc
 		{
 			if ( from is PlayerMobile && from != null && from.Backpack != null )
 			{
+				if ( from.Skills[SkillName.Begging].Value < 10 && from.Skills[SkillName.Psychology].Value < 10 ) return false;
+
 				var bagOfTricks = from.Backpack.FindItemByType( typeof( BagOfTricks ), true );
 				if ( bagOfTricks == null ) return false;
-				if ( from.Skills[SkillName.Begging].Value < 10 && from.Skills[SkillName.Psychology].Value < 10 ) return false;
 
 				return CheckGraphicEquipped( from, from.FindItemOnLayer( Layer.OuterTorso ), 0x1f9f, 0x1fa0, 0x4C16, 0x4C17, 0x2B6B, 0x3162 )
 					|| CheckGraphicEquipped( from, from.FindItemOnLayer( Layer.MiddleTorso ), 0x1f9f, 0x1fa0, 0x4C16, 0x4C17, 0x2B6B, 0x3162 )
@@ -567,8 +583,8 @@ namespace Server.Misc
 				if ( m.AccessLevel > AccessLevel.Player 
 					|| m.Skills[SkillName.Necromancy].Base >= 50.0 && m.Karma < 0 // NECROMANCERS
 					|| m.Skills[SkillName.Forensics].Base >= 80.0 && m.Karma < 0 // UNDERTAKERS
-					|| m.Skills[SkillName.Knightship].Base >= 50.0 && m.Karma <= -5000 // DEATH KNIGHTS
-					|| m.Skills[SkillName.Psychology].Base >= 50.0 && m.Skills[SkillName.Swords].Base >= 50.0 && m.Karma <= -5000 && Server.Misc.GetPlayerInfo.isSyth(m,false) // SYTH
+					|| isDeathKnight(m)// DEATH KNIGHTS
+					|| isSyth(m, false) // SYTH
 					|| Server.Items.BaseRace.IsRavendarkCreature( m ) // EVIL UNDEAD CREATURE PLAYERS
 					|| ((PlayerMobile)m).Fugitive == 1) // OUTLAWS
 				{
@@ -602,11 +618,11 @@ namespace Server.Misc
 				{
 					warning = warning + "You are considered by most to be a vile creature and not welcome in many settlements. ";
 				}
-				if (player.Karma <= -5000 && player.Skills[SkillName.Knightship].Base >= 50 )
+				if ( GetPlayerInfo.isDeathKnight(player) )
 				{
 					warning = warning + "You are a death knight, which is feared amongst the land. ";
 				}
-				if ( player.Karma <= -5000 && player.Skills[SkillName.Psychology].Base >= 50 && Server.Misc.GetPlayerInfo.isSyth(player, false) )
+				if ( GetPlayerInfo.isSyth(player, false) )
 				{
 					warning = warning + "You are a syth, and are not welcome in most settlements. ";
 				}
@@ -658,9 +674,9 @@ namespace Server.Misc
 					wanted = true;
 				else if ( m is PlayerMobile && ( m.Karma < 2500 || m.Fame < 2500 ) && Server.Items.BaseRace.IsEvil( m ) )
 					wanted = true;
-				else if ( m is PlayerMobile && m.Karma <= -5000 && m.Skills[SkillName.Knightship].Base >= 50 )
+				else if ( GetPlayerInfo.isDeathKnight(m) )
 					wanted = true;
-				else if ( m is PlayerMobile && m.Karma <= -5000 && m.Skills[SkillName.Psychology].Base >= 50 && Server.Misc.GetPlayerInfo.isSyth(m, false) )
+				else if ( GetPlayerInfo.isSyth(m, false) )
 					wanted = true;
 				else if ( m.Criminal )
 					wanted = true;
