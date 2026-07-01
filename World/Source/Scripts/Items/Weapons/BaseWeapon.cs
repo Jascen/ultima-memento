@@ -2416,7 +2416,7 @@ namespace Server.Items
 			if ( Type != WeaponType.Bashing )
 				miningBonus = 0.0;
 
-			if (!( this is Harpoon || this is GiftHarpoon || this is LevelHarpoon ))
+			if ( false == this is IHarpoon )
 				fishingBonus = 0.0;
 
 			if (!( this is BaseStaff || this is WizardWand || this is BaseWizardStaff || this is BaseLevelStave || this is BaseGiftStave || this is GiftScepter || this is LevelScepter || this is Scepter ))

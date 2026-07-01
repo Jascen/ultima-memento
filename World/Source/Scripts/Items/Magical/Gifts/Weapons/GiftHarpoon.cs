@@ -1,12 +1,10 @@
 using System;
-using Server.Items;
 using Server.Network;
 using Server.Spells;
-using Server.Mobiles;
 
 namespace Server.Items
 {
-	public class GiftHarpoon : BaseGiftRanged
+	public class GiftHarpoon : BaseGiftRanged, IHarpoon
 	{
 		public override int EffectID{ get{ return 0x528A; } }
 		public override Type AmmoType{ get{ return typeof( HarpoonRope ); } }
