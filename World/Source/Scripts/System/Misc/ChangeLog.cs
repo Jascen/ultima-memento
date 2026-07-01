@@ -1028,6 +1028,7 @@ namespace Server.Misc
 					builder.Append("- Combat - Empowered mobs will now reduce strength after losing their target<br>");
 					builder.Append("- Command - '[Where' is now available to all players<br>");
 					builder.Append("- Command - '[Organize' against yourself will now automatically target your backpack<br>");
+					builder.Append("- Command - Add '[OrganizeMe' command to automatically organize your main backpack<br>");
 					builder.Append("- Gather - Double-clicking a harvesting tool may now indicate the self-target feature<br>");
 					builder.Append("- Gather - Add automatic target resolution when *self-targeting* for refining resources<br>");
 					builder.Append("-        - Ore -> Forge<br>");
