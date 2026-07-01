@@ -57,14 +57,14 @@ namespace Server.Spells.Jester
 
 				if ( Caster.Skills[SkillName.Begging].Value >= Utility.RandomMinMax( 1, 200 ) ){ qty++; }
 				if ( Caster.Skills[SkillName.Psychology].Value >= Utility.RandomMinMax( 1, 200 ) ){ qty++; }
-				if ( Caster.Skills[SkillName.Psychology].Value >= Utility.RandomMinMax( 1, 200 ) ){ qty++; }
+				// if ( Caster.Skills[SkillName.Psychology].Value >= Utility.RandomMinMax( 1, 200 ) ){ qty++; }
 
 				if ( qty > ( ( Caster.FollowersMax - Caster.Followers - 1 ) ) )
 					qty = Caster.FollowersMax - Caster.Followers;
 
 				if ( qty > 0 ){ FoolHue = Utility.RandomColor(0); Server.Mobiles.SummonedJoke.MakeJoker( Caster, p, FoolPoisons, FoolName, FoolBody, FoolHue, FoolSound, FoolPhys, FoolCold, FoolFire, FoolPois, FoolEngy ); }
 				if ( qty > 1 ){ FoolHue = Utility.RandomColor(0); Server.Mobiles.SummonedJoke.MakeJoker( Caster, p, FoolPoisons, FoolName, FoolBody, FoolHue, FoolSound, FoolPhys, FoolCold, FoolFire, FoolPois, FoolEngy ); }
-				if ( qty > 2 ){ FoolHue = Utility.RandomColor(0); Server.Mobiles.SummonedJoke.MakeJoker( Caster, p, FoolPoisons, FoolName, FoolBody, FoolHue, FoolSound, FoolPhys, FoolCold, FoolFire, FoolPois, FoolEngy ); }
+				// if ( qty > 2 ){ FoolHue = Utility.RandomColor(0); Server.Mobiles.SummonedJoke.MakeJoker( Caster, p, FoolPoisons, FoolName, FoolBody, FoolHue, FoolSound, FoolPhys, FoolCold, FoolFire, FoolPois, FoolEngy ); }
 
 				Caster.PlaySound( Caster.Female ? 793 : 1065 );
 				Caster.Say( "*gasp!*" );
