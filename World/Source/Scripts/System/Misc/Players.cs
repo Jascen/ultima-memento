@@ -587,25 +587,26 @@ namespace Server.Misc
 
 			if ( m is PlayerMobile )
 			{
-				if ( ((PlayerMobile)m).Fugitive == 1 || m.Kills > 0 )
+				var player = (PlayerMobile)m;
+				if ( player.Fugitive == 1 || player.Kills > 0 )
 				{
 					warning = warning + "You are wanted for your murderous deeds! ";
 					umbra = false;
 				}
-				else if ( m.Criminal )
+				else if ( player.Criminal )
 				{
 					warning = warning + "You are being sought as a criminal right now. ";
 					umbra = false;
 				}
-				if ( m is PlayerMobile && ( m.Karma < 2500 || m.Fame < 2500 ) && Server.Items.BaseRace.IsEvil( m ) )
+				if ( ( player.Karma < 2500 || player.Fame < 2500 ) && Server.Items.BaseRace.IsEvil( player ) )
 				{
 					warning = warning + "You are considered by most to be a vile creature and not welcome in many settlements. ";
 				}
-				if ( m is PlayerMobile && m.Karma <= -5000 && m.Skills[SkillName.Knightship].Base >= 50 )
+				if (player.Karma <= -5000 && player.Skills[SkillName.Knightship].Base >= 50 )
 				{
 					warning = warning + "You are a death knight, which is feared amongst the land. ";
 				}
-				if ( m is PlayerMobile && m.Karma <= -5000 && m.Skills[SkillName.Psychology].Base >= 50 && Server.Misc.GetPlayerInfo.isSyth(m, false) )
+				if ( player.Karma <= -5000 && player.Skills[SkillName.Psychology].Base >= 50 && Server.Misc.GetPlayerInfo.isSyth(player, false) )
 				{
 					warning = warning + "You are a syth, and are not welcome in most settlements. ";
 				}
