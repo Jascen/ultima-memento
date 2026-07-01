@@ -12,6 +12,8 @@ namespace Server.Items
 {
 	public class TreasureMapChest : LockableContainer
 	{
+		public const int LEVEL_BONUS = 4;
+
 		public override CraftResource DefaultResource{ get{ return CraftResource.RegularWood; } }
 
 		public override int LabelNumber{ get{ return 3000541; } }
@@ -47,7 +49,7 @@ namespace Server.Items
 		{
 			Catalog = Catalogs.TreasureChest;
 
-			int level = originalLevel + 4;
+			int level = originalLevel + LEVEL_BONUS;
 				if ( level > 10 ){ level = 10; }
 
 			m_Owner = owner;

@@ -75,7 +75,7 @@ namespace Server.Utilities
 	public static class UnlockUtilities
 	{
 		public const int CardSlotItemId = 0x3A75;
-		public const int MAX_TMAP_LEVEL = 2;
+		public const int MAX_TMAP_LEVEL = 2 + TreasureMapChest.LEVEL_BONUS;
 
 		#region Profiles
 
