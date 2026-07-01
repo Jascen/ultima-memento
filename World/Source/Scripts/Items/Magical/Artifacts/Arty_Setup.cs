@@ -15,8 +15,8 @@ namespace Server.Misc
 			if ( item is IGiftable )
 			{
 				var gift = (IGiftable)item;
-				gift.Owner = null;
-				gift.Gifter = "Unearthed by";
+				gift.Gifter = null;
+				gift.How = "Unearthed by";
 				gift.Points = points;
 			}
 		}
