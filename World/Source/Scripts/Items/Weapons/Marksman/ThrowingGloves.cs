@@ -1,11 +1,13 @@
 using System;
-using Server.Items;
-using Server.Network;
 
 namespace Server.Items
 {
+	public interface IThrowingGloves
+	{
+	}
+
 	[FlipableAttribute( 0x13C6, 0x13CE )]
-	public class ThrowingGloves : BaseRanged
+	public class ThrowingGloves : BaseRanged, IThrowingGloves
 	{
 		public string GloveType;
 		
