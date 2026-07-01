@@ -1059,6 +1059,7 @@ namespace Server.Misc
 					builder.Append("- Skill - Parrying activation is now an overhead message<br>");
 					builder.Append("- Skill - Activating Tracking now auto-selects last tracked options when moving<br>");
 					builder.Append("- Skill - Taming will now automatically retry when a creature is angered<br>");
+					builder.Append("- Skill - Druidism now reduces the chance a creature will be angered during taming attempts<br>");
 					builder.Append("- Spell - All spells now display their visuals regardless if absorbed<br>");
 
 					builder.Append("<br>Fixes<br>");

@@ -253,18 +253,23 @@ namespace Server.SkillHandlers
 				return TameAttemptResult.Failed;
 			}
 
-			if ( creature.CanAngerOnTame && 0.95 >= Utility.RandomDouble() )
+			if ( creature.CanAngerOnTame )
 			{
-				HandleAngerOnTame( from, creature );
-
-				if ( !fromRetry )
+				var delta = from.Skills[SkillName.Druidism].Value - creature.MinTameSkill;
+				var angerChance = Math.Min(95, 95 - delta) / 100;
+				if ( angerChance >= Utility.RandomDouble() )
 				{
-					var timer = new TameTimer( from, creature );
-					RegisterTimer( creature, timer );
-					timer.Start();
-				}
+					HandleAngerOnTame( from, creature );
 
-				return TameAttemptResult.Angered;
+					if ( !fromRetry )
+					{
+						var timer = new TameTimer( from, creature );
+						RegisterTimer( creature, timer );
+						timer.Start();
+					}
+
+					return TameAttemptResult.Angered;
+				}
 			}
 
 			from.LocalOverheadMessage( MessageType.Emote, 0x59, 1010597 ); // You start to tame the creature.
