@@ -2427,8 +2427,16 @@ namespace Server.Items
 				ellyBonus = 0.0;
 			}
 
-			if ( !( this is BaseRanged && CraftResources.GetType( this.Resource ) == CraftResourceType.Wood ) )
+			if ( this is BaseRanged )
+			{
+				var ranged = (BaseRanged)this;
+				if ( false == ( ranged.AmmoType == typeof( Arrow ) || ranged.AmmoType == typeof( Bolt ) ) )
+					bowyerBonus = 0.0;
+			}
+			else
+			{
 				bowyerBonus = 0.0;
+			}
 
 			if ( false == ( this is IPugilistGlove && this is ThrowingGloves ) )
 				tailorBonus = 0.0;

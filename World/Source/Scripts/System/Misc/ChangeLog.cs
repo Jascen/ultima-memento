@@ -1027,6 +1027,7 @@ namespace Server.Misc
 					builder.Append("- Combat - Caster mobs are now smarter with teleport targeting in tight spaces<br>");
 					builder.Append("- Combat - Empowered mobs will now reduce strength after losing their target<br>");
 					builder.Append("- Combat - Throwing gloves and Pugilist gloves now get a damage bonus from Tailoring skill<br>");
+					builder.Append("- Combat - Only Bows and Crossbows get a damage bonus from Bowcraft skill<br>");
 					builder.Append("- Command - '[Where' is now available to all players<br>");
 					builder.Append("- Command - '[Organize' no longer moves spellbooks<br>");
 					builder.Append("- Command - '[Organize' no longer removes items from weight reduction containers<br>");
