@@ -2405,6 +2405,7 @@ namespace Server.Items
 			double	necroBonus = GetBonus( attacker.Skills[SkillName.Necromancy].Value,			0.625, 100.0,  6.25 );
 			double	wizardBonus = GetBonus( attacker.Skills[SkillName.Magery].Value,			0.625, 100.0,  6.25 );
 			double	bowyerBonus = GetBonus( attacker.Skills[SkillName.Bowcraft].Value,			0.625, 100.0,  6.25 );
+			double	tailorBonus = GetBonus( attacker.Skills[SkillName.Tailoring].Value,			0.625, 100.0,  6.25 );
 			double	ellyBonus = GetBonus( attacker.Skills[SkillName.Elementalism].Value,		0.625, 100.0,  6.25 );
 
 			if ( Type != WeaponType.Axe && Type != WeaponType.Slashing && Type != WeaponType.Polearm )
@@ -2428,6 +2429,9 @@ namespace Server.Items
 
 			if ( !( this is BaseRanged && CraftResources.GetType( this.Resource ) == CraftResourceType.Wood ) )
 				bowyerBonus = 0.0;
+
+			if ( false == ( this is IPugilistGlove && this is ThrowingGloves ) )
+				tailorBonus = 0.0;
 
 			#endregion
 
@@ -2462,7 +2466,7 @@ namespace Server.Items
 				damageBonus = 100;
 			#endregion
 
-			double totalBonus = strengthBonus + anatomyBonus + tacticsBonus + necroBonus + wizardBonus + bowyerBonus + bushidoBonus + ninjaBonus + lumberBonus + miningBonus + fishingBonus + ellyBonus + ((double)(GetDamageBonus() + damageBonus) / 100.0);
+			double totalBonus = strengthBonus + anatomyBonus + tacticsBonus + necroBonus + wizardBonus + bowyerBonus + bushidoBonus + ninjaBonus + lumberBonus + miningBonus + fishingBonus + ellyBonus + tailorBonus + ((double)(GetDamageBonus() + damageBonus) / 100.0);
 
 			return damage + (int)(damage * totalBonus);
 		}
