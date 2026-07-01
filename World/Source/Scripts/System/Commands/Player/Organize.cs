@@ -190,6 +190,10 @@ namespace Server.Commands
 		{
 			if (e.Mobile == null) return;
 
+			// If someone targets themselves, use their backpack instead
+			if (obj == e.Mobile)
+				obj = e.Mobile.Backpack;
+
 			if (obj is Container)
 			{
 				int horizontalSpace;
