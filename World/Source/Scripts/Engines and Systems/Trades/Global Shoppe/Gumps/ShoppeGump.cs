@@ -11,6 +11,7 @@ namespace Server.Engines.GlobalShoppe
 			Close = 0,
 			Help = 1,
 			ShowRewards = 2,
+			PayFee = 3,
 			AcceptBase = 50,
 			RejectBase = 100,
 			DoOrderBase = 150,
@@ -159,6 +160,17 @@ namespace Server.Engines.GlobalShoppe
 				if (!string.IsNullOrWhiteSpace(requirements))
 				{
 					AddTextCard(y, requirements);
+
+					if (shoppe.NeedsFeePayment(from, context))
+					{
+						int by = y + CARD_HEIGHT + 20;
+						int bx = 20 + (CARD_WIDTH / 2) - 140;
+
+						AddButton(bx, by, 4005, 4007, (int)Actions.PayFee, GumpButtonType.Reply, 0);
+						TextDefinition.AddHtmlText(this, bx + 38, by + 2, 320, 20,
+							string.Format("Pay {0} gold from backpack/bank", ShoppeConstants.SHOPPE_FEE), HtmlColors.MUSTARD);
+					}
+
 					return;
 				}
 
@@ -264,6 +276,10 @@ namespace Server.Engines.GlobalShoppe
 						));
 					}));
 					return;
+				}
+				else if (buttonID == (int)Actions.PayFee)
+				{
+					m_Shoppe.TryPayFee(player, m_Context);
 				}
 			}
 
