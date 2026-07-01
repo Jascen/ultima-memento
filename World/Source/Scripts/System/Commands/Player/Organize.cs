@@ -62,7 +62,6 @@ namespace Server.Commands
 					item =>
 					{
 						return item is BaseReagent
-							|| item is Spellbook
 							|| item is RuneStone
 							|| item is MagicRuneBag
 							|| item.Catalog == Catalogs.Reagent;
