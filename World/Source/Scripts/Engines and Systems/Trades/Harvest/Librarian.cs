@@ -57,11 +57,11 @@ namespace Server.Engines.Harvest
 			library.EffectCounts = new int[]{ 1 };
 			library.EffectDelay = TimeSpan.FromSeconds( 0.0 );
 			library.EffectSoundDelay = TimeSpan.FromSeconds( 0.1 );
-			library.NoResourcesMessage = 1060530; // The shelf is completely empty.
-			library.FailMessage = 1060531; // You shuffle around and find nothing of interest.
-			library.OutOfRangeMessage = 500446; // That is too far away.
-			library.PackFullMessage = 500720; // You don't have enough room in your backpack!
-			library.ToolBrokeMessage = 1044038; // You broke your tool.
+			library.NoResourcesMessage = "The shelf is completely empty."; // 1060530; // The shelf is completely empty.
+			library.FailMessage = "You shuffle around and find nothing of interest."; // 1060531; // You shuffle around and find nothing of interest.
+			library.OutOfRangeMessage = "That is too far away."; // 500446; // That is too far away.
+			library.PackFullMessage = "You don't have enough room in your backpack!"; // 500720; // You don't have enough room in your backpack!
+			library.ToolBrokeMessage = "You broke your tool."; // 1044038; // You broke your tool.
 
 			res = new HarvestResource[]
 				{

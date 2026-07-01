@@ -55,11 +55,11 @@ namespace Server.Engines.Harvest
 			grave.EffectCounts = new int[]{ 1 };
 			grave.EffectDelay = TimeSpan.FromSeconds( 1.6 );
 			grave.EffectSoundDelay = TimeSpan.FromSeconds( 0.9 );
-			grave.NoResourcesMessage = 1060533; // The grave is empty.
-			grave.FailMessage = 1060532; // You dig and dig but find nothing of value.
-			grave.OutOfRangeMessage = 500446; // That is too far away.
-			grave.PackFullMessage = 500720; // You don't have enough room in your backpack!
-			grave.ToolBrokeMessage = 1044038; // You broke your tool.
+			grave.NoResourcesMessage = "The grave is empty."; // 1060533; // The grave is empty.
+			grave.FailMessage = "You dig and dig but find nothing of value."; // 1060532; // You dig and dig but find nothing of value.
+			grave.OutOfRangeMessage = "That is too far away."; // 500446; // That is too far away.
+			grave.PackFullMessage = "You don't have enough room in your backpack!"; // 500720; // You don't have enough room in your backpack!
+			grave.ToolBrokeMessage = "You broke your tool."; // 1044038; // You broke your tool.
 
 			res = new HarvestResource[]
 			{

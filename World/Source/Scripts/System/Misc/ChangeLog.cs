@@ -1032,6 +1032,7 @@ namespace Server.Misc
 					builder.Append("- Command - '[Organize' against yourself will now automatically target your backpack<br>");
 					builder.Append("- Command - Add '[OrganizeMe' command to automatically organize your main backpack<br>");
 					builder.Append("- Gather - Double-clicking a harvesting tool may now indicate the self-target feature<br>");
+					builder.Append("- Gather - Add harvesting messages for Librarian and Grave Robbing systems<br>");
 					builder.Append("- Gather - Add automatic target resolution when *self-targeting* for refining resources<br>");
 					builder.Append("-        - Ore -> Forge<br>");
 					builder.Append("-        - Logs -> Sawmill<br>");
