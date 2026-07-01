@@ -210,6 +210,35 @@ namespace Server.Commands
 				e.Mobile.SendMessage("That is not a container.");
 		}
 
+		private static bool HasIgnoredParent(Item item)
+		{
+			if (item == null) return false;
+
+			var parent = item.Parent as Item;
+			while (parent != null)
+			{
+				if (IsIgnoredContainerType(parent)) return true;
+
+				parent = parent.Parent as Item;
+			}
+
+			return false;
+		}
+
+		private static bool IsIgnoredContainerType(Item i)
+		{
+			return i is DruidPouch
+				|| i is MysticPack
+				|| i is WitchPouch
+				|| i is AlchemistPouch
+				|| i is AlchemyPouch
+				|| i is BagOfHolding
+				|| i is MovingBox
+				|| i is SackOfHolding
+				|| i is WeightReductionContainer
+				|| i is BaseQuiver;
+		}
+
 		private void Organize(PlayerMobile from, Container target, int horizontalSpace, int verticalSpace)
 		{
 			if (from == null) return;
@@ -253,6 +282,7 @@ namespace Server.Commands
 					if (!organizer.Test(item)) continue;
 					if (item.Parent is NotIdentified) continue;
 					if (item.Parent is LockableContainer && ((LockableContainer)item.Parent).Locked) continue;
+					if (HasIgnoredParent(item)) continue;
 
 					OrganizerContainer container;
 					if (!destinations.TryGetValue(organizer.ContainerName, out container))

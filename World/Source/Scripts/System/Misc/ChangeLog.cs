@@ -1027,6 +1027,7 @@ namespace Server.Misc
 					builder.Append("- Combat - Caster mobs are now smarter with teleport targeting in tight spaces<br>");
 					builder.Append("- Combat - Empowered mobs will now reduce strength after losing their target<br>");
 					builder.Append("- Command - '[Where' is now available to all players<br>");
+					builder.Append("- Command - '[Organize' no longer removes items from weight reduction containers<br>");
 					builder.Append("- Command - '[Organize' against yourself will now automatically target your backpack<br>");
 					builder.Append("- Command - Add '[OrganizeMe' command to automatically organize your main backpack<br>");
 					builder.Append("- Gather - Double-clicking a harvesting tool may now indicate the self-target feature<br>");
