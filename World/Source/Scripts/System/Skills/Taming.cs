@@ -1,16 +1,26 @@
 using System;
-using System.Collections;
-using Server;
+using System.Collections.Generic;
 using Server.Targeting;
 using Server.Network;
 using Server.Mobiles;
-using Server.Spells;
+using System.Linq;
 
 namespace Server.SkillHandlers
 {
 	public class Taming
 	{
-		private static Hashtable m_BeingTamed = new Hashtable();
+		private const int MAX_TAMING_DISTANCE = 6;
+		private const int MAX_TARGET_DISTANCE = 3;
+		private static readonly TimeSpan RETRY_INTERVAL = TimeSpan.FromMilliseconds( 750 );
+		private static readonly TimeSpan TAMING_INTERVAL = TimeSpan.FromSeconds( 3.0 );
+
+		private static class TameState
+		{
+			public const int Retry = 0;
+			public const int Taming = 1;
+		}
+
+		private static readonly Dictionary<BaseCreature, TameTimer> m_BeingTamed = new Dictionary<BaseCreature, TameTimer>();
 
 		public static void Initialize()
 		{
@@ -27,6 +37,19 @@ namespace Server.SkillHandlers
 
 		public static TimeSpan OnUse( Mobile m )
 		{
+			TameTimer timer = GetTimer( m );
+			if ( timer != null )
+			{
+				if ( timer.State == TameState.Retry )
+				{
+					var creature = timer.Creature;
+					StopTimer( creature );
+					creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, false, "You stop trying to tame the creature.", m.NetState );
+				}
+
+				return TimeSpan.Zero;
+			}
+
 			m.RevealingAction();
 
 			m.Target = new InternalTarget();
@@ -72,7 +95,7 @@ namespace Server.SkillHandlers
 			{
 				bc.HitsMaxSeed = (int)Math.Max( 1, bc.HitsMaxSeed * scalar );
 				bc.Hits = bc.Hits;
-				}
+			}
 
 			if ( bc.StamMaxSeed > 0 )
 			{
@@ -101,11 +124,171 @@ namespace Server.SkillHandlers
 			}
 		}
 
+		public static bool IsTaming( Mobile m )
+		{
+			return m_BeingTamed.Values.Any( timer => timer.Tamer == m );
+		}
+
+		private static void RegisterTimer( BaseCreature creature, TameTimer timer )
+		{
+			StopTimer( creature );
+			m_BeingTamed[creature] = timer;
+		}
+
+		private static void StopTimer( BaseCreature creature )
+		{
+			TameTimer timer;
+			if ( m_BeingTamed.TryGetValue( creature, out timer ) )
+			{
+				timer.Stop();
+				timer.Tamer.NextSkillTime = DateTime.Now;
+				m_BeingTamed.Remove( creature );
+			}
+		}
+
+		private static TameTimer GetTimer( Mobile m )
+		{
+			return m_BeingTamed.Values.FirstOrDefault( timer => timer.Tamer == m );
+		}
+
+		private static bool IsBeingTamed( BaseCreature creature, Mobile byTamer, bool fromRetry, TameTimer thisTimer )
+		{
+			TameTimer existing;
+			if ( !m_BeingTamed.TryGetValue( creature, out existing ) )
+				return false;
+
+			if ( fromRetry )
+				return !( existing == thisTimer && existing.State == TameState.Retry && existing.Tamer == byTamer );
+
+			return true;
+		}
+
+		private static void ResetPacify( object obj )
+		{
+			if ( obj is BaseCreature )
+				((BaseCreature)obj).BardPacified = true;
+		}
+
+		private static void HandleAngerOnTame( Mobile from, BaseCreature creature )
+		{
+			creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502805, from.NetState ); // You seem to anger the beast!
+			creature.PlaySound( creature.GetAngerSound() );
+			creature.Direction = creature.GetDirectionTo( from );
+
+			if ( creature.BardPacified && Utility.RandomDouble() > .24 )
+				Timer.DelayCall( TimeSpan.FromSeconds( 2.0 ), new TimerStateCallback( ResetPacify ), creature );
+			else
+				creature.BardEndTime = DateTime.Now;
+
+			creature.BardPacified = false;
+
+			creature.Move( creature.Direction );
+
+			if ( from is PlayerMobile )
+				creature.Combatant = from;
+		}
+
+		private enum TameAttemptResult { Started, Angered, OutOfRange, Failed }
+
+		private static TameAttemptResult AttemptTame( Mobile from, BaseCreature creature, bool fromRetry, TameTimer retryTimer )
+		{
+			if ( !creature.Tamable )
+			{
+				creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1049655, from.NetState ); // That creature cannot be tamed.
+				return TameAttemptResult.Failed;
+			}
+			
+			if ( creature.Controlled )
+			{
+				creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502804, from.NetState ); // That animal looks tame already.
+				return TameAttemptResult.Failed;
+			}
+			
+			if ( from.Female && !creature.AllowFemaleTamer )
+			{
+				creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1049653, from.NetState ); // That creature can only be tamed by males.
+				return TameAttemptResult.Failed;
+			}
+			
+			if ( !from.Female && !creature.AllowMaleTamer )
+			{
+				creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1049652, from.NetState ); // That creature can only be tamed by females.
+				return TameAttemptResult.Failed;
+			}
+			
+			if ( from.Followers + creature.ControlSlots > from.FollowersMax )
+			{
+				from.SendLocalizedMessage( 1049611 ); // You have too many followers to tame that creature.
+				return TameAttemptResult.Failed;
+			}
+
+			if ( !from.InRange( creature, MAX_TARGET_DISTANCE ) )
+			{
+				creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 500446, from.NetState ); // That is too far away.
+				return TameAttemptResult.OutOfRange;
+			}
+			
+			if ( creature.Owners.Count >= BaseCreature.MaxOwners && !creature.Owners.Contains( from ) )
+			{
+				creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1005615, from.NetState ); // This animal has had too many owners and is too upset for you to tame.
+				return TameAttemptResult.Failed;
+			}
+			
+			if ( MustBeSubdued( creature ) )
+			{
+				creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1054025, from.NetState ); // You must subdue this creature before you can tame it!
+				return TameAttemptResult.Failed;
+			}
+			
+			if ( !CheckMastery( from, creature ) && from.Skills[SkillName.Taming].Value < creature.MinTameSkill )
+			{
+				creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502806, from.NetState ); // You have no chance of taming this creature.
+				from.SendMessage( string.Format( "You need at least '{0}' Taming skill to tame this creature.", creature.MinTameSkill.ToString( "F1" ) ) );
+				return TameAttemptResult.Failed;
+			}
+
+			if ( IsBeingTamed( creature, from, fromRetry, retryTimer ) )
+			{
+				creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502802, from.NetState ); // Someone else is already taming this.
+				return TameAttemptResult.Failed;
+			}
+
+			if ( creature.CanAngerOnTame && 0.95 >= Utility.RandomDouble() )
+			{
+				HandleAngerOnTame( from, creature );
+
+				if ( !fromRetry )
+				{
+					var timer = new TameTimer( from, creature );
+					RegisterTimer( creature, timer );
+					timer.Start();
+				}
+
+				return TameAttemptResult.Angered;
+			}
+
+			from.LocalOverheadMessage( MessageType.Emote, 0x59, 1010597 ); // You start to tame the creature.
+			from.NonlocalOverheadMessage( MessageType.Emote, 0x59, 1010598 ); // *begins taming a creature.*
+
+			if ( fromRetry && retryTimer != null )
+			{
+				retryTimer.TransitionToTaming( Utility.Random( 3, 2 ) );
+			}
+			else
+			{
+				var timer = new TameTimer( from, creature );
+				RegisterTimer( creature, timer );
+				timer.TransitionToTaming( Utility.Random( 3, 2 ) );
+			}
+
+			return TameAttemptResult.Started;
+		}
+
 		private class InternalTarget : Target
 		{
 			private bool m_SetSkillTime = true;
 
-			public InternalTarget() :  base ( 3, false, TargetFlags.None )
+			public InternalTarget() : base( MAX_TARGET_DISTANCE, false, TargetFlags.None )
 			{
 			}
 
@@ -113,14 +296,6 @@ namespace Server.SkillHandlers
 			{
 				if ( m_SetSkillTime )
 					from.NextSkillTime = DateTime.Now;
-			}
-
-			public virtual void ResetPacify( object obj )
-			{
-				if( obj is BaseCreature )
-				{
-					((BaseCreature)obj).BardPacified = true;
-				}
 			}
 
 			protected override void OnTarget( Mobile from, object targeted )
@@ -131,81 +306,11 @@ namespace Server.SkillHandlers
 				{
 					if ( targeted is BaseCreature )
 					{
-						BaseCreature creature = (BaseCreature)targeted;
+						var creature = (BaseCreature)targeted;
+						var result = AttemptTame( from, creature, false, null );
 
-						if ( !creature.Tamable )
-						{
-							creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1049655, from.NetState ); // That creature cannot be tamed.
-						}
-						else if ( creature.Controlled )
-						{
-							creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502804, from.NetState ); // That animal looks tame already.
-						}
-						else if ( from.Female && !creature.AllowFemaleTamer )
-						{
-							creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1049653, from.NetState ); // That creature can only be tamed by males.
-						}
-						else if ( !from.Female && !creature.AllowMaleTamer )
-						{
-							creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1049652, from.NetState ); // That creature can only be tamed by females.
-						}
-						else if ( from.Followers + creature.ControlSlots > from.FollowersMax )
-						{
-							from.SendLocalizedMessage( 1049611 ); // You have too many followers to tame that creature.
-						}
-						else if ( creature.Owners.Count >= BaseCreature.MaxOwners && !creature.Owners.Contains( from ) )
-						{
-							creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1005615, from.NetState ); // This animal has had too many owners and is too upset for you to tame.
-						}
-						else if ( MustBeSubdued( creature ) )
-						{
-							creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1054025, from.NetState ); // You must subdue this creature before you can tame it!
-						}
-						else if ( CheckMastery( from, creature ) || from.Skills[SkillName.Taming].Value >= creature.MinTameSkill )
-						{
-							if ( m_BeingTamed.Contains( targeted ) )
-							{
-								creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502802, from.NetState ); // Someone else is already taming this.
-							}
-							else if ( creature.CanAngerOnTame && 0.95 >= Utility.RandomDouble() )
-							{
-								creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502805, from.NetState ); // You seem to anger the beast!
-								creature.PlaySound( creature.GetAngerSound() );
-								creature.Direction = creature.GetDirectionTo( from );
-
-								if( creature.BardPacified && Utility.RandomDouble() > .24)
-								{
-									Timer.DelayCall( TimeSpan.FromSeconds( 2.0 ), new TimerStateCallback( ResetPacify ), creature );
-								}
-								else
-								{
-									creature.BardEndTime = DateTime.Now;
-								}
-		
-								creature.BardPacified = false;
-
-								creature.Move( creature.Direction );
-
-								if ( from is PlayerMobile )
-									creature.Combatant = from;
-							}
-							else
-							{
-								m_BeingTamed[targeted] = from;
-
-								from.LocalOverheadMessage( MessageType.Emote, 0x59, 1010597 ); // You start to tame the creature.
-								from.NonlocalOverheadMessage( MessageType.Emote, 0x59, 1010598 ); // *begins taming a creature.*
-
-								new InternalTimer( from, creature, Utility.Random( 3, 2 ) ).Start();
-
-								m_SetSkillTime = false;
-							}
-						}
-						else
-						{
-							creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502806, from.NetState ); // You have no chance of taming this creature.
-							from.SendMessage("You need at least '{0}' Taming skill to tame this creature.", creature.MinTameSkill.ToString("F1"));
-						}
+						if ( result == TameAttemptResult.Started )
+							m_SetSkillTime = false;
 					}
 					else
 					{
@@ -217,174 +322,196 @@ namespace Server.SkillHandlers
 					from.SendLocalizedMessage( 502801 ); // You can't tame that!
 				}
 			}
+		}
 
-			private class InternalTimer : Timer
+		private class TameTimer : Timer
+		{
+			private readonly Mobile m_Tamer;
+			private readonly BaseCreature m_Creature;
+			private int m_MaxCount;
+			private int m_Count;
+			private bool m_Paralyzed;
+			private DateTime m_StartTime;
+
+			public int State { get; private set; }
+			public Mobile Tamer { get { return m_Tamer; } }
+			public BaseCreature Creature { get { return m_Creature; } }
+
+			public TameTimer( Mobile tamer, BaseCreature creature ) : base( RETRY_INTERVAL, RETRY_INTERVAL, 0 )
 			{
-				private Mobile m_Tamer;
-				private BaseCreature m_Creature;
-				private int m_MaxCount;
-				private int m_Count;
-				private bool m_Paralyzed;
-				private DateTime m_StartTime;
+				m_Tamer = tamer;
+				m_Creature = creature;
+				State = TameState.Retry;
+				Priority = TimerPriority.TwoFiftyMS;
+			}
 
-				public InternalTimer( Mobile tamer, BaseCreature creature, int count ) : base( TimeSpan.FromSeconds( 3.0 ), TimeSpan.FromSeconds( 3.0 ), count )
+			public void TransitionToTaming( int count )
+			{
+				Stop();
+
+				State = TameState.Taming;
+				Delay = TAMING_INTERVAL;
+				Interval = TAMING_INTERVAL;
+				m_MaxCount = count;
+				m_Count = 0;
+				m_Paralyzed = m_Creature.Paralyzed;
+				m_StartTime = DateTime.Now;
+				Priority = TimerPriority.TwoFiftyMS;
+
+				Start();
+			}
+
+			protected override void OnTick()
+			{
+				if ( !m_Tamer.InRange( m_Creature, MAX_TAMING_DISTANCE ) )
 				{
-					m_Tamer = tamer;
-					m_Creature = creature;
-					m_MaxCount = count;
-					m_Paralyzed = creature.Paralyzed;
-					m_StartTime = DateTime.Now;
-					Priority = TimerPriority.TwoFiftyMS;
+					m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502795, m_Tamer.NetState ); // You are too far away to continue taming.
+					StopTimer( Creature );
 				}
-
-				protected override void OnTick()
+				else if ( !m_Tamer.CheckAlive() )
 				{
-					m_Count++;
+					m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502796, m_Tamer.NetState ); // You are dead, and cannot continue taming.
+					StopTimer( Creature );
+				}
+				else if ( !m_Tamer.CanSee( m_Creature ) || !m_Tamer.InLOS( m_Creature ) || !CanPath() )
+				{
+					m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1049654, m_Tamer.NetState ); // You do not have a clear path to the animal you are taming, and must cease your attempt.
+					StopTimer( Creature );
+				}
+				else if ( !m_Creature.Tamable )
+				{
+					m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1049655, m_Tamer.NetState ); // That creature cannot be tamed.
+					StopTimer( Creature );
+				}
+				else if ( m_Creature.Controlled )
+				{
+					m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502804, m_Tamer.NetState ); // That animal looks tame already.
+					StopTimer( Creature );
+				}
+				else if ( m_Creature.Owners.Count >= BaseCreature.MaxOwners && !m_Creature.Owners.Contains( m_Tamer ) )
+				{
+					m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1005615, m_Tamer.NetState ); // This animal has had too many owners and is too upset for you to tame.
+					StopTimer( Creature );
+				}
+				else
+				{
+					if ( State == TameState.Retry )
+						OnRetryTick();
+					else
+						OnTamingTick();
+				}
+			}
 
-					DamageEntry de = m_Creature.FindMostRecentDamageEntry( false );
-					bool alreadyOwned = m_Creature.Owners.Contains( m_Tamer );
+			private void OnRetryTick()
+			{
+				var result = AttemptTame( m_Tamer, m_Creature, true, this );
+				if ( result == TameAttemptResult.Failed )
+					StopTimer( Creature );
+			}
 
-					if ( !m_Tamer.InRange( m_Creature, 6 ) )
-					{
-						m_BeingTamed.Remove( m_Creature );
-						m_Tamer.NextSkillTime = DateTime.Now;
-						m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502795, m_Tamer.NetState ); // You are too far away to continue taming.
-						Stop();
-					}
-					else if ( !m_Tamer.CheckAlive() )
-					{
-						m_BeingTamed.Remove( m_Creature );
-						m_Tamer.NextSkillTime = DateTime.Now;
-						m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502796, m_Tamer.NetState ); // You are dead, and cannot continue taming.
-						Stop();
-					}
-					else if ( !m_Tamer.CanSee( m_Creature ) || !m_Tamer.InLOS( m_Creature ) || !CanPath() )
-					{
-						m_BeingTamed.Remove( m_Creature );
-						m_Tamer.NextSkillTime = DateTime.Now;
-						m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1049654, m_Tamer.NetState ); // You do not have a clear path to the animal you are taming, and must cease your attempt.
-						Stop();
-					}
-					else if ( !m_Creature.Tamable )
-					{
-						m_BeingTamed.Remove( m_Creature );
-						m_Tamer.NextSkillTime = DateTime.Now;
-						m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1049655, m_Tamer.NetState ); // That creature cannot be tamed.
-						Stop();
-					}
-					else if ( m_Creature.Controlled )
-					{
-						m_BeingTamed.Remove( m_Creature );
-						m_Tamer.NextSkillTime = DateTime.Now;
-						m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502804, m_Tamer.NetState ); // That animal looks tame already.
-						Stop();
-					}
-					else if ( m_Creature.Owners.Count >= BaseCreature.MaxOwners && !m_Creature.Owners.Contains( m_Tamer ) )
-					{
-						m_BeingTamed.Remove( m_Creature );
-						m_Tamer.NextSkillTime = DateTime.Now;
-						m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1005615, m_Tamer.NetState ); // This animal has had too many owners and is too upset for you to tame.
-						Stop();
-					}
-					else if ( de != null && de.LastDamage > m_StartTime )
-					{
-						m_BeingTamed.Remove( m_Creature );
-						m_Tamer.NextSkillTime = DateTime.Now;
-						m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502794, m_Tamer.NetState ); // The animal is too angry to continue taming.
-						Stop();
-					}
-					else if ( m_Count < m_MaxCount )
-					{
-						m_Tamer.RevealingAction();
+			private void OnTamingTick()
+			{
+				m_Count++;
 
-						switch ( Utility.Random( 5 ) )
+				DamageEntry de = m_Creature.FindMostRecentDamageEntry( false );
+				bool alreadyOwned = m_Creature.Owners.Contains( m_Tamer );
+
+				if ( de != null && de.LastDamage > m_StartTime )
+				{
+					m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502794, m_Tamer.NetState ); // The animal is too angry to continue taming.
+					StopTimer( Creature );
+				}
+				else if ( m_Count < m_MaxCount )
+				{
+					m_Tamer.RevealingAction();
+
+					switch ( Utility.Random( 5 ) )
+					{
+						case 0: m_Tamer.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "Easy...easy..."); break;
+						case 1: m_Tamer.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "Don't be afraid..."); break;
+						case 2: m_Tamer.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "I won't hurt you..."); break;
+						case 3: m_Tamer.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "See? Nothing to be afraid of..."); break;
+						case 4: m_Tamer.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "Nice and easy..."); break;
+					}
+
+					if ( !alreadyOwned ) // Passively check druidism for gain
+						m_Tamer.CheckTargetSkill( SkillName.Druidism, m_Creature, 0.0, 125.0 );
+
+					if ( m_Creature.Paralyzed )
+						m_Paralyzed = true;
+				}
+				else
+				{
+					m_Tamer.RevealingAction();
+
+					if ( m_Creature.Paralyzed )
+						m_Paralyzed = true;
+
+					if ( !alreadyOwned ) // Passively check druidism for gain
+						m_Tamer.CheckTargetSkill( SkillName.Druidism, m_Creature, 0.0, 125.0 );
+
+					double minSkill = m_Creature.MinTameSkill + (m_Creature.Owners.Count * 6.0);
+
+					if ( minSkill > -24.9 && CheckMastery( m_Tamer, m_Creature ) )
+						minSkill = -24.9; // 50% at 0.0?
+
+					minSkill += 24.9;
+
+					double mod = m_Tamer.Skills[SkillName.Druidism].Value / 5;
+
+					if ( CheckMastery( m_Tamer, m_Creature ) || alreadyOwned || m_Tamer.CheckTargetSkillExplicit( SkillName.Taming, m_Creature, (minSkill-25.0-mod), (minSkill+25.0) ) )
+					{
+						if ( m_Creature.Owners.Count == 0 ) // First tame
 						{
-							case 0: m_Tamer.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "Easy...easy..."); break;
-							case 1: m_Tamer.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "Don't be afraid..."); break;
-							case 2: m_Tamer.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "I won't hurt you..."); break;
-							case 3: m_Tamer.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "See? Nothing to be afraid of..."); break;
-							case 4: m_Tamer.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "Nice and easy..."); break;
+							if ( m_Paralyzed )
+								ScaleSkills( m_Creature, 0.86 ); // 86% of original skills if they were paralyzed during the taming
+							else
+								ScaleSkills( m_Creature, 0.90 ); // 90% of original skills
+
+							if ( m_Creature.StatLossAfterTame )
+								ScaleStats( m_Creature, 0.75 );
 						}
 
-						if ( !alreadyOwned ) // Passively check druidism for gain
-							m_Tamer.CheckTargetSkill( SkillName.Druidism, m_Creature, 0.0, 125.0 );
-
-						if ( m_Creature.Paralyzed )
-							m_Paralyzed = true;
-					}
-					else
-					{
-						m_Tamer.RevealingAction();
-						m_Tamer.NextSkillTime = DateTime.Now;
-						m_BeingTamed.Remove( m_Creature );
-
-						if ( m_Creature.Paralyzed )
-							m_Paralyzed = true;
-
-						if ( !alreadyOwned ) // Passively check druidism for gain
-							m_Tamer.CheckTargetSkill( SkillName.Druidism, m_Creature, 0.0, 125.0 );
-
-						double minSkill = m_Creature.MinTameSkill + (m_Creature.Owners.Count * 6.0);
-
-						if ( minSkill > -24.9 && CheckMastery( m_Tamer, m_Creature ) )
-							minSkill = -24.9; // 50% at 0.0?
-
-						minSkill += 24.9;
-
-						double mod = m_Tamer.Skills[SkillName.Druidism].Value / 5;
-
-						if ( CheckMastery( m_Tamer, m_Creature ) || alreadyOwned || m_Tamer.CheckTargetSkillExplicit( SkillName.Taming, m_Creature, (minSkill-25.0-mod), (minSkill+25.0) ) )
+						if ( alreadyOwned )
 						{
-							if ( m_Creature.Owners.Count == 0 ) // First tame
-							{
-								if ( m_Paralyzed )
-									ScaleSkills( m_Creature, 0.86 ); // 86% of original skills if they were paralyzed during the taming
-								else
-									ScaleSkills( m_Creature, 0.90 ); // 90% of original skills
-
-								if ( m_Creature.StatLossAfterTame )
-									ScaleStats( m_Creature, 0.75 );
-							}
-
-							if ( alreadyOwned )
-							{
-								m_Tamer.SendLocalizedMessage( 502797 ); // That wasn't even challenging.
-							}
-							else
-							{
-								m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502799, m_Tamer.NetState ); // It seems to accept you as master.
-								m_Creature.Owners.Add( m_Tamer );
-							}
-
-							m_Creature.SetControlMaster( m_Tamer );
-							m_Creature.Fame = 0;
-							m_Creature.Karma = 0;
-							m_Creature.RangeHome = -1;
-							m_Creature.Home = new Point3D(0, 0, 0);
-							m_Creature.FightMode = FightMode.Aggressor;
-							m_Creature.IsBonded = false;
-							m_Creature.Level = 1;
+							m_Tamer.SendLocalizedMessage( 502797 ); // That wasn't even challenging.
 						}
 						else
 						{
-							m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502798, m_Tamer.NetState ); // You fail to tame the creature.
+							m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502799, m_Tamer.NetState ); // It seems to accept you as master.
+							m_Creature.Owners.Add( m_Tamer );
 						}
+
+						m_Creature.SetControlMaster( m_Tamer );
+						m_Creature.Fame = 0;
+						m_Creature.Karma = 0;
+						m_Creature.RangeHome = -1;
+						m_Creature.Home = new Point3D(0, 0, 0);
+						m_Creature.FightMode = FightMode.Aggressor;
+						m_Creature.IsBonded = false;
+						m_Creature.Level = 1;
 					}
+					else
+					{
+						m_Creature.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502798, m_Tamer.NetState ); // You fail to tame the creature.
+					}
+
+					StopTimer( Creature );
 				}
+			}
 
-				private bool CanPath()
-				{
-					IPoint3D p = m_Tamer as IPoint3D;
+			private bool CanPath()
+			{
+				IPoint3D p = m_Tamer as IPoint3D;
 
-					if ( p == null )
-						return false;
+				if ( p == null )
+					return false;
 
-					if( m_Creature.InRange( new Point3D( p ), 2 ) )
-						return true;
+				if( m_Creature.InRange( new Point3D( p ), 2 ) )
+					return true;
 
-					MovementPath path = new MovementPath( m_Creature, new Point3D( p ) );
-					return path.Success;
-				}
+				MovementPath path = new MovementPath( m_Creature, new Point3D( p ) );
+				return path.Success;
 			}
 		}
 	}

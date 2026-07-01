@@ -1058,6 +1058,7 @@ namespace Server.Misc
 					builder.Append("- Skill - Parrying absorption duration is now 3 seconds, down from 5<br>");
 					builder.Append("- Skill - Parrying activation is now an overhead message<br>");
 					builder.Append("- Skill - Activating Tracking now auto-selects last tracked options when moving<br>");
+					builder.Append("- Skill - Taming will now automatically retry when a creature is angered<br>");
 					builder.Append("- Spell - All spells now display their visuals regardless if absorbed<br>");
 
 					builder.Append("<br>Fixes<br>");

@@ -24,6 +24,7 @@ using Server.Engines.PartySystem;
 using Server.Engines.MLQuests;
 using Server.SpellBars;
 using Server.Utilities;
+using Server.SkillHandlers;
 
 namespace Server.Mobiles
 {
@@ -1466,7 +1467,10 @@ namespace Server.Mobiles
 				}
 			}
 
-			return DesignContext.Check( this );
+			if ( !DesignContext.Check( this ) )
+				return false;
+
+			return skill == SkillName.Taming || !Taming.IsTaming( this );
 		}
 
 		private bool m_LastProtectedMessage;
