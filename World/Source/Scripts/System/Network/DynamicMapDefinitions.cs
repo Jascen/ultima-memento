@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Server;
-using Server.Network;
 
 namespace Server.Network
 {
     public class DynamicMapDefinitions
     {
+		public static bool Enabled = false;
+
         public static void Initialize()
         {
             EventSink.Login += OnLogin;
@@ -13,7 +13,7 @@ namespace Server.Network
 
         private static void OnLogin(LoginEventArgs e)
         {
-            if (e == null || e.Mobile == null)
+            if (e == null || e.Mobile == null || !Enabled)
                 return;
 
             NetState ns = e.Mobile.NetState;
