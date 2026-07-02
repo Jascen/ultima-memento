@@ -21,14 +21,12 @@ namespace Server.Items
 		public override WeaponAbility FourthAbility { get { return ThrowingGloves.GetFourthAbility( GloveType ); } }
 		public override WeaponAbility FifthAbility { get { return ThrowingGloves.GetFifthAbility( GloveType ); } }
 
-
 		public override int AosStrengthReq{ get{ return 20; } }
-		public override int AosMinDamage{ get{ return 12; } }
-		public override int AosMaxDamage{ get{ return 16; } }
-		public override int AosSpeed{ get{ return 23; } }
-		public override float MlSpeed{ get{ return 4.00f; } }
+		public override int AosMinDamage{ get{ return 8; } }
+		public override int AosMaxDamage{ get{ return 11; } }
+		public override float MlSpeed{ get{ return 2.00f; } }
 
-		public override int DefMaxRange{ get{ return 8; } }
+		public override int DefMaxRange{ get{ return 6; } }
 
 		public override int InitMinHits{ get{ return 31; } }
 		public override int InitMaxHits{ get{ return 60; } }

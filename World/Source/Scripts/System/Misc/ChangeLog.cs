@@ -1050,6 +1050,10 @@ namespace Server.Misc
 					builder.Append("- Item - All vendor-purchased ethereal mounts can now retain dye<br>");
 					builder.Append("- Item - Hide chests and Studded hide chests can now be sold to vendors<br>");
 					builder.Append("- Item - Arrows, Bolts, and Shafts now cost notably less to purchase (~3x cheaper)<br>");
+					builder.Append("- Item - Throwing gloves have been rebalanced<br>");
+					builder.Append("       - Damage has been changed to 8-11, down from 10-14<br>");
+					builder.Append("       - Attack Speed has been changed to 2s, up from 4s<br>");
+					builder.Append("       - Range has been changed to 6, down from 8<br>");
 					builder.Append("- Misc - Multiple items that accept gold being dropped on them no longer delete excess gold<br>");
 					builder.Append("- Misc - Hunger and thirst no longer pointlessly decay when dead<br>");
 					builder.Append("- Misc - Humanoid corpses no longer turn to bones after being carved<br>");
@@ -1083,6 +1087,7 @@ namespace Server.Misc
 					builder.Append("- Item - Leather Dye Tubs now work on leather<br>");
 					builder.Append("- Item - Double-clicking an axe now provides a system message<br>");
 					builder.Append("- Item - Leggings can now be equipped over pants<br>");
+					builder.Append("- Item - Fix issue where throwing glove types had inconsistent base damage<br>");
 					builder.Append("- Misc - Fix issue where Dex/Int stat gains couldn't happen if Str gain was on cooldown<br>");
 					builder.Append("- Misc - Fix issue where where some Library books would show random books<br>");
 					builder.Append("- Mobs - Fix case where AI would redundantly curse/poison<br>");
