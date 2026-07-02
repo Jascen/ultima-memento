@@ -118,18 +118,18 @@ namespace Server.Items
 
 				if ( attacker.FindItemOnLayer( Layer.OneHanded ) != null )
 				{
-					if ( attacker.FindItemOnLayer( Layer.OneHanded ) is ThrowingGloves )
+					if ( attacker.FindItemOnLayer( Layer.OneHanded ) is IThrowingGloves )
 					{
-						ThrowingGloves glove = (ThrowingGloves)( attacker.FindItemOnLayer( Layer.OneHanded ) );
+						IThrowingGloves glove = (IThrowingGloves)( attacker.FindItemOnLayer( Layer.OneHanded ) );
 						ThrowingWeapon knife = new ThrowingWeapon();
 
-						if ( glove.GloveType == "Stones" ){ knife.ammo = "Throwing Stones"; knife.ItemID = 0x10B6; knife.Name = "throwing stone"; }
-						else if ( glove.GloveType == "Axes" ){ knife.ammo = "Throwing Axes"; knife.ItemID = 0x10B3; knife.Name = "throwing axe"; }
-						else if ( glove.GloveType == "Daggers" ){ knife.ammo = "Throwing Daggers"; knife.ItemID = 0x10B7; knife.Name = "throwing dagger"; }
-						else if ( glove.GloveType == "Darts" ){ knife.ammo = "Throwing Darts"; knife.ItemID = 0x10B5; knife.Name = "throwing dart"; }
-						else if ( glove.GloveType == "Cards" && Server.Misc.GetPlayerInfo.isJester( attacker ) ){ knife.ammo = "Throwing Cards"; knife.ItemID = 0x4C29; knife.Name = "throwing card"; }
-						else if ( glove.GloveType == "Tomatoes" && Server.Misc.GetPlayerInfo.isJester( attacker ) ){ knife.ammo = "Throwing Tomatoes"; knife.ItemID = 0x4C28; knife.Name = "throwing tomato"; }
-						else { knife.ammo = "Throwing Stars"; knife.ItemID = 0x10B2; knife.Name = "throwing star"; }
+						if ( glove.GloveType == ThrowingWeaponType.Stones ){ knife.Ammo = ThrowingWeaponType.Stones; }
+						else if ( glove.GloveType == ThrowingWeaponType.Axes ){ knife.Ammo = ThrowingWeaponType.Axes; }
+						else if ( glove.GloveType == ThrowingWeaponType.Daggers ){ knife.Ammo = ThrowingWeaponType.Daggers; }
+						else if ( glove.GloveType == ThrowingWeaponType.Darts ){ knife.Ammo = ThrowingWeaponType.Darts; }
+						else if ( glove.GloveType == ThrowingWeaponType.Cards && Server.Misc.GetPlayerInfo.isJester( attacker ) ){ knife.Ammo = ThrowingWeaponType.Cards; }
+						else if ( glove.GloveType == ThrowingWeaponType.Tomatoes && Server.Misc.GetPlayerInfo.isJester( attacker ) ){ knife.Ammo = ThrowingWeaponType.Tomatoes; }
+						else { knife.Ammo = ThrowingWeaponType.Stars; }
 
 						bc.PackItem( knife );
 					}
@@ -189,29 +189,21 @@ namespace Server.Items
 
 		public virtual bool OnFired( Mobile attacker, Mobile defender )
 		{
-			if ( this is ThrowingGloves && attacker.Player )
+			if ( this is IThrowingGloves && attacker.Player )
 			{
-				string ammoType = "Throwing Stones";
+				ThrowingWeaponType ammoType;
+				IThrowingGloves glove = (IThrowingGloves)this;
+				if ( glove.GloveType == ThrowingWeaponType.Stones ){ ammoType = ThrowingWeaponType.Stones; }
+				else if ( glove.GloveType == ThrowingWeaponType.Axes ){ ammoType = ThrowingWeaponType.Axes; }
+				else if ( glove.GloveType == ThrowingWeaponType.Daggers ){ ammoType = ThrowingWeaponType.Daggers; }
+				else if ( glove.GloveType == ThrowingWeaponType.Darts ){ ammoType = ThrowingWeaponType.Darts; }
+				else if ( glove.GloveType == ThrowingWeaponType.Cards && Server.Misc.GetPlayerInfo.isJester( attacker ) ){ ammoType = ThrowingWeaponType.Cards; }
+				else if ( glove.GloveType == ThrowingWeaponType.Tomatoes && Server.Misc.GetPlayerInfo.isJester( attacker ) ){ ammoType = ThrowingWeaponType.Tomatoes; }
+				else { ammoType = ThrowingWeaponType.Stars; glove.GloveType = ThrowingWeaponType.Stars; }
 
-				ThrowingGloves glove = (ThrowingGloves)this;
-				if ( glove.GloveType == "Stones" ){ ammoType = "Throwing Stones"; }
-				else if ( glove.GloveType == "Axes" ){ ammoType = "Throwing Axes"; }
-				else if ( glove.GloveType == "Daggers" ){ ammoType = "Throwing Daggers"; }
-				else if ( glove.GloveType == "Darts" ){ ammoType = "Throwing Darts"; }
-				else if ( glove.GloveType == "Cards" && Server.Misc.GetPlayerInfo.isJester( attacker ) ){ ammoType = "Throwing Cards"; }
-				else if ( glove.GloveType == "Tomatoes" && Server.Misc.GetPlayerInfo.isJester( attacker ) ){ ammoType = "Throwing Tomatoes"; }
-				else { ammoType = "Throwing Stars"; glove.GloveType = "Stars"; }
-
-				foreach( Item i in attacker.Backpack.FindItemsByType( typeof( ThrowingWeapon ), true ) )
+				foreach( ThrowingWeapon i in attacker.Backpack.FindItemsByType( typeof( ThrowingWeapon ), true ) )
 				{
-					if ( ammoType == "Throwing Stones" ){ ((ThrowingWeapon)i).ammo = "Throwing Stones"; i.ItemID = 0x10B6; i.Name = "throwing stone"; }
-					else if ( ammoType == "Throwing Axes" ){ ((ThrowingWeapon)i).ammo = "Throwing Axes"; i.ItemID = 0x10B3; i.Name = "throwing axe"; }
-					else if ( ammoType == "Throwing Daggers" ){ ((ThrowingWeapon)i).ammo = "Throwing Daggers"; i.ItemID = 0x10B7; i.Name = "throwing dagger"; }
-					else if ( ammoType == "Throwing Darts" ){ ((ThrowingWeapon)i).ammo = "Throwing Darts"; i.ItemID = 0x10B5; i.Name = "throwing dart"; }
-					else if ( ammoType == "Throwing Cards" ){ ((ThrowingWeapon)i).ammo = "Throwing Cards"; i.ItemID = 0x4C29; i.Name = "throwing card"; }
-					else if ( ammoType == "Throwing Tomatoes" ){ ((ThrowingWeapon)i).ammo = "Throwing Tomatoes"; i.ItemID = 0x4C28; i.Name = "throwing tomato"; }
-					else { ((ThrowingWeapon)i).ammo = "Throwing Stars"; i.ItemID = 0x10B2; i.Name = "throwing star"; }
-					i.InvalidateProperties();
+					i.Ammo = ammoType;
 				}
 			}
 

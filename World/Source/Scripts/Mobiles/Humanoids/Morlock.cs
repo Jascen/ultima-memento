@@ -49,7 +49,7 @@ namespace Server.Mobiles
 				AddItem( gloves );
 
 				ThrowingWeapon toss = new ThrowingWeapon( Utility.RandomMinMax( 10, 30 ) );
-				toss.ammo = "Throwing Stones"; toss.ItemID = 0x10B6; toss.Name = "throwing stone";
+				toss.Ammo = ThrowingWeaponType.Stones;
 				PackItem( toss );
 			}
 			else

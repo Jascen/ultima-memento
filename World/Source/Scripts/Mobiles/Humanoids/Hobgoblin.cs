@@ -53,7 +53,7 @@ namespace Server.Mobiles
 				AddItem( gloves );
 
 				ThrowingWeapon toss = new ThrowingWeapon( Utility.RandomMinMax( 10, 30 ) );
-				toss.ammo = "Throwing Daggers"; toss.ItemID = 0x10B7; toss.Name = "throwing dagger";
+				toss.Ammo = ThrowingWeaponType.Daggers;
 				PackItem( toss );
 			}
 		}

@@ -57,7 +57,7 @@ namespace Server.Mobiles
 				AddItem( gloves );
 
 				ThrowingWeapon toss = new ThrowingWeapon( Utility.RandomMinMax( 10, 30 ) );
-				toss.ammo = "Throwing Axes"; toss.ItemID = 0x10B3; toss.Name = "throwing axe";
+				toss.Ammo = ThrowingWeaponType.Axes;
 				PackItem( toss );
 			}
 		}

@@ -140,15 +140,18 @@ namespace Server.Mobiles
 			if ( Utility.RandomBool() )
 			{
 				ThrowingGloves glove = new ThrowingGloves();
-				ThrowingWeapon ammo = new ThrowingWeapon( Utility.RandomMinMax( 15, 30 ) );
-
 				switch ( Utility.Random( 5 ))		   
 				{
-					case 0: glove.GloveType = "Stones";		ammo.ammo = "Throwing Stones"; 	ammo.ItemID = 0x10B6; ammo.Name = "throwing stone";		break;
-					case 1: glove.GloveType = "Axes"; 		ammo.ammo = "Throwing Axes"; 	ammo.ItemID = 0x10B3; ammo.Name = "throwing axe";		break;
-					case 2: glove.GloveType = "Daggers"; 	ammo.ammo = "Throwing Daggers"; ammo.ItemID = 0x10B7; ammo.Name = "throwing dagger";	break;
-					case 3: glove.GloveType = "Darts"; 		ammo.ammo = "Throwing Darts"; 	ammo.ItemID = 0x10B5; ammo.Name = "throwing dart";		break;
-					case 4: glove.GloveType = "Stars"; 		ammo.ammo = "Throwing Stars"; 	ammo.ItemID = 0x10B2; ammo.Name = "throwing star";		break;
+					case 0: glove.GloveType = ThrowingWeaponType.Stones; break;
+					case 1: glove.GloveType = ThrowingWeaponType.Axes; break;
+					case 2: glove.GloveType = ThrowingWeaponType.Daggers; break;
+					case 3: glove.GloveType = ThrowingWeaponType.Darts; break;
+					case 4: glove.GloveType = ThrowingWeaponType.Stars; break;
+				};
+
+				ThrowingWeapon ammo = new ThrowingWeapon( Utility.RandomMinMax( 15, 30 ) )
+				{
+					Ammo = glove.GloveType
 				};
 
 				AddItem( glove );

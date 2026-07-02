@@ -1076,6 +1076,9 @@ namespace Server.Misc
 					builder.Append("<br>Fixes<br>");
 					builder.Append("- Admin - Remove duplicate doors in Britain castle<br>");
 					builder.Append("- Admin - Blockers are now hidden by default<br>");
+					builder.Append("- Combat - Fix issue where non-crafted throwing gloves wouldn't refund ammo<br>");
+					builder.Append("- Combat - Fix issue where non-crafted throwing gloves couldn't throw cards or tomatoes<br>");
+					builder.Append("- Combat - Fix issue where non-crafted throwing gloves wouldn't convert existing ammo<br>");
 					builder.Append("- Craft - Fix issue where invalid heat sources were detected<br>");
 					builder.Append("- Item - Leather Dye Tubs now work on leather<br>");
 					builder.Append("- Item - Double-clicking an axe now provides a system message<br>");

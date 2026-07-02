@@ -4,113 +4,33 @@ namespace Server.Items
 {
 	public interface IThrowingGloves
 	{
+		ThrowingWeaponType GloveType { get; set; }
 	}
 
 	[FlipableAttribute( 0x13C6, 0x13CE )]
-	public class ThrowingGloves : BaseRanged, IThrowingGloves
+	public partial class ThrowingGloves : BaseRanged, IThrowingGloves
 	{
-		public string GloveType;
+		private ThrowingWeaponType m_GloveType;
 		
-		[CommandProperty(AccessLevel.Owner)]
-		public string Glove_Type { get { return GloveType; } set { GloveType = value; InvalidateProperties(); } }
+		[CommandProperty(AccessLevel.GameMaster)]
+		public ThrowingWeaponType GloveType { get { return m_GloveType; } set { m_GloveType = value; InvalidateProperties(); } }
 
-		public override int EffectID
-		{
-			get
-			{
-				if ( GloveType == "Stones" ){ return 0x10B6; }
-				else if ( GloveType == "Axes" ){ return 0x10B3; }
-				else if ( GloveType == "Daggers" ){ return 0x529F; }
-				else if ( GloveType == "Darts" ){ return 0x52B0; }
-				else if ( GloveType == "Cards" ){ return 0x4C29; }
-				else if ( GloveType == "Tomatoes" ){ return 0x4C28; }
-				else { return 0x10B2; }
-			}
-		}
+		public override int EffectID { get { return ThrowingGloves.GetEffectID( GloveType ); } }
 
 		public override Type AmmoType{ get{ return typeof( ThrowingWeapon ); } }
 		public override Item Ammo{ get{ return new ThrowingWeapon(); } }
 
-		public override WeaponAbility PrimaryAbility
-		{
-			get
-			{
-				if ( GloveType == "Stones" ){ return WeaponAbility.ConcussionBlow; }
-				else if ( GloveType == "Axes" ){ return WeaponAbility.ArmorIgnore; }
-				else if ( GloveType == "Daggers" ){ return WeaponAbility.ArmorIgnore; }
-				else if ( GloveType == "Darts" ){ return WeaponAbility.ParalyzingBlow; }
-				else if ( GloveType == "Cards" ){ return WeaponAbility.ArmorIgnore; }
-				else if ( GloveType == "Tomatoes" ){ return WeaponAbility.ConcussionBlow; }
-				else { return WeaponAbility.ShadowStrike; }
-			}
-		}
-
-		public override WeaponAbility SecondaryAbility
-		{
-			get
-			{
-				if ( GloveType == "Stones" ){ return WeaponAbility.StunningStrike; }
-				else if ( GloveType == "Axes" ){ return WeaponAbility.TalonStrike; }
-				else if ( GloveType == "Daggers" ){ return WeaponAbility.TalonStrike; }
-				else if ( GloveType == "Darts" ){ return WeaponAbility.ArmorIgnore; }
-				else if ( GloveType == "Cards" ){ return WeaponAbility.TalonStrike; }
-				else if ( GloveType == "Tomatoes" ){ return WeaponAbility.StunningStrike; }
-				else { return WeaponAbility.ParalyzingBlow; }
-			}
-		}
-
-		public override WeaponAbility ThirdAbility
-		{
-			get
-			{
-				if ( GloveType == "Stones" ){ return WeaponAbility.CrushingBlow; }
-				else if ( GloveType == "Axes" ){ return WeaponAbility.BleedAttack; }
-				else if ( GloveType == "Daggers" ){ return WeaponAbility.InfectiousStrike; }
-				else if ( GloveType == "Darts" ){ return WeaponAbility.InfectiousStrike; }
-				else if ( GloveType == "Cards" ){ return WeaponAbility.InfectiousStrike; }
-				else if ( GloveType == "Tomatoes" ){ return WeaponAbility.CrushingBlow; }
-				else { return WeaponAbility.InfectiousStrike; }
-			}
-		}
-
-		public override WeaponAbility FourthAbility
-		{
-			get
-			{
-				if ( GloveType == "Stones" ){ return WeaponAbility.DeathBlow; }
-				else if ( GloveType == "Axes" ){ return WeaponAbility.ConsecratedStrike; }
-				else if ( GloveType == "Daggers" ){ return WeaponAbility.DevastatingBlow; }
-				else if ( GloveType == "Darts" ){ return WeaponAbility.ToxicStrike; }
-				else if ( GloveType == "Cards" ){ return WeaponAbility.DevastatingBlow; }
-				else if ( GloveType == "Tomatoes" ){ return WeaponAbility.DeathBlow; }
-				else { return WeaponAbility.ShadowInfectiousStrike; }
-			}
-		}
-
-		public override WeaponAbility FifthAbility
-		{
-			get
-			{
-				if ( GloveType == "Stones" ){ return WeaponAbility.NerveStrike; }
-				else if ( GloveType == "Axes" ){ return WeaponAbility.DoubleStrike; }
-				else if ( GloveType == "Daggers" ){ return WeaponAbility.DeathBlow; }
-				else if ( GloveType == "Darts" ){ return WeaponAbility.LightningStriker; }
-				else if ( GloveType == "Cards" ){ return WeaponAbility.DeathBlow; }
-				else if ( GloveType == "Tomatoes" ){ return WeaponAbility.NerveStrike; }
-				else { return WeaponAbility.DevastatingBlow; }
-			}
-		}
+		public override WeaponAbility PrimaryAbility { get { return ThrowingGloves.GetPrimaryAbility( GloveType ); } }
+		public override WeaponAbility SecondaryAbility { get { return ThrowingGloves.GetSecondaryAbility( GloveType ); } }
+		public override WeaponAbility ThirdAbility { get { return ThrowingGloves.GetThirdAbility( GloveType ); } }
+		public override WeaponAbility FourthAbility { get { return ThrowingGloves.GetFourthAbility( GloveType ); } }
+		public override WeaponAbility FifthAbility { get { return ThrowingGloves.GetFifthAbility( GloveType ); } }
 
 		public override int AosStrengthReq{ get{ return 20; } }
 		public override int AosMinDamage{ get{ return 10; } }
 		public override int AosMaxDamage{ get{ return 14; } }
 		public override int AosSpeed{ get{ return 23; } }
 		public override float MlSpeed{ get{ return 4.00f; } }
-
-		public override int OldStrengthReq{ get{ return 20; } }
-		public override int OldMinDamage{ get{ return 6; } }
-		public override int OldMaxDamage{ get{ return 22; } }
-		public override int OldSpeed{ get{ return 20; } }
 
 		public override int DefMaxRange{ get{ return 8; } }
 
@@ -128,7 +48,7 @@ namespace Server.Items
 		[Constructable]
 		public ThrowingGloves() : base( 0x13C6 )
 		{
-			if ( GloveType == "" || GloveType == null ){ GloveType = "Stones"; }
+			GloveType = ThrowingWeaponType.Stones;
 			Name = "throwing gloves";
 			Weight = 2.0;
 			Hue = Utility.RandomColor(0);
@@ -139,29 +59,14 @@ namespace Server.Items
 
 		public override void OnDoubleClick( Mobile from )
 		{
-			if ( !IsChildOf( from.Backpack ) ) 
-			{
-				from.SendMessage( "This must be in your backpack to change the weapon type." );
-				return;
-			}
-			else
-			{
-				if ( GloveType == "Stones" ){ GloveType = "Axes"; }
-				else if ( GloveType == "Axes" ){ GloveType = "Daggers"; }
-				else if ( GloveType == "Daggers" ){ GloveType = "Darts"; }
-				else if ( GloveType == "Darts" ){ GloveType = "Stars"; }
-				else if ( GloveType == "Stars" && Server.Misc.GetPlayerInfo.isJester( from ) ){ GloveType = "Cards"; }
-				else if ( GloveType == "Cards" && Server.Misc.GetPlayerInfo.isJester( from ) ){ GloveType = "Tomatoes"; }
-				else { GloveType = "Stones"; }
-				from.SendMessage(68, "You have changed the gloves to throw " + GloveType + ".");
-				this.InvalidateProperties();
-			}
+			ThrowingGloves.ChangeGloveType( from, this );
 		}
 
 		public override void AddNameProperties( ObjectPropertyList list )
 		{
 			base.AddNameProperties( list );
-			list.Add( 1049644, "Double click to change type from " + GloveType );
+			list.Add("Throwing: {0}", ThrowingGloves.GetAmmoName( GloveType ));
+			list.Add( 1049644, "Double click to change ammo type" );
 			list.Add( 1070722, "Cannot be used with other weapons" );
 		}
 
@@ -172,15 +77,154 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.Write( (int) 0 ); // version
-            writer.Write( GloveType );
+			writer.Write( (int) 1 ); // version
+            writer.Write( (int)GloveType );
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-            GloveType = reader.ReadString();
+
+			if ( 0 < version ){ GloveType = (ThrowingWeaponType)reader.ReadInt(); }
+			else
+			{
+            	var _ = reader.ReadString(); // We don't care about converting this. Just default them to Stones.
+			}
+		}
+	}
+
+	public partial class ThrowingGloves
+	{
+		public static int GetEffectID( ThrowingWeaponType GloveType )
+		{
+			switch ( GloveType )
+			{
+				case ThrowingWeaponType.Stones: return 0x10B6;
+				case ThrowingWeaponType.Axes: return 0x10B3;
+				case ThrowingWeaponType.Daggers: return 0x529F;
+				case ThrowingWeaponType.Darts: return 0x52B0;
+				case ThrowingWeaponType.Cards: return 0x4C29;
+				case ThrowingWeaponType.Tomatoes: return 0x4C28;
+				default: return 0x10B2;
+			}
+		}
+
+		public static WeaponAbility GetPrimaryAbility( ThrowingWeaponType GloveType )
+		{
+			switch ( GloveType )
+			{
+				case ThrowingWeaponType.Stones: return WeaponAbility.ConcussionBlow;
+				case ThrowingWeaponType.Axes: return WeaponAbility.ArmorIgnore;
+				case ThrowingWeaponType.Daggers: return WeaponAbility.ArmorIgnore;
+				case ThrowingWeaponType.Darts: return WeaponAbility.ParalyzingBlow;
+				case ThrowingWeaponType.Cards: return WeaponAbility.ArmorIgnore;
+				case ThrowingWeaponType.Tomatoes: return WeaponAbility.ConcussionBlow;
+				default: return WeaponAbility.ShadowStrike;
+			}
+		}
+
+		public static WeaponAbility GetSecondaryAbility( ThrowingWeaponType GloveType )
+		{
+			switch ( GloveType )
+			{
+				case ThrowingWeaponType.Stones: return WeaponAbility.StunningStrike;
+				case ThrowingWeaponType.Axes: return WeaponAbility.TalonStrike;
+				case ThrowingWeaponType.Daggers: return WeaponAbility.TalonStrike;
+				case ThrowingWeaponType.Darts: return WeaponAbility.ArmorIgnore;
+				case ThrowingWeaponType.Cards: return WeaponAbility.TalonStrike;
+				case ThrowingWeaponType.Tomatoes: return WeaponAbility.StunningStrike;
+				default: return WeaponAbility.ParalyzingBlow;
+			}
+		}
+
+		public static WeaponAbility GetThirdAbility( ThrowingWeaponType GloveType )
+		{
+			switch ( GloveType )
+			{
+				case ThrowingWeaponType.Stones: return WeaponAbility.CrushingBlow;
+				case ThrowingWeaponType.Axes: return WeaponAbility.BleedAttack;
+				case ThrowingWeaponType.Daggers: return WeaponAbility.InfectiousStrike;
+				case ThrowingWeaponType.Darts: return WeaponAbility.InfectiousStrike;
+				case ThrowingWeaponType.Cards: return WeaponAbility.InfectiousStrike;
+				case ThrowingWeaponType.Tomatoes: return WeaponAbility.CrushingBlow;
+				default: return WeaponAbility.InfectiousStrike;
+			}
+		}
+
+		public static WeaponAbility GetFourthAbility( ThrowingWeaponType GloveType )
+		{
+			switch ( GloveType )
+			{
+				case ThrowingWeaponType.Stones: return WeaponAbility.DeathBlow;
+				case ThrowingWeaponType.Axes: return WeaponAbility.ConsecratedStrike;
+				case ThrowingWeaponType.Daggers: return WeaponAbility.DevastatingBlow;
+				case ThrowingWeaponType.Darts: return WeaponAbility.ToxicStrike;
+				case ThrowingWeaponType.Cards: return WeaponAbility.DevastatingBlow;
+				case ThrowingWeaponType.Tomatoes: return WeaponAbility.DeathBlow;
+				default: return WeaponAbility.ShadowInfectiousStrike;
+			}
+		}
+
+		public static WeaponAbility GetFifthAbility( ThrowingWeaponType GloveType )
+		{
+			switch ( GloveType )
+			{
+				case ThrowingWeaponType.Stones: return WeaponAbility.NerveStrike;
+				case ThrowingWeaponType.Axes: return WeaponAbility.DoubleStrike;
+				case ThrowingWeaponType.Daggers: return WeaponAbility.DeathBlow;
+				case ThrowingWeaponType.Darts: return WeaponAbility.LightningStriker;
+				case ThrowingWeaponType.Cards: return WeaponAbility.DeathBlow;
+				case ThrowingWeaponType.Tomatoes: return WeaponAbility.NerveStrike;
+				default: return WeaponAbility.DevastatingBlow;
+			}
+		}
+
+		public static void ChangeGloveType<TGlove>( Mobile from, TGlove gloves ) where TGlove : Item, IThrowingGloves
+		{
+			if ( !gloves.IsChildOf( from.Backpack ) ) 
+			{
+				from.SendMessage( "This must be in your backpack to change the weapon type." );
+				return;
+			}
+
+			gloves.GloveType = NextWeaponType( from, gloves.GloveType );
+
+			from.SendMessage(68, "You have changed the gloves to throw " + gloves.GloveType + ".");
+		}
+
+		public static ThrowingWeaponType NextWeaponType( Mobile from, ThrowingWeaponType m_ammo )
+		{
+			if ( m_ammo == ThrowingWeaponType.Stones ) return ThrowingWeaponType.Axes;
+			if ( m_ammo == ThrowingWeaponType.Axes ) return ThrowingWeaponType.Daggers;
+			if ( m_ammo == ThrowingWeaponType.Daggers ) return ThrowingWeaponType.Darts;
+			if ( m_ammo == ThrowingWeaponType.Darts ) return ThrowingWeaponType.Stars;
+
+			if ( Server.Misc.GetPlayerInfo.isJester( from ) )
+			{
+				if ( m_ammo == ThrowingWeaponType.Stars ) return ThrowingWeaponType.Cards;
+				if ( m_ammo == ThrowingWeaponType.Cards ) return ThrowingWeaponType.Tomatoes;
+			}
+
+			return ThrowingWeaponType.Stones;
+		}
+
+		public static string GetAmmoName( ThrowingWeaponType type )
+		{
+			switch ( type )
+			{
+				case ThrowingWeaponType.Stones:
+				case ThrowingWeaponType.Axes:
+				case ThrowingWeaponType.Daggers:
+				case ThrowingWeaponType.Darts:
+				case ThrowingWeaponType.Stars:
+				case ThrowingWeaponType.Cards:
+				case ThrowingWeaponType.Tomatoes:
+					return type.ToString();
+
+				default:
+					return "Unknown";
+			}
 		}
 	}
 }
