@@ -6862,8 +6862,8 @@ namespace Server.Mobiles
 				Owner.From.TargetLocked = true;
 				SkillHandlers.Taming.DisableMessage = true;
 
-				if ( Owner.From.UseSkill( SkillName.Taming ) )
-					Owner.From.Target.Invoke( Owner.From, m_Mobile );
+			if ( Owner.From.UseSkill( SkillName.Taming ) && Owner.From.Target != null )
+				Owner.From.Target.Invoke( Owner.From, m_Mobile );
 
 				SkillHandlers.Taming.DisableMessage = false;
 				Owner.From.TargetLocked = false;
