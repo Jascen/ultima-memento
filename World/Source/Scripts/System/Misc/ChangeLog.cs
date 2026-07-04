@@ -1051,6 +1051,7 @@ namespace Server.Misc
 					builder.Append("- Item - Hide chests and Studded hide chests can now be sold to vendors<br>");
 					builder.Append("- Item - Arrows, Bolts, and Shafts now cost notably less to purchase (~3x cheaper)<br>");
 					builder.Append("- Item - Dropped loot chests now indicate they're filled with treasure<br>");
+					builder.Append("- Item - Power Scrolls now indicate which Shrine they require<br>");
 					builder.Append("- Item - Throwing gloves have been rebalanced<br>");
 					builder.Append("       - Damage has been changed to 8-11, down from 10-14<br>");
 					builder.Append("       - Attack Speed has been changed to 2s, up from 4s<br>");
