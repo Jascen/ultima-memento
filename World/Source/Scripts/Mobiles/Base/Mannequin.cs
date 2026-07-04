@@ -169,7 +169,7 @@ namespace Server.Mobiles
 
 		private void OnWanderTick()
 		{
-			if ( Deleted || !m_Roaming )
+			if ( Deleted || !m_Roaming || true )
 			{
 				StopWanderTimer();
 				return;
