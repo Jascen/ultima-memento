@@ -75,7 +75,8 @@ namespace Server.Utilities
 	public static class UnlockUtilities
 	{
 		public const int CardSlotItemId = 0x3A75;
-		public const int MAX_TMAP_LEVEL = 2 + TreasureMapChest.LEVEL_BONUS;
+		public const int MAX_TMAP_LEVEL = 2;
+		private const int MAX_TMAP_LEVEL_HACK = MAX_TMAP_LEVEL + TreasureMapChest.LEVEL_BONUS;
 
 		#region Profiles
 
@@ -760,7 +761,7 @@ namespace Server.Utilities
 
 		private static bool IsInvalidTreasureMapChest(object chest)
 		{
-			return chest is TreasureMapChest && MAX_TMAP_LEVEL < ((TreasureMapChest)chest).Level;
+			return chest is TreasureMapChest && MAX_TMAP_LEVEL_HACK < ((TreasureMapChest)chest).Level;
 		}
 
 		private static void ReturnEmptyAcidContainer(Mobile from, Item tool)
