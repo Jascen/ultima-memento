@@ -27,9 +27,14 @@ namespace Server.Items
 			Movable = true;
 		}
 
-		public override void Open( Mobile from )
+		private bool NeedsFilling()
 		{
-			if ( this.Weight > 50 )
+			return Weight > 50;
+		}
+
+		private void TryFillContainer( Mobile from )
+		{
+			if ( NeedsFilling() )
 			{
 				Movable = true;
 				int FillMeUpLevel = (int)(this.Weight - 51);
@@ -42,27 +47,30 @@ namespace Server.Items
 
 				ContainerFunctions.FillTheContainer( FillMeUpLevel, this, from );
 			}
+		}
 
+		public override void Open( Mobile from )
+		{
+			TryFillContainer( from );
+			from.SendSound( 0x48, GetWorldLocation() );
 			base.Open( from );
 		}
 
 		public override bool OnDragLift( Mobile from )
 		{
-			if ( this.Weight > 50 )
-			{
-				Movable = true;
-				int FillMeUpLevel = (int)(this.Weight - 51);
-				this.Weight = 5.0;
-
-				if ( GetPlayerInfo.LuckyPlayer( from.Luck ) )
-				{
-					FillMeUpLevel = FillMeUpLevel + Utility.RandomMinMax( 1, 2 );
-				}
-
-				ContainerFunctions.FillTheContainer( FillMeUpLevel, this, from );
-			}
+			TryFillContainer( from );
 
 			return true;
+		}
+
+		public override bool DisplaysContent{ get{ return !NeedsFilling(); } }
+
+		public override void AddNameProperties(ObjectPropertyList list)
+		{
+			base.AddNameProperties(list);
+			
+			if ( NeedsFilling() )
+				list.Add("Filled with treasure");
 		}
 
 		public LootChest( Serial serial ) : base( serial )
