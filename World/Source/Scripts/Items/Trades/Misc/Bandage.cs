@@ -304,6 +304,12 @@ namespace Server.Items
 
 		public void EndHeal( bool partial, int toHeal, bool canGainSkill, ref int rollingHealAmount )
 		{
+			if ( !m_Healer.Alive )
+			{
+				StopHeal();
+				return;
+			}
+
 			if ( !partial )
 				StopHeal();
 

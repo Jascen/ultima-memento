@@ -1092,6 +1092,7 @@ namespace Server.Misc
 					builder.Append("- Item - Fix issue where throwing glove types had inconsistent base damage<br>");
 					builder.Append("- Misc - Fix issue where Dex/Int stat gains couldn't happen if Str gain was on cooldown<br>");
 					builder.Append("- Misc - Fix issue where where some Library books would show random books<br>");
+					builder.Append("- Misc - Bandages now stop when the healer dies<br>");
 					builder.Append("- Mobs - Fix case where AI would redundantly curse/poison<br>");
 					builder.Append("- Quest - Kite shield blacksmith quest now clarifies the item type name<br>");
 					break;
