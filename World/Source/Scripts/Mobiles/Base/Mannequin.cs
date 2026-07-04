@@ -196,16 +196,24 @@ namespace Server.Mobiles
 			// Open any closed adjacent doors so the mannequin can pass through.
 			if ( this.Map != null )
 			{
+				List<BaseDoor> doors = new List<BaseDoor>();
 				IPooledEnumerable eable = this.Map.GetItemsInRange( this.Location, 1 );
 				foreach ( Item item in eable )
 				{
 					BaseDoor door = item as BaseDoor;
 					if ( door != null && !door.Open )
+						doors.Add( door );
+				}
+				eable.Free();
+
+				for ( int i = 0; i < doors.Count; i++ )
+				{
+					BaseDoor door = doors[i];
+					if ( door != null && !door.Deleted && !door.Open )
 					{
 						try { door.Use( this ); } catch { /* locked or no access — ignore */ }
 					}
 				}
-				eable.Free();
 			}
 
 			// Try several directions per tick — the first one that fits inside the house AND
