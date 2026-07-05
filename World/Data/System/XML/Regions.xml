@@ -129,6 +129,7 @@
 			<rect x="6027" y="1425" width="103" height="88" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Lizardman Cave">
+			<entrance x="5407" y="631" z="30" map="Lodor" />
 			<rect x="5376" y="509" width="141" height="134" />
 				<spawning>
 					<object id="2021" type="HiddenChest" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="5" />
@@ -139,6 +140,7 @@
 			<rect x="5801" y="319" width="63" height="66" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Crypt">
+			<entrance x="2103" y="361" z="0" map="SerpentIsland" />
 			<rect x="5222" y="3057" width="33" height="72" />
 				<spawning>
 					<object id="2030" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="3" />
@@ -146,6 +148,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Wrong">
+			<entrance x="5825" y="630" z="0" map="Lodor" />
 			<rect x="5379" y="1283" width="248" height="226" />
 			<rect x="5639" y="508" width="249" height="180" />
 				<spawning>
@@ -154,6 +157,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Volcanic Cave">
+			<entrance x="3105" y="3597" z="0" map="Lodor" />
 			<rect x="5830" y="3361" width="210" height="180" />
 				<spawning>
 					<object id="2026" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="22" />
@@ -161,6 +165,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Terathan Keep">
+			<entrance x="5342" y="1601" z="0" map="Lodor" />
 			<rect x="5125" y="1536" width="252" height="246" />
 				<spawning>
 					<object id="2024" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="36" />
@@ -168,6 +173,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Shame">
+			<entrance x="5395" y="126" z="0" map="Lodor" />
 			<rect x="5628" y="1" width="265" height="125" />
 			<rect x="5375" y="2" width="259" height="253" />
 				<spawning>
@@ -183,6 +189,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Frozen Hells">
+			<entrance x="5879" y="242" z="-2" map="Lodor" />
 			<rect x="5665" y="132" width="224" height="131" />
 				<spawning>
 					<object id="2016" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="16" />
@@ -190,6 +197,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Hythloth">
+			<entrance x="5905" y="20" z="46" map="Lodor" />
 			<rect x="5902" y="14" width="238" height="227" />
 			<rect x="5941" y="335" width="27" height="31" />
 				<spawning>
@@ -205,6 +213,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the City of Embers">
+			<entrance x="5783" y="1504" z="20" map="Lodor" />
 			<rect x="5632" y="1282" width="258" height="242" />
 				<spawning>
 					<object id="2010" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="37" />
@@ -212,6 +221,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="100" name="Dungeon Destard">
+			<entrance x="5243" y="1006" z="0" map="Lodor" />
 			<rect x="6764" y="463" width="167" height="158" />
 			<rect x="5123" y="770" width="246" height="255" />
 				<spawning>
@@ -221,6 +231,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Despise">
+			<entrance x="5519" y="673" z="20" map="Lodor" />
 			<rect x="5377" y="646" width="154" height="131" />
 			<rect x="5374" y="768" width="255" height="255" />
 			<rect x="5145" y="2393" width="201" height="281" />
@@ -232,6 +243,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Deceit">
+			<entrance x="5188" y="638" z="0" map="Lodor" />
 			<rect x="5125" y="525" width="228" height="243" />
 				<spawning>
 					<object id="2004" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="30" />
@@ -239,6 +251,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Covetous">
+			<entrance x="5458" y="1853" z="0" map="Lodor" />
 			<rect x="5377" y="1843" width="133" height="123" />
 			<rect x="5376" y="1947" width="246" height="96" />
 			<rect x="5436" y="2080" width="138" height="85" />
@@ -250,6 +263,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Lodoria Catacombs">
+			<entrance x="5579" y="1924" z="0" map="Lodor" />
 			<rect x="5531" y="1821" width="97" height="110" />
 			<rect x="5398" y="1788" width="234" height="51" />
 				<spawning>
@@ -258,6 +272,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Halls of Undermountain">
+			<entrance x="5413" y="506" z="0" map="Lodor" />
 			<rect x="5205" y="291" width="263" height="218" />
 				<spawning>
 					<object id="2760" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="36" />
@@ -265,6 +280,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Vault of the Black Knight">
+			<entrance x="1580" y="304" z="0" map="SerpentIsland" />
 			<rect x="6181" y="21" width="491" height="583" />
 				<spawning>
 					<object id="2762" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="178" />
@@ -279,6 +295,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="20" name="Stonegate Castle">
+			<entrance x="6529" y="2823" z="0" map="Lodor" />
 			<rect x="5979" y="2243" width="1022" height="653" />
 				<spawning>
 					<object id="2136" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="300" />
@@ -294,10 +311,12 @@
 		</region>
 
 		<region type="DungeonRegion" priority="50" name="the Montor Sewers">
+			<entrance x="6479" y="926" z="22" map="Lodor" />
 			<rect x="6448" y="892" width="177" height="141" />
 		</region>
 
 		<region type="DungeonRegion" priority="50" name="the Depths of Carthax Lake">
+			<entrance x="5764" y="1770" z="71" map="Lodor" />
 			<rect x="5732" y="1582" width="401" height="326" />
 			<rect x="5157" y="1837" width="153" height="304" />
 			<rect x="5154" y="2192" width="375" height="186" />
@@ -307,6 +326,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Morgaelin's Inferno">
+			<entrance x="7003" y="740" z="-30" map="Lodor" />
 			<rect x="6883" y="529" width="260" height="346" />
 			<rect x="6662" y="909" width="360" height="444" />
 			<rect x="7017" y="958" width="121" height="234" />
@@ -317,6 +337,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Zealan Tombs">
+			<entrance x="5553" y="1664" z="102" map="Lodor" />
 			<rect x="6346" y="640" width="500" height="202" />
 			<rect x="5966" y="861" width="46" height="56" />
 			<rect x="5423" y="1545" width="285" height="213" />
@@ -328,6 +349,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Temple of Osirus">
+			<entrance x="6222" y="3931" z="30" map="Lodor" />
 			<rect x="6043" y="3504" width="173" height="226" />
 			<rect x="6020" y="3741" width="149" height="332" />
 			<rect x="6190" y="3778" width="130" height="191" />
@@ -338,6 +360,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Argentrock Castle">
+			<entrance x="6098" y="503" z="0" map="Lodor" />
 			<rect x="5929" y="429" width="241" height="374" />
 			<rect x="5783" y="690" width="128" height="268" />
 			<rect x="6194" y="622" width="104" height="200" />
@@ -348,6 +371,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="60" name="the Daemon's Crag">
+			<entrance x="5889" y="2171" z="-7" map="Lodor" />
 			<rect x="5866" y="2080" width="85" height="152" />
 			<rect x="6135" y="1954" width="305" height="262" />
 		</region>
@@ -366,6 +390,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="80" name="the Sanctum of Saltmarsh">
+			<entrance x="6283" y="1157" z="1" map="Lodor" />
 			<rect x="5683" y="1963" width="142" height="157" />
 			<rect x="5909" y="1943" width="151" height="82" />
 			<rect x="6554" y="2044" width="80" height="100" />
@@ -571,6 +596,7 @@
 				</spawning>
 		</region>
 		<region type="BardDungeonRegion" priority="50" name="the Catacombs">
+			<entrance x="5579" y="1924" z="0" map="Lodor" />
 			<rect x="6481" y="1889" width="163" height="156" />
 				<spawning>
 					<object id="2772" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="14" />
@@ -578,6 +604,7 @@
 				</spawning>
 		</region>
 		<region type="BardDungeonRegion" priority="50" name="the Lower Catacombs">
+			<entrance x="5579" y="1924" z="0" map="Lodor" />
 			<rect x="6131" y="2656" width="148" height="100" />
 			<rect x="6201" y="2642" width="78" height="42" />
 				<spawning>
@@ -586,12 +613,14 @@
 				</spawning>
 		</region>
 		<region type="BardDungeonRegion" priority="50" name="the Sewers">
+			<entrance x="6479" y="926" z="22" map="Lodor" />
 			<rect x="6477" y="1526" width="211" height="260" />
 				<spawning>
 					<object id="2774" type="HiddenChest" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="17" />
 				</spawning>
 		</region>
 		<region type="BardDungeonRegion" priority="50" name="the Mines">
+			<entrance x="1037" y="2168" z="-3" map="SavagedEmpire" />
 			<rect x="6026" y="2314" width="90" height="60" />
 		</region>
 		<region type="BardDungeonRegion" priority="50" name="the Cellar">
@@ -788,6 +817,7 @@
 			<rect x="3183" y="3603" width="212" height="225" />
 		</region>
 		<region type="CaveRegion" priority="65" name="the Ambrosian Cavern">
+			<entrance x="5605" y="3833" z="0" map="Sosaria" />
 			<rect x="3219" y="3865" width="129" height="84" />
 		</region>
 		<region type="CaveRegion" priority="65" name="the Britain Mines">
@@ -898,6 +928,7 @@
 			<rect x="4947" y="3484" width="112" height="106" />
 		</region>
 		<region type="DungeonRegion" priority="100" name="the Caverns of Poseidon">
+			<entrance x="5199" y="2112" z="40" map="Sosaria" />
 			<rect x="5701" y="1664" width="112" height="56" />
 			<rect x="5780" y="1722" width="133" height="75" />
 			<rect x="5960" y="1677" width="114" height="75" />
@@ -909,6 +940,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Ancient Pyramid">
+			<entrance x="5322" y="573" z="0" map="Sosaria" />
 			<rect x="5192" y="422" width="246" height="561" />
 				<spawning>
 					<object id="2032" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="70" />
@@ -916,6 +948,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="90" name="the Tower of Brass">
+			<entrance x="6952" y="3565" z="0" map="Sosaria" />
 			<rect x="6916" y="3473" width="56" height="155" />
 			<rect x="6787" y="3787" width="75" height="97" />
 			<rect x="6785" y="3575" width="58" height="58" />
@@ -934,6 +967,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Clues">
+			<entrance x="5313" y="2273" z="0" map="Sosaria" />
 			<rect x="5242" y="2229" width="199" height="160" />
 			<rect x="5535" y="2087" width="199" height="173" />
 			<rect x="5800" y="2080" width="234" height="185" />
@@ -943,6 +977,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dardin's Pit">
+			<entrance x="5697" y="45" z="0" map="Sosaria" />
 			<rect x="5474" y="302" width="321" height="191" />
 			<rect x="5536" y="20" width="191" height="231" />
 				<spawning>
@@ -954,6 +989,7 @@
 			<rect x="2856" y="3204" width="225" height="199" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Doom">
+			<entrance x="5320" y="71" z="0" map="Sosaria" />
 			<rect x="5187" y="35" width="254" height="356" />
 				<spawning>
 					<object id="2040" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="46" />
@@ -961,6 +997,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Exodus">
+			<entrance x="5925" y="590" z="0" map="Sosaria" />
 			<rect x="5816" y="537" width="239" height="183" />
 				<spawning>
 					<object id="2042" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="22" />
@@ -968,6 +1005,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Fires of Hell">
+			<entrance x="6028" y="2045" z="20" map="Sosaria" />
 			<rect x="5227" y="1326" width="201" height="146" />
 			<rect x="5856" y="1886" width="251" height="180" />
 			<rect x="5437" y="1168" width="315" height="220" />
@@ -977,6 +1015,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Frozen Dungeon">
+			<entrance x="5879" y="242" z="-2" map="Lodor" />
 			<rect x="3668" y="3648" width="80" height="79" />
 			<rect x="5149" y="2706" width="460" height="297" />
 			<rect x="4173" y="3213" width="352" height="679" />
@@ -986,6 +1025,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Mines of Morinia">
+			<entrance x="5898" y="1221" z="0" map="Sosaria" />
 			<rect x="5540" y="1436" width="193" height="204" />
 			<rect x="5832" y="1299" width="180" height="335" />
 			<rect x="5801" y="901" width="255" height="359" />
@@ -995,6 +1035,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Perinian Depths">
+			<entrance x="5953" y="79" z="0" map="Sosaria" />
 			<rect x="5824" y="32" width="250" height="475" />
 				<spawning>
 					<object id="2050" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="60" />
@@ -1005,6 +1046,7 @@
 			<rect x="2681" y="3684" width="146" height="143" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Dungeon of Time Awaits">
+			<entrance x="5630" y="594" z="0" map="Sosaria" />
 			<rect x="4989" y="3209" width="89" height="91" />
 			<rect x="5467" y="526" width="294" height="416" />
 			<rect x="5704" y="2623" width="26" height="28" />
@@ -1015,6 +1057,7 @@
 		</region>
 
 		<region type="DungeonRegion" priority="100" name="the Dragon's Maw">
+			<entrance x="5316" y="3437" z="5" map="Sosaria" />
 			<rect x="4079" y="3916" width="156" height="115" />
 			<rect x="4419" y="3899" width="100" height="74" />
 			<rect x="4285" y="3956" width="115" height="100" />
@@ -1064,6 +1107,7 @@
 			<music name="Doom" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Cave of Banished Mages">
+			<entrance x="250" y="3483" z="0" map="Sosaria" />
 			<rect x="46" y="3259" width="619" height="672" />
 			<rect x="228" y="3267" width="210" height="63" />
 			<rect x="429" y="3291" width="225" height="115" />
@@ -1098,12 +1142,14 @@
 			<rect x="2371" y="3217" width="134" height="116" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Forgotten Tombs">
+			<entrance x="275" y="3297" z="20" map="SavagedEmpire" />
 			<rect x="2359" y="3460" width="142" height="130" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Magma Vaults">
 			<rect x="2313" y="3657" width="183" height="170" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Dark Tombs">
+			<entrance x="6942" y="1696" z="0" map="Lodor" />
 			<rect x="6989" y="5" width="158" height="151" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Shrouded Grave">
@@ -1347,6 +1393,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Vordo's Dungeon">
+			<entrance x="6278" y="170" z="0" map="Sosaria" />
 			<rect x="6118" y="0" width="420" height="762" />
 				<spawning>
 					<object id="5007" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="150" />
@@ -1381,6 +1428,7 @@
 		</region>
 
 		<region type="DungeonRegion" priority="50" name="the Stygian Abyss">
+			<entrance x="1784" y="1416" z="-2" map="Underworld" />
 			<rect x="1653" y="1146" width="260" height="291" />
 			<rect x="1969" y="1136" width="94" height="96" />
 				<spawning>
@@ -1397,6 +1445,7 @@
 		</region>
 
 		<region type="DungeonRegion" priority="50" name="the Glacial Scar">
+			<entrance x="1871" y="1504" z="20" map="Underworld" />
 			<rect x="2104" y="1118" width="178" height="267" />
 			<rect x="1943" y="1264" width="124" height="150" />
 			<rect x="1925" y="1459" width="169" height="130" />
@@ -1504,6 +1553,7 @@
 		</region>
 
 		<region type="DungeonRegion" priority="50" name="the Ancient Prison">
+			<entrance x="1931" y="437" z="0" map="SerpentIsland" />
 			<rect x="1886" y="344" width="128" height="236" />
 				<spawning>
 					<object id="2056" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="16" />
@@ -1511,6 +1561,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Cave of Fire">
+			<entrance x="2086" y="794" z="2" map="SerpentIsland" />
 			<rect x="2018" y="668" width="146" height="266" />
 				<spawning>
 					<object id="2058" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="20" />
@@ -1518,6 +1569,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Cave of Souls">
+			<entrance x="2527" y="57" z="1" map="SerpentIsland" />
 			<rect x="2415" y="31" width="124" height="173" />
 				<spawning>
 					<object id="2060" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="11" />
@@ -1525,6 +1577,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Ankh">
+			<entrance x="2034" y="104" z="7" map="SerpentIsland" />
 			<rect x="2020" y="29" width="85" height="200" />
 				<spawning>
 					<object id="2062" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="9" />
@@ -1532,6 +1585,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Bane">
+			<entrance x="1945" y="99" z="0" map="SerpentIsland" />
 			<rect x="1891" y="31" width="99" height="212" />
 			<rect x="2416" y="228" width="120" height="35" />
 				<spawning>
@@ -1540,6 +1594,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Hate">
+			<entrance x="2213" y="417" z="0" map="SerpentIsland" />
 			<rect x="2145" y="371" width="139" height="175" />
 				<spawning>
 					<object id="2066" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="13" />
@@ -1547,6 +1602,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Scorn">
+			<entrance x="2232" y="687" z="0" map="SerpentIsland" />
 			<rect x="2181" y="675" width="75" height="199" />
 				<spawning>
 					<object id="2068" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="8" />
@@ -1554,6 +1610,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Torment">
+			<entrance x="1976" y="698" z="0" map="SerpentIsland" />
 			<rect x="1910" y="681" width="86" height="181" />
 				<spawning>
 					<object id="2070" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="8" />
@@ -1561,6 +1618,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Vile">
+			<entrance x="2337" y="396" z="0" map="SerpentIsland" />
 			<rect x="2296" y="371" width="93" height="158" />
 				<spawning>
 					<object id="2072" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="8" />
@@ -1568,6 +1626,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Wicked">
+			<entrance x="2191" y="57" z="0" map="SerpentIsland" />
 			<rect x="2136" y="26" width="110" height="227" />
 				<spawning>
 					<object id="2074" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="13" />
@@ -1575,6 +1634,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Wrath">
+			<entrance x="2356" y="683" z="0" map="SerpentIsland" />
 			<rect x="2280" y="669" width="103" height="261" />
 				<spawning>
 					<object id="2076" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="14" />
@@ -1582,6 +1642,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Flooded Temple">
+			<entrance x="2506" y="727" z="1" map="SerpentIsland" />
 			<rect x="2411" y="679" width="126" height="226" />
 				<spawning>
 					<object id="2078" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="15" />
@@ -1589,6 +1650,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Gargoyle Crypts">
+			<entrance x="2103" y="361" z="0" map="SerpentIsland" />
 			<rect x="2031" y="353" width="103" height="204" />
 				<spawning>
 					<object id="2080" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="11" />
@@ -1596,6 +1658,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Serpent Sanctum">
+			<entrance x="2519" y="421" z="0" map="SerpentIsland" />
 			<rect x="2418" y="332" width="122" height="251" />
 			<rect x="2325" y="289" width="36" height="36" />
 				<spawning>
@@ -1604,6 +1667,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Tomb of the Fallen Wizard">
+			<entrance x="2353" y="105" z="0" map="SerpentIsland" />
 			<rect x="2262" y="20" width="131" height="251" />
 				<spawning>
 					<object id="2084" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="17" />
@@ -1731,6 +1795,7 @@
 		</region>
 
 		<region type="DungeonRegion" priority="50" name="the Blood Temple">
+			<entrance x="729" y="2503" z="-28" map="SavagedEmpire" />
 			<rect x="653" y="2480" width="156" height="245" />
 				<spawning>
 					<object id="2086" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="20" />
@@ -1738,6 +1803,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Tombs">
+			<entrance x="5553" y="1664" z="102" map="Lodor" />
 			<rect x="1" y="2496" width="180" height="334" />
 				<spawning>
 					<object id="2088" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="31" />
@@ -1748,6 +1814,7 @@
 			<rect x="2" y="2073" width="168" height="368" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Crypt">
+			<entrance x="2103" y="361" z="0" map="SerpentIsland" />
 			<rect x="363" y="2443" width="148" height="132" />
 				<spawning>
 					<object id="2092" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="10" />
@@ -1769,6 +1836,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Ice Queen Fortress">
+			<entrance x="275" y="2976" z="44" map="SavagedEmpire" />
 			<rect x="241" y="2744" width="257" height="255" />
 				<spawning>
 					<object id="2098" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="33" />
@@ -1790,6 +1858,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Halls of Ogrimar">
+			<entrance x="811" y="2387" z="-28" map="SavagedEmpire" />
 			<rect x="798" y="2272" width="417" height="185" />
 				<spawning>
 					<object id="2104" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="39" />
@@ -1807,6 +1876,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="Dungeon Rock">
+			<entrance x="367" y="1421" z="66" map="Sosaria" />
 			<rect x="597" y="2163" width="175" height="217" />
 				<spawning>
 					<object id="2108" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="20" />
@@ -1831,6 +1901,7 @@
 			<rect x="270" y="3804" width="14" height="16" />
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Forgotten Halls">
+			<entrance x="275" y="3297" z="20" map="SavagedEmpire" />
 			<rect x="21" y="3225" width="348" height="213" />
 			<rect x="60" y="3828" width="139" height="180" />
 			<rect x="370" y="3538" width="375" height="196" />
@@ -1883,6 +1954,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Undersea Castle">
+			<entrance x="598" y="2766" z="-28" map="SavagedEmpire" />
 			<rect x="605" y="3768" width="223" height="324" />
 			<rect x="901" y="3249" width="50" height="68" />
 				<spawning>
@@ -1891,6 +1963,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Tomb of Kazibal">
+			<entrance x="547" y="3317" z="0" map="SavagedEmpire" />
 			<rect x="404" y="3252" width="205" height="177" />
 				<spawning>
 					<object id="2128" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="40" />
@@ -1898,6 +1971,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Catacombs of Azerok">
+			<entrance x="5579" y="1924" z="0" map="Lodor" />
 			<rect x="619" y="3259" width="216" height="221" />
 				<spawning>
 					<object id="2130" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="40" />
@@ -1912,6 +1986,7 @@
 				</spawning>
 		</region>
 		<region type="DungeonRegion" priority="50" name="the Scurvy Reef">
+			<entrance x="479" y="4051" z="0" map="SavagedEmpire" />
 			<rect x="315" y="3812" width="185" height="261" />
 				<spawning>
 					<object id="2134" type="HiddenTrap" minSpawnTime="PT1S" maxSpawnTime="PT1S" amount="40" />

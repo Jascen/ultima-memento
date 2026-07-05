@@ -4,6 +4,12 @@ using Server;
 
 namespace Server.Engines.Instancing
 {
+	public enum InstanceOwnerKind
+	{
+		Mobile = 0,
+		PublicGateway = 1
+	}
+
 	// One object belonging to an instance, paired with the instance-local
 	// coordinate it should occupy when the instance is live. Because every pool
 	// map of a given type shares identical terrain, this coordinate is
@@ -33,6 +39,7 @@ namespace Server.Engines.Instancing
 	{
 		private readonly InstanceType m_Type;
 		private Serial m_OwnerSerial;
+		private InstanceOwnerKind m_OwnerKind;
 		private DateTime m_LastTouched;
 		private int m_LiveMapIndex = -1;
 		private bool m_Built;
@@ -46,6 +53,8 @@ namespace Server.Engines.Instancing
 		public InstanceType Type { get { return m_Type; } }
 
 		public Serial OwnerSerial { get { return m_OwnerSerial; } set { m_OwnerSerial = value; } }
+		public InstanceOwnerKind OwnerKind { get { return m_OwnerKind; } set { m_OwnerKind = value; } }
+		public bool IsPublicInstance { get { return m_OwnerKind == InstanceOwnerKind.PublicGateway; } }
 		public DateTime LastTouched { get { return m_LastTouched; } set { m_LastTouched = value; } }
 
 		// Index into Map.Maps[] of the pool map this instance currently occupies, or -1 when parked.

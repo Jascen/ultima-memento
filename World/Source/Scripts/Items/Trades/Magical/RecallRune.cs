@@ -35,7 +35,7 @@ namespace Server.Items
 			writer.Write( (string) m_Description );
 			writer.Write( (bool) m_Marked );
 			writer.Write( (Point3D) m_Target );
-			writer.Write( (Map) m_TargetMap );
+			writer.Write( (Map) NormalizeTargetMap( m_TargetMap ) );
 		}
 
 		public override void Deserialize( GenericReader reader )
@@ -56,7 +56,7 @@ namespace Server.Items
 					m_Description = reader.ReadString();
 					m_Marked = reader.ReadBool();
 					m_Target = reader.ReadPoint3D();
-					m_TargetMap = reader.ReadMap();
+					m_TargetMap = NormalizeTargetMap( reader.ReadMap() );
 
 					CalculateHue();
 
@@ -128,17 +128,25 @@ namespace Server.Items
 		{
 			get
 			{
+				m_TargetMap = NormalizeTargetMap( m_TargetMap );
 				return m_TargetMap;
 			}
 			set
 			{
-				if ( m_TargetMap != value )
+				value = NormalizeTargetMap( value );
+
+				if ( !Object.ReferenceEquals( m_TargetMap, value ) )
 				{
 					m_TargetMap = value;
 					CalculateHue();
 					InvalidateProperties();
 				}
 			}
+		}
+
+		private static Map NormalizeTargetMap( Map map )
+		{
+			return Server.Engines.Instancing.DungeonInstanceType.NormalizeExternalMap( map );
 		}
 
 		private void CalculateHue()
@@ -171,7 +179,7 @@ namespace Server.Items
 				if ( m_House == null )
 				{
 					m_Target = m.Location;
-					m_TargetMap = m.Map;
+					m_TargetMap = NormalizeTargetMap( m.Map );
 				}
 				else
 				{
@@ -197,14 +205,14 @@ namespace Server.Items
 						z = map.GetAverageZ( x, y );
 
 					m_Target = new Point3D( x, y, z );
-					m_TargetMap = map;
+					m_TargetMap = NormalizeTargetMap( map );
 				}
 			}
 			else
 			{
 				m_House = null;
 				m_Target = m.Location;
-				m_TargetMap = m.Map;
+				m_TargetMap = NormalizeTargetMap( m.Map );
 			}
 
 			if( !setDesc )

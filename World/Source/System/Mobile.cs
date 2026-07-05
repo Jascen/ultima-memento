@@ -7542,7 +7542,7 @@ namespace Server
 				if( m_Deleted )
 					return;
 
-				if( m_Map != value )
+				if( !Object.ReferenceEquals( m_Map, value ) )
 				{
 					if( m_NetState != null )
 						m_NetState.ValidateAllTrades();
@@ -9632,7 +9632,7 @@ namespace Server
 			if( m_Deleted )
 				return;
 
-			if( m_Map == map )
+			if( Object.ReferenceEquals( m_Map, map ) )
 			{
 				SetLocation( newLocation, true );
 				return;
