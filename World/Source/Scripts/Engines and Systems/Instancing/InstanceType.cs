@@ -155,6 +155,21 @@ namespace Server.Engines.Instancing
 			return Landing;
 		}
 
+		protected virtual Point3D GetLandingPoint( Instance inst, Map map )
+		{
+			return GetLandingPoint( map );
+		}
+
+		protected virtual Map GetExitMap( Mobile m )
+		{
+			return ExitMap;
+		}
+
+		protected virtual Point3D GetExitPoint( Mobile m )
+		{
+			return ExitPoint;
+		}
+
 		// ----- Identity / lookup -----
 
 		// The key under which a mobile's instance is stored. Owner-keyed by default;
@@ -170,13 +185,42 @@ namespace Server.Engines.Instancing
 			if ( owner == null ) return null;
 			Instance inst;
 			_byOwner.TryGetValue( OwnerKey( owner ), out inst );
-			return inst;
+			return inst != null && inst.OwnerKind == InstanceOwnerKind.Mobile ? inst : null;
+		}
+
+		public Instance GetByOwner( Item owner )
+		{
+			if ( owner == null ) return null;
+			Instance inst;
+			_byOwner.TryGetValue( owner.Serial, out inst );
+			return inst != null && inst.OwnerKind == InstanceOwnerKind.PublicGateway ? inst : null;
 		}
 
 		protected Instance GetByKey( Serial key )
 		{
 			Instance inst;
 			_byOwner.TryGetValue( key, out inst );
+			return inst;
+		}
+
+		protected Instance GetOrCreateByKey( Serial key )
+		{
+			return GetOrCreateByKey( key, InstanceOwnerKind.Mobile );
+		}
+
+		protected Instance GetOrCreateByKey( Serial key, InstanceOwnerKind ownerKind )
+		{
+			Instance inst;
+			if ( _byOwner.TryGetValue( key, out inst ) )
+			{
+				inst.OwnerKind = ownerKind;
+				return inst;
+			}
+
+			inst = new Instance( this );
+			inst.OwnerSerial = key;
+			inst.OwnerKind = ownerKind;
+			_byOwner[inst.OwnerSerial] = inst;
 			return inst;
 		}
 
@@ -189,6 +233,7 @@ namespace Server.Engines.Instancing
 
 			inst = new Instance( this );
 			inst.OwnerSerial = OwnerKey( owner );
+			inst.OwnerKind = InstanceOwnerKind.Mobile;
 			_byOwner[inst.OwnerSerial] = inst;
 			return inst;
 		}
@@ -253,7 +298,7 @@ namespace Server.Engines.Instancing
 			if ( inst == null ) return false;
 			if ( inst.IsLive ) return true;
 
-			int idx = AcquireMapIndex();
+			int idx = AcquireMapIndex( inst );
 			if ( idx < 0 ) return false;
 
 			inst.LiveMapIndex = idx;
@@ -274,7 +319,7 @@ namespace Server.Engines.Instancing
 			return true;
 		}
 
-		private int AcquireMapIndex()
+		protected virtual int AcquireMapIndex( Instance instance )
 		{
 			for ( int i = 0; i < PoolSize; i++ )
 			{
@@ -286,12 +331,12 @@ namespace Server.Engines.Instancing
 			// Pool exhausted: evict the least-recently-used instance that has no
 			// players inside, freeing its map.
 			Instance victim = null;
-			foreach ( Instance inst in _liveMapToInstance.Values )
+			foreach ( Instance live in _liveMapToInstance.Values )
 			{
-				if ( HasPlayersInside( inst ) )
+				if ( HasPlayersInside( live ) )
 					continue;
-				if ( victim == null || inst.LastTouched < victim.LastTouched )
-					victim = inst;
+				if ( victim == null || live.LastTouched < victim.LastTouched )
+					victim = live;
 			}
 
 			if ( victim == null )
@@ -300,6 +345,21 @@ namespace Server.Engines.Instancing
 			int freed = victim.LiveMapIndex;
 			ReleaseIdle( victim );
 			return freed;
+		}
+
+		protected bool IsMapIndexLive( int mapIndex )
+		{
+			return _liveMapToInstance.ContainsKey( mapIndex );
+		}
+
+		protected Instance GetLiveInstance( Map map )
+		{
+			if ( map == null )
+				return null;
+
+			Instance inst;
+			_liveMapToInstance.TryGetValue( map.MapIndex, out inst );
+			return inst;
 		}
 
 		// Populate a freshly-built instance: doors and a purchase sign, monster
@@ -469,7 +529,7 @@ namespace Server.Engines.Instancing
 			List<Instance> toRelease = null;
 			foreach ( Instance inst in _byOwner.Values )
 			{
-				if ( World.FindMobile( inst.OwnerSerial ) == null )
+				if ( !OwnerExists( inst ) )
 				{
 					if ( toRelease == null ) toRelease = new List<Instance>();
 					toRelease.Add( inst );
@@ -479,9 +539,27 @@ namespace Server.Engines.Instancing
 			if ( toRelease == null ) return 0;
 
 			foreach ( Instance inst in toRelease )
+			{
+				OnReleaseDeadOwner( inst );
 				FreeInstance( inst );
+			}
 
 			return toRelease.Count;
+		}
+
+		protected virtual bool OwnerExists( Instance inst )
+		{
+			if ( inst == null )
+				return false;
+
+			if ( inst.OwnerKind == InstanceOwnerKind.PublicGateway )
+				return World.FindItem( inst.OwnerSerial ) != null;
+
+			return World.FindMobile( inst.OwnerSerial ) != null;
+		}
+
+		protected virtual void OnReleaseDeadOwner( Instance inst )
+		{
 		}
 
 		// ----- Entry / exit -----
@@ -500,7 +578,7 @@ namespace Server.Engines.Instancing
 
 			inst.Touch();
 			Map map = inst.LiveMap;
-			Point3D landing = GetLandingPoint( map );
+			Point3D landing = GetLandingPoint( inst, map );
 
 			BaseCreature.TeleportPets( from, landing, map, false );
 			from.MoveToWorld( landing, map );
@@ -514,13 +592,16 @@ namespace Server.Engines.Instancing
 			return SendToInstance( owner, GetOrCreate( owner ) );
 		}
 
-		public bool LeaveInstance( Mobile m )
+		public virtual bool LeaveInstance( Mobile m )
 		{
 			if ( m == null || !IsPoolMap( m.Map ) )
 				return false;
 
-			BaseCreature.TeleportPets( m, ExitPoint, ExitMap, false );
-			m.MoveToWorld( ExitPoint, ExitMap );
+			Map exitMap = GetExitMap( m );
+			Point3D exitPoint = GetExitPoint( m );
+
+			BaseCreature.TeleportPets( m, exitPoint, exitMap, false );
+			m.MoveToWorld( exitPoint, exitMap );
 			return true;
 		}
 
@@ -580,12 +661,13 @@ namespace Server.Engines.Instancing
 				SavePath,
 				delegate( GenericWriter writer )
 				{
-					writer.Write( (int) 2 ); // version
+					writer.Write( (int) 3 ); // version
 
 					writer.Write( (int) _byOwner.Count );
 					foreach ( Instance inst in _byOwner.Values )
 					{
 						writer.Write( (int) inst.OwnerSerial );
+						writer.Write( (int) inst.OwnerKind );
 						writer.Write( (DateTime) inst.LastTouched );
 						writer.Write( (bool) inst.Built );
 						writer.Write( (bool) inst.Purchased );
@@ -622,6 +704,8 @@ namespace Server.Engines.Instancing
 					{
 						Instance inst = new Instance( this );
 						inst.OwnerSerial = (Serial)reader.ReadInt();
+						if ( version >= 3 )
+							inst.OwnerKind = (InstanceOwnerKind)reader.ReadInt();
 						inst.LastTouched = reader.ReadDateTime();
 						inst.Built = reader.ReadBool();
 						if ( version >= 1 )

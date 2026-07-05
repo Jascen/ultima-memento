@@ -2016,7 +2016,7 @@ namespace Server
 			else if ( Parent is Item )
 				((Item)Parent).RemoveItem( this );
 
-			if ( m_Map != map )
+			if ( !Object.ReferenceEquals( m_Map, map ) )
 			{
 				Map old = m_Map;
 
@@ -2578,7 +2578,7 @@ namespace Server
 			}
 			set
 			{
-				if ( m_Map != value )
+				if ( !Object.ReferenceEquals( m_Map, value ) )
 				{
 					Map old = m_Map;
 

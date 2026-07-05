@@ -231,11 +231,13 @@ namespace Server.Misc
 		{
 			string world = "Sosaria";
 
-			if ( map == Map.Lodor ){ world = "Lodor"; }
-			else if ( map == Map.Underworld ){ world = "Underworld"; }
-			else if ( map == Map.SerpentIsland ){ world = "SerpentIsland"; }
-			else if ( map == Map.IslesDread ){ world = "IslesDread"; }
-			else if ( map == Map.SavagedEmpire ){ world = "SavagedEmpire"; }
+			if ( Object.ReferenceEquals( map, Map.Lodor ) ){ world = "Lodor"; }
+			else if ( Object.ReferenceEquals( map, Map.Underworld ) ){ world = "Underworld"; }
+			else if ( Object.ReferenceEquals( map, Map.SerpentIsland ) ){ world = "SerpentIsland"; }
+			else if ( Object.ReferenceEquals( map, Map.IslesDread ) ){ world = "IslesDread"; }
+			else if ( Object.ReferenceEquals( map, Map.SavagedEmpire ) ){ world = "SavagedEmpire"; }
+			else if ( Object.ReferenceEquals( map, Map.Atlantis ) ){ world = "Atlantis"; }
+			else if ( map != null && map.Name != null && map.Name.Length > 0 ){ world = map.Name; }
 
 			return world;
 		}

@@ -525,7 +525,11 @@ namespace Server.Items
 
 		public Map Map
 		{
-			get{ return m_Map; }
+			get
+			{
+				m_Map = Server.Engines.Instancing.DungeonInstanceType.NormalizeExternalMap( m_Map );
+				return m_Map;
+			}
 		}
 
 		public string Description
@@ -542,7 +546,7 @@ namespace Server.Items
 		public RunebookEntry( Point3D loc, Map map, string desc, BaseHouse house )
 		{
 			m_Location = loc;
-			m_Map = map;
+			m_Map = Server.Engines.Instancing.DungeonInstanceType.NormalizeExternalMap( map );
 			m_Description = desc;
 			m_House = house;
 		}
@@ -561,7 +565,7 @@ namespace Server.Items
 				case 0:
 				{
 					m_Location = reader.ReadPoint3D();
-					m_Map = reader.ReadMap();
+					m_Map = Server.Engines.Instancing.DungeonInstanceType.NormalizeExternalMap( reader.ReadMap() );
 					m_Description = reader.ReadString();
 
 					break;
@@ -583,7 +587,7 @@ namespace Server.Items
 			}
 
 			writer.Write( m_Location );
-			writer.Write( m_Map );
+			writer.Write( Server.Engines.Instancing.DungeonInstanceType.NormalizeExternalMap( m_Map ) );
 			writer.Write( m_Description );
 		}
 	}
