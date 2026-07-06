@@ -1105,6 +1105,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Fix issue where roaming Mannequins could cause the server to freeze<br>");
 					builder.Append("- Mobs - Fix case where AI would redundantly curse/poison<br>");
 					builder.Append("- Quest - Kite shield blacksmith quest now clarifies the item type name<br>");
+					builder.Append("- Spell - Natures Passage now transports in one action<br>");
 					builder.Append("- Temptations - Fix app start race condition preventing proper skill cap application<br>");
 					break;
 			}

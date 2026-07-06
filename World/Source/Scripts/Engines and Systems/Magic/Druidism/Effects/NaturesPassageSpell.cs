@@ -92,8 +92,7 @@ namespace Server.Spells.Herbalist
 
 				Caster.PlaySound( 0x16 );
 				Effects.SendLocationParticles( Caster, 0x54F5, 9, 10, 5025 );
-				Caster.Map = map;
-				Caster.Location = loc;
+				Caster.MoveToWorld(loc, map);
 				Caster.PlaySound( 0x16 );
 				Effects.SendLocationParticles( Caster, 0x54F5, 9, 10, 5025 );
 			}
