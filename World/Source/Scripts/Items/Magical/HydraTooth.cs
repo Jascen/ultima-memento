@@ -1,6 +1,5 @@
-using System;
-using Server;
-using Server.Items;
+using System.Collections.Generic;
+using Server.ContextMenus;
 using Server.Spells;
 using Server.Spells.Magical;
 
@@ -35,6 +34,11 @@ namespace Server.Items
 
 			Spell spell = new SummonSkeletonSpell( from, this );
 			spell.Cast();
+		}
+
+		public override void GetContextMenuEntries( Mobile from, List<ContextMenuEntry> list )
+		{
+			// suppress
 		}
 
 		public HydraTooth( Serial serial ) : base( serial )
