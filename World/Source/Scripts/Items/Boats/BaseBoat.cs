@@ -2121,7 +2121,12 @@ namespace Server.Multis
 						item.NoMoveHS = true;
 
 						if ( item is Corpse ) // This makes it look like it changes it's location because the boat moves
-							item.Location = new Point3D( item.X, item.Y, item.Z );
+						{
+							if ( MobileUtilities.TryGetMasterPlayer(( (Corpse) item ).Owner ) is PlayerMobile )
+								item.Location = new Point3D( item.X + xOffset, item.Y + yOffset, item.Z );
+							else
+								item.Location = new Point3D( item.X, item.Y, item.Z );
+						}
 						else if ( !( item is TillerMan || item is Hold || item is Plank ) )
 							item.Location = new Point3D( item.X + xOffset, item.Y + yOffset, item.Z );
 					}
