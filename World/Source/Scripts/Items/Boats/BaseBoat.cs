@@ -345,7 +345,7 @@ namespace Server.Multis
 		{
 			base.Serialize( writer );
 
-			writer.Write( (int) 4 );
+			writer.Write( (int) 5 );
 
 			writer.Write( (Item) m_MapItem );
 			writer.Write( (int) m_NextNavPoint );
@@ -374,6 +374,7 @@ namespace Server.Multis
 
 			switch ( version )
 			{
+				case 5:
 				case 4:
 				case 3:
 				{
@@ -427,7 +428,7 @@ namespace Server.Multis
 				}
 			}
 
-			if ( version < 4 ) Refresh();
+			if ( version < 5 ) Refresh();
 
 			m_Instances.Add( this );
 		}

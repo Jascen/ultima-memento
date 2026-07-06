@@ -632,7 +632,7 @@ namespace Server
 	// The number of days, no less than 5.0 (decimal format), that a boat or magic carpet will decay if on
 	// the sea not used.
 
-		public static double S_BoatDecay = 365.0;
+		public static double S_BoatDecay = 30.0;
 
 	// The number of days, no less than 30.0 (decimal format), that a home will decay if an owner never shows up.
 

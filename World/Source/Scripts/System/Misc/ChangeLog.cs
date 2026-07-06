@@ -1078,6 +1078,7 @@ namespace Server.Misc
 					builder.Append("- Quest - All Blacksmith quests now show a return destination<br>");
 					builder.Append("- Quest - All remaining MLQuest engine quests now show a return destination<br>");
 					builder.Append("- Setting - Add setting to enable legacy humanoid carving behavior<br>");
+					builder.Append("- Setting - Boat decay has been reduced to 30 days, down from 365<br>");
 					builder.Append("- Skill - Parrying absorption duration is now 3 seconds, down from 5<br>");
 					builder.Append("- Skill - Parrying activation is now an overhead message<br>");
 					builder.Append("- Skill - Activating Tracking now auto-selects last tracked options when moving<br>");
