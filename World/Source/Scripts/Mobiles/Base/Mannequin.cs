@@ -1,13 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Server;
 using Server.Gumps;
 using Server.Items;
 using Server.Multis;
 using Server.Network;
 using Server.Targeting;
 using Server.ContextMenus;
+using Server.Utilities;
 
 namespace Server.Mobiles
 {
@@ -169,7 +168,7 @@ namespace Server.Mobiles
 
 		private void OnWanderTick()
 		{
-			if ( Deleted || !m_Roaming || true )
+			if ( Deleted || !m_Roaming )
 			{
 				StopWanderTimer();
 				return;
@@ -194,18 +193,9 @@ namespace Server.Mobiles
 				return;
 
 			// Open any closed adjacent doors so the mannequin can pass through.
-			if ( this.Map != null )
+			foreach (var door in WorldUtilities.GetAllNearbyItems<BaseDoor>(this, 1, door => !door.Open && InLOS(door)))
 			{
-				IPooledEnumerable eable = this.Map.GetItemsInRange( this.Location, 1 );
-				foreach ( Item item in eable )
-				{
-					BaseDoor door = item as BaseDoor;
-					if ( door != null && !door.Open )
-					{
-						try { door.Use( this ); } catch { /* locked or no access — ignore */ }
-					}
-				}
-				eable.Free();
+				try { door.Use( this ); } catch { /* locked or no access — ignore */ }
 			}
 
 			// Try several directions per tick — the first one that fits inside the house AND

@@ -131,6 +131,37 @@ namespace Server.Utilities
 			return false;
 		}
 
+		/// <summary>
+		/// Iterates over all items in the range of a mobile and returns all items that match the predicate.
+		/// </summary>
+		public static IEnumerable<T> GetAllNearbyItems<T>(Mobile from, int range, Func<T, bool> predicate) where T : Item
+		{
+			if (from.Map == null) yield break;
+
+			List<T> items = null;
+			IPooledEnumerable eable = from.Map.GetItemsInRange(from.Location, range);
+			foreach (Item item in eable)
+			{
+				// TODO: Z+16 is probably fine...
+				if ((item.Z + 16) > from.Z && (from.Z + 16) > item.Z)
+				{
+					if (item is T && predicate((T)item))
+					{
+						if (items == null) items = new List<T>();
+						items.Add((T)item);
+					}
+				}
+			}
+			eable.Free();
+
+			if (items == null) yield break;
+
+			foreach (var item in items)
+			{
+				yield return item;
+			}
+		}
+
 		public static T GetNearbyItem<T>(Mobile from, int range, Func<T, bool> predicate) where T : Item
 		{
 			return ForEachNearbyItem(from, range, item =>
