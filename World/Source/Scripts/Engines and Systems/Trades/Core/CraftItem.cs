@@ -1197,7 +1197,7 @@ namespace Server.Engines.Craft
 						var runic = (IRunicTool)tool;
 						BaseRunicTool.ApplyAttributes(from, item, runic.RunicMinAttributes, runic.RunicMaxAttributes, runic.RunicMinIntensity, runic.RunicMaxIntensity);
 					}
-					else if (tool is IRunicWhenExceptional && ItemUtilities.IsExceptional(item)) // Exceptional applies a runic
+					else if (false == (item is BaseTool) && tool is IRunicWhenExceptional && ItemUtilities.IsExceptional(item)) // Exceptional applies a runic
 					{
 						int min = 5;
 						int max = 20;
