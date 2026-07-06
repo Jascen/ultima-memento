@@ -1101,6 +1101,7 @@ namespace Server.Misc
 					builder.Append("- Item - Double-clicking an axe now provides a system message<br>");
 					builder.Append("- Item - Leggings can now be equipped over pants<br>");
 					builder.Append("- Item - Fix issue where throwing glove types had inconsistent base damage<br>");
+					builder.Append("- Item - Crafted relocking boxes now properly retain their difficulty<br>");
 					builder.Append("- Misc - Fix issue where Dex/Int stat gains couldn't happen if Str gain was on cooldown<br>");
 					builder.Append("- Misc - Fix issue where where some Library books would show random books<br>");
 					builder.Append("- Misc - Bandages now stop when the healer dies<br>");

@@ -360,6 +360,9 @@ namespace Server.Items
 
 		public int OnCraft( int quality, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue )
 		{
+			// If the item is already locked, don't do anything. It knows better.
+			if ( Locked ) return 1;
+
 			if ( from.CheckSkill( SkillName.Tinkering, -5.0, 15.0 ) )
 			{
 				from.SendLocalizedMessage( 500636 ); // Your tinker skill was sufficient to make the item lockable.
