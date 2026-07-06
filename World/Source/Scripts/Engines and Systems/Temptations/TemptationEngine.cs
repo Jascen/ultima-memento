@@ -41,7 +41,7 @@ namespace Server.Temptation
 			}
 		}
 
-		public void ApplyContext(PlayerMobile player, PlayerContext context)
+		public void ApplyContext(PlayerMobile player, PlayerContext context, bool initialLoad = false)
 		{
 			Item pants = player.FindItemOnLayer(Layer.InnerLegs);
 			if (!context.CanWearTightPants && pants != null)
@@ -56,11 +56,15 @@ namespace Server.Temptation
 				BaseRace.SyncRace(player, true);
 			}
 
-			WorldUtilities.DeleteAllItems<OldSwordTalisman>(item => item.Owner == player);
-			if (context.Flags.HasFlag(TemptationFlags.Deathwish))
+			// Don't constantly recreate the item every restart
+			if (!initialLoad)
 			{
-				var knife = new OldSwordTalisman { Owner = player };
-				player.AddToBackpack(knife);
+				WorldUtilities.DeleteAllItems<OldSwordTalisman>(item => item.Owner == player);
+				if (context.Flags.HasFlag(TemptationFlags.Deathwish))
+				{
+					var knife = new OldSwordTalisman { Owner = player };
+					player.AddToBackpack(knife);
+				}
 			}
 
 			// Skill cap could have changed (Titan or some other bonus could be reduced)
@@ -127,6 +131,18 @@ namespace Server.Temptation
 					Instance.IsEnabled = true;
 				}
 			);
+
+			foreach (var key in Instance.m_Context.Keys)
+			{
+				Mobile mobile;
+				World.Mobiles.TryGetValue(key, out mobile);
+				if (false == (mobile is PlayerMobile)) continue;
+
+				var player = (PlayerMobile)mobile;
+				if (!player.Temptations.Active) continue;
+
+				Instance.ApplyContext(player, player.Temptations, true);
+			}
 		}
 
 		private static void OnWorldSave(WorldSaveEventArgs e)
