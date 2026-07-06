@@ -8050,8 +8050,12 @@ namespace Server.Mobiles
 
 			if( m_Mobile.InRange( m, range ) )
 			{
-				m_Path = null;
-				return true;
+				// Ensure they're on the same level
+				if( Math.Abs( m_Mobile.Z - m.Z ) < 16 )
+				{
+					m_Path = null;
+					return true;
+				}
 			}
 
 			if( m_Path != null && m_Path.Goal == m )
@@ -8062,8 +8066,16 @@ namespace Server.Mobiles
 					return true;
 				}
 			}
-			else if( !DoMove( m_Mobile.GetDirectionTo( m ), true ) )
+			else
 			{
+				bool needsPath = !m_Mobile.InLOS( m ) && Math.Abs( m_Mobile.Z - m.Z ) >= 16;
+
+				if( !needsPath && DoMove( m_Mobile.GetDirectionTo( m ), true ) )
+				{
+					m_Path = null;
+					return true;
+				}
+
 				m_Path = new PathFollower( m_Mobile, m );
 				m_Path.Mover = new MoveMethod( DoMoveImpl );
 
@@ -8072,11 +8084,6 @@ namespace Server.Mobiles
 					m_Path = null;
 					return true;
 				}
-			}
-			else
-			{
-				m_Path = null;
-				return true;
 			}
 
 			return false;

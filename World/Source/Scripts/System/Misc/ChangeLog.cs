@@ -1031,6 +1031,9 @@ namespace Server.Misc
 					builder.Append("- Combat - Throwing gloves and Pugilist gloves now get a damage bonus from Tailoring skill<br>");
 					builder.Append("- Combat - Only Bows and Crossbows get a damage bonus from Bowcraft skill<br>");
 					builder.Append("- Combat - AI teleport logic now requires Line of Sight<br>");
+					builder.Append("- Combat - AI retreat logic now requires Line of Sight<br>");
+					builder.Append("- Combat - AI pursuit logic now validates Line of Sight<br>");
+					builder.Append("- Combat - AI pursuit logic now validates vertical distance<br>");
 					builder.Append("- Command - '[Where' is now available to all players<br>");
 					builder.Append("- Command - '[Organize' no longer moves spellbooks<br>");
 					builder.Append("- Command - '[Organize' no longer removes items from weight reduction containers<br>");
@@ -1089,7 +1092,6 @@ namespace Server.Misc
 					builder.Append("- Combat - Fix issue where non-crafted throwing gloves wouldn't refund ammo<br>");
 					builder.Append("- Combat - Fix issue where non-crafted throwing gloves couldn't throw cards or tomatoes<br>");
 					builder.Append("- Combat - Fix issue where non-crafted throwing gloves wouldn't convert existing ammo<br>");
-					builder.Append("- Combat - AI retreat logic now requires Line of Sight<br>");
 					builder.Append("- Craft - Fix issue where invalid heat sources were detected<br>");
 					builder.Append("- Item - Leather Dye Tubs now work on leather<br>");
 					builder.Append("- Item - Double-clicking an axe now provides a system message<br>");
