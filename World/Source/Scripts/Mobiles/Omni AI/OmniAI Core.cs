@@ -323,7 +323,11 @@ namespace Server.Mobiles
 		public bool OnFailedMove()
 		{
 			var canOnlySwim = m_Mobile.CanSwim && m_Mobile.CantWalk;
-			if( m_CanUseMagery && !canOnlySwim && !m_Mobile.DisallowAllMoves && !Server.Mobiles.BasePirate.IsSailor( m_Mobile ) && DateTime.Now > m_NextTeleportTime )
+			var canCastTeleport = m_CanUseMagery
+				&& !canOnlySwim && !m_Mobile.DisallowAllMoves
+				&& !Server.Mobiles.BasePirate.IsSailor( m_Mobile )
+				&& m_Mobile.Combatant != null && m_Mobile.InLOS( m_Mobile.Combatant );
+			if( canCastTeleport && DateTime.Now > m_NextTeleportTime )
 			{
 				if( m_Mobile.Target != null )
 					m_Mobile.Target.Cancel( m_Mobile, TargetCancelType.Canceled );
@@ -413,7 +417,7 @@ namespace Server.Mobiles
 				else
 					return true;
 			}
-			else if ( m != null && ( m_MoveErratically || m_RequireRanged || m_PrefersRanged ) )
+			else if ( m != null && ( m_MoveErratically || m_RequireRanged || m_PrefersRanged ) && m_Mobile.InLOS( m ) )
 			{
 				bool forceMove = m_MoveErratically;
 				bool shouldRetreat = m_MoveErratically || m_Mobile.InRange( m, 2 );
