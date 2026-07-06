@@ -1094,6 +1094,7 @@ namespace Server.Misc
 					builder.Append("- Combat - Fix issue where non-crafted throwing gloves couldn't throw cards or tomatoes<br>");
 					builder.Append("- Combat - Fix issue where non-crafted throwing gloves wouldn't convert existing ammo<br>");
 					builder.Append("- Craft - Fix issue where invalid heat sources were detected<br>");
+					builder.Append("- Gump - Starter Gypsy now tells Avatars the proper value for Fugitive skill bonus<br>");
 					builder.Append("- Item - Leather Dye Tubs now work on leather<br>");
 					builder.Append("- Item - Double-clicking an axe now provides a system message<br>");
 					builder.Append("- Item - Leggings can now be equipped over pants<br>");
