@@ -7731,7 +7731,7 @@ namespace Server.Mobiles
 				delay -= 0.075;
 			}
 
-			if ( m_Mobile.ReduceSpeedWithDamage || m_Mobile.IsSubdued )
+			if ( !m_Mobile.IsDeadBondedPet && ( m_Mobile.ReduceSpeedWithDamage || m_Mobile.IsSubdued ) )
 			{
 				double offset = (double) m_Mobile.Hits / m_Mobile.HitsMax;
 

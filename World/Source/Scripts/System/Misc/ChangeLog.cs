@@ -1066,6 +1066,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Quick hack for fixing low lvl treasure map chests<br>");
 					builder.Append("- Mob - Rocs and Roclings have been rebalanced<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
+					builder.Append("- Pets - Pet ghosts no longer have penalized movement speed<br>");
 					builder.Append("- Quest - Quest rewards now display as an overhead message rather than system message<br>");
 					builder.Append("- Quest - Blacksmith recipes are now in chests instead of bags<br>");
 					builder.Append("- Quest - Blacksmith reward chests are now named and brightly colored<br>");
