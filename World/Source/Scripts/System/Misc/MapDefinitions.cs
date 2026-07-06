@@ -25,6 +25,13 @@ namespace Server.Misc
 
 			RegisterMap( 0x7F, 0x7F, 0x7F, Map.SectorSize, Map.SectorSize, 1, "Internal", MapRules.Internal );
 
+			// Instanced-map pools (sky dwellings, dungeons, ...). Registered here so
+			// the maps exist before Region.Load() and World.Load() (items deserialize
+			// by map index). Each pool map reuses a base map's mapID/fileIndex, so the
+			// client renders existing terrain with no extra .mul files.
+			// See InstanceManager / InstanceType.
+			Server.Engines.Instancing.InstanceManager.RegisterAllPoolMaps();
+
 			/* Example of registering a custom map:
 			 * RegisterMap( 32, 0, 0, 6144, 4096, 3, "Iceland", MapRules.LodorRules );
 			 * 
