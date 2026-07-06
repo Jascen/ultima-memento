@@ -1068,6 +1068,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Fix inconsistent Syth and Death Knight checks<br>");
 					builder.Append("- Misc - Bag of Tricks now values Gold as 10 prank points each, up from 1<br>");
 					builder.Append("- Misc - Quick hack for fixing low lvl treasure map chests<br>");
+					builder.Append("- Misc - Dropping a stack of scrolls on a spellbook now attempts to add one to the book<br>");
 					builder.Append("- Mob - Rocs and Roclings have been rebalanced<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Pets - Pet ghosts no longer have penalized movement speed<br>");

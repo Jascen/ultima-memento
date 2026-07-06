@@ -620,7 +620,7 @@ namespace Server.Items
 				}
 			}
 
-			if ( dropped is SpellScroll && dropped.Amount == 1 )
+			if ( dropped is SpellScroll )
 			{
 				SpellScroll scroll = (SpellScroll)dropped;
 
@@ -648,12 +648,13 @@ namespace Server.Items
 
 						InvalidateProperties();
 
-						scroll.Delete();
+						scroll.Consume();
 
 						if ( this is SythSpellbook ){ from.SendSound( 0x558 ); }
 						else if ( this is JediSpellbook ){ from.SendSound( 0x558 ); }
 						else { from.Send( new PlaySound( 0x249, GetWorldLocation() ) ); }
-						return true;
+
+						return scroll.Deleted;
 					}
 
 					return false;
