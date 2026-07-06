@@ -189,9 +189,6 @@ namespace Server.Engines.Avatar
 				|| MobileUtilities.TryGetMasterPlayer(creature) != null // No pets
 			 ) return;
 
-			// If the total damage is less than 10% of the creature's max hits, no coins!
-			if (e.TotalDamage < (e.Killed.HitsMax / 10)) return;
-
 			var corpse = e.Corpse;
 			int value = GetValue<DDCopper>(1, corpse);
 			value += GetValue<DDSilver>(2, corpse);

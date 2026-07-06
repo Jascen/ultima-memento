@@ -8823,9 +8823,6 @@ namespace Server.Mobiles
 					List<int> fame = new List<int>();
 					List<int> karma = new List<int>();
 
-					var mobilesWhoKilledMob = new HashSet<Serial>();
-					var damageValueTrack = 0;
-
 					foreach ( var ds in list )
 					{
 						Party party = Engines.PartySystem.Party.Get( ds.m_Mobile );
@@ -8863,23 +8860,21 @@ namespace Server.Mobiles
 							fame.Add( totalFame );
 							karma.Add( totalKarma );
 						}
-
-						damageValueTrack = Math.Max( damageValueTrack, ds.m_Damage );
-
-						OnKilledBy( ds.m_Mobile, c, party != null ? 2 : list.Count, ds.m_Damage );
-						mobilesWhoKilledMob.Add( ds.m_Mobile.Serial );
 					}
 
+					Func<Mobile, bool> isInRange = m => m.InRange( c, 20 );
+					var splitCoins = 1 < titles.Count( m => isInRange( m ) );
 					for ( int i = 0; i < titles.Count; ++i )
 					{
 						var mobile = titles[ i ];
 						Titles.AwardFame( mobile, fame[ i ], true );
 						Titles.AwardKarma( mobile, karma[ i ], true );
 
-						// Grant credit to people who haven't gotten credit yet
-						if ( !mobilesWhoKilledMob.Contains( mobile.Serial ) )
+						if ( isInRange( mobile ) )
 						{
-							OnKilledBy( mobile, c, 2, damageValueTrack );
+							var entry = list.FirstOrDefault( ds => ds.m_Mobile == mobile );
+							var damage = entry != null ? entry.m_Damage : 0;
+							OnKilledBy( mobile, c, splitCoins ? 2 : 1, damage );
 						}
 					}
 				}

@@ -1019,6 +1019,7 @@ namespace Server.Misc
 				default:
 					builder.Append(Version());
 					builder.Append("<br>Changes<br>");
+					builder.Append("- Avatar - Coins are now properly split between party members<br>");
 					builder.Append("- Combat - Caster mobs now prioritize direct damage openers<br>");
 					builder.Append("- Combat - Caster mobs with notable health will attempt to Bless again<br>");
 					builder.Append("- Combat - Caster mobs now choreograph their summoning sequence<br>");
