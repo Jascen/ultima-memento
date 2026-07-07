@@ -1060,6 +1060,7 @@ namespace Server.Misc
 					builder.Append("- Item - Power Scrolls now indicate which Shrine they require<br>");
 					builder.Append("- Item - Removed misleading context menu option from hydra tooth<br>");
 					builder.Append("- Item - Magic quivers can now be sold to vendors<br>");
+					builder.Append("- Item - Magic candles, lanterns, and torches can now be sold to vendors<br>");
 					builder.Append("- Item - Throwing gloves have been rebalanced<br>");
 					builder.Append("       - Damage has been changed to 8-11, down from 10-14<br>");
 					builder.Append("       - Attack Speed has been changed to 2s, up from 4s<br>");
