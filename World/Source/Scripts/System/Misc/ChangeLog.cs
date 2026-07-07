@@ -1044,7 +1044,7 @@ namespace Server.Misc
 					builder.Append("- Gather - Add automatic target resolution when *self-targeting* for refining resources<br>");
 					builder.Append("-        - Ore -> Forge<br>");
 					builder.Append("-        - Logs -> Sawmill<br>");
-					builder.Append("-        - Flax/Wool -> Spinning Wheel<br>");
+					builder.Append("-        - Cotton/Flax/Wool -> Spinning Wheel<br>");
 					builder.Append("-        - Thread -> Loom<br>");
 					builder.Append("-        - Wheat -> Flour Mill<br>");
 					builder.Append("- Gump - Add tooltips to Shinobi spell icon descriptions<br>");
