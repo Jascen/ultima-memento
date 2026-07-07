@@ -16,6 +16,7 @@ using Server.Spells.Seventh;
 using Server.Spells.Fifth;
 using Server.Spells.Shinobi;
 using Server.Spells.Elementalism;
+using Server.Engines.Instancing;
 
 namespace Server
 {
@@ -569,6 +570,13 @@ namespace Server.Spells
 				return false;
 			}
 
+			if( type == TravelCheckType.Mark && InstanceManager.IsInstanceMap( map ) )
+			{
+				if( caster != null )
+					caster.SendMessage( "You cannot mark runes inside an instance." );
+
+				return false;
+			}
 			if( caster != null && caster.AccessLevel == AccessLevel.Player && caster.Region.IsPartOf( typeof( Regions.Jail ) ) )
 			{
 				caster.SendLocalizedMessage( 1042632 ); // You'll need a better jailbreak plan then that!

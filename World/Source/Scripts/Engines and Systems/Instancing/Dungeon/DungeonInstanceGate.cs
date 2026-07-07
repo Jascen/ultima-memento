@@ -95,6 +95,22 @@ namespace Server.Engines.Instancing
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
+		public string InstanceAvailability
+		{
+			get
+			{
+				DungeonInstanceType.DungeonInstanceDefinition def = SelectedDefinition;
+				if ( def == null )
+					return "Unresolved";
+
+				if ( def.CanSpawnInstance )
+					return def.AvailabilityLabel;
+
+				return String.Format( "{0}: {1}", def.AvailabilityLabel, def.InstanceBlockReason );
+			}
+		}
+
+		[CommandProperty( AccessLevel.GameMaster )]
 		public new Difficulty Difficulty
 		{
 			get { return m_Difficulty; }
@@ -206,6 +222,9 @@ namespace Server.Engines.Instancing
 				list.Add( 1070722, "Dungeon: " + def.DisplayName );
 				list.Add( 1070722, "Difficulty: " + m_Difficulty );
 				list.Add( 1070722, "Spawn entries: " + def.SpawnCount );
+				list.Add( 1070722, "Availability: " + def.AvailabilityLabel );
+				if ( !def.CanSpawnInstance )
+					list.Add( 1070722, "Disabled: " + def.InstanceBlockReason );
 				list.Add( 1070722, "Instance: " + DungeonInstanceType.Instance.GetInstanceStatus( Serial ) );
 			}
 			else

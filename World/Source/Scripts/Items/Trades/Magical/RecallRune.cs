@@ -169,6 +169,15 @@ namespace Server.Items
 
 		public void Mark( Mobile m )
 		{
+			if ( m == null )
+				return;
+
+			if ( Server.Engines.Instancing.InstanceManager.IsInstanceMap( m.Map ) )
+			{
+				m.SendMessage( "You cannot mark runes inside an instance." );
+				return;
+			}
+
 			m_Marked = true;
 
 			bool setDesc = false;

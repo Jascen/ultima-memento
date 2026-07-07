@@ -1148,8 +1148,8 @@ namespace Server.Misc
 				case 58: dungeon = "the Sanctum of Saltmarsh"; break;
 				case 59: dungeon = "the Scurvy Reef"; break;
 				case 60: dungeon = "the Temple of Osirus"; break;
-				case 61: dungeon = "Dungeon of the Lich King"; break;
-				case 62: dungeon = "Dungeon of the Mad Archmage"; break;
+				case 61: dungeon = "the Dungeon of the Lich King"; break;
+				case 62: dungeon = "the Dungeon of the Mad Archmage"; break;
 				case 63: dungeon = "Dungeon Rock"; break;
 				case 64: dungeon = "the Azure Castle"; break;
 				case 65: dungeon = "the Catacombs of Azerok"; break;
@@ -1263,8 +1263,8 @@ namespace Server.Misc
 				case "the Temple of Osirus": location = GetAreaEntrance( 0, dungeon, Map.Lodor, out placer, out xc, out yc ); world = "Isles of Dread"; break;
 
 				// Savaged Empire
-				case "Dungeon of the Lich King": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
-				case "Dungeon of the Mad Archmage": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
+				case "Dungeon of the Lich King": case "the Dungeon of the Lich King": location = GetAreaEntrance( 0, "the Dungeon of the Lich King", Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; dungeon = "the Dungeon of the Lich King"; break;
+				case "Dungeon of the Mad Archmage": case "the Dungeon of the Mad Archmage": location = GetAreaEntrance( 0, "the Dungeon of the Mad Archmage", Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; dungeon = "the Dungeon of the Mad Archmage"; break;
 				case "Dungeon Rock": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
 				case "the Azure Castle": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
 				case "the Catacombs of Azerok": location = GetAreaEntrance( 0, dungeon, Map.SavagedEmpire, out placer, out xc, out yc ); world = "Savaged Empire"; break;
