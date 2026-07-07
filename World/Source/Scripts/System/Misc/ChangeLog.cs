@@ -1059,6 +1059,7 @@ namespace Server.Misc
 					builder.Append("- Item - Dropped loot chests now indicate they're filled with treasure<br>");
 					builder.Append("- Item - Power Scrolls now indicate which Shrine they require<br>");
 					builder.Append("- Item - Removed misleading context menu option from hydra tooth<br>");
+					builder.Append("- Item - Magic quivers can now be sold to vendors<br>");
 					builder.Append("- Item - Throwing gloves have been rebalanced<br>");
 					builder.Append("       - Damage has been changed to 8-11, down from 10-14<br>");
 					builder.Append("       - Attack Speed has been changed to 2s, up from 4s<br>");
@@ -1070,6 +1071,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Bag of Tricks now values Gold as 10 prank points each, up from 1<br>");
 					builder.Append("- Misc - Quick hack for fixing low lvl treasure map chests<br>");
 					builder.Append("- Misc - Dropping a stack of scrolls on a spellbook now attempts to add one to the book<br>");
+					builder.Append("- Misc - Reduced gold value of lower ammo cost and weight reduction on quivers<br>");
 					builder.Append("- Mob - Rocs and Roclings have been rebalanced<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Pets - Pet ghosts no longer have penalized movement speed<br>");
