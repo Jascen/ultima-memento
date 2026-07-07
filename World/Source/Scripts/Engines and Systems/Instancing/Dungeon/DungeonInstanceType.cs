@@ -5,6 +5,7 @@ using Server;
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
+using Server.Misc;
 using Server.Engines.PartySystem;
 using Server.Regions;
 
@@ -18,14 +19,44 @@ namespace Server.Engines.Instancing
 	{
 		public static readonly DungeonInstanceType Instance = new DungeonInstanceType();
 
+		public enum DungeonInstanceAvailability
+		{
+			Allowed,
+			BadEntranceOrExit,
+			Broken
+		}
+
 		private const int CoreBaseMapCount = 7;
 		private const int ClonesPerBaseMap = 7;
 		private const int RuntimeRegionPriorityOffset = 1000;
 		private const int FunctionalItemMargin = 8;
 		private const int TeleporterEndpointMargin = 4;
+		private const int DungeonListingScanLimit = 85;
 			private const string ReturnSavePath = "Saves/Instancing/DungeonReturns.bin";
 
 			private static readonly Dictionary<int, List<DecorationTeleporterSource>> m_DecorationTeleportersByMap = new Dictionary<int, List<DecorationTeleporterSource>>();
+		private static readonly string[] ExcludedListedDungeonNames = new string[]
+		{
+			"Stonegate Castle",
+			"the Halls of Undermountain",
+			"the Ice Fiend Lair"
+		};
+
+		private static readonly int[] BadEntranceOrExitDungeonIndexes = new int[]
+		{
+			75, 74, 76, 40, 25, 28, 30, 32, 6, 38, 36
+		};
+
+		private static readonly int[] BrokenDungeonIndexes = new int[]
+		{
+			81, 60, 62, 63, 64, 65, 66, 67, 70, 71, 77, 78, 79, 21, 22, 23, 26, 27, 29, 31, 39, 1, 10, 11, 13, 17, 18
+		};
+
+		private const string BadEntranceOrExitReason = "entrance location incorrect or exit tiles incorrect";
+		private const string BrokenReason = "broken in general";
+		public const int GoodDungeonGateHue = 0x455;
+		public const int BadEntranceOrExitDungeonGateHue = 0x36;
+		public const int BrokenDungeonGateHue = 0x25;
 			private static readonly string[] EmptyStringArray = new string[0];
 
 		private List<DungeonInstanceDefinition> m_Definitions;
@@ -252,6 +283,7 @@ namespace Server.Engines.Instancing
 				return m_Definitions;
 
 			List<DungeonInstanceDefinition> list = new List<DungeonInstanceDefinition>();
+			HashSet<string> listedDungeonNames = BuildListedDungeonNames();
 
 			foreach ( Region region in Region.Regions )
 			{
@@ -259,7 +291,7 @@ namespace Server.Engines.Instancing
 				if ( br == null || br.Map == null || br.Map == Map.Internal || br.Area == null || br.Area.Length == 0 )
 					continue;
 
-				if ( !( br is DungeonRegion ) && !( br is BardDungeonRegion ) && !( br is CaveRegion ) )
+				if ( !IsCatalogRegionForDefinitionList( br ) || !IsListedDungeonDefinition( br, listedDungeonNames ) )
 					continue;
 
 				list.Add( new DungeonInstanceDefinition( br ) );
@@ -279,6 +311,161 @@ namespace Server.Engines.Instancing
 
 			m_Definitions = list;
 			return m_Definitions;
+		}
+
+		private static HashSet<string> BuildListedDungeonNames()
+		{
+			HashSet<string> names = new HashSet<string>( StringComparer.OrdinalIgnoreCase );
+
+			for ( int i = 1; i <= DungeonListingScanLimit; i++ )
+			{
+				string world;
+				string location;
+				Map placer;
+				int x;
+				int y;
+				string dungeon = Worlds.GetDungeonListing( i, out world, out location, out placer, out x, out y );
+
+				AddListedDungeonName( names, dungeon );
+			}
+
+			return names;
+		}
+
+		private static void AddListedDungeonName( HashSet<string> names, string dungeon )
+		{
+			if ( String.IsNullOrEmpty( dungeon ) )
+				return;
+
+			dungeon = dungeon.Trim();
+			if ( dungeon.Length == 0 )
+				return;
+
+			names.Add( dungeon );
+
+			string normalized = NormalizeDungeonListingName( dungeon );
+			if ( normalized != null && normalized.Length > 0 )
+				names.Add( normalized );
+		}
+
+		private static bool IsCatalogRegionForDefinitionList( BaseRegion region )
+		{
+			return region is DungeonRegion || region is BardDungeonRegion || region is CaveRegion || region is DeadRegion;
+		}
+
+		private static bool IsListedDungeonDefinition( BaseRegion region, HashSet<string> listedDungeonNames )
+		{
+			if ( region == null || String.IsNullOrEmpty( region.Name ) || listedDungeonNames == null )
+				return false;
+
+			if ( IsExcludedListedDungeon( region.Name ) )
+				return false;
+
+			string normalized = NormalizeDungeonListingName( region.Name );
+			return listedDungeonNames.Contains( region.Name )
+				|| ( normalized != null && listedDungeonNames.Contains( normalized ) );
+		}
+
+		private static bool IsExcludedListedDungeon( string name )
+		{
+			if ( String.IsNullOrEmpty( name ) )
+				return false;
+
+			string normalized = NormalizeDungeonListingName( name );
+
+			for ( int i = 0; i < ExcludedListedDungeonNames.Length; i++ )
+			{
+				string excluded = ExcludedListedDungeonNames[i];
+				if ( String.Equals( name, excluded, StringComparison.OrdinalIgnoreCase ) )
+					return true;
+
+				if ( String.Equals( normalized, NormalizeDungeonListingName( excluded ), StringComparison.OrdinalIgnoreCase ) )
+					return true;
+			}
+
+			return false;
+		}
+
+		private static string NormalizeDungeonListingName( string name )
+		{
+			if ( name == null )
+				return null;
+
+			name = name.Trim();
+
+			if ( name.StartsWith( "the Dungeon of ", StringComparison.OrdinalIgnoreCase ) )
+				return name.Substring( 4 );
+
+			return name;
+		}
+
+		public static DungeonInstanceAvailability GetDefinitionAvailability( int index )
+		{
+			if ( ContainsIndex( BrokenDungeonIndexes, index ) )
+				return DungeonInstanceAvailability.Broken;
+
+			if ( ContainsIndex( BadEntranceOrExitDungeonIndexes, index ) )
+				return DungeonInstanceAvailability.BadEntranceOrExit;
+
+			return DungeonInstanceAvailability.Allowed;
+		}
+
+		public static bool IsDefinitionAvailable( int index )
+		{
+			return GetDefinitionAvailability( index ) == DungeonInstanceAvailability.Allowed;
+		}
+
+		public static string GetAvailabilityLabel( DungeonInstanceAvailability availability )
+		{
+			switch ( availability )
+			{
+				case DungeonInstanceAvailability.BadEntranceOrExit:
+					return "Bad entrance/exit";
+				case DungeonInstanceAvailability.Broken:
+					return "Broken";
+				default:
+					return "Good";
+			}
+		}
+
+		public static string GetAvailabilityReason( DungeonInstanceAvailability availability )
+		{
+			switch ( availability )
+			{
+				case DungeonInstanceAvailability.BadEntranceOrExit:
+					return BadEntranceOrExitReason;
+				case DungeonInstanceAvailability.Broken:
+					return BrokenReason;
+				default:
+					return null;
+			}
+		}
+
+		public static int GetAvailabilityHue( DungeonInstanceAvailability availability )
+		{
+			switch ( availability )
+			{
+				case DungeonInstanceAvailability.BadEntranceOrExit:
+					return BadEntranceOrExitDungeonGateHue;
+				case DungeonInstanceAvailability.Broken:
+					return BrokenDungeonGateHue;
+				default:
+					return GoodDungeonGateHue;
+			}
+		}
+
+		private static bool ContainsIndex( int[] indexes, int index )
+		{
+			if ( indexes == null )
+				return false;
+
+			for ( int i = 0; i < indexes.Length; i++ )
+			{
+				if ( indexes[i] == index )
+					return true;
+			}
+
+			return false;
 		}
 
 		public DungeonInstanceDefinition GetDefinition( int index )
@@ -330,7 +517,13 @@ namespace Server.Engines.Instancing
 
 			for ( int i = 0; i < defs.Count; i++ )
 			{
-				if ( defs[i].SpawnCount > 0 )
+				if ( defs[i].CanSpawnInstance && defs[i].SpawnCount > 0 )
+					return defs[i];
+			}
+
+			for ( int i = 0; i < defs.Count; i++ )
+			{
+				if ( defs[i].CanSpawnInstance )
 					return defs[i];
 			}
 
@@ -387,6 +580,12 @@ namespace Server.Engines.Instancing
 			if ( definition == null )
 			{
 				from.SendMessage( "This dungeon instance gate is not configured with a valid dungeon." );
+				return false;
+			}
+
+			if ( !definition.CanSpawnInstance )
+			{
+				from.SendMessage( "This dungeon is temporarily disabled for instance spawning: {0}.", definition.InstanceBlockReason );
 				return false;
 			}
 
@@ -482,28 +681,30 @@ namespace Server.Engines.Instancing
 
 			private void EjectPlayers( Instance inst )
 			{
-			if ( inst == null || !inst.IsLive )
-				return;
+				if ( inst == null || !inst.IsLive )
+					return;
 
-			Map map = inst.LiveMap;
-			if ( map == null )
-				return;
+				Map map = inst.LiveMap;
+				if ( map == null )
+					return;
 
-			List<Mobile> players = null;
-			foreach ( NetState ns in NetState.Instances )
-			{
-				Mobile m = ns.Mobile;
-				if ( m != null && m.Map == map )
+				EjectPlayerCorpses( inst, map );
+
+				List<Mobile> players = null;
+				foreach ( NetState ns in NetState.Instances )
 				{
-					if ( players == null )
-						players = new List<Mobile>();
+					Mobile m = ns.Mobile;
+					if ( m != null && m.Map == map )
+					{
+						if ( players == null )
+							players = new List<Mobile>();
 
-					players.Add( m );
+						players.Add( m );
+					}
 				}
-			}
 
-			if ( players == null )
-				return;
+				if ( players == null )
+					return;
 
 				for ( int i = 0; i < players.Count; i++ )
 				{
@@ -521,6 +722,91 @@ namespace Server.Engines.Instancing
 					ClearReturn( m );
 				}
 			}
+
+		private void EjectPlayerCorpses( Instance inst, Map liveMap )
+		{
+			if ( inst == null || liveMap == null )
+				return;
+
+			List<Corpse> corpses = null;
+
+			foreach ( Item item in World.Items.Values )
+			{
+				if ( item == null || item.Deleted || item.Map != liveMap || item.Parent != null )
+					continue;
+
+				Corpse corpse = item as Corpse;
+				if ( corpse == null )
+					continue;
+
+				if ( corpses == null )
+					corpses = new List<Corpse>();
+
+				corpses.Add( corpse );
+			}
+
+			if ( corpses == null )
+				return;
+
+			for ( int i = 0; i < corpses.Count; i++ )
+			{
+				Corpse corpse = corpses[i];
+				if ( corpse == null || corpse.Deleted || corpse.Map != liveMap )
+					continue;
+
+				Mobile owner = corpse.Owner;
+				if ( owner != null && owner.Player && corpse.TotalItems > 0 )
+				{
+					Map returnMap;
+					Point3D returnPoint;
+					GetCorpseReturnLocation( inst, owner, out returnMap, out returnPoint );
+
+					if ( returnMap != null )
+					{
+						RemoveTrackedInstanceItem( inst, corpse );
+						corpse.MoveToWorld( returnPoint, returnMap );
+						continue;
+					}
+				}
+
+				corpse.Delete();
+			}
+		}
+
+		private void GetCorpseReturnLocation( Instance inst, Mobile owner, out Map returnMap, out Point3D returnPoint )
+		{
+			DungeonReturnInfo info = GetReturnInfo( owner );
+
+			if ( info != null && info.ReturnMap != null )
+			{
+				returnMap = NormalizeExternalMap( info.ReturnMap );
+				returnPoint = info.ReturnPoint;
+			}
+			else
+			{
+				returnMap = GetReturnMap( inst );
+				returnPoint = GetReturnPoint( inst );
+			}
+
+			if ( returnMap == null )
+			{
+				returnMap = ExitMap;
+				returnPoint = ExitPoint;
+			}
+		}
+
+		private static void RemoveTrackedInstanceItem( Instance inst, Item item )
+		{
+			if ( inst == null || item == null )
+				return;
+
+			for ( int i = inst.Items.Count - 1; i >= 0; i-- )
+			{
+				InstanceItem instanceItem = inst.Items[i];
+				if ( instanceItem != null && Object.ReferenceEquals( instanceItem.Item, item ) )
+					inst.Items.RemoveAt( i );
+			}
+		}
 
 		public string GetInstanceStatus( Serial instanceKey )
 		{
@@ -1392,7 +1678,8 @@ namespace Server.Engines.Instancing
 				try
 				{
 					object o = c.Invoke( null );
-					if ( o != null && o is Item newItem )
+					Item newItem = o as Item;
+					if ( newItem != null )
 					{
 						Server.Commands.Dupe.CopyProperties( newItem, source );
 						return newItem;
@@ -1532,6 +1819,8 @@ namespace Server.Engines.Instancing
 
 		protected override void OnFreeInstance( Instance inst, Map liveMap )
 		{
+			EjectPlayerCorpses( inst, liveMap );
+
 			CleanupRuntime( inst.OwnerSerial );
 
 			m_SettingsByOwner.Remove( inst.OwnerSerial );
@@ -1602,6 +1891,10 @@ namespace Server.Engines.Instancing
 			public SpawnZLevel SpawnZLevel { get { return m_SpawnZLevel; } }
 			public SpawnEntry[] Spawns { get { return m_Spawns; } }
 			public int SpawnCount { get { return m_Spawns == null ? 0 : m_Spawns.Length; } }
+			public DungeonInstanceAvailability Availability { get { return DungeonInstanceType.GetDefinitionAvailability( m_Index ); } }
+			public string AvailabilityLabel { get { return DungeonInstanceType.GetAvailabilityLabel( Availability ); } }
+			public string InstanceBlockReason { get { return DungeonInstanceType.GetAvailabilityReason( Availability ); } }
+			public bool CanSpawnInstance { get { return Availability == DungeonInstanceAvailability.Allowed; } }
 
 			public bool Contains( Point3D loc )
 			{
@@ -1860,7 +2153,7 @@ namespace Server.Engines.Instancing
 
 			private static bool IsDungeonCatalogRegion( BaseRegion region )
 			{
-				return region is DungeonRegion || region is BardDungeonRegion || region is CaveRegion;
+				return region is DungeonRegion || region is BardDungeonRegion || region is CaveRegion || region is DeadRegion;
 			}
 
 			private static bool IsCloneableConnectedRegion( BaseRegion region )
@@ -1979,14 +2272,16 @@ namespace Server.Engines.Instancing
 				// 1. Try to find an overworld teleporter that drops players into this region
 				foreach ( Item item in World.Items.Values )
 				{
-					if ( item is Teleporter teleporter && teleporter.MapDest == region.Map && region.Contains( teleporter.PointDest ) )
+					Teleporter teleporter = item as Teleporter;
+					if ( teleporter != null && teleporter.MapDest == region.Map && region.Contains( teleporter.PointDest ) )
 						return teleporter.PointDest;
 				}
 
 				// 2. Fallback: find any teleporter inside this region (like an exit teleporter)
 				foreach ( Item item in World.Items.Values )
 				{
-					if ( item is Teleporter teleporter && teleporter.Map == region.Map && region.Contains( teleporter.Location ) )
+					Teleporter teleporter = item as Teleporter;
+					if ( teleporter != null && teleporter.Map == region.Map && region.Contains( teleporter.Location ) )
 						return teleporter.Location;
 				}
 
