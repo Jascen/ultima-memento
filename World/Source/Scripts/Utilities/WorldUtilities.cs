@@ -55,7 +55,7 @@ namespace Server.Utilities
 		/// <returns>The first item that matches the predicate, otherwise null.</returns>
 		public static Item ForEachNearbyItem(Map map, Point3D location, int range, Func<Item, bool> stopPredicate = null)
 		{
-			if (map == null) return null;
+			if (map == null || map == Map.Internal) return null;
 
 			IPooledEnumerable eable = map.GetItemsInRange(location, range);
 
@@ -81,7 +81,7 @@ namespace Server.Utilities
 		/// <returns>The first mobile that matches the predicate, otherwise null.</returns>
 		public static Mobile ForEachNearbyMobile(Map map, Point3D location, int range, Func<Mobile, bool> stopPredicate = null)
 		{
-			if (map == null) return null;
+			if (map == null || map == Map.Internal) return null;
 
 			IPooledEnumerable eable = map.GetMobilesInRange(location, range);
 
@@ -104,7 +104,7 @@ namespace Server.Utilities
 		/// <returns>True if the stopPredicate is true for any static tile, otherwise false.</returns>
 		public static bool ForEachNearbyStatic(Map map, IPoint3D location, int range, Func<int, bool> stopPredicate)
 		{
-			if (map == null) return false;
+			if (map == null || map == Map.Internal) return false;
 
 			for (int x = 0 - range; x <= range; ++x)
 			{
@@ -141,7 +141,7 @@ namespace Server.Utilities
 		/// </summary>
 		public static IEnumerable<T> GetAllNearbyItems<T>(Map map, Point3D location, int range, Func<T, bool> predicate) where T : Item
 		{
-			if (map == null) yield break;
+			if (map == null || map == Map.Internal) yield break;
 
 			List<T> items = null;
 			IPooledEnumerable eable = map.GetItemsInRange(location, range);
