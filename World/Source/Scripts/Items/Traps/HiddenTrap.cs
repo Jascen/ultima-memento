@@ -1237,7 +1237,7 @@ namespace Server.Items
 
 		public static void DitchTrap( Item trap )
 		{
-			if ( trap.Weight < 5.0 && trap is HiddenTrap )
+			if ( IsActiveTrap( trap ) )
 			{
 				trap.Visible = false;
 				trap.Weight = 6.0;
@@ -1248,7 +1248,7 @@ namespace Server.Items
 
 		public static void DisableTrap( Item trap )
 		{
-			if ( trap.Weight < 5.0 && trap is HiddenTrap )
+			if ( IsActiveTrap( trap ) )
 			{
 				trap.Visible = true;
 				trap.Weight = 5.0;
@@ -1266,6 +1266,11 @@ namespace Server.Items
 				SetAppearance( trap );
 				new Delete_5_Minutes( trap ).Start();
 			}
+		}
+
+		public static bool IsActiveTrap( Item trap )
+		{
+			return trap is HiddenTrap && 5 < trap.Weight;
 		}
 
 		/// <returns>`True` if the trap his been triggered</returns>
