@@ -20,6 +20,9 @@ namespace Server.Items
 		private int m_TrapLevel;
 
 		[CommandProperty( AccessLevel.GameMaster )]
+		public bool IsActive { get { return TrapType != TrapType.None; } }
+
+		[CommandProperty( AccessLevel.GameMaster )]
 		public TrapType TrapType
 		{
 			get
