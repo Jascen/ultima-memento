@@ -1115,7 +1115,7 @@ namespace Server
 			return UseSkill( from, (int)name );
 		}
 
-		public static bool UseSkill( Mobile from, int skillID )
+		public static bool CanUseSkill( Mobile from, int skillID )
 		{
 			if ( !from.CheckAlive() )
 				return false;
@@ -1124,16 +1124,34 @@ namespace Server
 			else if ( !from.AllowSkillUse( (SkillName)skillID ) )
 				return false;
 
+			return true;
+		}
+
+		public static bool TryExecuteSkillCallback( Mobile from )
+		{
+			if ( from.NextSkillTime <= DateTime.Now && from.Spell == null )
+			{
+				from.DisruptiveAction();
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public static bool UseSkill( Mobile from, int skillID )
+		{
+			if ( !CanUseSkill( from, skillID ) )
+				return false;
+
 			if ( skillID >= 0 && skillID < SkillInfo.Table.Length )
 			{
 				SkillInfo info = SkillInfo.Table[skillID];
 
 				if ( info.Callback != null )
 				{
-					if ( from.NextSkillTime <= DateTime.Now && from.Spell == null )
+					if ( TryExecuteSkillCallback( from ) )
 					{
-						from.DisruptiveAction();
-
 						from.NextSkillTime = DateTime.Now + info.Callback( from );
 
 						return true;
