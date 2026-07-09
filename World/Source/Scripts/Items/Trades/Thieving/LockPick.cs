@@ -148,7 +148,7 @@ namespace Server.Items
 			private readonly Lockpick m_Lockpick;
 			private readonly Action m_OnComplete;
 
-			public InternalTimer( Mobile from, ILockpickable item, Lockpick lockpick, Action onComplete ) : base( TimeSpan.FromSeconds( 3.0 ) )
+			public InternalTimer( Mobile from, ILockpickable item, Lockpick lockpick, Action onComplete ) : base( TimeSpan.FromSeconds( 1.0 ) )
 			{
 				m_From = from;
 				m_Item = item;

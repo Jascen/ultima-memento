@@ -1073,6 +1073,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Quick hack for fixing low lvl treasure map chests<br>");
 					builder.Append("- Misc - Dropping a stack of scrolls on a spellbook now attempts to add one to the book<br>");
 					builder.Append("- Misc - Reduced gold value of lower ammo cost and weight reduction on quivers<br>");
+					builder.Append("- Misc - Dramatically reduce lockpicking time<br>");
 					builder.Append("- Mob - Rocs and Roclings have been rebalanced<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Pets - Pet ghosts no longer have penalized movement speed<br>");
