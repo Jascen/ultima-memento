@@ -20,6 +20,107 @@ namespace Server.SkillHandlers
 			return TimeSpan.FromSeconds( 1.0 );
 		}
 
+		public static bool CanDoEffect( Mobile from, object targeted )
+		{
+			if ( targeted is Mobile )
+			{
+				from.SendLocalizedMessage( 502816 ); // You feel that such an action would be inappropriate
+				return false;
+			}
+
+			if ( targeted is TrapableContainer )
+			{
+				TrapableContainer targ = (TrapableContainer)targeted;
+
+				from.Direction = from.GetDirectionTo( targ );
+
+				int nTrapLevel = targ.TrapLevel * 10;
+
+				if ( !targ.IsActive )
+				{
+					from.SendLocalizedMessage( 502373 ); // That doesn't appear to be trapped
+					return false;
+				}
+
+				if ( (int)(from.Skills[SkillName.RemoveTrap].Value ) < nTrapLevel )
+				{
+					from.SendMessage( "This trap looks too complicated for you." );
+					return false;
+				}
+
+				from.PlaySound( 0x241 );
+				return true;
+			}
+			
+			if ( targeted is HiddenTrap )
+			{
+				HiddenTrap trapt = (HiddenTrap)targeted;
+
+				if ( HiddenTrap.IsActiveTrap( trapt ) )
+				{
+					from.PlaySound( 0x241 );
+					
+					if ( from.CheckSkill( SkillName.RemoveTrap, 0, 125 ) )
+					{
+						HiddenTrap.DisableTrap( trapt );
+						from.SendLocalizedMessage( 502377 ); // You successfully render the trap harmless
+					}
+					else
+					{
+						from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off
+					}
+
+					return true;
+				}
+			}
+
+			from.SendLocalizedMessage( 502373 ); // That doesn't appear to be trapped
+			return false;
+		}
+
+		public static void DoEffect( Mobile from, object targeted )
+		{
+			if ( targeted is TrapableContainer )
+			{
+				TrapableContainer targ = (TrapableContainer)targeted;
+
+				from.Direction = from.GetDirectionTo( targ );
+
+				int nTrapLevel = (targ.TrapLevel * 10) + 20;
+				if ( from.CheckTargetSkill( SkillName.RemoveTrap, targ, 0, nTrapLevel ) )
+				{
+					targ.TrapPower = 0;
+					targ.TrapLevel = 0;
+					targ.TrapType = TrapType.None;
+					from.SendLocalizedMessage( 502377 ); // You successfully render the trap harmless
+				}
+				else
+				{
+					from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off
+				}
+			}
+			else if ( targeted is HiddenTrap )
+			{
+				HiddenTrap trapt = (HiddenTrap)targeted;
+				if ( HiddenTrap.IsActiveTrap( trapt ) )
+				{
+					from.PlaySound( 0x241 );
+					
+					if ( from.CheckSkill( SkillName.RemoveTrap, 0, 125 ) )
+					{
+						HiddenTrap.DisableTrap( trapt );
+						from.SendLocalizedMessage( 502377 ); // You successfully render the trap harmless
+					}
+					else
+					{
+						from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off
+					}
+				}
+			}
+
+			from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
+		}
+
 		private class InternalTarget : Target
 		{
 			public InternalTarget() :  base ( 2, false, TargetFlags.None )
@@ -28,74 +129,10 @@ namespace Server.SkillHandlers
 
 			protected override void OnTarget( Mobile from, object targeted )
 			{
-				if ( targeted is Mobile )
+				if ( CanDoEffect( from, targeted ) )
 				{
-					from.SendLocalizedMessage( 502816 ); // You feel that such an action would be inappropriate
-					return;
+					DoEffect( from, targeted );
 				}
-				else if ( targeted is TrapableContainer )
-				{
-					TrapableContainer targ = (TrapableContainer)targeted;
-
-					from.Direction = from.GetDirectionTo( targ );
-
-					int nTrapLevel = targ.TrapLevel * 10;
-
-					if ( targ.TrapType == TrapType.None )
-					{
-						from.SendLocalizedMessage( 502373 ); // That doesn't appear to be trapped
-						return;
-					}
-
-					if ( (int)(from.Skills[SkillName.RemoveTrap].Value ) < nTrapLevel )
-					{
-						from.SendMessage( "This trap looks too complicated for you." );
-						return;
-					}
-
-					from.PlaySound( 0x241 );
-
-					// if ( from.CheckTargetSkill( SkillName.RemoveTrap, targ, targ.TrapPower, targ.TrapPower + 30 ) )
-					nTrapLevel = nTrapLevel + 20;
-					if ( from.CheckTargetSkill( SkillName.RemoveTrap, targ, 0, nTrapLevel ) )
-					{
-						targ.TrapPower = 0;
-						targ.TrapLevel = 0;
-						targ.TrapType = TrapType.None;
-						from.SendLocalizedMessage( 502377 ); // You successfully render the trap harmless
-					}
-					else
-					{
-						from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off
-					}
-				}
-				else if ( targeted is Item )
-				{
-					Item trapt = (Item)targeted;
-
-					if ( trapt is HiddenTrap && trapt.Weight < 5.0 )
-					{
-						from.PlaySound( 0x241 );
-						
-						if ( from.CheckSkill( SkillName.RemoveTrap, 0, 125 ) )
-						{
-							HiddenTrap.DisableTrap( trapt );
-							from.SendLocalizedMessage( 502377 ); // You successfully render the trap harmless
-						}
-						else
-						{
-							from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off
-						}
-					}
-					else { from.SendLocalizedMessage( 502373 ); }
-				}
-				else
-				{
-					from.SendLocalizedMessage( 502373 ); // That does'nt appear to be trapped
-					return;
-				}
-
-				from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
 			}
 		}
 	}
