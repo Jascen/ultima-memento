@@ -1,7 +1,11 @@
 namespace Server.Items
 {
+	public interface IAutoLockingContainer
+	{
+	}
+
     [Flipable(0x1C0E, 0x1C0F)]
-    public class PickBoxEasy : LockableContainer
+    public class PickBoxEasy : LockableContainer, IAutoLockingContainer
     {
         public override string DefaultDescription
         { get { return "These are locked boxes that thieves use to practice their lockpicking skills. They require a single skill point in lockpicking, and can help you learn up to 25."; } }
@@ -51,7 +55,7 @@ namespace Server.Items
 
     /////////////////////////////////////////////////////////////////////////////////////////
     [Flipable(0x1C0E, 0x1C0F)]
-    public class PickBoxNormal : LockableContainer
+    public class PickBoxNormal : LockableContainer, IAutoLockingContainer
     {
         public override string DefaultDescription
         { get { return "These are locked boxes that thieves use to practice their lockpicking skills. They require a 20 lockpicking, and can help you learn up to 35."; } }
@@ -101,7 +105,7 @@ namespace Server.Items
 
     /////////////////////////////////////////////////////////////////////////////////////////
     [Flipable(0x1C0E, 0x1C0F)]
-    public class PickBoxDifficult : LockableContainer
+    public class PickBoxDifficult : LockableContainer, IAutoLockingContainer
     {
         public override string DefaultDescription
         { get { return "These are locked boxes that thieves use to practice their lockpicking skills. They require a 30 lockpicking, and can help you learn up to 45."; } }
@@ -151,7 +155,7 @@ namespace Server.Items
 
     /////////////////////////////////////////////////////////////////////////////////////////
     [Flipable(0x1C0E, 0x1C0F)]
-    public class PickBoxChallenging : LockableContainer
+    public class PickBoxChallenging : LockableContainer, IAutoLockingContainer
     {
         public override string DefaultDescription
         { get { return "These are locked boxes that thieves use to practice their lockpicking skills. They require a 40 lockpicking, and can help you learn up to 55."; } }
@@ -201,7 +205,7 @@ namespace Server.Items
 
     /////////////////////////////////////////////////////////////////////////////////////////
     [Flipable(0x1C0E, 0x1C0F)]
-    public class PickBoxHard : LockableContainer
+    public class PickBoxHard : LockableContainer, IAutoLockingContainer
     {
         public override string DefaultDescription
         { get { return "These are locked boxes that thieves use to practice their lockpicking skills. They require a 50 lockpicking, and can help you learn up to 65."; } }
@@ -251,7 +255,7 @@ namespace Server.Items
 
     /////////////////////////////////////////////////////////////////////////////////////////
     [Flipable(0x1C0E, 0x1C0F)]
-    public class PickBoxVeryHard : LockableContainer
+    public class PickBoxVeryHard : LockableContainer, IAutoLockingContainer
     {
         public override string DefaultDescription
         { get { return "These are locked boxes that thieves use to practice their lockpicking skills. They require a 60 lockpicking, and can help you learn up to 75."; } }
@@ -301,7 +305,7 @@ namespace Server.Items
 
     /////////////////////////////////////////////////////////////////////////////////////////
     [Flipable(0x1C0E, 0x1C0F)]
-    public class PickBoxExtreme : LockableContainer
+    public class PickBoxExtreme : LockableContainer, IAutoLockingContainer
     {
         public override string DefaultDescription
         { get { return "These are locked boxes that thieves use to practice their lockpicking skills. They require a 70 lockpicking, and can help you learn up to 85."; } }
@@ -351,7 +355,7 @@ namespace Server.Items
 
     /////////////////////////////////////////////////////////////////////////////////////////
     [Flipable(0x1C0E, 0x1C0F)]
-    public class PickBoxMaster : LockableContainer
+    public class PickBoxMaster : LockableContainer, IAutoLockingContainer
     {
         public override string DefaultDescription
         { get { return "These are locked boxes that thieves use to practice their lockpicking skills. They require a 80 lockpicking, and can help you learn up to 95."; } }
