@@ -75,6 +75,11 @@ namespace Server.Utilities
 			return null;
 		}
 
+		public static Item ForEachNearbyItem(Mobile mobile, int range, Func<Item, bool> stopPredicate = null)
+		{
+			return ForEachNearbyItem(mobile.Map, mobile.Location, range, stopPredicate);
+		}
+
 		/// <summary>
 		/// Iterates over all mobiles in the range of a mobile and returns the first mobile that matches the predicate.
 		/// </summary>
@@ -96,6 +101,11 @@ namespace Server.Utilities
 
 			eable.Free();
 			return null;
+		}
+
+		public static Mobile ForEachNearbyMobile(Mobile mobile, int range, Func<Mobile, bool> stopPredicate)
+		{
+			return ForEachNearbyMobile(mobile.Map, mobile.Location, range, stopPredicate);
 		}
 
 		/// <summary>
@@ -129,6 +139,11 @@ namespace Server.Utilities
 			}
 
 			return false;
+		}
+
+		public static bool ForEachNearbyStatic(Mobile mobile, int range, Func<int, bool> stopPredicate)
+		{
+			return ForEachNearbyStatic(mobile.Map, mobile.Location, range, stopPredicate);
 		}
 
 		public static IEnumerable<T> GetAllNearbyItems<T>(Mobile from, int range, Func<T, bool> predicate) where T : Item
