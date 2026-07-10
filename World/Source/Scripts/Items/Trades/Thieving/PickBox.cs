@@ -22,9 +22,9 @@ namespace Server.Items
             InfoText1 = "Easy Lock";
             Hue = 0xB61;
             Locked = true;
-            LockLevel = 1;
+            LockLevel = -25;
             MaxLockLevel = 25;
-            RequiredSkill = 1;
+            RequiredSkill = 0;
             Weight = 4.0;
         }
 
@@ -41,14 +41,14 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write((int)1); // version
+            writer.Write((int)2); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-            if (version == 0)
+            if (version < 2)
                 SetDefaultStats();
         }
     }
