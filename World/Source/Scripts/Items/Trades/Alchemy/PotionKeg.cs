@@ -294,7 +294,7 @@ namespace Server.Items
 		{
 			Container pack = m.Backpack;
 
-			if ( potion is BaseMixture )
+			if ( potion is BaseMixture || potion is BaseLiquid )
 			{
 				Jar jar = new Jar( amount );
 

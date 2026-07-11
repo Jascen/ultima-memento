@@ -1116,6 +1116,7 @@ namespace Server.Misc
 					builder.Append("- Item - Fix issue where throwing glove types had inconsistent base damage<br>");
 					builder.Append("- Item - Crafted relocking boxes now properly retain their difficulty<br>");
 					builder.Append("- Item - Wolf caps and stag caps are now sold by the fur trader<br>");
+					builder.Append("- Item - Jarred Liquids now refund a Jar when dumping into a Potion Keg<br>");
 					builder.Append("- Misc - Fix issue where Dex/Int stat gains couldn't happen if Str gain was on cooldown<br>");
 					builder.Append("- Misc - Fix issue where where some Library books would show random books<br>");
 					builder.Append("- Misc - Bandages now stop when the healer dies<br>");
