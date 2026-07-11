@@ -5,7 +5,7 @@ namespace Server.Spells
 {
 	public class SpellRegistry
 	{
-		const int MAX_SPELL_ID = 700;
+		const int MAX_SPELL_ID = 1000;
 		private static Type[] m_Types = new Type[MAX_SPELL_ID];
 		private static int m_Count;
 
