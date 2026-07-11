@@ -1,18 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using Server.Spells.Bushido;
-using Server.Spells.Chivalry;
-using Server.Items;
-using Server.Spells.Necromancy;
-using Server.Spells.Ninjitsu;
-using Server.Spells.Elementalism;
 
 namespace Server.Spells
 {
 	public class SpellRegistry
 	{
-		private static Type[] m_Types = new Type[700];
+		const int MAX_SPELL_ID = 700;
+		private static Type[] m_Types = new Type[MAX_SPELL_ID];
 		private static int m_Count;
 
 		public static Type[] Types
@@ -67,6 +61,8 @@ namespace Server.Spells
 
 		public static void Register( int spellID, Type type )
 		{
+			if (MAX_SPELL_ID < spellID)
+				throw new InvalidOperationException(string.Format("The spell ID must be less than '{0}'", MAX_SPELL_ID));
 			if ( spellID < 0 || spellID >= m_Types.Length )
 				return;
 
