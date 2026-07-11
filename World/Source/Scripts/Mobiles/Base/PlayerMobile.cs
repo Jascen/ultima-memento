@@ -2721,7 +2721,7 @@ namespace Server.Mobiles
 
 			m_GameTime = TimeSpan.Zero;
 			m_ShortTermElapse = TimeSpan.FromHours( 8.0 );
-			m_LongTermElapse = TimeSpan.FromHours( 40.0 );
+			m_LongTermElapse = TimeSpan.FromHours( 12.0 );
 
 			m_GuildRank = Guilds.RankDefinition.Lowest;
 		}
@@ -3629,7 +3629,7 @@ namespace Server.Mobiles
 
 			if ( m_LongTermElapse < this.GameTime )
 			{
-				m_LongTermElapse += TimeSpan.FromHours( 40 );
+				m_LongTermElapse += TimeSpan.FromHours( 12 );
 				if ( Kills > 0 )
 					--Kills;
 			}
@@ -3638,7 +3638,7 @@ namespace Server.Mobiles
 		public void ResetKillTime()
 		{
 			m_ShortTermElapse = this.GameTime + TimeSpan.FromHours( 8 );
-			m_LongTermElapse = this.GameTime + TimeSpan.FromHours( 40 );
+			m_LongTermElapse = this.GameTime + TimeSpan.FromHours( 12 );
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
