@@ -214,7 +214,7 @@ namespace Server.ModernSkill
 		{ return pickable != null; }
 
 		private static bool CheckIsTrappable(ITrap trap)
-		{ return trap != null && 0 < trap.TrapDifficulty; }
+		{ return trap != null; }
 
 		private static void DoLockpick(PlayerMobile player, Item target, bool showTrapState)
 		{
