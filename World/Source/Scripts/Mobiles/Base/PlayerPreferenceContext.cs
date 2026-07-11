@@ -76,6 +76,11 @@ namespace Server.Mobiles
 				ModernLockpickingAutoRetryEnabled = reader.ReadBool();
 				ModernRemoveTrapsAutoRetryEnabled = reader.ReadBool();
 			}
+			else
+			{
+				ModernLockpickingEnabled = true;
+				ModernRemoveTrapEnabled = true;
+			}
 		}
 
 		[CommandProperty(AccessLevel.GameMaster)]
