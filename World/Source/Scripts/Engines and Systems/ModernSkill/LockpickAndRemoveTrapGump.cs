@@ -304,8 +304,12 @@ namespace Server.ModernSkill
 				if (player.Map != target.Map) return false;
 				if (!player.InRange(target.GetWorldLocation(), 2)) return false;
 				if (!RemoveTrap.CanDoEffect(player, target) || !keepRunning)
-				{
-					player.SendGump(new LockpickAndRemoveTrapGump(player, target, showLockpickState, true));
+				{			
+					var pickable = target as ILockpickable;
+					if (pickable != null && !pickable.Locked && showLockpickState && (!isTrappable || !trap.IsActive))
+						target.OnDoubleClick(player);
+					else
+						player.SendGump(new LockpickAndRemoveTrapGump(player, target, showLockpickState, true));
 					return false;
 				}
 
