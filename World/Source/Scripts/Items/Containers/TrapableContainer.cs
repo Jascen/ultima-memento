@@ -1,5 +1,3 @@
-using System;
-using Server;
 using Server.Misc;
 
 namespace Server.Items
@@ -13,7 +11,13 @@ namespace Server.Items
 		PoisonTrap
 	}
 
-	public abstract class TrapableContainer : BaseContainer, ITelekinesisable
+	public interface ITrap
+	{
+		bool IsActive { get; }
+		int TrapDifficulty { get; }
+	}
+
+	public abstract class TrapableContainer : BaseContainer, ITelekinesisable, ITrap
 	{
 		private TrapType m_TrapType;
 		private int m_TrapPower;
@@ -21,6 +25,9 @@ namespace Server.Items
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool IsActive { get { return TrapType != TrapType.None; } }
+
+		[CommandProperty( AccessLevel.GameMaster )]
+		public int TrapDifficulty { get { return TrapLevel * 10; } }
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public TrapType TrapType

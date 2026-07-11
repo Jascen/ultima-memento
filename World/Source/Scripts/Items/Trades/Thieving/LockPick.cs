@@ -1,7 +1,10 @@
 using System;
+using Server.Gumps;
+using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
 using Server.Utilities;
+using Server.ModernSkill;
 
 namespace Server.Items
 {
@@ -19,6 +22,16 @@ namespace Server.Items
 	[FlipableAttribute( 0x14fc, 0x14fb )]
 	public class Lockpick : Item
 	{
+		private enum LockpickDifficulty
+		{
+			NotLocked = 0,
+			Trivial,
+			Easy,
+			Difficult,
+			Challenging,
+			Impossible,
+		}
+		
 		public override string DefaultDescription
 		{
 			get
@@ -73,6 +86,40 @@ namespace Server.Items
 			from.Target = new InternalTarget( this );
 		}
 
+		public static string GetDifficulty( double removeTrapSkill, object target )
+		{
+			switch (GetDifficultyInternal(removeTrapSkill, target))
+			{
+				default:
+				case LockpickDifficulty.NotLocked: return TextDefinition.GetColorizedText("Not Locked", HtmlColors.COOL_GREEN);
+				case LockpickDifficulty.Trivial: return  TextDefinition.GetColorizedText("Trivial", HtmlColors.MINT_GREEN);
+				case LockpickDifficulty.Easy: return TextDefinition.GetColorizedText("Easy", HtmlColors.MINT_GREEN);
+				case LockpickDifficulty.Difficult: return TextDefinition.GetColorizedText("Difficult", HtmlColors.RUST);
+				case LockpickDifficulty.Challenging: return TextDefinition.GetColorizedText("Challenging", HtmlColors.PALE_RED);
+				case LockpickDifficulty.Impossible: return TextDefinition.GetColorizedText("Impossible", HtmlColors.RED);
+			}
+		}
+
+		private static LockpickDifficulty GetDifficultyInternal( double lockpickSkill, object target )
+		{
+			if ( target is ILockpickable )
+			{
+				var lockpickable = (ILockpickable)target;
+				if ( !lockpickable.Locked ) return LockpickDifficulty.NotLocked;
+
+				if ( lockpickable.MaxLockLevel <= lockpickSkill ) return LockpickDifficulty.Trivial;
+				if ( lockpickSkill < lockpickable.RequiredSkill ) return LockpickDifficulty.Impossible;
+				
+				var delta = (double)( lockpickable.MaxLockLevel - lockpickSkill ) / ( 1 + Math.Abs( lockpickable.MaxLockLevel - lockpickable.LockLevel ) );
+				if ( delta < 0.33 ) return LockpickDifficulty.Easy;
+				if ( delta < 0.66 ) return LockpickDifficulty.Difficult;
+
+				return LockpickDifficulty.Challenging;
+			}
+
+			return LockpickDifficulty.NotLocked;
+		}
+
 		public static bool CanDoEffect( Mobile from, Lockpick lockpick, Item targeted, bool isLocked )
 		{
 			from.Direction = from.GetDirectionTo( targeted );
@@ -122,6 +169,13 @@ namespace Server.Items
 			{
 				if ( m_Item.Deleted )
 					return;
+
+				if ( from is PlayerMobile && targeted is Item )
+				{
+					var player = (PlayerMobile)from;
+					if ( player.Preferences.ModernLockpickingEnabled && LockpickAndRemoveTrapGump.TryShow(player, (Item)targeted) )
+						return;
+				}
 
 				if ( targeted is BaseDoor && from.Skills[SkillName.Lockpicking].Value >= 30 )
 				{
