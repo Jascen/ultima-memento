@@ -1079,6 +1079,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Add new Lockpicking and Remove Trap experience<br>");
 					builder.Append("- Misc - Multiple Strange Portals can no longer go to the same dungeon at once<br>");
 					builder.Append("- Misc - Empty player vendors are no longer listed on the Vendor Advertiser Bulletin<br>");
+					builder.Append("- Misc - Sextant can now convert coordinates on the Vendor Advertiser Bulletin<br>");
 					builder.Append("- Mob - Rocs and Roclings have been rebalanced<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Pets - Pet ghosts no longer have penalized movement speed<br>");
@@ -1119,6 +1120,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Fix issue where where some Library books would show random books<br>");
 					builder.Append("- Misc - Bandages now stop when the healer dies<br>");
 					builder.Append("- Misc - Fix issue where roaming Mannequins could cause the server to freeze<br>");
+					builder.Append("- Misc - Add missing degree symbol for Vendor Advertiser Bulletin<br>");
 					builder.Append("- Mobs - Fix case where AI would redundantly curse/poison<br>");
 					builder.Append("- Quest - Kite shield blacksmith quest now clarifies the item type name<br>");
 					builder.Append("- Spell - Natures Passage now transports in one action<br>");

@@ -61,7 +61,7 @@ namespace Server.Items
 			private const int RedHue = 0x20;
 			private List<PlayerVendor> m_List;
 			private int m_Page;
-			private Mobile m_From;
+			private int m_ItemsPerPage;
 
 			public void AddBlackAlpha( int x, int y, int width, int height )
 			{
@@ -74,21 +74,22 @@ namespace Server.Items
 				from.CloseGump( typeof( FindPlayerVendorsGump ) );
 				int pvs = 0;
 				m_Page = page;
-				m_From = from;
 				int pageCount = 0;
 				m_List = list;
 
+				bool hasSextant = Sextants.HasSextant( from );
+				m_ItemsPerPage = hasSextant ? 8 : 12;
 				AddPage( 0 );
 				AddBackground( 0, 0, 645, 325, 3500 );
 				AddBlackAlpha( 20, 20, 604, 277 );
 				pvs = list.Count;
-				if ( list.Count % 12 == 0 )
+				if ( list.Count % m_ItemsPerPage == 0 )
 				{
-					pageCount = (list.Count / 12);
+					pageCount = (list.Count / m_ItemsPerPage);
 				}
 				else
 				{
-					pageCount = (list.Count / 12) + 1;
+					pageCount = (list.Count / m_ItemsPerPage) + 1;
 				}
 
 				AddLabelCropped( 32, 20, 100, 20, 1152, "Shop Name" );
@@ -111,17 +112,17 @@ namespace Server.Items
 
 				if ( page == pageCount )
 				{
-					for ( int i = (page * 12) -12; i < pvs; ++i )
-						AddDetails( i );
+					for ( int i = (page * m_ItemsPerPage) -m_ItemsPerPage; i < pvs; ++i )
+						AddDetails( i, hasSextant );
 				}
 				else
 				{
-					for ( int i = (page * 12) -12; i < page * 12; ++ i )
-						AddDetails( i );
+					for ( int i = (page * m_ItemsPerPage) -m_ItemsPerPage; i < page * m_ItemsPerPage; ++ i )
+						AddDetails( i, hasSextant );
 				}
 			}
 
-			private void AddDetails( int index )
+			private void AddDetails( int index, bool hasSextant )
 			{
 				try{
 					if ( index < m_List.Count )
@@ -133,7 +134,7 @@ namespace Server.Items
 						int btn;
 						int row;
 						btn = (index) + 101;
-						row = index % 12;
+						row = index % m_ItemsPerPage;
 						PlayerVendor pv = m_List[index] as PlayerVendor;
 						Account a = pv.Owner.Account as Account;
 
@@ -199,12 +200,25 @@ namespace Server.Items
 
 						if ( Sextant.Format( spot, mSet, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth ) )
 						{
-							my_location = String.Format( "{0}� {1}'{2}, {3}� {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W" );
+							my_location = String.Format( "{0}° {1}'{2}, {3}° {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W" );
 						}
 
-						AddLabel(32, 46 +(row * 20), 1152, String.Format( "{0}", pv.ShopName ));
-						AddLabel(250, 46 +(row * 20), 1152, String.Format( "{0}", pv.Owner.Name ));
-						AddLabel(415, 46 +(row * 20), 1152, String.Format( "{0} {1}", my_location, vMap));
+						var rowHeight = hasSextant ? 30 : 20;
+						var itemY = 46 +(row * rowHeight);
+						var itemX = 32;
+						AddLabel(32, itemY, 1152, String.Format( "{0}", pv.ShopName ));
+						itemX += 218;
+
+						AddLabel(itemX, itemY, 1152, String.Format( "{0}", pv.Owner.Name ));
+						itemX += 165;
+						
+						if ( hasSextant )
+						{
+							AddButton( itemX, itemY - 5, 10461, 10461, 100 + index, GumpButtonType.Reply, 0);
+							itemX += 30;
+						}
+
+						AddLabel(itemX, itemY, 1152, String.Format( "{0} {1}", my_location, vMap));
 
 						if ( pv == null )
 						{
@@ -233,19 +247,13 @@ namespace Server.Items
 					from.CloseGump( typeof( FindPlayerVendorsGump ) );
 					from.SendGump( new FindPlayerVendorsGump( from, m_List, m_Page ) );
 				}
-				if ( buttonID > 100 )
+				if ( 100 <= buttonID )
 				{
-					int index = buttonID - 101;
+					int index = buttonID - 100;
 					PlayerVendor pv = m_List[index] as PlayerVendor;
-					Point3D xyz = pv.Location;
-					int x = xyz.X;
-					int y = xyz.Y;
-					int z = xyz.Z;
-
-					Point3D dest = new Point3D( x, y, z );
-					from.MoveToWorld( dest, pv.Map );
+					from.CloseGump( typeof( Sextants.MapGump ) );
+					from.SendGump( new Sextants.MapGump( from, pv.Map, pv.X, pv.Y, null ) );
 					from.SendGump( new FindPlayerVendorsGump( from, m_List, m_Page ) );
-					
 				}
 			}
 		}
