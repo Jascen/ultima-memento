@@ -1075,6 +1075,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Reduced gold value of lower ammo cost and weight reduction on quivers<br>");
 					builder.Append("- Misc - Dramatically reduce lockpicking time<br>");
 					builder.Append("- Misc - Dramatically reduce remove trap time<br>");
+					builder.Append("- Misc - Lockpicking messages are now overhead<br>");
 					builder.Append("- Misc - Remove Trap messages are now overhead<br>");
 					builder.Append("- Misc - Add new Lockpicking and Remove Trap experience<br>");
 					builder.Append("- Misc - Multiple Strange Portals can no longer go to the same dungeon at once<br>");

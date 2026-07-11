@@ -131,7 +131,7 @@ namespace Server.Items
 
 			if ( targeted.Catalog == Catalogs.SciFi && isLocked && !lockpick.IsSciFi )
 			{
-				from.SendMessage( "This doesn't have a key hole, but it does have a card slot." );
+				from.LocalOverheadMessage(MessageType.Regular, 1150, false, "This doesn't have a key hole, but it does have a card slot." );
 				return false;
 			}
 			else if ( targeted.Catalog == Catalogs.SciFi && isLocked && lockpick.IsSciFi )
@@ -146,12 +146,12 @@ namespace Server.Items
 			}
 			else if ( isLocked && lockpick.IsSciFi )
 			{
-				from.SendMessage( "You don't see a card slot on this." );
+				from.LocalOverheadMessage(MessageType.Regular, 1150, false, "You don't see a card slot on this." );
 				return false;
 			}
 			else
 			{
-				from.SendLocalizedMessage( 502069 ); // This does not appear to be locked
+				from.LocalOverheadMessage(MessageType.Regular, 1150,  502069 ); // This does not appear to be locked
 				return false;
 			}
 		}
@@ -195,7 +195,7 @@ namespace Server.Items
 				}
 				else
 				{
-					from.SendLocalizedMessage( 501666 ); // You can't unlock that!
+					from.LocalOverheadMessage(MessageType.Regular, 1150,  501666 ); // You can't unlock that!
 				}
 			}
 		}
