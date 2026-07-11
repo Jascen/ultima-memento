@@ -162,7 +162,7 @@ namespace Server.SkillHandlers
 				}
 			}
 
-			from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
+			from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 2.0 );
 		}
 
 		private class InternalTarget : Target

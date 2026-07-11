@@ -1074,6 +1074,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Dropping a stack of scrolls on a spellbook now attempts to add one to the book<br>");
 					builder.Append("- Misc - Reduced gold value of lower ammo cost and weight reduction on quivers<br>");
 					builder.Append("- Misc - Dramatically reduce lockpicking time<br>");
+					builder.Append("- Misc - Dramatically reduce remove trap time<br>");
 					builder.Append("- Misc - Remove Trap messages are now overhead<br>");
 					builder.Append("- Misc - Add new Lockpicking and Remove Trap experience<br>");
 					builder.Append("- Mob - Rocs and Roclings have been rebalanced<br>");
