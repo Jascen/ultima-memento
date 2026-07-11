@@ -159,7 +159,6 @@ namespace Server.ModernSkill
 			var pickable = target as ILockpickable;
 			var isPickable = CheckIsPickable(pickable);
 			if (!isTrappable && !isPickable) return false;
-			if (isPickable && !pickable.Locked && isTrappable && !trap.IsActive) return false;
 
 			from.SendGump(new LockpickAndRemoveTrapGump(from, target, false));
 			return true;
@@ -192,7 +191,9 @@ namespace Server.ModernSkill
 							{
 								if (isRunning) return;
 
-								keepRunning = player.Preferences.ModernLockpickingAutoRetryEnabled;
+								keepRunning = player.Preferences.ModernLockpickingAutoRetryEnabled && Pickable.Locked;
+								if (!Pickable.Locked) return;
+
 								isRunning = true;
 								player.PrivateOverheadMessage(MessageType.Regular, 1150, false, "You begin to pick the lock.", player.NetState);
 								Lockpick.DoEffect(player, pick, m_Target, () =>
@@ -207,16 +208,10 @@ namespace Server.ModernSkill
 							},
 						() =>
 						{
-							if (!keepRunning || !Pickable.Locked)
-							{
-								player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, m_ShowTrapState));
-								return false;
-							}
-
 							if (pick == null) return false;
 							if (player.Map != pick.Map || player.Map != m_Target.Map) return false;
 							if (!player.InRange(m_Target.GetWorldLocation(), 2) || !player.InRange(pick.GetWorldLocation(), 2)) return false;
-							if (!Lockpick.CanDoEffect(player, pick, m_Target, Pickable.Locked)) return false;
+							if (!Lockpick.CanDoEffect(player, pick, m_Target, Pickable.Locked) || !keepRunning) return false;
 
 							if (m_Target is IAutoLockingContainer)
 							{
@@ -239,7 +234,9 @@ namespace Server.ModernSkill
 							if (DateTime.Now < player.NextSkillTime) return;
 							if (!Skills.CanUseSkill(player, (int)SkillName.RemoveTrap)) return;
 
-							keepRunning = player.Preferences.ModernRemoveTrapsAutoRetryEnabled;
+							keepRunning = player.Preferences.ModernRemoveTrapsAutoRetryEnabled && Trap.IsActive;
+							if (!Trap.IsActive) return;
+
 							if (Skills.TryExecuteSkillCallback(player))
 							{
 								player.PrivateOverheadMessage(MessageType.Regular, 1150, false, "You begin to remove the trap.", player.NetState);
@@ -252,15 +249,9 @@ namespace Server.ModernSkill
 						},
 						() =>
 						{
-							if (!keepRunning || !Trap.IsActive)
-							{
-								player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, true));
-								return false;
-							}
-
 							if (player.Map != m_Target.Map) return false;
 							if (!player.InRange(m_Target.GetWorldLocation(), 2)) return false;
-							if (!RemoveTrap.CanDoEffect(player, m_Target))
+							if (!RemoveTrap.CanDoEffect(player, m_Target) || !keepRunning)
 							{
 								player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, true));
 								return false;
