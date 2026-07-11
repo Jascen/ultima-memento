@@ -1087,6 +1087,7 @@ namespace Server.Misc
 					builder.Append("- Quest - All Blacksmith quests can now be started at the same time<br>");
 					builder.Append("- Quest - All Blacksmith quests now show a return destination<br>");
 					builder.Append("- Quest - All remaining MLQuest engine quests now show a return destination<br>");
+					builder.Append("- Quest - Titan of Ether completion now grants a single Hoard Minion for cleanup<br>");
 					builder.Append("- Setting - Add setting to enable legacy humanoid carving behavior<br>");
 					builder.Append("- Setting - Boat decay has been reduced to 30 days, down from 365<br>");
 					builder.Append("- Skill - Parrying absorption duration is now 3 seconds, down from 5<br>");

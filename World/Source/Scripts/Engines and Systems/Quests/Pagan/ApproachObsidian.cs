@@ -36,6 +36,8 @@ namespace Server.Items
 			WorldUtilities.DeleteAllItems<ObeliskTip>( item => item.ObeliskOwner == mobile );
 
 			GoodiesTimer.Create(m);
+			m.AddToBackpack(new HoardMinionFamiliarItem());
+			m.SendMessage( "You have been given a minion to help you clean up this mess." );
 
 			m.IsTitanOfEther = true;
 			m.RefreshSkillCap();
