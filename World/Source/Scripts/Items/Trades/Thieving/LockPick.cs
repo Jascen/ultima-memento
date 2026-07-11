@@ -120,6 +120,11 @@ namespace Server.Items
 			return LockpickDifficulty.NotLocked;
 		}
 
+		public static bool ValidateLockpickType( Lockpick lockpick, Item targeted )
+		{
+			return lockpick.IsSciFi ? targeted.Catalog == Catalogs.SciFi : true;
+		}
+
 		public static bool CanDoEffect( Mobile from, Lockpick lockpick, Item targeted, bool isLocked )
 		{
 			from.Direction = from.GetDirectionTo( targeted );
