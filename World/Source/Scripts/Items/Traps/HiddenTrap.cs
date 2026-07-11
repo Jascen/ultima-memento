@@ -1281,7 +1281,7 @@ namespace Server.Items
 
 		public static bool IsActiveTrap( Item trap )
 		{
-			return trap is HiddenTrap && 5 < trap.Weight;
+			return trap is HiddenTrap && trap.Weight < 5;
 		}
 
 		/// <returns>`True` if the trap his been triggered</returns>
