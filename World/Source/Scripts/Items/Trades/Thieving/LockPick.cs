@@ -178,7 +178,7 @@ namespace Server.Items
 				if ( from is PlayerMobile && targeted is Item )
 				{
 					var player = (PlayerMobile)from;
-					if ( player.Preferences.ModernLockpickingEnabled && LockpickAndRemoveTrapGump.TryShow(player, (Item)targeted) )
+					if ( player.Preferences.ModernLockpickingEnabled && LockpickAndRemoveTrapGump.TryShow(player, (Item)targeted, true, false) )
 						return;
 				}
 

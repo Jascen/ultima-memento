@@ -22,11 +22,13 @@ namespace Server.ModernSkill
 		}
 
 		private readonly Item m_Target;
+		private readonly bool m_ShowLockpickState;
 		private readonly bool m_ShowTrapState;
 
-		public LockpickAndRemoveTrapGump(PlayerMobile player, Item target, bool showTrapState) : base(100, 100)
+		public LockpickAndRemoveTrapGump(PlayerMobile player, Item target, bool showLockpickState, bool showTrapState) : base(100, 100)
 		{
 			m_Target = target;
+			m_ShowLockpickState = showLockpickState;
 			m_ShowTrapState = showTrapState;
 
 			var gumpHeight = 120;
@@ -62,8 +64,11 @@ namespace Server.ModernSkill
 				currentX += 60 + 10;
 
 				currentY += 10;
+				var isWellSkilled = 100 <= player.Skills[SkillName.Lockpicking].Value;
 				TextDefinition.AddHtmlText(this, currentX, currentY, MAIN_WIDTH, 20,
-				string.Format("Status: {0}", Pickable.Locked
+				string.Format("Status: {0}", !isWellSkilled && !showLockpickState
+					? TextDefinition.GetColorizedText("???", HtmlColors.RED)
+						: Pickable.Locked
 					? TextDefinition.GetColorizedText("Locked", HtmlColors.RED)
 					: TextDefinition.GetColorizedText("Unlocked", HtmlColors.COOL_GREEN)
 				), HtmlColors.MUSTARD);
@@ -150,7 +155,7 @@ namespace Server.ModernSkill
 		private ITrap Trap
 		{ get { return m_Target as ITrap; } }
 
-		public static bool TryShow(PlayerMobile from, Item target)
+		public static bool TryShow(PlayerMobile from, Item target, bool showLockpickState, bool showTrapState)
 		{
 			from.CloseGump(typeof(LockpickAndRemoveTrapGump));
 
@@ -160,7 +165,7 @@ namespace Server.ModernSkill
 			var isPickable = CheckIsPickable(pickable);
 			if (!isTrappable && !isPickable) return false;
 
-			from.SendGump(new LockpickAndRemoveTrapGump(from, target, false));
+			from.SendGump(new LockpickAndRemoveTrapGump(from, target, showLockpickState, showTrapState));
 			return true;
 		}
 
@@ -253,7 +258,7 @@ namespace Server.ModernSkill
 							if (!player.InRange(m_Target.GetWorldLocation(), 2)) return false;
 							if (!RemoveTrap.CanDoEffect(player, m_Target) || !keepRunning)
 							{
-								player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, true));
+								player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, m_ShowLockpickState, true));
 								return false;
 							}
 
@@ -268,12 +273,12 @@ namespace Server.ModernSkill
 
 				case PageActions.ToggleRetryLockpicking:
 					player.Preferences.ModernLockpickingAutoRetryEnabled = !player.Preferences.ModernLockpickingAutoRetryEnabled;
-					player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, m_ShowTrapState));
+					player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, m_ShowLockpickState, m_ShowTrapState));
 					break;
 
 				case PageActions.ToggleRetryRemoveTrap:
 					player.Preferences.ModernRemoveTrapsAutoRetryEnabled = !player.Preferences.ModernRemoveTrapsAutoRetryEnabled;
-					player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, m_ShowTrapState));
+					player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, m_ShowLockpickState, m_ShowTrapState));
 					break;
 			}
 		}
