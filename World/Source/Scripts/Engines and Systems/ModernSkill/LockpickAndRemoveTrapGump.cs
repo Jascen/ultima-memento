@@ -21,9 +21,9 @@ namespace Server.ModernSkill
 			ToggleRetryRemoveTrap,
 		}
 
-		private readonly Item m_Target;
 		private readonly bool m_ShowLockpickState;
 		private readonly bool m_ShowTrapState;
+		private readonly Item m_Target;
 
 		public LockpickAndRemoveTrapGump(PlayerMobile player, Item target, bool showLockpickState, bool showTrapState) : base(100, 100)
 		{
@@ -159,17 +159,19 @@ namespace Server.ModernSkill
 		private ITrap Trap
 		{ get { return m_Target as ITrap; } }
 
-		public static bool TryShow(PlayerMobile from, Item target, bool showLockpickState, bool showTrapState)
+		public static bool TryLockpick(PlayerMobile from, Item target)
 		{
-			from.CloseGump(typeof(LockpickAndRemoveTrapGump));
+			if (!TryShow(from, target)) return false;
 
-			var trap = target as ITrap;
-			var isTrappable = CheckIsTrappable(trap);
-			var pickable = target as ILockpickable;
-			var isPickable = CheckIsPickable(pickable);
-			if (!isTrappable && !isPickable) return false;
+			DoLockpick(from, target, false);
+			return true;
+		}
 
-			from.SendGump(new LockpickAndRemoveTrapGump(from, target, showLockpickState, showTrapState));
+		public static bool TryRemoveTrap(PlayerMobile from, Item target, bool force)
+		{
+			if (!TryShow(from, target)) return false;
+
+			DoRemoveTrap(from, target, false, force);
 			return true;
 		}
 
@@ -185,93 +187,12 @@ namespace Server.ModernSkill
 					return;
 
 				case PageActions.DoLockpick:
-					{
-						var pick = TryGetLockpick(player, m_Target);
-						var keepRunning = true;
-						bool isRunning = false;
-						RepeatableAction.Run(player,
-						() =>
-							{
-								if (isRunning) return;
-
-								keepRunning = player.Preferences.ModernLockpickingAutoRetryEnabled && Pickable.Locked;
-								if (!Pickable.Locked) return;
-
-								isRunning = true;
-								player.PrivateOverheadMessage(MessageType.Regular, 1150, false, "You begin to pick the lock.", player.NetState);
-								Lockpick.DoEffect(player, pick, m_Target, () =>
-								{
-									isRunning = false;
-									if (pick.Deleted)
-									{
-										pick = TryGetLockpick(player, m_Target);
-										if (pick == null) return;
-									}
-								});
-							},
-						() =>
-						{
-							if (pick == null) return false;
-							if (player.Map != pick.Map || player.Map != m_Target.Map) return false;
-							if (!player.InRange(m_Target.GetWorldLocation(), 2) || !player.InRange(pick.GetWorldLocation(), 2)) return false;
-							if (!Lockpick.CanDoEffect(player, pick, m_Target, Pickable.Locked) || !keepRunning)
-							{
-								if (!Pickable.Locked && m_ShowTrapState && (!IsTrappable || !Trap.IsActive))
-									m_Target.OnDoubleClick(player);
-								else
-									player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, true, m_ShowTrapState));
-
-								return false;
-							}
-
-							if (m_Target is IAutoLockingContainer)
-							{
-								if (player.Skills[SkillName.Lockpicking].Value < Pickable.MaxLockLevel) return true;
-
-								player.PrivateOverheadMessage(MessageType.Regular, 1150, false, "That wasn't even a challenge.", player.NetState);
-								return false;
-							}
-
-							return true;
-						});
-						break;
-					}
+					DoLockpick(player, m_Target, m_ShowTrapState);
+					break;
 
 				case PageActions.DoRemoveTrap:
-					{
-						var keepRunning = true;
-						RepeatableAction.Run(player, () =>
-						{
-							if (DateTime.Now < player.NextSkillTime) return;
-							if (!Skills.CanUseSkill(player, (int)SkillName.RemoveTrap)) return;
-
-							keepRunning = player.Preferences.ModernRemoveTrapsAutoRetryEnabled && Trap.IsActive;
-							if (!Trap.IsActive) return;
-
-							if (Skills.TryExecuteSkillCallback(player))
-							{
-								player.PrivateOverheadMessage(MessageType.Regular, 1150, false, "You begin to remove the trap.", player.NetState);
-								RemoveTrap.DoEffect(player, m_Target);
-							}
-							else
-							{
-								player.SendSkillMessage();
-							}
-						},
-						() =>
-						{
-							if (player.Map != m_Target.Map) return false;
-							if (!player.InRange(m_Target.GetWorldLocation(), 2)) return false;
-							if (!RemoveTrap.CanDoEffect(player, m_Target) || !keepRunning)
-							{
-								player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, m_ShowLockpickState, true));
-								return false;
-							}
-
-							return true;
-						});
-						break;
-					}
+					DoRemoveTrap(player, m_Target, m_ShowLockpickState);
+					break;
 
 				case PageActions.DoDoubleclick:
 					m_Target.OnDoubleClick(player);
@@ -295,7 +216,104 @@ namespace Server.ModernSkill
 		private static bool CheckIsTrappable(ITrap trap)
 		{ return trap != null && 0 < trap.TrapDifficulty; }
 
-		private Lockpick TryGetLockpick(PlayerMobile player, Item targeted)
+		private static void DoLockpick(PlayerMobile player, Item target, bool showTrapState)
+		{
+			var pickable = target as ILockpickable;
+			if (pickable == null) return;
+
+			var trap = target as ITrap;
+			var isTrappable = CheckIsTrappable(trap);
+
+			var pick = TryGetLockpick(player, target);
+			var keepRunning = true;
+			bool isRunning = false;
+			RepeatableAction.Run(player,
+			() =>
+				{
+					if (isRunning) return;
+
+					keepRunning = player.Preferences.ModernLockpickingAutoRetryEnabled && pickable.Locked;
+					if (!pickable.Locked) return;
+
+					isRunning = true;
+					player.PrivateOverheadMessage(MessageType.Regular, 1150, false, "You begin to pick the lock.", player.NetState);
+					Lockpick.DoEffect(player, pick, target, () =>
+					{
+						isRunning = false;
+						if (pick.Deleted)
+						{
+							pick = TryGetLockpick(player, target);
+							if (pick == null) return;
+						}
+					});
+				},
+			() =>
+			{
+				if (pick == null) return false;
+				if (player.Map != pick.Map || player.Map != target.Map) return false;
+				if (!player.InRange(target.GetWorldLocation(), 2) || !player.InRange(pick.GetWorldLocation(), 2)) return false;
+				if (!Lockpick.CanDoEffect(player, pick, target, pickable.Locked) || !keepRunning)
+				{
+					if (!pickable.Locked && showTrapState && (!isTrappable || !trap.IsActive))
+						target.OnDoubleClick(player);
+					else
+						player.SendGump(new LockpickAndRemoveTrapGump(player, target, true, showTrapState));
+
+					return false;
+				}
+
+				if (target is IAutoLockingContainer)
+				{
+					if (player.Skills[SkillName.Lockpicking].Value < pickable.MaxLockLevel) return true;
+
+					player.PrivateOverheadMessage(MessageType.Regular, 1150, false, "That wasn't even a challenge.", player.NetState);
+					return false;
+				}
+
+				return true;
+			});
+		}
+
+		private static void DoRemoveTrap(PlayerMobile player, Item target, bool showLockpickState, bool force = false)
+		{
+			var trap = target as ITrap;
+			var isTrappable = CheckIsTrappable(trap);
+			if (!isTrappable && !force) return;
+
+			var keepRunning = true;
+			RepeatableAction.Run(player, () =>
+			{
+				if (DateTime.Now < player.NextSkillTime) return;
+				if (!Skills.CanUseSkill(player, (int)SkillName.RemoveTrap)) return;
+
+				keepRunning = player.Preferences.ModernRemoveTrapsAutoRetryEnabled && trap.IsActive;
+				if (!trap.IsActive) return;
+
+				if (Skills.TryExecuteSkillCallback(player))
+				{
+					player.PrivateOverheadMessage(MessageType.Regular, 1150, false, "You begin to remove the trap.", player.NetState);
+					RemoveTrap.DoEffect(player, target);
+				}
+				else
+				{
+					player.SendSkillMessage();
+				}
+			},
+			() =>
+			{
+				if (player.Map != target.Map) return false;
+				if (!player.InRange(target.GetWorldLocation(), 2)) return false;
+				if (!RemoveTrap.CanDoEffect(player, target) || !keepRunning)
+				{
+					player.SendGump(new LockpickAndRemoveTrapGump(player, target, showLockpickState, true));
+					return false;
+				}
+
+				return true;
+			});
+		}
+
+		private static Lockpick TryGetLockpick(PlayerMobile player, Item targeted)
 		{
 			var pick = player.Backpack.FindItemByType<Lockpick>(lockpick => Lockpick.ValidateLockpickType(lockpick, targeted));
 			if (pick == null)
@@ -305,6 +323,19 @@ namespace Server.ModernSkill
 			}
 
 			return pick;
+		}
+
+		private static bool TryShow(PlayerMobile from, Item target)
+		{
+			from.CloseGump(typeof(LockpickAndRemoveTrapGump));
+
+			var trap = target as ITrap;
+			var isTrappable = CheckIsTrappable(trap);
+			var pickable = target as ILockpickable;
+			var isPickable = CheckIsPickable(pickable);
+			if (!isTrappable && !isPickable) return false;
+
+			return true;
 		}
 	}
 }

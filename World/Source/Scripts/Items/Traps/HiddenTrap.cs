@@ -50,7 +50,7 @@ namespace Server.Items
 			if ( from is PlayerMobile )
 			{
 				var player = (PlayerMobile)from;
-				if ( player.Preferences.ModernRemoveTrapEnabled && LockpickAndRemoveTrapGump.TryShow( player, this, false, true) )
+				if ( player.Preferences.ModernRemoveTrapEnabled && LockpickAndRemoveTrapGump.TryRemoveTrap( player, this, true ) )
 					return;
 			}
 

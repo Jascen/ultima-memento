@@ -176,7 +176,7 @@ namespace Server.SkillHandlers
 				if ( from is PlayerMobile && targeted is Item )
 				{
 					var player = (PlayerMobile)from;
-					if ( player.Preferences.ModernRemoveTrapEnabled && LockpickAndRemoveTrapGump.TryShow(player, (Item)targeted, false, true))
+					if ( player.Preferences.ModernRemoveTrapEnabled && LockpickAndRemoveTrapGump.TryRemoveTrap(player, (Item)targeted, true))
 						return;
 				}
 
