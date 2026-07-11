@@ -100,7 +100,7 @@ namespace Server.SkillHandlers
 
 				if ( (int)from.Skills[SkillName.RemoveTrap].Value < targ.TrapDifficulty )
 				{
-					from.SendMessage( "This trap looks too complicated for you." );
+					from.LocalOverheadMessage(MessageType.Regular, 1150, false, "This trap looks too complicated for you." );
 					return false;
 				}
 
