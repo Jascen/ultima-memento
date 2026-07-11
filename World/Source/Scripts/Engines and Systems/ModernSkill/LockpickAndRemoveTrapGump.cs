@@ -58,15 +58,23 @@ namespace Server.ModernSkill
 			{
 				currentY += 20;
 
-				const int LOCKPICKS_ITEM = 0x14FE;
-				AddButton(currentX, currentY, BLACK_BOX_GOLD_TRIM, BLACK_BOX_GOLD_TRIM, (int)PageActions.DoLockpick, GumpButtonType.Reply, 0);
-				GumpUtilities.AddCenteredItemToGump(this, LOCKPICKS_ITEM, currentX, currentY, 60, 60);
+				var showLockStatus = showLockpickState || 100 <= player.Skills[SkillName.Lockpicking].Value;
+				if (showLockStatus && !Pickable.Locked && target is BaseContainer)
+				{
+					AddButton(currentX, currentY, BLACK_BOX_GOLD_TRIM, BLACK_BOX_GOLD_TRIM, (int)PageActions.DoDoubleclick, GumpButtonType.Reply, 0);
+					TextDefinition.AddHtmlText(this, currentX + 2, currentY + 20, 60, 20, "<CENTER>Open</CENTER>", HtmlColors.MUSTARD);
+				}
+				else
+				{
+					const int LOCKPICKS_ITEM = 0x14FE;
+					AddButton(currentX, currentY, BLACK_BOX_GOLD_TRIM, BLACK_BOX_GOLD_TRIM, (int)PageActions.DoLockpick, GumpButtonType.Reply, 0);
+					GumpUtilities.AddCenteredItemToGump(this, LOCKPICKS_ITEM, currentX, currentY, 60, 60);
+				}
 				currentX += 60 + 10;
 
 				currentY += 10;
-				var isWellSkilled = 100 <= player.Skills[SkillName.Lockpicking].Value;
 				TextDefinition.AddHtmlText(this, currentX, currentY, MAIN_WIDTH, 20,
-				string.Format("Status: {0}", !isWellSkilled && !showLockpickState
+				string.Format("Lock Status: {0}", !showLockStatus
 					? TextDefinition.GetColorizedText("???", HtmlColors.RED)
 						: Pickable.Locked
 						? TextDefinition.GetColorizedText("Locked", HtmlColors.RED)
@@ -86,24 +94,18 @@ namespace Server.ModernSkill
 				if (IsPickable) currentY += 30;
 				currentY += 20;
 
+				var removeTrapSkill = player.Skills[SkillName.RemoveTrap].Value;
+				var showTrapStatus = showTrapState || 100 <= removeTrapSkill;
+
 				currentX = START_X;
 				const int TRAPPING_TOOLS_ITEM = 0x1EBB;
 				AddButton(currentX, currentY, BLACK_BOX_GOLD_TRIM, BLACK_BOX_GOLD_TRIM, (int)PageActions.DoRemoveTrap, GumpButtonType.Reply, 0);
 				GumpUtilities.AddCenteredItemToGump(this, TRAPPING_TOOLS_ITEM, currentX, currentY, 60, 60);
 				currentX += 60 + 10;
 
-				if (target is BaseContainer)
-				{
-					AddButton(currentX, currentY, BLACK_BOX_GOLD_TRIM, BLACK_BOX_GOLD_TRIM, (int)PageActions.DoDoubleclick, GumpButtonType.Reply, 0);
-					TextDefinition.AddHtmlText(this, currentX + 2, currentY + 20, 60, 20, "<CENTER>Open</CENTER>", HtmlColors.MUSTARD);
-					currentX += 60 + 10;
-				}
-
 				currentY += 10;
-				var removeTrapSkill = player.Skills[SkillName.RemoveTrap].Value;
-				var isWellSkilled = 100 <= removeTrapSkill;
 				TextDefinition.AddHtmlText(this, currentX, currentY, MAIN_WIDTH, 20,
-				string.Format("Status: {0}", !isWellSkilled && !showTrapState
+				string.Format("Trap Status: {0}", !showTrapStatus
 					? TextDefinition.GetColorizedText("???", HtmlColors.RED)
 					: Trap.IsActive
 						? TextDefinition.GetColorizedText("Trapped", HtmlColors.RED)
@@ -111,10 +113,12 @@ namespace Server.ModernSkill
 				), HtmlColors.MUSTARD);
 
 				currentY += 20;
-				var difficultyText = !isWellSkilled && !showTrapState
-					? TextDefinition.GetColorizedText("???", HtmlColors.RED)
-					: RemoveTrap.GetDifficulty(removeTrapSkill, Trap);
-				TextDefinition.AddHtmlText(this, currentX, currentY, MAIN_WIDTH, 20, string.Format("Difficulty: {0}", difficultyText), HtmlColors.MUSTARD);
+
+				if (showTrapStatus && Trap.IsActive)
+				{
+					var difficultyText = RemoveTrap.GetDifficulty(removeTrapSkill, Trap);
+					TextDefinition.AddHtmlText(this, currentX, currentY, MAIN_WIDTH, 20, string.Format("Difficulty: {0}", difficultyText), HtmlColors.MUSTARD);
+				}
 			}
 
 			currentY += 30;
