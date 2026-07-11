@@ -82,7 +82,7 @@ namespace Server.Gumps
 					Add(x + LABEL_AMOUNT_OFFSET_X, y, player.TithingPoints, 300);
 					y += GAP_LARGE;
 				}
-				if (player.Backpack != null && player.Skills[SkillName.Healing].Base >= 5.0)
+				if (player.Backpack != null && ( 5 <= player.Skills[SkillName.Healing].Value || 5 <= player.Skills[SkillName.Veterinary].Value ))
 				{
 					AddItem(x + 20, y, 0xE21); // Bandage
 					Add(x + LABEL_AMOUNT_OFFSET_X, y, player.Backpack.GetAmount(typeof(Bandage), true), 50);

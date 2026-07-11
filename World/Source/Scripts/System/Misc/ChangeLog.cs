@@ -1050,6 +1050,7 @@ namespace Server.Misc
 					builder.Append("- Gump - Add tooltips to Shinobi spell icon descriptions<br>");
 					builder.Append("- Gump - '[Status' gump now properly includes weapon damage from Quality Level<br>");
 					builder.Append("- Gump - '[Status' gump now properly includes hit chance from Accuracy Level<br>");
+					builder.Append("- Gump - '[Combatbar' gump now tracks bandages if you have Veterinary but not Healing<br>");
 					builder.Append("- Housekeeping - Consolidate logic for gift items<br>");
 					builder.Append("- Housekeeping - Consolidate logic for forge/anvil usage checks<br>");
 					builder.Append("- Item - Learn the Trade scrolls can now be opened from a small distance<br>");
