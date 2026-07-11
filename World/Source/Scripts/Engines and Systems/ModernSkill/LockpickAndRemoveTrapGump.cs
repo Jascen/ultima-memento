@@ -69,8 +69,8 @@ namespace Server.ModernSkill
 				string.Format("Status: {0}", !isWellSkilled && !showLockpickState
 					? TextDefinition.GetColorizedText("???", HtmlColors.RED)
 						: Pickable.Locked
-					? TextDefinition.GetColorizedText("Locked", HtmlColors.RED)
-					: TextDefinition.GetColorizedText("Unlocked", HtmlColors.COOL_GREEN)
+						? TextDefinition.GetColorizedText("Locked", HtmlColors.RED)
+						: TextDefinition.GetColorizedText("Unlocked", HtmlColors.COOL_GREEN)
 				), HtmlColors.MUSTARD);
 
 				currentY += 20;
@@ -183,12 +183,6 @@ namespace Server.ModernSkill
 				case PageActions.DoLockpick:
 					{
 						var pick = TryGetLockpick(player, m_Target);
-						if (!Pickable.Locked)
-						{
-							m_Target.OnDoubleClick(player);
-							return;
-						}
-
 						var keepRunning = true;
 						bool isRunning = false;
 						RepeatableAction.Run(player,
@@ -216,7 +210,15 @@ namespace Server.ModernSkill
 							if (pick == null) return false;
 							if (player.Map != pick.Map || player.Map != m_Target.Map) return false;
 							if (!player.InRange(m_Target.GetWorldLocation(), 2) || !player.InRange(pick.GetWorldLocation(), 2)) return false;
-							if (!Lockpick.CanDoEffect(player, pick, m_Target, Pickable.Locked) || !keepRunning) return false;
+							if (!Lockpick.CanDoEffect(player, pick, m_Target, Pickable.Locked) || !keepRunning)
+							{
+								if (!Pickable.Locked && m_ShowTrapState && (!IsTrappable || !Trap.IsActive))
+									m_Target.OnDoubleClick(player);
+								else
+									player.SendGump(new LockpickAndRemoveTrapGump(player, m_Target, true, m_ShowTrapState));
+
+								return false;
+							}
 
 							if (m_Target is IAutoLockingContainer)
 							{
@@ -291,10 +293,7 @@ namespace Server.ModernSkill
 
 		private Lockpick TryGetLockpick(PlayerMobile player, Item targeted)
 		{
-			bool isLocked = targeted is ILockable && ((ILockable)targeted).Locked;
-			if (!isLocked) return null;
-
-			var pick = player.Backpack.FindItemByType<Lockpick>(lockpick => Lockpick.CanDoEffect(player, lockpick, targeted, isLocked));
+			var pick = player.Backpack.FindItemByType<Lockpick>(lockpick => Lockpick.ValidateLockpickType(lockpick, targeted));
 			if (pick == null)
 			{
 				player.SendMessage("You don't have a lockpick that can be used on this container.");
