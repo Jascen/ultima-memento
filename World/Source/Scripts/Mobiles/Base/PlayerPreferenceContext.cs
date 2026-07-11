@@ -7,6 +7,7 @@ namespace Server.Mobiles
 	{
 		public PlayerPreferenceContext()
 		{
+			CharacterWepAbNames = true;
 			ColorlessFabricBreakdown = true;
 			ModernLockpickingEnabled = true;
 			ModernRemoveTrapEnabled = true;
@@ -70,10 +71,10 @@ namespace Server.Mobiles
 
 			if (6 < version)
 			{
-			ModernLockpickingEnabled = reader.ReadBool();
-			ModernRemoveTrapEnabled = reader.ReadBool();
-			ModernLockpickingAutoRetryEnabled = reader.ReadBool();
-			ModernRemoveTrapsAutoRetryEnabled = reader.ReadBool();
+				ModernLockpickingEnabled = reader.ReadBool();
+				ModernRemoveTrapEnabled = reader.ReadBool();
+				ModernLockpickingAutoRetryEnabled = reader.ReadBool();
+				ModernRemoveTrapsAutoRetryEnabled = reader.ReadBool();
 			}
 		}
 
