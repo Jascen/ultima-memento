@@ -160,7 +160,7 @@ namespace Server.Items
 		{
 			private Lockpick m_Item;
 
-			public InternalTarget( Lockpick item ) : base( 1, false, TargetFlags.None )
+			public InternalTarget( Lockpick item ) : base( 2, false, TargetFlags.None )
 			{
 				m_Item = item;
 			}
