@@ -45,9 +45,7 @@ namespace Server.Spells.Undead
 				Effects.SendLocationParticles( EffectItem.Create( loc, item.Map, EffectItem.DefaultDuration ), 0x376A, 9, 32, 5015 );
 				Effects.PlaySound( loc, item.Map, 0x37D );
 
-				item.TrapType = TrapType.None;
-				item.TrapPower = 0;
-				item.TrapLevel = 0;
+				item.DisableTrap();
 			}
 
 			FinishSequence();

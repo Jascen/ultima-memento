@@ -1797,12 +1797,10 @@ namespace Server.Mobiles
 					say = "I unlocked it for you.";
 					sound = 0x241;
 					box.Locked = false;
-					box.TrapPower = 0;
-					box.TrapLevel = 0;
+					box.DisableTrap();
 					box.LockLevel = 0;
 					box.MaxLockLevel = 0;
 					box.RequiredSkill = 0;
-					box.TrapType = TrapType.None;
 				}
 			}
 			else if ( CitizenService == 2 )

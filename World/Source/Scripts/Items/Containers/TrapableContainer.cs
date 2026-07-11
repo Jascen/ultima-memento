@@ -134,9 +134,7 @@ namespace Server.Items
 				else if ( from.CheckTargetSkill( SkillName.RemoveTrap, this, 0, nTrapLevel2 ) )
 				{
 					from.PlaySound( 0x241 );
-					TrapPower = 0;
-					TrapLevel = 0;
-					TrapType = TrapType.None;
+					DisableTrap();
 					SendMessageTo( from, "That was trapped, but you were able to disable it.", 0x3B2 );
 					return false;
 				}
@@ -149,9 +147,7 @@ namespace Server.Items
 					if ( GetPlayerInfo.LuckyPlayer(from.Luck) )
 					{
 						from.PlaySound( 0x241 );
-						TrapPower = 0;
-						TrapLevel = 0;
-						TrapType = TrapType.None;
+						DisableTrap();
 						SendMessageTo( from, "That was trapped, but with luck on your side...it broke.", 0x3B2 );
 						return false;
 					}
@@ -163,9 +159,7 @@ namespace Server.Items
 						if ( nPower >= nAgainst )
 						{
 							from.PlaySound( 0x1F0 );
-							TrapPower = 0;
-							TrapLevel = 0;
-							TrapType = TrapType.None;
+							DisableTrap();
 							SendMessageTo( from, "That was trapped, but your magic orb disabled it.", 0x3B2 );
 							return false;
 						}
@@ -176,9 +170,7 @@ namespace Server.Items
 						if ( poles.Tap >= Utility.RandomMinMax( nTrapLevel, nTrapLevel2 ) )
 						{
 							from.PlaySound( 0x3FD );
-							TrapPower = 0;
-							TrapLevel = 0;
-							TrapType = TrapType.None;
+							DisableTrap();
 							poles.ConsumeLimits( 1 );
 							if ( poles.Limits < 1 )
 							{
@@ -296,9 +288,8 @@ namespace Server.Items
 					}
 				}
 
-				m_TrapType = TrapType.None;
-				m_TrapPower = 0;
-				m_TrapLevel = 0;
+				DisableTrap();
+
 				return true;
 			}
 
@@ -314,6 +305,13 @@ namespace Server.Items
 			{
 				ExecuteTrap( from );
 			}
+		}
+
+		public void DisableTrap()
+		{
+			TrapPower = 0;
+			TrapLevel = 0;
+			TrapType = TrapType.None;
 		}
 
 		public override void Open( Mobile from )

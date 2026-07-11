@@ -132,9 +132,7 @@ namespace Server.SkillHandlers
 				int nTrapLevel = (targ.TrapLevel * 10) + 20;
 				if ( from.CheckTargetSkill( SkillName.RemoveTrap, targ, 0, nTrapLevel ) )
 				{
-					targ.TrapPower = 0;
-					targ.TrapLevel = 0;
-					targ.TrapType = TrapType.None;
+					targ.DisableTrap();
 					from.LocalOverheadMessage(MessageType.Regular, 1150, 502377 ); // You successfully render the trap harmless
 				}
 				else

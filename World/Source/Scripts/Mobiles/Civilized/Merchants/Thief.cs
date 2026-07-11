@@ -166,12 +166,10 @@ namespace Server.Mobiles
                         from.SendMessage(String.Format("You pay {0} gold.", toConsume));
                         Effects.PlaySound(from.Location, from.Map, 0x241);
 						box.Locked = false;
-						box.TrapPower = 0;
-						box.TrapLevel = 0;
+						box.DisableTrap();
 						box.LockLevel = 0;
 						box.MaxLockLevel = 0;
 						box.RequiredSkill = 0;
-						box.TrapType = TrapType.None;
                     }
                     else
                     {
