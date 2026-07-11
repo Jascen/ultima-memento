@@ -30,6 +30,7 @@ namespace Server.Items
 			var player = e as PlayerMobile;
 			if (player == null) return;
 
+			var temp = new List<Item>();
 			var list = World.Mobiles.Values
 				.Where(x => x is PlayerVendor)
 				.Cast<PlayerVendor>()
@@ -42,6 +43,12 @@ namespace Server.Items
 					if (player.Temptations.HasPermanentDeath) return owner.Temptations.HasPermanentDeath;
 
 					return true;
+				})
+				.Where(pv =>
+				{
+					temp.Clear();
+					pv.Backpack.RecurseItems(temp);
+					return temp.Where(item => false == item is BaseContainer || item is BaseQuiver).Any();
 				})
 				.ToList();
 

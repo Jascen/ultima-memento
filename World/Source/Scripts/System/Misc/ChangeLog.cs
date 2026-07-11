@@ -1078,6 +1078,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Remove Trap messages are now overhead<br>");
 					builder.Append("- Misc - Add new Lockpicking and Remove Trap experience<br>");
 					builder.Append("- Misc - Multiple Strange Portals can no longer go to the same dungeon at once<br>");
+					builder.Append("- Misc - Empty player vendors are no longer listed on the Vendor Advertiser Bulletin<br>");
 					builder.Append("- Mob - Rocs and Roclings have been rebalanced<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Pets - Pet ghosts no longer have penalized movement speed<br>");
