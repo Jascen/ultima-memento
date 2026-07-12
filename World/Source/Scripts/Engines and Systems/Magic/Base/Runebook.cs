@@ -497,6 +497,22 @@ namespace Server.Items
 
 			return false;
 		}
+		
+		public void ChangeGraphic(Mobile from, Mobile player, Runebook dropped)
+		{
+			if ( dropped.ItemID == 0x22C5 ){ dropped.ItemID = 0x0F3D; }
+			else if ( dropped.ItemID == 0x0F3D ){ dropped.ItemID = 0x5687; }
+			else if ( dropped.ItemID == 0x5687 ){ dropped.ItemID = 0x4F50; }
+			else if ( dropped.ItemID == 0x4F50 ){ dropped.ItemID = 0x4F51; }
+			else if ( dropped.ItemID == 0x4F51 ){ dropped.ItemID = 0x5463; }
+			else if ( dropped.ItemID == 0x5463 ){ dropped.ItemID = 0x5464; }
+			else { dropped.ItemID = 0x22C5; }
+
+			player.PlaySound( 0x249 );
+			player.AddToBackpack ( dropped );
+			from.PrivateOverheadMessage(MessageType.Regular, 1153, false, "I have changed the cover of your book.", player.NetState);
+		}
+
 		#region ICraftable Members
 
 		public int OnCraft( int quality, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue )

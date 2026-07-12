@@ -1066,6 +1066,7 @@ namespace Server.Misc
 					builder.Append("       - Damage has been changed to 8-11, down from 10-14<br>");
 					builder.Append("       - Attack Speed has been changed to 2s, up from 4s<br>");
 					builder.Append("       - Range has been changed to 6, down from 8<br>");
+					builder.Append("- Item - Sages can now change Runebook graphic (Scribes and Librarian Guildmaster always have)<br>");
 					builder.Append("- Misc - Multiple items that accept gold being dropped on them no longer delete excess gold<br>");
 					builder.Append("- Misc - Hunger and thirst no longer pointlessly decay when dead<br>");
 					builder.Append("- Misc - Humanoid corpses no longer turn to bones after being carved<br>");

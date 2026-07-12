@@ -1,14 +1,6 @@
-using System;
-using Server;
-using System.Collections;
 using System.Collections.Generic;
-using Server.Targeting;
 using Server.Items;
 using Server.Network;
-using Server.ContextMenus;
-using Server.Gumps;
-using Server.Misc;
-using Server.Mobiles;
 
 namespace Server.Mobiles
 {
@@ -139,17 +131,7 @@ namespace Server.Mobiles
 			}
 			else if ( dropped is Runebook )
 			{
-				if ( dropped.ItemID == 0x22C5 ){ dropped.ItemID = 0x0F3D; }
-				else if ( dropped.ItemID == 0x0F3D ){ dropped.ItemID = 0x5687; }
-				else if ( dropped.ItemID == 0x5687 ){ dropped.ItemID = 0x4F50; }
-				else if ( dropped.ItemID == 0x4F50 ){ dropped.ItemID = 0x4F51; }
-				else if ( dropped.ItemID == 0x4F51 ){ dropped.ItemID = 0x5463; }
-				else if ( dropped.ItemID == 0x5463 ){ dropped.ItemID = 0x5464; }
-				else { dropped.ItemID = 0x22C5; }
-
-				from.PlaySound( 0x249 );
-				from.AddToBackpack ( dropped );
-				this.PrivateOverheadMessage(MessageType.Regular, 1153, false, "I have changed the cover of your book.", from.NetState);
+				((Runebook)dropped).ChangeGraphic( this, from, (Runebook)dropped );
 			}
 
 			return base.OnDragDrop( from, dropped );

@@ -108,6 +108,10 @@ namespace Server.Mobiles
 
 				this.PrivateOverheadMessage(MessageType.Regular, 1153, false, sMessage, from.NetState);
 			}
+			else if ( dropped is Runebook )
+			{
+				((Runebook)dropped).ChangeGraphic( this, from, (Runebook)dropped );
+			}
 
 			return base.OnDragDrop( from, dropped );
 		}
