@@ -1,5 +1,4 @@
 using System;
-using Server;
 using Server.Items;
 
 namespace Server.Spells
@@ -44,7 +43,17 @@ namespace Server.Spells
 
 		public override int GetMana()
 		{
-			return m_ManaTable[(int)Circle];
+			var manaCost = m_ManaTable[(int)Circle];
+			return Caster.ScrollCastSpell ? manaCost / 2 : manaCost;
+		}
+
+		public void DoResistSkillCheck( Mobile m )
+		{
+			int maxSkill = (1 + (int)Circle) * 10;
+			maxSkill += (1 + ((int)Circle / 6)) * 25;
+
+			if( m.Skills[SkillName.MagicResist].Value < maxSkill )
+				m.CheckSkill( SkillName.MagicResist, 0.0, m.Skills[SkillName.MagicResist].Cap );
 		}
 
 		public override double GetResistSkill( Mobile m )

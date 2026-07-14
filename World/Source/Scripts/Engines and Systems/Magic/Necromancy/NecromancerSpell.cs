@@ -1,5 +1,3 @@
-using System;
-using Server;
 using Server.Items;
 
 namespace Server.Spells.Necromancy
@@ -50,7 +48,8 @@ namespace Server.Spells.Necromancy
 
 		public override int GetMana()
 		{
-			return RequiredMana;
+			var manaCost = RequiredMana;
+			return Caster.ScrollCastSpell ? manaCost / 2 : manaCost;
 		}
 	}
 }
