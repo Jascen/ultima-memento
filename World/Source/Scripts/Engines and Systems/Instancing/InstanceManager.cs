@@ -28,6 +28,22 @@ namespace Server.Engines.Instancing
 
 		public static IEnumerable<InstanceType> Types { get { return _types; } }
 
+		public static bool IsInstanceMap( Map map )
+		{
+			if ( map == null )
+				return false;
+
+			EnsureRegistered();
+
+			foreach ( InstanceType type in _types )
+			{
+				if ( type.IsPoolMap( map ) )
+					return true;
+			}
+
+			return false;
+		}
+
 		// The known instance systems. Constructed here (rather than relying on each
 		// type's own Configure() running first) so pool-map registration is safe
 		// regardless of Configure() ordering.

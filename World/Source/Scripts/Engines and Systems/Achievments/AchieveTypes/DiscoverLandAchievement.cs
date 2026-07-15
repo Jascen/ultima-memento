@@ -1,4 +1,5 @@
 using Server;
+using Server.Engines.Instancing;
 using Server.Mobiles;
 using System;
 
@@ -24,6 +25,7 @@ namespace Scripts.Mythik.Systems.Achievements
 
             var player = e.Mobile as PlayerMobile;
             if (player == null) return;
+            if (InstanceManager.IsInstanceMap(player.Map)) return;
 
             if (player.Land == Land)
             {
@@ -35,6 +37,7 @@ namespace Scripts.Mythik.Systems.Achievements
         private void EventSink_OnLandChanged(LandChangedArgs e)
         {
             if (e == null || e.Mobile == null) return;
+            if (InstanceManager.IsInstanceMap(e.Mobile.Map)) return;
 
             if (e.NewLand == Land)
             {

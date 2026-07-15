@@ -410,6 +410,7 @@ namespace Server.Gumps
 		private static Type typeofSkills = typeof( Skills );
 		private static Type typeofPropertyObject = typeof( PropertyObjectAttribute );
 		private static Type typeofNoSort = typeof( NoSortAttribute );
+		private static Type typeofDifficulty = typeof( Difficulty );
 
 		private static Type[] typeofReal = new Type[]
 			{
@@ -428,6 +429,11 @@ namespace Server.Gumps
 				typeof( UInt32 ),
 				typeof( UInt64 )
 			};
+
+		private static bool IsPromotedProperty( PropertyInfo prop )
+		{
+			return prop != null && prop.Name == "Difficulty" && prop.PropertyType == typeofDifficulty;
+		}
 
 		private string ValueToString( PropertyInfo prop )
 		{
@@ -558,19 +564,23 @@ namespace Server.Gumps
 
 					if ( attr != null && m_Mobile.AccessLevel >= attr.ReadLevel )
 					{
-						Type type = prop.DeclaringType;
+						bool promoted = IsPromotedProperty( prop );
+						Type type = promoted ? objectType : prop.DeclaringType;
 
-						while ( true )
+						if ( !promoted )
 						{
-							Type baseType = type.BaseType;
+							while ( true )
+							{
+								Type baseType = type.BaseType;
 
-							if ( baseType == null || baseType == typeofObject )
-								break;
+								if ( baseType == null || baseType == typeofObject )
+									break;
 
-							if ( baseType.GetProperty( prop.Name, prop.PropertyType ) != null )
-								type = baseType;
-							else
-								break;
+								if ( baseType.GetProperty( prop.Name, prop.PropertyType ) != null )
+									type = baseType;
+								else
+									break;
+							}
 						}
 
 						ArrayList list = (ArrayList)groups[type];
@@ -708,6 +718,14 @@ namespace Server.Gumps
 
 				if ( a == null || b == null )
 					throw new ArgumentException();
+
+				bool aPromoted = IsPromotedProperty( a );
+				bool bPromoted = IsPromotedProperty( b );
+
+				if ( aPromoted && !bPromoted )
+					return -1;
+				else if ( !aPromoted && bPromoted )
+					return 1;
 
 				return a.Name.CompareTo( b.Name );
 			}
