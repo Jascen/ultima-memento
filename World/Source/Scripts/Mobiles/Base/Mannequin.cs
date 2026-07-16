@@ -721,7 +721,18 @@ namespace Server.Mobiles
 
 		public override bool IsAccessibleTo( Mobile m )
 		{
-			return true;
+			// Gate on ownership. This is the check Mobile.Use runs before BOTH the
+			// snoop branch and the normal "open container" branch, so returning false
+			// for non-owners blocks them from opening OR snooping the pack entirely
+			// (they get the "not accessible" message). CanManage already grants GMs
+			// and house co-owners. Owners open via Mannequin.OpenBackpack, which calls
+			// DisplayTo directly and doesn't depend on this.
+			Mannequin man = RootParent as Mannequin;
+
+			if ( man != null && man.CanManage( m ) )
+				return base.IsAccessibleTo( m );
+
+			return false;
 		}
 
 		public override bool CheckItemUse( Mobile from, Item item )
