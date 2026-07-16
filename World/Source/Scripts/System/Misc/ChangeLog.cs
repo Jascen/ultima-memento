@@ -1034,9 +1034,10 @@ namespace Server.Misc
 					builder.Append("- Combat - AI retreat logic now requires Line of Sight<br>");
 					builder.Append("- Combat - AI pursuit logic now validates Line of Sight<br>");
 					builder.Append("- Combat - AI pursuit logic now validates vertical distance<br>");
+					builder.Append("- Craft - Shoppes now have a button to pay their fee<br>");
 					builder.Append("- Craft - Inscription Changes<br>");
-					builder.Append("        - Restore crafting skill requirements<br>");
-					builder.Append("        - 5th+ circle spells now require arcane scrolls to craft<br>");
+					builder.Append("        - Inscribing scrolls now requires explicit crafting skill requirements<br>");
+					builder.Append("        - 5th+ circle spells now require arcane scrolls as an ingredient<br>");
 					builder.Append("        - Crafted scrolls are now ephemeral magic; they cannot be added to spellbooks<br>");
 					builder.Append("- Command - '[Where' is now available to all players<br>");
 					builder.Append("- Command - '[Organize' no longer moves spellbooks<br>");
@@ -1133,6 +1134,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Bandages now stop when the healer dies<br>");
 					builder.Append("- Misc - Fix issue where roaming Mannequins could cause the server to freeze<br>");
 					builder.Append("- Misc - Add missing degree symbol for Vendor Advertiser Bulletin<br>");
+					builder.Append("- Misc - Double-click to Talk now properly respects range and LOS<br>");
 					builder.Append("- Mobs - Fix case where AI would redundantly curse/poison<br>");
 					builder.Append("- Quest - Kite shield blacksmith quest now clarifies the item type name<br>");
 					builder.Append("- Spell - Natures Passage now transports in one action<br>");
