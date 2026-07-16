@@ -2,7 +2,6 @@ using System;
 using Server.Items;
 using Server.Spells;
 using Server.Spells.Elementalism;
-using Server.Mobiles;
 
 namespace Server.Engines.Craft
 {
@@ -54,6 +53,11 @@ namespace Server.Engines.Craft
 		private DefInscription()
 			: base(1, 1, 1.25)// base( 1, 1, 3.0 )
 		{
+		}
+
+		public override string GetCategoryWarning( int selectedGroup )
+		{
+			return "Crafted scrolls cannot be placed in spellbooks";
 		}
 
 		public override int CanCraft(Mobile from, BaseTool tool, Type typeItem)
@@ -147,11 +151,19 @@ namespace Server.Engines.Craft
 
 		private void AddSpell(Type type, params Reg[] regs)
 		{
-			AddSpell(-1, type, regs);
+			AddSpell(-1, type, false, regs);
 		}
 
-		private void AddSpell(int recipeNumber, Type type, params Reg[] regs)
+		private void AddSpell(int recipeNumber, Type type,  params Reg[] regs)
 		{
+			AddSpell(recipeNumber, type, true, regs );
+		}
+
+		private void AddSpell(int recipeNumber, Type type, bool requireArcaneScroll, params Reg[] regs)
+		{
+			// Temp Hack: Remove Recipe
+			recipeNumber = -1;
+
 			double minSkill, maxSkill;
 
 			string title = "Magery Circles 1 & 2";
@@ -169,48 +181,32 @@ namespace Server.Engines.Craft
 				case 7: minSkill = 75.0; maxSkill = 125.0; title = "Magery Circles 7 & 8"; break;
 			}
 
-			if (MySettings.S_UseLegacyInscription)
-			{
-				// Remove Recipe
-				recipeNumber = -1;
-			}
-			else
-			{
-				// Crafting any scroll should gain
-				maxSkill = 125;
-			}
-
 			int index = AddCraftRecipe(recipeNumber, type, title, 1044381 + m_Index++, minSkill, maxSkill, m_RegTypes[(int)regs[0]], 1044353 + (int)regs[0], 1, 1044361 + (int)regs[0]);
 
 			for (int i = 1; i < regs.Length; ++i)
 				AddRes(index, m_RegTypes[(int)regs[i]], 1044353 + (int)regs[i], 1, 1044361 + (int)regs[i]);
 
-			AddRes(index, typeof(BlankScroll), 1044377, 1, 1044378);
+			if ( requireArcaneScroll )
+				AddRes( index, typeof( ArcaneScroll ), "Arcane Scroll", 1, 1053098 );
+			else
+				AddRes(index, typeof(BlankScroll), 1044377, 1, 1044378);
 
 			SetManaReq(index, m_Mana);
 		}
 
 		private void AddNecroSpell(int spell, int mana, double minSkill, Type type, params Type[] regs)
 		{
-			AddNecroSpell(-1, spell, mana, minSkill, type, regs);
+			AddNecroSpell(-1, spell, mana, minSkill, type, false, regs);
 		}
 
-		private void AddNecroSpell(int recipeNumber, int spell, int mana, double minSkill, Type type, params Type[] regs)
+		private void AddNecroSpell(int recipeNumber, int spell, int mana, double minSkill, Type type, bool requireArcaneScroll, params Type[] regs)
 		{
+			// Temp Hack: Remove Recipe
+			recipeNumber = -1;
+
 			double maxSkill = minSkill + 1;
 
 			int id = CraftItem.ItemIDOf(regs[0]);
-
-			if (MySettings.S_UseLegacyInscription)
-			{
-				// Remove Recipe
-				recipeNumber = -1;
-			}
-			else
-			{
-				// Crafting any scroll should gain
-				maxSkill = 125;
-			}
 
 			int index = AddCraftRecipe(recipeNumber, type, "Necromancy Spells", 1060509 + spell, minSkill, maxSkill, regs[0], id < 0x4000 ? 1020000 + id : 1078872 + id, 1, 501627);
 
@@ -220,7 +216,10 @@ namespace Server.Engines.Craft
 				AddRes(index, regs[i], id < 0x4000 ? 1020000 + id : 1078872 + id, 1, 501627);
 			}
 
-			AddRes(index, typeof(BlankScroll), 1044377, 1, 1044378);
+			if ( requireArcaneScroll )
+				AddRes( index, typeof( ArcaneScroll ), "Arcane Scroll", 1, 1053098 );
+			else
+				AddRes(index, typeof(BlankScroll), 1044377, 1, 1044378);
 
 			SetManaReq(index, mana);
 		}
@@ -229,11 +228,14 @@ namespace Server.Engines.Craft
 
 		private void AddElementalSpell( Type type )
 		{
-			AddElementalSpell( -1, type );
+			AddElementalSpell( -1, type, false );
 		}
 
-		private void AddElementalSpell( int recipeNumber, Type type )
+		private void AddElementalSpell( int recipeNumber, Type type, bool requireArcaneScroll )
 		{
+			// Temp Hack: Remove Recipe
+			recipeNumber = -1;
+
 			double minSkill, maxSkill;
 
 			int blood = 2+m_Circle;
@@ -251,20 +253,12 @@ namespace Server.Engines.Craft
 				case 7: minSkill = 75.0; maxSkill = 125.0; break;
 			}
 
-			if (MySettings.S_UseLegacyInscription)
-			{
-				// Remove Recipe
-				recipeNumber = -1;
-			}
+			int index = AddCraftRecipe(recipeNumber, type, "Elemental Spells", ElementalSpell.CommonInfo( (300 + m_Elly++), 1 ), minSkill, maxSkill, typeof(DaemonBlood), 1023965, blood, 1042081);
+
+			if ( requireArcaneScroll )
+				AddRes( index, typeof( ArcaneScroll ), "Arcane Scroll", 1, 1053098 );
 			else
-			{
-				// Crafting any scroll should gain
-				maxSkill = 125;
-			}
-
-			int index = AddCraftRecipe(recipeNumber, type, "Elemental Spells", ElementalSpell.CommonInfo( (300 + m_Elly++), 1 ), minSkill, maxSkill, typeof(BlankScroll), 1044377, 1, 1044378);
-
-			AddRes(index, typeof(DaemonBlood), 1023965, blood, 1042081);
+				AddRes(index, typeof(BlankScroll), 1044377, 1, 1044378);
 
 			SetManaReq(index, m_Mana);
 		}
@@ -297,28 +291,28 @@ namespace Server.Engines.Craft
 			AddElementalSpell( typeof( Elemental_Void_Scroll ) );
 			m_Circle = 4;
 			m_Mana = 19;
-			AddElementalSpell( 1, typeof( Elemental_Blast_Scroll ) );
-			AddElementalSpell( 2, typeof( Elemental_Echo_Scroll ) );
-			AddElementalSpell( 3, typeof( Elemental_Fiend_Scroll ) );
-			AddElementalSpell( 4, typeof( Elemental_Hold_Scroll ) );
+			AddElementalSpell( 1, typeof( Elemental_Blast_Scroll ), true );
+			AddElementalSpell( 2, typeof( Elemental_Echo_Scroll ), true );
+			AddElementalSpell( 3, typeof( Elemental_Fiend_Scroll ), true );
+			AddElementalSpell( 4, typeof( Elemental_Hold_Scroll ), true );
 			m_Circle = 5;
 			m_Mana = 24;
-			AddElementalSpell( 5, typeof( Elemental_Barrage_Scroll ) );
-			AddElementalSpell( 6, typeof( Elemental_Rune_Scroll ) );
-			AddElementalSpell( 7, typeof( Elemental_Storm_Scroll ) );
-			AddElementalSpell( 8, typeof( Elemental_Summon_Scroll ) );
+			AddElementalSpell( 5, typeof( Elemental_Barrage_Scroll ), true );
+			AddElementalSpell( 6, typeof( Elemental_Rune_Scroll ), true );
+			AddElementalSpell( 7, typeof( Elemental_Storm_Scroll ), true );
+			AddElementalSpell( 8, typeof( Elemental_Summon_Scroll ), true );
 			m_Circle = 6;
 			m_Mana = 40;
-			AddElementalSpell( 9, typeof( Elemental_Devastation_Scroll ) );
-			AddElementalSpell( 10, typeof( Elemental_Fall_Scroll ) );
-			AddElementalSpell( 11, typeof( Elemental_Gate_Scroll ) );
-			AddElementalSpell( 12, typeof( Elemental_Havoc_Scroll ) );
+			AddElementalSpell( 9, typeof( Elemental_Devastation_Scroll ), true );
+			AddElementalSpell( 10, typeof( Elemental_Fall_Scroll ), true );
+			AddElementalSpell( 11, typeof( Elemental_Gate_Scroll ), true );
+			AddElementalSpell( 12, typeof( Elemental_Havoc_Scroll ), true );
 			m_Circle = 7;
 			m_Mana = 50;
-			AddElementalSpell( 13, typeof( Elemental_Apocalypse_Scroll ) );
-			AddElementalSpell( 14, typeof( Elemental_Lord_Scroll ) );
-			AddElementalSpell( 15, typeof( Elemental_Soul_Scroll ) );
-			AddElementalSpell( 16, typeof( Elemental_Spirit_Scroll ) );
+			AddElementalSpell( 13, typeof( Elemental_Apocalypse_Scroll ), true );
+			AddElementalSpell( 14, typeof( Elemental_Lord_Scroll ), true );
+			AddElementalSpell( 15, typeof( Elemental_Soul_Scroll ), true );
+			AddElementalSpell( 16, typeof( Elemental_Spirit_Scroll ), true );
 
 			m_Circle = 0;
 			m_Mana = 4;
@@ -425,20 +419,28 @@ namespace Server.Engines.Craft
 			AddNecroSpell(6, 23, 69.6, typeof(LichFormScroll), Reagent.GraveDust, Reagent.DaemonBlood, Reagent.NoxCrystal);
 			AddNecroSpell(7, 17, 29.6, typeof(MindRotScroll), Reagent.BatWing, Reagent.DaemonBlood, Reagent.PigIron);
 			AddNecroSpell(8, 5, 19.6, typeof(PainSpikeScroll), Reagent.GraveDust, Reagent.PigIron);
-			AddNecroSpell( 83, 9, 17, 49.6, typeof(PoisonStrikeScroll), Reagent.NoxCrystal);
-			AddNecroSpell( 84, 10, 29, 64.6, typeof(StrangleScroll), Reagent.DaemonBlood, Reagent.NoxCrystal);
-			AddNecroSpell( 85, 11, 17, 29.6, typeof(SummonFamiliarScroll), Reagent.BatWing, Reagent.GraveDust, Reagent.DaemonBlood);
-			AddNecroSpell( 86, 12, 23, 98.6, typeof(VampiricEmbraceScroll), Reagent.BatWing, Reagent.NoxCrystal, Reagent.PigIron);
-			AddNecroSpell( 87, 13, 41, 79.6, typeof(VengefulSpiritScroll), Reagent.BatWing, Reagent.GraveDust, Reagent.PigIron);
-			AddNecroSpell( 88, 14, 23, 59.6, typeof(WitherScroll), Reagent.GraveDust, Reagent.NoxCrystal, Reagent.PigIron);
-			AddNecroSpell( 89, 15, 17, 79.6, typeof(WraithFormScroll), Reagent.NoxCrystal, Reagent.PigIron);
-			AddNecroSpell( 90, 16, 40, 79.6, typeof(ExorcismScroll), Reagent.NoxCrystal, Reagent.GraveDust);
+			AddNecroSpell( 83, 9, 17, 49.6, typeof(PoisonStrikeScroll), true, Reagent.NoxCrystal);
+			AddNecroSpell( 84, 10, 29, 64.6, typeof(StrangleScroll), true, Reagent.DaemonBlood, Reagent.NoxCrystal);
+			AddNecroSpell( 85, 11, 17, 29.6, typeof(SummonFamiliarScroll), true, Reagent.BatWing, Reagent.GraveDust, Reagent.DaemonBlood);
+			AddNecroSpell( 86, 12, 23, 98.6, typeof(VampiricEmbraceScroll), true, Reagent.BatWing, Reagent.NoxCrystal, Reagent.PigIron);
+			AddNecroSpell( 87, 13, 41, 79.6, typeof(VengefulSpiritScroll), true, Reagent.BatWing, Reagent.GraveDust, Reagent.PigIron);
+			AddNecroSpell( 88, 14, 23, 59.6, typeof(WitherScroll), true, Reagent.GraveDust, Reagent.NoxCrystal, Reagent.PigIron);
+			AddNecroSpell( 89, 15, 17, 79.6, typeof(WraithFormScroll), true, Reagent.NoxCrystal, Reagent.PigIron);
+			AddNecroSpell( 90, 16, 40, 79.6, typeof(ExorcismScroll), true, Reagent.NoxCrystal, Reagent.GraveDust);
 
 			int index;
 
 			// Blank Scrolls
 			index = AddCraft( typeof( BlankScroll ), "Books & Scrolls", "Blank Scrolls", 40.0, 70.0, typeof( BarkFragment ), 1073477, 1, 1073478 );
 			index = AddCraft( typeof( BlankScroll ), "Books & Scrolls", "A batch of Blank Scrolls", 70.0, 70.0, typeof( BarkFragment ), 1073477, 1, 1073478 );
+			SetUseAllRes( index, true );
+
+			index = AddCraft( typeof( ArcaneScroll ), "Books & Scrolls", "Arcane Scroll", 50.0, 70.0, typeof( BlankScroll ), 1044377, 1, 1044378 );
+			AddRes( index, typeof( ArcaneGem ), "arcane gem", 1, 1053098 );
+			AddOrSkill( index, 50.0, 50.0, SkillName.Elementalism, SkillName.Magery, SkillName.Necromancy );
+			index = AddCraft( typeof( ArcaneScroll ), "Books & Scrolls", "A batch of Arcane Scrolls", 70.0, 70.0, typeof( BlankScroll ), 1044377, 1, 1044378 );
+			AddRes( index, typeof( ArcaneGem ), "arcane gem", 1, 1053098 );
+			AddOrSkill( index, 50.0, 50.0, SkillName.Elementalism, SkillName.Magery, SkillName.Necromancy );
 			SetUseAllRes( index, true );
 
 			// Writing Book

@@ -55,6 +55,11 @@ namespace Server.Engines.Craft
 
 		public abstract double GetChanceAtMin( CraftItem item );
 
+		public virtual string GetCategoryWarning( int selectedGroup )
+		{
+			return null;
+		}
+
 		public static bool AllowManyCraft( BaseTool tool )
 		{
 			if ( tool != null && ( tool is BaseRunicTool || tool is TomeOfWands ) )

@@ -707,7 +707,7 @@ namespace Server
 				typeof( Jar ),					typeof( Bottle ),				typeof( BlankScroll ),			typeof( Feather ),
 				typeof( Shaft ),				typeof( BrittleSkeletal ),		typeof( AmethystBlocks ),		typeof( Sand ),
 				typeof( DemonSkins ),			typeof( RedScales ),			typeof( Log ),					typeof( IronOre ),
-				typeof( Hides )
+				typeof( Hides ),				typeof( ArcaneScroll )
 			};
 
 		public static Type[] CraftsTypes{ get{ return m_CraftsTypes; } }

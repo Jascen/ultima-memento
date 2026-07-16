@@ -27,6 +27,7 @@ namespace Server.Gumps
 
     public class LabelColors // Hue from files / in-game
     {
+        public const int RED = 32;
 		public const int DARK_RED = 237;
 		public const int PALE_RED = 239;
 		public const int GRAY = 1000;

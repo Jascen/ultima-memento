@@ -1034,6 +1034,10 @@ namespace Server.Misc
 					builder.Append("- Combat - AI retreat logic now requires Line of Sight<br>");
 					builder.Append("- Combat - AI pursuit logic now validates Line of Sight<br>");
 					builder.Append("- Combat - AI pursuit logic now validates vertical distance<br>");
+					builder.Append("- Craft - Inscription Changes<br>");
+					builder.Append("        - Restore crafting skill requirements<br>");
+					builder.Append("        - 5th+ circle spells now require arcane scrolls to craft<br>");
+					builder.Append("        - Crafted scrolls are now ephemeral magic; they cannot be added to spellbooks<br>");
 					builder.Append("- Command - '[Where' is now available to all players<br>");
 					builder.Append("- Command - '[Organize' no longer moves spellbooks<br>");
 					builder.Append("- Command - '[Organize' no longer removes items from weight reduction containers<br>");

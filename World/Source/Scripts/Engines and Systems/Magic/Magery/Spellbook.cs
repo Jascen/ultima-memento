@@ -624,6 +624,12 @@ namespace Server.Items
 			{
 				SpellScroll scroll = (SpellScroll)dropped;
 
+				if ( scroll.IsEphemeralSpellScroll )
+				{
+					from.SendMessage( "Ephemeral magic cannot be added to spellbooks." );
+					return false;
+				}
+
 				SpellbookType type = GetTypeForSpell( scroll.SpellID );
 
 				if ( type != this.SpellbookType )
