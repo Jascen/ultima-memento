@@ -1057,7 +1057,12 @@ namespace Server.Mobiles
 			if ( this is Humanoid || (this is HouseVisitor && (this.Body == 9 || this.Body == 320)) )
 				return false;
 
-			new SpeechGumpEntry( from, this ).OnClick();
+			SpeechGumpEntry entry = new SpeechGumpEntry( from, this );
+
+			if ( !from.CanSee( this ) || !from.InRange( this, entry.Range ) )
+				return false;
+
+			entry.OnClick();
 			return true;
 		}
 

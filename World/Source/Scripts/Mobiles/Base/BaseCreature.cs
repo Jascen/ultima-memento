@@ -7918,6 +7918,9 @@ namespace Server.Mobiles
 			if ( !CheckChattingAccess( from ) )
 				return false;
 
+			if ( !from.InRange( this, 12 ) )
+				return false;
+
 			Server.Misc.IntelligentAction.SayHey( this );
 			from.CloseGump( typeof( SpeechGump ) );
 			from.SendGump( new SpeechGump( from, TalkGumpTitle, SpeechFunctions.SpeechText( this, from, TalkGumpSubject ) ) );

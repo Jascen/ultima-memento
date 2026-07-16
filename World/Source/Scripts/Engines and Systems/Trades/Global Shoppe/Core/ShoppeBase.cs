@@ -4,6 +4,7 @@ using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
 using Server.Utilities;
+using System;
 using System.Collections.Generic;
 
 namespace Server.Engines.GlobalShoppe
@@ -60,6 +61,48 @@ namespace Server.Engines.GlobalShoppe
 		public bool HasGoldCapacity(TradeSkillContext context, CustomerContext customer)
 		{
 			return context.Gold + customer.GoldReward <= ShoppeConstants.MAX_GOLD;
+		}
+
+		public bool NeedsFeePayment(Mobile from, TradeSkillContext context)
+		{
+			return !context.FeePaid && ShoppeConstants.MIN_SKILL <= from.Skills[PrimarySkill].Value;
+		}
+
+		public bool TryPayFee(Mobile from, TradeSkillContext context)
+		{
+			if (context.FeePaid)
+				return true;
+
+			int fee = ShoppeConstants.SHOPPE_FEE;
+
+			Container pack = from.Backpack;
+			int packGold = pack == null ? 0 : pack.GetAmount(typeof(Gold));
+			int bankGold = Banker.GetBalance(from);
+
+			if (packGold + bankGold < fee)
+			{
+				from.SendMessage(0x22, "You need {0} gold in your backpack or bank to open this shoppe.", fee);
+				return false;
+			}
+
+			int fromPack = Math.Min(packGold, fee);
+			int fromBank = fee - fromPack;
+
+			if (fromPack > 0)
+				pack.ConsumeUpTo(typeof(Gold), fromPack);
+
+			if (fromBank > 0)
+				Banker.Withdraw(from, fromBank);
+
+			context.FeePaid = true;
+
+			string source =
+				fromBank == 0 ? "your backpack" :
+				fromPack == 0 ? "your bank" :
+				"your backpack and bank";
+			from.SendMessage("You paid {0} gold from {1} to open this shoppe.", fee, source);
+
+			return true;
 		}
 
 		public override void OnDoubleClick(Mobile from)

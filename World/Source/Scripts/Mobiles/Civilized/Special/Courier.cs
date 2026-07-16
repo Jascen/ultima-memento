@@ -172,7 +172,12 @@ namespace Server.Mobiles
 			if ( from == null || from.Blessed )
 				return false;
 
-			new SpeechGumpEntry( from, this ).OnClick();
+			SpeechGumpEntry entry = new SpeechGumpEntry( from, this );
+
+			if ( !from.CanSee( this ) || !from.InRange( this, entry.Range ) )
+				return false;
+
+			entry.OnClick();
 			return true;
 		}
 
