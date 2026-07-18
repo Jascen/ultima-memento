@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.SpellBars
 {
@@ -34,6 +35,11 @@ namespace Server.SpellBars
 
 				_states[id] = state;
 			}
+		}
+
+		public IEnumerable<SpellBarId> GetAllAutoOpenSpellBarIds()
+		{
+			return _states.Where(pair => pair.Value.OpenOnLogin).Select(pair => pair.Key);
 		}
 
 		public SpellBarState GetState(SpellBarId id)

@@ -11,7 +11,7 @@ namespace Server.SpellBars
 
 		public SpellBarState(GenericReader reader, int maxSlots)
 		{
-			reader.ReadInt();
+			var version = reader.ReadInt();
 			var length = reader.ReadInt();
 
 			_spellEnabled = new bool[maxSlots];
@@ -27,9 +27,12 @@ namespace Server.SpellBars
 
 			ShowName = reader.ReadBool();
 			IsVertical = reader.ReadBool();
+			OpenOnLogin = 0 < version ? reader.ReadBool() : false;
 		}
 
 		public bool IsVertical { get; set; }
+
+		public bool OpenOnLogin { get; set; }
 
 		public bool ShowName { get; set; }
 
@@ -61,7 +64,7 @@ namespace Server.SpellBars
 
 		public void Serialize(GenericWriter writer)
 		{
-			writer.Write(0);
+			writer.Write(1);
 			writer.Write(_spellEnabled.Length);
 
 			for (var index = 0; index < _spellEnabled.Length; index++)
@@ -69,6 +72,7 @@ namespace Server.SpellBars
 
 			writer.Write(ShowName);
 			writer.Write(IsVertical);
+			writer.Write(OpenOnLogin);
 		}
 
 		public void ToggleSpellEnabled(int spellIndex)

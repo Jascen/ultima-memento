@@ -13,6 +13,7 @@ using Server.Engines.MLQuests.Gumps;
 using Scripts.Mythik.Systems.Achievements;
 using Server.SpellBars;
 using Server.ModernSkill;
+using System.Linq;
 
 namespace Server.Engines.Help
 {
@@ -74,69 +75,91 @@ namespace Server.Engines.Help
 			MagicToolbar_Ancient_I_Close,
 			MagicToolbar_Ancient_I_Config,
 			MagicToolbar_Ancient_I_Open,
+			MagicToolbar_Ancient_I_ToggleAutoOpen,
 			MagicToolbar_Ancient_II_Close,
 			MagicToolbar_Ancient_II_Config,
 			MagicToolbar_Ancient_II_Open,
+			MagicToolbar_Ancient_II_ToggleAutoOpen,
 			MagicToolbar_Ancient_III_Close,
 			MagicToolbar_Ancient_III_Config,
 			MagicToolbar_Ancient_III_Open,
+			MagicToolbar_Ancient_III_ToggleAutoOpen,
 			MagicToolbar_Ancient_IV_Close,
 			MagicToolbar_Ancient_IV_Config,
 			MagicToolbar_Ancient_IV_Open,
+			MagicToolbar_Ancient_IV_ToggleAutoOpen,
 			MagicToolbar_Bard_I_Close,
 			MagicToolbar_Bard_I_Config,
 			MagicToolbar_Bard_I_Open,
+			MagicToolbar_Bard_I_ToggleAutoOpen,
 			MagicToolbar_Bard_II_Close,
 			MagicToolbar_Bard_II_Config,
 			MagicToolbar_Bard_II_Open,
+			MagicToolbar_Bard_II_ToggleAutoOpen,
 			MagicToolbar_DeathKnight_I_Close,
 			MagicToolbar_DeathKnight_I_Config,
 			MagicToolbar_DeathKnight_I_Open,
+			MagicToolbar_DeathKnight_I_ToggleAutoOpen,
 			MagicToolbar_DeathKnight_II_Close,
 			MagicToolbar_DeathKnight_II_Config,
 			MagicToolbar_DeathKnight_II_Open,
+			MagicToolbar_DeathKnight_II_ToggleAutoOpen,
 			MagicToolbar_Elemental_I_Close,
 			MagicToolbar_Elemental_I_Config,
 			MagicToolbar_Elemental_I_Open,
+			MagicToolbar_Elemental_I_ToggleAutoOpen,
 			MagicToolbar_Elemental_II_Close,
 			MagicToolbar_Elemental_II_Config,
 			MagicToolbar_Elemental_II_Open,
+			MagicToolbar_Elemental_II_ToggleAutoOpen,
 			MagicToolbar_Knight_I_Close,
 			MagicToolbar_Knight_I_Config,
 			MagicToolbar_Knight_I_Open,
+			MagicToolbar_Knight_I_ToggleAutoOpen,
 			MagicToolbar_Knight_II_Close,
 			MagicToolbar_Knight_II_Config,
 			MagicToolbar_Knight_II_Open,
+			MagicToolbar_Knight_II_ToggleAutoOpen,
 			MagicToolbar_Magery_I_Close,
 			MagicToolbar_Magery_I_Config,
 			MagicToolbar_Magery_I_Open,
+			MagicToolbar_Magery_I_ToggleAutoOpen,
 			MagicToolbar_Magery_II_Close,
 			MagicToolbar_Magery_II_Config,
 			MagicToolbar_Magery_II_Open,
+			MagicToolbar_Magery_II_ToggleAutoOpen,
 			MagicToolbar_Magery_III_Close,
 			MagicToolbar_Magery_III_Config,
 			MagicToolbar_Magery_III_Open,
+			MagicToolbar_Magery_III_ToggleAutoOpen,
 			MagicToolbar_Magery_IV_Close,
 			MagicToolbar_Magery_IV_Config,
 			MagicToolbar_Magery_IV_Open,
+			MagicToolbar_Magery_IV_ToggleAutoOpen,
 			MagicToolbar_Monk_I_Close,
 			MagicToolbar_Monk_I_Config,
 			MagicToolbar_Monk_I_Open,
+			MagicToolbar_Monk_I_ToggleAutoOpen,
 			MagicToolbar_Monk_II_Close,
 			MagicToolbar_Monk_II_Config,
 			MagicToolbar_Monk_II_Open,
+			MagicToolbar_Monk_II_ToggleAutoOpen,
 			MagicToolbar_Necromancer_I_Close,
 			MagicToolbar_Necromancer_I_Config,
 			MagicToolbar_Necromancer_I_Open,
+			MagicToolbar_Necromancer_I_ToggleAutoOpen,
 			MagicToolbar_Necromancer_II_Close,
 			MagicToolbar_Necromancer_II_Config,
 			MagicToolbar_Necromancer_II_Open,
+			MagicToolbar_Necromancer_II_ToggleAutoOpen,
 			MagicToolbar_Priest_I_Close,
 			MagicToolbar_Priest_I_Config,
 			MagicToolbar_Priest_I_Open,
+			MagicToolbar_Priest_I_ToggleAutoOpen,
 			MagicToolbar_Priest_II_Close,
 			MagicToolbar_Priest_II_Config,
 			MagicToolbar_Priest_II_Open,
+			MagicToolbar_Priest_II_ToggleAutoOpen,
 
 			Navigate_Changelog,
 			Navigate_Library,
@@ -401,48 +424,49 @@ namespace Server.Engines.Help
 
 				AddMagicToolbarRowHeader(SECTION_START_X, barS);
 				barS += barM;
+				var autoOpenSpellBarIds = from.SpellBars.GetAllAutoOpenSpellBarIds().ToHashSet();
 
 				if (hasResearch)
 				{
-					AddMagicToolbarRow(SECTION_START_X, barS, "Ancient Spell Bar", PageActionType.MagicToolbar_Ancient_I_Config, PageActionType.MagicToolbar_Ancient_I_Open, PageActionType.MagicToolbar_Ancient_I_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Ancient Spell Bar", PageActionType.MagicToolbar_Ancient_I_Config, PageActionType.MagicToolbar_Ancient_I_Open, PageActionType.MagicToolbar_Ancient_I_Close, PageActionType.MagicToolbar_Ancient_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Ancient_1));
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Ancient_II_Config, PageActionType.MagicToolbar_Ancient_II_Open, PageActionType.MagicToolbar_Ancient_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Ancient_II_Config, PageActionType.MagicToolbar_Ancient_II_Open, PageActionType.MagicToolbar_Ancient_II_Close, PageActionType.MagicToolbar_Ancient_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Ancient_2));
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Ancient_III_Config, PageActionType.MagicToolbar_Ancient_III_Open, PageActionType.MagicToolbar_Ancient_III_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Ancient_III_Config, PageActionType.MagicToolbar_Ancient_III_Open, PageActionType.MagicToolbar_Ancient_III_Close, PageActionType.MagicToolbar_Ancient_III_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Ancient_3));
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Ancient_IV_Config, PageActionType.MagicToolbar_Ancient_IV_Open, PageActionType.MagicToolbar_Ancient_IV_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Ancient_IV_Config, PageActionType.MagicToolbar_Ancient_IV_Open, PageActionType.MagicToolbar_Ancient_IV_Close, PageActionType.MagicToolbar_Ancient_IV_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Ancient_4));
 					barS += barM;
 				}
 
 				if (hasBarding)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Bard Songs Bar", PageActionType.MagicToolbar_Bard_I_Config, PageActionType.MagicToolbar_Bard_I_Open, PageActionType.MagicToolbar_Bard_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Bard Songs Bar", PageActionType.MagicToolbar_Bard_I_Config, PageActionType.MagicToolbar_Bard_I_Open, PageActionType.MagicToolbar_Bard_I_Close, PageActionType.MagicToolbar_Bard_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Bard_1), true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Bard_II_Config, PageActionType.MagicToolbar_Bard_II_Open, PageActionType.MagicToolbar_Bard_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Bard_II_Config, PageActionType.MagicToolbar_Bard_II_Open, PageActionType.MagicToolbar_Bard_II_Close, PageActionType.MagicToolbar_Bard_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Bard_2));
 					barS += barM;
 				}
 
 				if (hasKnightship)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Knight Spell Bar", PageActionType.MagicToolbar_Knight_I_Config, PageActionType.MagicToolbar_Knight_I_Open, PageActionType.MagicToolbar_Knight_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Knight Spell Bar", PageActionType.MagicToolbar_Knight_I_Config, PageActionType.MagicToolbar_Knight_I_Open, PageActionType.MagicToolbar_Knight_I_Close, PageActionType.MagicToolbar_Knight_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Knight_1), true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Knight_II_Config, PageActionType.MagicToolbar_Knight_II_Open, PageActionType.MagicToolbar_Knight_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Knight_II_Config, PageActionType.MagicToolbar_Knight_II_Open, PageActionType.MagicToolbar_Knight_II_Close, PageActionType.MagicToolbar_Knight_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Knight_2));
 					barS += barM;
 
 					if (hasNegativeKarma)
 					{
 						barS -= BAR_BORDER_HEIGHT;
-						AddMagicToolbarRow(SECTION_START_X, barS, "Death Knight Spell Bar", PageActionType.MagicToolbar_DeathKnight_I_Config, PageActionType.MagicToolbar_DeathKnight_I_Open, PageActionType.MagicToolbar_DeathKnight_I_Close, true);
+						AddMagicToolbarRow(SECTION_START_X, barS, "Death Knight Spell Bar", PageActionType.MagicToolbar_DeathKnight_I_Config, PageActionType.MagicToolbar_DeathKnight_I_Open, PageActionType.MagicToolbar_DeathKnight_I_Close, PageActionType.MagicToolbar_DeathKnight_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Death_1), true);
 						barS += barM;
 
-						AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_DeathKnight_II_Config, PageActionType.MagicToolbar_DeathKnight_II_Open, PageActionType.MagicToolbar_DeathKnight_II_Close);
+						AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_DeathKnight_II_Config, PageActionType.MagicToolbar_DeathKnight_II_Open, PageActionType.MagicToolbar_DeathKnight_II_Close, PageActionType.MagicToolbar_DeathKnight_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Death_2));
 						barS += barM;
 					}
 				}
@@ -450,56 +474,56 @@ namespace Server.Engines.Help
 				if (hasElementalism)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Elemental Spell Bar", PageActionType.MagicToolbar_Elemental_I_Config, PageActionType.MagicToolbar_Elemental_I_Open, PageActionType.MagicToolbar_Elemental_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Elemental Spell Bar", PageActionType.MagicToolbar_Elemental_I_Config, PageActionType.MagicToolbar_Elemental_I_Open, PageActionType.MagicToolbar_Elemental_I_Close, PageActionType.MagicToolbar_Elemental_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Elemental_1), true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Elemental_II_Config, PageActionType.MagicToolbar_Elemental_II_Open, PageActionType.MagicToolbar_Elemental_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Elemental_II_Config, PageActionType.MagicToolbar_Elemental_II_Open, PageActionType.MagicToolbar_Elemental_II_Close, PageActionType.MagicToolbar_Elemental_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Elemental_2));
 					barS += barM;
 				}
 
 				if (hasMagery)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Magery Spell Bar", PageActionType.MagicToolbar_Magery_I_Config, PageActionType.MagicToolbar_Magery_I_Open, PageActionType.MagicToolbar_Magery_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Magery Spell Bar", PageActionType.MagicToolbar_Magery_I_Config, PageActionType.MagicToolbar_Magery_I_Open, PageActionType.MagicToolbar_Magery_I_Close, PageActionType.MagicToolbar_Magery_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Mage_1), true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Magery_II_Config, PageActionType.MagicToolbar_Magery_II_Open, PageActionType.MagicToolbar_Magery_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Magery_II_Config, PageActionType.MagicToolbar_Magery_II_Open, PageActionType.MagicToolbar_Magery_II_Close, PageActionType.MagicToolbar_Magery_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Mage_2));
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Magery_III_Config, PageActionType.MagicToolbar_Magery_III_Open, PageActionType.MagicToolbar_Magery_III_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Magery_III_Config, PageActionType.MagicToolbar_Magery_III_Open, PageActionType.MagicToolbar_Magery_III_Close, PageActionType.MagicToolbar_Magery_III_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Mage_3));
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Magery_IV_Config, PageActionType.MagicToolbar_Magery_IV_Open, PageActionType.MagicToolbar_Magery_IV_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Magery_IV_Config, PageActionType.MagicToolbar_Magery_IV_Open, PageActionType.MagicToolbar_Magery_IV_Close, PageActionType.MagicToolbar_Magery_IV_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Mage_4));
 					barS += barM;
 				}
 
 				if (hasMonk)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Monk Ability Bar", PageActionType.MagicToolbar_Monk_I_Config, PageActionType.MagicToolbar_Monk_I_Open, PageActionType.MagicToolbar_Monk_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Monk Ability Bar", PageActionType.MagicToolbar_Monk_I_Config, PageActionType.MagicToolbar_Monk_I_Open, PageActionType.MagicToolbar_Monk_I_Close, PageActionType.MagicToolbar_Monk_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Monk_1), true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Monk_II_Config, PageActionType.MagicToolbar_Monk_II_Open, PageActionType.MagicToolbar_Monk_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Monk_II_Config, PageActionType.MagicToolbar_Monk_II_Open, PageActionType.MagicToolbar_Monk_II_Close, PageActionType.MagicToolbar_Monk_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Monk_2));
 					barS += barM;
 				}
 
 				if (hasNecromancy)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Necromancer Spell Bar", PageActionType.MagicToolbar_Necromancer_I_Config, PageActionType.MagicToolbar_Necromancer_I_Open, PageActionType.MagicToolbar_Necromancer_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Necromancer Spell Bar", PageActionType.MagicToolbar_Necromancer_I_Config, PageActionType.MagicToolbar_Necromancer_I_Open, PageActionType.MagicToolbar_Necromancer_I_Close, PageActionType.MagicToolbar_Necromancer_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Necro_1), true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Necromancer_II_Config, PageActionType.MagicToolbar_Necromancer_II_Open, PageActionType.MagicToolbar_Necromancer_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Necromancer_II_Config, PageActionType.MagicToolbar_Necromancer_II_Open, PageActionType.MagicToolbar_Necromancer_II_Close, PageActionType.MagicToolbar_Necromancer_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Necro_2));
 					barS += barM;
 				}
 
 				if (hasHolyMan)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Priest Prayer Bar", PageActionType.MagicToolbar_Priest_I_Config, PageActionType.MagicToolbar_Priest_I_Open, PageActionType.MagicToolbar_Priest_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Priest Prayer Bar", PageActionType.MagicToolbar_Priest_I_Config, PageActionType.MagicToolbar_Priest_I_Open, PageActionType.MagicToolbar_Priest_I_Close, PageActionType.MagicToolbar_Priest_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Priest_1), true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Priest_II_Config, PageActionType.MagicToolbar_Priest_II_Open, PageActionType.MagicToolbar_Priest_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Priest_II_Config, PageActionType.MagicToolbar_Priest_II_Open, PageActionType.MagicToolbar_Priest_II_Close, PageActionType.MagicToolbar_Priest_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Priest_2));
 					barS += barM;
 				}
 			}
@@ -846,47 +870,59 @@ namespace Server.Engines.Help
 		{
 			const int HORIZONTAL_LINE = 2700;
 			const int BORDER_WIDTH = 2;
-			AddImageTiled(x + 2, y + 25, 740 / 2, BORDER_WIDTH, HORIZONTAL_LINE);
+
+			AddImageTiled(x + 2, y + 25, 740, BORDER_WIDTH, HORIZONTAL_LINE);
 
 			AddHtml(x, y + 3, 200, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Type</BASEFONT></BODY>", false, false);
+
 			x += 225;
-
-			AddHtml(x, y + 3, 148, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Open</BASEFONT></BODY>", false, false);
-
-			x += 50;
-			AddHtml(x, y + 3, 148, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Close</BASEFONT></BODY>", false, false);
+			AddHtml(x, y + 3, 100, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Open</BASEFONT></BODY>", false, false);
 
 			x += 50;
-			AddHtml(x, y + 3, 160, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Manage</BASEFONT></BODY>", false, false);
+			AddHtml(x, y + 3, 100, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Close</BASEFONT></BODY>", false, false);
+
+			x += 50;
+			AddHtml(x, y + 3, 100, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Manage</BASEFONT></BODY>", false, false);
 
 			x += 75;
+			AddHtml(x, y + 3, 100, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Open on Login</BASEFONT></BODY>", false, false);
 		}
 
-		private void AddMagicToolbarRow(int x, int y, string name, PageActionType config, PageActionType open, PageActionType close, bool addTopSeparator = false)
+		private void AddMagicToolbarRow(int x, int y, string name, PageActionType config, PageActionType open, PageActionType close, PageActionType toggleAutoOpen, bool isAutoOpen, bool addTopSeparator = false)
 		{
 			const int RIGHT_ARROW = 4005;
 			const int CANCEL_ICON = 4020;
 			const int PAGE_ICON = 4011;
+			const int CHECKED_BOX = 4018;
+			const int UNCHECKED_BOX = 3609;
 
 			if (addTopSeparator)
 			{
 				const int HORIZONTAL_LINE = 2700;
 				const int BORDER_WIDTH = 1;
-				AddImageTiled(x + 2, y, 740 / 2, BORDER_WIDTH, HORIZONTAL_LINE);
+				AddImageTiled(x + 2, y, 740, BORDER_WIDTH, HORIZONTAL_LINE);
 				y += 4;
 			}
 
 			if (!string.IsNullOrWhiteSpace(name))
 				AddHtml(x, y + 3, 200, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">" + name + "</BASEFONT></BODY>", false, false);
 
+			// Open
 			x += 225;
 			AddButton(x, y, RIGHT_ARROW, RIGHT_ARROW, (int)open, GumpButtonType.Reply, 0);
 
+			// Close
 			x += 50;
 			AddButton(x, y, CANCEL_ICON, CANCEL_ICON, (int)close, GumpButtonType.Reply, 0);
 
+			// Manage
 			x += 50;
 			AddButton(x, y, PAGE_ICON, PAGE_ICON, (int)config, GumpButtonType.Reply, 0);
+
+			// Open on Login
+			x += 75;
+			int isAutoOpenSelected = isAutoOpen ? CHECKED_BOX : UNCHECKED_BOX;
+			AddButton(x, y, isAutoOpenSelected, isAutoOpenSelected, (int)toggleAutoOpen, GumpButtonType.Reply, 0);
 		}
 
 		private bool UseArrowIcon( PageActionType actionType )
@@ -1441,69 +1477,91 @@ namespace Server.Engines.Help
 				case PageActionType.MagicToolbar_Ancient_I_Close: reopenPage = true; InvokeCommand( "archclose1", from ); break;
 				case PageActionType.MagicToolbar_Ancient_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_1, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Ancient_I_Open: reopenPage = true; InvokeCommand( "archtool1", from ); break;
+				case PageActionType.MagicToolbar_Ancient_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Ancient_1 ); break;
 				case PageActionType.MagicToolbar_Ancient_II_Close: reopenPage = true; InvokeCommand( "archclose2", from ); break;
 				case PageActionType.MagicToolbar_Ancient_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_2, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Ancient_II_Open: reopenPage = true; InvokeCommand( "archtool2", from ); break;
+				case PageActionType.MagicToolbar_Ancient_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Ancient_2 ); break;
 				case PageActionType.MagicToolbar_Ancient_III_Close: reopenPage = true; InvokeCommand( "archclose3", from ); break;
 				case PageActionType.MagicToolbar_Ancient_III_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_3, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Ancient_III_Open: reopenPage = true; InvokeCommand( "archtool3", from ); break;
+				case PageActionType.MagicToolbar_Ancient_III_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Ancient_3 ); break;
 				case PageActionType.MagicToolbar_Ancient_IV_Close: reopenPage = true; InvokeCommand( "archclose4", from ); break;
 				case PageActionType.MagicToolbar_Ancient_IV_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_4, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Ancient_IV_Open: reopenPage = true; InvokeCommand( "archtool4", from ); break;
+				case PageActionType.MagicToolbar_Ancient_IV_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Ancient_4 ); break;
 				case PageActionType.MagicToolbar_Bard_I_Close: reopenPage = true; InvokeCommand( "bardclose1", from ); break;
 				case PageActionType.MagicToolbar_Bard_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Bard_1, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Bard_I_Open: reopenPage = true; InvokeCommand( "bardtool1", from ); break;
+				case PageActionType.MagicToolbar_Bard_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Bard_1 ); break;
 				case PageActionType.MagicToolbar_Bard_II_Close: reopenPage = true; InvokeCommand( "bardclose2", from ); break;
 				case PageActionType.MagicToolbar_Bard_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Bard_2, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Bard_II_Open: reopenPage = true; InvokeCommand( "bardtool2", from ); break;
+				case PageActionType.MagicToolbar_Bard_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Bard_2 ); break;
 				case PageActionType.MagicToolbar_DeathKnight_I_Close: reopenPage = true; InvokeCommand( "deathclose1", from ); break;
 				case PageActionType.MagicToolbar_DeathKnight_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Death_1, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_DeathKnight_I_Open: reopenPage = true; InvokeCommand( "deathtool1", from ); break;
+				case PageActionType.MagicToolbar_DeathKnight_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Death_1 ); break;
 				case PageActionType.MagicToolbar_DeathKnight_II_Close: reopenPage = true; InvokeCommand( "deathclose2", from ); break;
 				case PageActionType.MagicToolbar_DeathKnight_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Death_2, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_DeathKnight_II_Open: reopenPage = true; InvokeCommand( "deathtool2", from ); break;
+				case PageActionType.MagicToolbar_DeathKnight_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Death_2 ); break;
 				case PageActionType.MagicToolbar_Elemental_I_Close: reopenPage = true; InvokeCommand( "elementclose1", from ); break;
 				case PageActionType.MagicToolbar_Elemental_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Elemental_1, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Elemental_I_Open: reopenPage = true; InvokeCommand( "elementtool1", from ); break;
+				case PageActionType.MagicToolbar_Elemental_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Elemental_1 ); break;
 				case PageActionType.MagicToolbar_Elemental_II_Close: reopenPage = true; InvokeCommand( "elementclose2", from ); break;
 				case PageActionType.MagicToolbar_Elemental_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Elemental_2, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Elemental_II_Open: reopenPage = true; InvokeCommand( "elementtool2", from ); break;
+				case PageActionType.MagicToolbar_Elemental_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Elemental_2 ); break;
 				case PageActionType.MagicToolbar_Knight_I_Close: reopenPage = true; InvokeCommand( "knightclose1", from ); break;
 				case PageActionType.MagicToolbar_Knight_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Knight_1, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Knight_I_Open: reopenPage = true; InvokeCommand( "knighttool1", from ); break;
+				case PageActionType.MagicToolbar_Knight_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Knight_1 ); break;
 				case PageActionType.MagicToolbar_Knight_II_Close: reopenPage = true; InvokeCommand( "knightclose2", from ); break;
 				case PageActionType.MagicToolbar_Knight_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Knight_2, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Knight_II_Open: reopenPage = true; InvokeCommand( "knighttool2", from ); break;
+				case PageActionType.MagicToolbar_Knight_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Knight_2 ); break;
 				case PageActionType.MagicToolbar_Magery_I_Close: reopenPage = true; InvokeCommand( "mageclose1", from ); break;
 				case PageActionType.MagicToolbar_Magery_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_1, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Magery_I_Open: reopenPage = true; InvokeCommand( "magetool1", from ); break;
+				case PageActionType.MagicToolbar_Magery_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Mage_1 ); break;
 				case PageActionType.MagicToolbar_Magery_II_Close: reopenPage = true; InvokeCommand( "mageclose2", from ); break;
 				case PageActionType.MagicToolbar_Magery_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_2, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Magery_II_Open: reopenPage = true; InvokeCommand( "magetool2", from ); break;
+				case PageActionType.MagicToolbar_Magery_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Mage_2 ); break;
 				case PageActionType.MagicToolbar_Magery_III_Close: reopenPage = true; InvokeCommand( "mageclose3", from ); break;
 				case PageActionType.MagicToolbar_Magery_III_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_3, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Magery_III_Open: reopenPage = true; InvokeCommand( "magetool3", from ); break;
+				case PageActionType.MagicToolbar_Magery_III_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Mage_3 ); break;
 				case PageActionType.MagicToolbar_Magery_IV_Close: reopenPage = true; InvokeCommand( "mageclose4", from ); break;
 				case PageActionType.MagicToolbar_Magery_IV_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_4, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Magery_IV_Open: reopenPage = true; InvokeCommand( "magetool4", from ); break;
+				case PageActionType.MagicToolbar_Magery_IV_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Mage_4 ); break;
 				case PageActionType.MagicToolbar_Monk_I_Close: reopenPage = true; InvokeCommand( "monkclose1", from ); break;
 				case PageActionType.MagicToolbar_Monk_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Monk_1, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Monk_I_Open: reopenPage = true; InvokeCommand( "monktool1", from ); break;
+				case PageActionType.MagicToolbar_Monk_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Monk_1 ); break;
 				case PageActionType.MagicToolbar_Monk_II_Close: reopenPage = true; InvokeCommand( "monkclose2", from ); break;
 				case PageActionType.MagicToolbar_Monk_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Monk_2, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Monk_II_Open: reopenPage = true; InvokeCommand( "monktool2", from ); break;
+				case PageActionType.MagicToolbar_Monk_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Monk_2 ); break;
 				case PageActionType.MagicToolbar_Necromancer_I_Close: reopenPage = true; InvokeCommand( "necroclose1", from ); break;
 				case PageActionType.MagicToolbar_Necromancer_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Necro_1, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Necromancer_I_Open: reopenPage = true; InvokeCommand( "necrotool1", from ); break;
+				case PageActionType.MagicToolbar_Necromancer_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Necro_1 ); break;
 				case PageActionType.MagicToolbar_Necromancer_II_Close: reopenPage = true; InvokeCommand( "necroclose2", from ); break;
 				case PageActionType.MagicToolbar_Necromancer_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Necro_2, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Necromancer_II_Open: reopenPage = true; InvokeCommand( "necrotool2", from ); break;
+				case PageActionType.MagicToolbar_Necromancer_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Necro_2 ); break;
 				case PageActionType.MagicToolbar_Priest_I_Close: reopenPage = true; InvokeCommand( "holyclose1", from ); break;
 				case PageActionType.MagicToolbar_Priest_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Priest_1, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Priest_I_Open: reopenPage = true; InvokeCommand( "holytool1", from ); break;
+				case PageActionType.MagicToolbar_Priest_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Priest_1 ); break;
 				case PageActionType.MagicToolbar_Priest_II_Close: reopenPage = true; InvokeCommand( "holyclose2", from ); break;
 				case PageActionType.MagicToolbar_Priest_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Priest_2, from, 1 ) ); break;
 				case PageActionType.MagicToolbar_Priest_II_Open: reopenPage = true; InvokeCommand( "holytool2", from ); break;
+				case PageActionType.MagicToolbar_Priest_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Priest_2 ); break;
 
 				case PageActionType.Setting_MagerySpellColor_White:
 				{

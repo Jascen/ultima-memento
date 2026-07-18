@@ -1,3 +1,5 @@
+using System;
+using Server.Commands;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
@@ -5,8 +7,34 @@ using Server.Spells;
 
 namespace Server.SpellBars
 {
-	public class SpellBarToolbarGump : Gump
+	public abstract class SpellBarToolbarGump : Gump
 	{
+		public static void Initialize()
+		{
+			EventSink.Login += args =>
+			{
+				var player = args.Mobile as PlayerMobile;
+				if (player == null)
+					return;
+
+				Timer.DelayCall(TimeSpan.FromSeconds(3), () =>
+				{
+					var opened = false;
+					foreach (var id in player.SpellBars.GetAllAutoOpenSpellBarIds())
+					{
+						if (player.NetState == null) return;
+						
+						var definition = SpellBarRegistry.GetDefinition(id);
+						CommandSystem.Handle(player, String.Format("{0}{1}", CommandSystem.Prefix, definition.ToolCommand));
+						opened = true;
+					}
+
+					if (opened)
+						player.SendMessage(32, "Spell bars automatically opened. Use `[toolbars` to disable them.");
+				});
+			};
+		}
+
 		const int SPELL_ACTION_OFFSET = 100;
 
 		private readonly SpellBarId _barId;
