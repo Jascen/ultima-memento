@@ -11,27 +11,16 @@ namespace Server.SpellBars
 		protected readonly string CloseCommand;
 		protected readonly string OpenCommand;
 		protected readonly int Origin;
-		protected readonly string StorageKey;
 		protected readonly string Title;
 
-		protected SpellBarSetupGumpBase(PlayerMobile from, int origin, bool isNumberOneBar, string title, string storageKey, string openCommand, string closeCommand)
-			: this(from, origin, title, storageKey, openCommand, closeCommand)
-		{
-		}
-
 		protected SpellBarSetupGumpBase(PlayerMobile from, int origin, ISpellBarDescriptor descriptor)
-			: this(from, origin, descriptor.Title, descriptor.StorageKey, descriptor.ToolCommand, descriptor.CloseCommand)
-		{
-		}
-
-		protected SpellBarSetupGumpBase(PlayerMobile from, int origin, string title, string storageKey, string openCommand, string closeCommand) : base(12, 50)
+			: base(12, 50)
 		{
 			Player = from;
 			Origin = origin;
-			Title = title;
-			StorageKey = storageKey;
-			OpenCommand = openCommand;
-			CloseCommand = closeCommand;
+			Title = descriptor.Title;
+			OpenCommand = descriptor.ToolCommand;
+			CloseCommand = descriptor.CloseCommand;
 
 			Closable = true;
 			Disposable = true;

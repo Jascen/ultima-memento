@@ -18,8 +18,9 @@ namespace Server.SpellBars
 		public static ToolBarSpellBarConfiguration CreateConfiguration(PlayerMobile from, SpellBarId id)
 		{
 			var definition = GetDefinition(id);
-			int background = definition.SchoolInstance.GetBackgroundImage(from);
-			return new ToolBarSpellBarConfiguration(from, definition.StorageKey, definition.SchoolInstance.MaxSlots, background);
+			var background = definition.SchoolInstance.GetBackgroundImage(from);
+			var state = from.SpellBars.GetState(id);
+			return new ToolBarSpellBarConfiguration(state, definition.SchoolInstance.MaxSlots, background);
 		}
 
 		public static SpellBarToolbarGump CreateToolbarGump(SpellBarId id, PlayerMobile from)
@@ -158,14 +159,13 @@ namespace Server.SpellBars
 			SpellBarSchool school,
 			ISpellSchool schoolInstance,
 			int barNumber,
-			string storageKey,
 			string toolCommand,
 			string closeCommand,
 			string setupCommand,
 			string titlePrefix,
 			bool usePaging)
 		{
-			return new SpellBarDefinition(id, school, schoolInstance, barNumber, storageKey, toolCommand, closeCommand, setupCommand, titlePrefix, usePaging);
+			return new SpellBarDefinition(id, school, schoolInstance, barNumber, toolCommand, closeCommand, setupCommand, titlePrefix, usePaging);
 		}
 	}
 }

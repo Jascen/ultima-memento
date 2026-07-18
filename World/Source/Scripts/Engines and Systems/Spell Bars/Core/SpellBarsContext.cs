@@ -1,132 +1,112 @@
+using System.Collections.Generic;
+
 namespace Server.SpellBars
 {
-	[PropertyObject]
 	public class SpellBarsContext
 	{
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Mage1 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Mage2 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Mage3 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Mage4 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Necro1 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Necro2 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Knight1 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Knight2 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Death1 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Death2 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Bard1 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Bard2 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Priest1 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Priest2 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Monk1 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Monk2 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Arch1 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Arch2 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Arch3 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Arch4 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Elly1 { get; set; }
-
-		[CommandProperty(AccessLevel.GameMaster)]
-		public string Elly2 { get; set; }
+		private readonly Dictionary<SpellBarId, SpellBarState> _states;
 
 		public SpellBarsContext()
 		{
+			_states = new Dictionary<SpellBarId, SpellBarState>();
 		}
 
 		public SpellBarsContext(GenericReader reader)
+			: this()
 		{
-			int version = reader.ReadInt();
+			var version = reader.ReadInt();
 
-			Mage1 = reader.ReadString();
-			Mage2 = reader.ReadString();
-			Mage3 = reader.ReadString();
-			Mage4 = reader.ReadString();
-			Necro1 = reader.ReadString();
-			Necro2 = reader.ReadString();
-			Knight1 = reader.ReadString();
-			Knight2 = reader.ReadString();
-			Death1 = reader.ReadString();
-			Death2 = reader.ReadString();
-			Bard1 = reader.ReadString();
-			Bard2 = reader.ReadString();
-			Priest1 = reader.ReadString();
-			Priest2 = reader.ReadString();
-			Arch1 = reader.ReadString();
-			Arch2 = reader.ReadString();
-			Arch3 = reader.ReadString();
-			Arch4 = reader.ReadString();
-			Monk1 = reader.ReadString();
-			Monk2 = reader.ReadString();
-			Elly1 = reader.ReadString();
-			Elly2 = reader.ReadString();
+			if (version < 2)
+			{
+				DeserializeLegacy(reader);
+				return;
+			}
+
+			var count = reader.ReadInt();
+
+			for (var index = 0; index < count; index++)
+			{
+				var id = (SpellBarId)reader.ReadInt();
+				var isValid = IsValid(id);
+				var state = new SpellBarState(reader, isValid ? GetMaxSlots(id) : 0);
+
+				if (!isValid) continue;
+
+				_states[id] = state;
+			}
+		}
+
+		public SpellBarState GetState(SpellBarId id)
+		{
+			if (!IsValid(id)) throw new System.ArgumentOutOfRangeException("id");
+
+			SpellBarState state;
+
+			if (!_states.TryGetValue(id, out state))
+			{
+				state = new SpellBarState(GetMaxSlots(id));
+				_states[id] = state;
+			}
+
+			return state;
+		}
+
+		public void ReadLegacyState(SpellBarId id, string settings)
+		{
+			if (!IsValid(id)) throw new System.ArgumentOutOfRangeException("id");
+
+			_states[id] = SpellBarState.FromLegacy(settings, GetMaxSlots(id));
 		}
 
 		public void Serialize(GenericWriter writer)
 		{
-			writer.Write(1);
+			writer.Write(2);
+			writer.Write(_states.Count);
 
-			writer.Write(Mage1);
-			writer.Write(Mage2);
-			writer.Write(Mage3);
-			writer.Write(Mage4);
-			writer.Write(Necro1);
-			writer.Write(Necro2);
-			writer.Write(Knight1);
-			writer.Write(Knight2);
-			writer.Write(Death1);
-			writer.Write(Death2);
-			writer.Write(Bard1);
-			writer.Write(Bard2);
-			writer.Write(Priest1);
-			writer.Write(Priest2);
-			writer.Write(Arch1);
-			writer.Write(Arch2);
-			writer.Write(Arch3);
-			writer.Write(Arch4);
-			writer.Write(Monk1);
-			writer.Write(Monk2);
-			writer.Write(Elly1);
-			writer.Write(Elly2);
+			foreach (SpellBarId id in System.Enum.GetValues(typeof(SpellBarId)))
+			{
+				SpellBarState state;
+				if (!_states.TryGetValue(id, out state)) continue;
+
+				writer.Write((int)id);
+				state.Serialize(writer);
+			}
+		}
+
+		private static int GetMaxSlots(SpellBarId id)
+		{
+			return SpellBarRegistry.GetDefinition(id).SchoolInstance.MaxSlots;
+		}
+
+		private static bool IsValid(SpellBarId id)
+		{
+			return System.Enum.IsDefined(typeof(SpellBarId), id);
+		}
+
+		private void DeserializeLegacy(GenericReader reader)
+		{
+			ReadLegacyState(SpellBarId.Mage_1, reader.ReadString());
+			ReadLegacyState(SpellBarId.Mage_2, reader.ReadString());
+			ReadLegacyState(SpellBarId.Mage_3, reader.ReadString());
+			ReadLegacyState(SpellBarId.Mage_4, reader.ReadString());
+			ReadLegacyState(SpellBarId.Necro_1, reader.ReadString());
+			ReadLegacyState(SpellBarId.Necro_2, reader.ReadString());
+			ReadLegacyState(SpellBarId.Knight_1, reader.ReadString());
+			ReadLegacyState(SpellBarId.Knight_2, reader.ReadString());
+			ReadLegacyState(SpellBarId.Death_1, reader.ReadString());
+			ReadLegacyState(SpellBarId.Death_2, reader.ReadString());
+			ReadLegacyState(SpellBarId.Bard_1, reader.ReadString());
+			ReadLegacyState(SpellBarId.Bard_2, reader.ReadString());
+			ReadLegacyState(SpellBarId.Priest_1, reader.ReadString());
+			ReadLegacyState(SpellBarId.Priest_2, reader.ReadString());
+			ReadLegacyState(SpellBarId.Ancient_1, reader.ReadString());
+			ReadLegacyState(SpellBarId.Ancient_2, reader.ReadString());
+			ReadLegacyState(SpellBarId.Ancient_3, reader.ReadString());
+			ReadLegacyState(SpellBarId.Ancient_4, reader.ReadString());
+			ReadLegacyState(SpellBarId.Monk_1, reader.ReadString());
+			ReadLegacyState(SpellBarId.Monk_2, reader.ReadString());
+			ReadLegacyState(SpellBarId.Elemental_1, reader.ReadString());
+			ReadLegacyState(SpellBarId.Elemental_2, reader.ReadString());
 		}
 	}
-}
+} 

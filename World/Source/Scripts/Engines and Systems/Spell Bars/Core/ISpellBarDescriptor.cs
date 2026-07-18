@@ -8,8 +8,6 @@ namespace Server.SpellBars
 
 		string SetupCommand { get; }
 
-		string StorageKey { get; }
-
 		string Title { get; }
 
 		string ToolCommand { get; }

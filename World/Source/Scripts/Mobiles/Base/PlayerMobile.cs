@@ -3193,7 +3193,7 @@ namespace Server.Mobiles
 				case 34:
 				{
 					if (version < 50) Preferences.UsingAncientBook = reader.ReadBool();
-					if ( version < 49 ) SpellBars.Arch4 = reader.ReadString();
+					if (version < 49) SpellBars.ReadLegacyState(SpellBarId.Ancient_4, reader.ReadString());
 
 					goto case 33;
 				}
@@ -3261,27 +3261,27 @@ namespace Server.Mobiles
 
 					if ( version < 49 )
 					{
-						SpellBars.Mage1 = reader.ReadString();
-						SpellBars.Mage2 = reader.ReadString();
-						SpellBars.Mage3 = reader.ReadString();
-						SpellBars.Mage4 = reader.ReadString();
-						SpellBars.Necro1 = reader.ReadString();
-						SpellBars.Necro2 = reader.ReadString();
-						SpellBars.Knight1 = reader.ReadString();
-						SpellBars.Knight2 = reader.ReadString();
-						SpellBars.Death1 = reader.ReadString();
-						SpellBars.Death2 = reader.ReadString();
-						SpellBars.Bard1 = reader.ReadString();
-						SpellBars.Bard2 = reader.ReadString();
-						SpellBars.Priest1 = reader.ReadString();
-						SpellBars.Priest2 = reader.ReadString();
-						SpellBars.Arch1 = reader.ReadString();
-						SpellBars.Arch2 = reader.ReadString();
-						SpellBars.Arch3 = reader.ReadString();
-						SpellBars.Monk1 = reader.ReadString();
-						SpellBars.Monk2 = reader.ReadString();
-						SpellBars.Elly1 = reader.ReadString();
-						SpellBars.Elly2 = reader.ReadString();
+						SpellBars.ReadLegacyState(SpellBarId.Mage_1, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Mage_2, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Mage_3, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Mage_4, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Necro_1, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Necro_2, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Knight_1, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Knight_2, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Death_1, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Death_2, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Bard_1, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Bard_2, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Priest_1, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Priest_2, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Ancient_1, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Ancient_2, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Ancient_3, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Monk_1, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Monk_2, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Elemental_1, reader.ReadString());
+						SpellBars.ReadLegacyState(SpellBarId.Elemental_2, reader.ReadString());
 					}
 
 					if (version < 50) Preferences.QuickBar = reader.ReadString();

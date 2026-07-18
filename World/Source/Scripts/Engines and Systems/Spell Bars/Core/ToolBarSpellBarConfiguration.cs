@@ -1,59 +1,46 @@
-using Server.Mobiles;
-
 namespace Server.SpellBars
 {
 	public sealed class ToolBarSpellBarConfiguration : ISpellBarConfiguration
 	{
-		private readonly PlayerMobile _from;
-		private readonly int _isVerticalIndex;
 		private readonly int _maxSlots;
-		private readonly string _settings;
-		private readonly int _showNameIndex;
-		private readonly int _totalOptions;
+		private readonly SpellBarState _state;
 
-		public ToolBarSpellBarConfiguration(PlayerMobile from, string storageKey, int maxSlots, int backgroundImage)
+		public ToolBarSpellBarConfiguration(SpellBarState state, int maxSlots, int backgroundImage)
 		{
 			_maxSlots = maxSlots;
-			_showNameIndex = maxSlots + 1;
-			_isVerticalIndex = maxSlots + 2;
-			_totalOptions = maxSlots + 3;
+			_state = state;
 			BackgroundImage = backgroundImage;
-			StorageKey = storageKey;
-			_from = from;
-			_settings = ToolBarUpdates.GetToolBarSettings(from, storageKey);
-			IsVertical = ToolBarUpdates.GetToolBarSetting(from, _isVerticalIndex, storageKey) > 0;
-			ShowName = ToolBarUpdates.GetToolBarSetting(from, _showNameIndex, storageKey) > 0;
 		}
 
 		public int BackgroundImage { get; private set; }
 
-		public bool IsVertical { get; private set; }
+		public bool IsVertical
+		{ get { return _state.IsVertical; } }
 
 		public int MaxSlots
 		{ get { return _maxSlots; } }
 
-		public bool ShowName { get; private set; }
-
-		public string StorageKey { get; private set; }
+		public bool ShowName
+		{ get { return _state.ShowName; } }
 
 		public bool IsSpellEnabled(int spellIndex)
 		{
-			return ToolBarUpdates.GetToolBarSetting(_settings, spellIndex);
+			return _state.IsSpellEnabled(spellIndex);
 		}
 
 		public void ToggleIsVertical()
 		{
-			ToolBarUpdates.UpdateToolBar(_from, _isVerticalIndex, StorageKey, _totalOptions);
+			_state.IsVertical = !_state.IsVertical;
 		}
 
 		public void ToggleShowName()
 		{
-			ToolBarUpdates.UpdateToolBar(_from, _showNameIndex, StorageKey, _totalOptions);
+			_state.ShowName = !_state.ShowName;
 		}
 
 		public void ToggleSpellEnabled(int spellIndex)
 		{
-			ToolBarUpdates.UpdateToolBar(_from, spellIndex, StorageKey, _totalOptions);
+			_state.ToggleSpellEnabled(spellIndex);
 		}
 	}
 }
