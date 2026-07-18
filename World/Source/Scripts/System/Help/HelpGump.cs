@@ -58,194 +58,192 @@ namespace Server.Engines.Help
 	public class HelpGump : Gump
 	{
 		private const string TEXT_COLOR = "#ddbc4b"; // Yellowy
+		private readonly int m_PageNumber;
 
 		private enum PageActionType
 		{
 			Close = 0,
-			Navigate_Main = 1,
-			Do_Toggle_AFK = 2,
-			Show_Chat = 3,
-			Do_CorpseClear = 4,
-			Do_CorpseSearch = 5,
-			Show_Emote = 6,
-			Navigate_MagicToolbars = 7,
-			Do_MoongateSearch = 8,
-			Show_MOTD = 9,
-			Show_Quests = 10,
-			Show_QuickBar = 11,
 
-			Show_Settings = 12,
-			Navigate_Library = 13,
-			Show_Statistics = 14,
-			Do_StuckInWorld = 15,
-			Show_WeaponAbilities = 16,
-			Show_WealthBar = 17,
-			Show_Conversations = 18,
-			Navigate_Changelog = 19,
-			Setting_OrdinaryResources = 49,
-			Setting_WeaponAbilityNames = 51,
-			Setting_AutoSheath = 52,
-			Setting_MusicTone = 53,
-			Setting_PrivatePlay = 54,
-			Setting_LootOptions = 55,
-			Setting_SkillTitle = 56,
-			Setting_Playstyle_Normal = 57,
-			Setting_Playstyle_Evil = 58,
-			Setting_Playstyle_Oriental = 59,
-			Setting_MessageColors = 60,
-			Setting_AutoAttack = 61,
-			Show_RegBar = 62,
-			Setting_UseAncientSpellbook = 63,
-			Setting_ClassicPoisoning = 64,
-			Setting_MusicPlaylist = 65,
-			MagicToolbar_BardSongsBarI_Config = 66,
-			MagicToolbar_BardSongsBarII_Config = 67,
-			MagicToolbar_KnightSpellBarI_Config = 68,
-			MagicToolbar_KnightSpellBarII_Config = 69,
-			MagicToolbar_DeathKnightSpellBarI_Config = 70,
-			MagicToolbar_DeathKnightSpellBarII_Config = 71,
-			MagicToolbar_MagerySpellBarI_Config = 72,
-			MagicToolbar_MagerySpellBarII_Config = 73,
-			MagicToolbar_MagerySpellBarIII_Config = 74,
-			MagicToolbar_MagerySpellBarIV_Config = 75,
-			MagicToolbar_NecromancerSpellBarI_Config = 76,
-			MagicToolbar_NecromancerSpellBarII_Config = 77,
-			MagicToolbar_PriestSpellBarI_Config = 78,
-			MagicToolbar_PriestSpellBarII_Config = 79,
-
-			Setting_CustomTitle = 80,
-
-			MARKER_SETTING_START = 81,
-			Setting_MusicTone_Info = 82,
-			Setting_MusicPlaylist_Info = 83,
-			Setting_PrivatePlay_Info = 84,
-			Setting_LootOptions_Info = 85,
-			Setting_ClassicPoisoning_Info = 86,
-			Setting_SkillTitle_Info = 87,
-			Setting_MessageColors_Info = 88,
-			Setting_AutoAttack_Info = 89,
-			Setting_Playstyle_Normal_Info = 92,
-			Setting_Playstyle_Evil_Info = 93,
-			Setting_Playstyle_Oriental_Info = 94,
-			ShowHelp_MagicToolbars = 95,
-			Setting_MagerySpellColor_Info = 96,
-			Setting_CustomTitle_Info = 97,
-			Setting_WeaponAbilityNames_Info = 99,
-			Setting_AutoSheath_Info = 100,
-			Setting_GumpImages_Info = 101,
-			Setting_WeaponAbilityBar_Info = 102,
-			Setting_CreatureMagicFocus_Info = 103,
-			Setting_CreatureType_Info = 104,
-			Setting_CreatureSounds_Info = 105,
-			Setting_UseAncientSpellbook_Info = 106,
-			Setting_SetCraftingContainer_Info = 107,
-			Setting_SetHarvestingContainer_Info = 108,
-			Setting_SetLootContainer_Info = 109,
-			Setting_OrdinaryResources_Info = 110,
-			Setting_DoubleClickToIDItems_Info = 111,
-			Setting_Playstyle_Barbaric_Info = 198,
-			Setting_SkillList_Info = 199,
-			MARKER_SETTING_END = 200,
-
-			MARKER_TOOLBAR_START = 200, // Yes, duplicate
-			MagicToolbar_Bard_I_Open = 266,
-			MagicToolbar_Bard_II_Open = 267,
-			MagicToolbar_Knight_I_Open = 268,
-			MagicToolbar_Knight_II_Open = 269,
-			MagicToolbar_DeathKnight_I_Open = 270,
-			MagicToolbar_DeathKnight_II_Open = 271,
-			MagicToolbar_Magery_I_Open = 272,
-			MagicToolbar_Magery_II_Open = 273,
-			MagicToolbar_Magery_III_Open = 274,
-			MagicToolbar_Magery_IV_Open = 275,
-			MagicToolbar_Necromancer_I_Open = 276,
-			MagicToolbar_Necromancer_II_Open = 277,
-			MagicToolbar_Priest_I_Open = 278,
-			MagicToolbar_Priest_II_Open = 279,
-			MagicToolbar_Monk_I_Open = 280,
-			MagicToolbar_Monk_II_Open = 281,
-			MagicToolbar_Elemental_I_Open = 282,
-			MagicToolbar_Elemental_II_Open = 283,
-			MagicToolbar_Bard_I_Close = 366,
-			MagicToolbar_Bard_II_Close = 367,
-			MagicToolbar_Knight_I_Close = 368,
-			MagicToolbar_Knight_II_Close = 369,
-			MagicToolbar_DeathKnight_I_Close = 370,
-			MagicToolbar_DeathKnight_II_Close = 371,
-			MagicToolbar_Magery_I_Close = 372,
-			MagicToolbar_Magery_II_Close = 373,
-			MagicToolbar_Magery_III_Close = 374,
-			MagicToolbar_Magery_IV_Close = 375,
-			MagicToolbar_Necromancer_I_Close = 376,
-			MagicToolbar_Necromancer_II_Close = 377,
-			MagicToolbar_Priest_I_Close = 378,
-			MagicToolbar_Priest_II_Close = 379,
-			MagicToolbar_Monk_I_Close = 380,
-			MagicToolbar_Monk_II_Close = 381,
-			MagicToolbar_Elemental_I_Close = 382,
-			MagicToolbar_Elemental_II_Close = 383,
-			MagicToolbar_Ancient_I_Open = 384,
-			MagicToolbar_Ancient_I_Close = 385,
-			MagicToolbar_Ancient_II_Open = 386,
-			MagicToolbar_Ancient_II_Close = 387,
-			MagicToolbar_Ancient_III_Open = 388,
-			MagicToolbar_Ancient_III_Close = 389,
-			MagicToolbar_Ancient_IV_Open = 390,
-			MagicToolbar_Ancient_IV_Close = 391,
-			MARKER_TOOLBAR_END = 400,
-
-			Setting_MagerySpellColor_White = 500,
-			Setting_MagerySpellColor_Black = 501,
-			Setting_MagerySpellColor_Blue = 502,
-			Setting_MagerySpellColor_Red = 503,
-			Setting_MagerySpellColor_Green = 504,
-			Setting_MagerySpellColor_Purple = 505,
-			Setting_MagerySpellColor_Yellow = 506,
-			Setting_MagerySpellColor_Default = 507,
-			MagicToolbar_ElementalSpellBarI_Config = 978,
-			MagicToolbar_ElementalSpellBarII_Config = 979,
-			MagicToolbar_MonkSpellBarI_Config = 980,
-			MagicToolbar_MonkSpellBarII_Config = 981,
-			Setting_SkillList = 982,
-			Show_SkillList = 983,
-			Setting_Playstyle_Barbaric = 984,
-			Setting_GumpImages = 985,
-			Setting_WeaponAbilityBar = 986,
-			Setting_CreatureMagicFocus = 989,
-			Setting_CreatureType = 990,
-			Setting_CreatureSounds = 991,
-			Setting_LegacyCarve = 992,
-			MagicToolbar_AncientSpellBarI_Config = 1081,
-			MagicToolbar_AncientSpellBarII_Config = 1082,
-			MagicToolbar_AncientSpellBarIII_Config = 1083,
-			MagicToolbar_AncientSpellBarIV_Config = 1084,
-			Setting_SetLootContainer = 5000,
-			Setting_SetCraftingContainer = 5001,
-			Setting_SetHarvestingContainer = 5002,
-			Setting_DoubleClickToIDItems = 5003,
-			Setting_RemoveVendorGoldSafeguard,
-			Setting_RemoveVendorGoldSafeguard_Info,
-			Setting_SuppressVendorTooltips,
-			Setting_SuppressVendorTooltips_Info,
 			Do_Achievements,
-			Setting_SingleAttemptID,
-			Setting_SingleAttemptID_Info,
-			Setting_ColorlessFabricBreakdown,
+			Do_CorpseClear,
+			Do_CorpseSearch,
+			Do_MoongateSearch,
+			Do_StuckInWorld,
+			Do_Toggle_AFK,
+
+			MagicToolbar_Ancient_I_Close,
+			MagicToolbar_Ancient_I_Config,
+			MagicToolbar_Ancient_I_Open,
+			MagicToolbar_Ancient_II_Close,
+			MagicToolbar_Ancient_II_Config,
+			MagicToolbar_Ancient_II_Open,
+			MagicToolbar_Ancient_III_Close,
+			MagicToolbar_Ancient_III_Config,
+			MagicToolbar_Ancient_III_Open,
+			MagicToolbar_Ancient_IV_Close,
+			MagicToolbar_Ancient_IV_Config,
+			MagicToolbar_Ancient_IV_Open,
+			MagicToolbar_Bard_I_Close,
+			MagicToolbar_Bard_I_Config,
+			MagicToolbar_Bard_I_Open,
+			MagicToolbar_Bard_II_Close,
+			MagicToolbar_Bard_II_Config,
+			MagicToolbar_Bard_II_Open,
+			MagicToolbar_DeathKnight_I_Close,
+			MagicToolbar_DeathKnight_I_Config,
+			MagicToolbar_DeathKnight_I_Open,
+			MagicToolbar_DeathKnight_II_Close,
+			MagicToolbar_DeathKnight_II_Config,
+			MagicToolbar_DeathKnight_II_Open,
+			MagicToolbar_Elemental_I_Close,
+			MagicToolbar_Elemental_I_Config,
+			MagicToolbar_Elemental_I_Open,
+			MagicToolbar_Elemental_II_Close,
+			MagicToolbar_Elemental_II_Config,
+			MagicToolbar_Elemental_II_Open,
+			MagicToolbar_Knight_I_Close,
+			MagicToolbar_Knight_I_Config,
+			MagicToolbar_Knight_I_Open,
+			MagicToolbar_Knight_II_Close,
+			MagicToolbar_Knight_II_Config,
+			MagicToolbar_Knight_II_Open,
+			MagicToolbar_Magery_I_Close,
+			MagicToolbar_Magery_I_Config,
+			MagicToolbar_Magery_I_Open,
+			MagicToolbar_Magery_II_Close,
+			MagicToolbar_Magery_II_Config,
+			MagicToolbar_Magery_II_Open,
+			MagicToolbar_Magery_III_Close,
+			MagicToolbar_Magery_III_Config,
+			MagicToolbar_Magery_III_Open,
+			MagicToolbar_Magery_IV_Close,
+			MagicToolbar_Magery_IV_Config,
+			MagicToolbar_Magery_IV_Open,
+			MagicToolbar_Monk_I_Close,
+			MagicToolbar_Monk_I_Config,
+			MagicToolbar_Monk_I_Open,
+			MagicToolbar_Monk_II_Close,
+			MagicToolbar_Monk_II_Config,
+			MagicToolbar_Monk_II_Open,
+			MagicToolbar_Necromancer_I_Close,
+			MagicToolbar_Necromancer_I_Config,
+			MagicToolbar_Necromancer_I_Open,
+			MagicToolbar_Necromancer_II_Close,
+			MagicToolbar_Necromancer_II_Config,
+			MagicToolbar_Necromancer_II_Open,
+			MagicToolbar_Priest_I_Close,
+			MagicToolbar_Priest_I_Config,
+			MagicToolbar_Priest_I_Open,
+			MagicToolbar_Priest_II_Close,
+			MagicToolbar_Priest_II_Config,
+			MagicToolbar_Priest_II_Open,
+
+			Navigate_Changelog,
+			Navigate_Library,
+			Navigate_MagicToolbars,
+			Navigate_Main,
+
+			Setting_AutoAttack_Info,
+			Setting_AutoAttack,
+			Setting_AutoSheath_Info,
+			Setting_AutoSheath,
+			Setting_ClassicPoisoning_Info,
+			Setting_ClassicPoisoning,
 			Setting_ColorlessFabricBreakdown_Info,
-			Setting_DoubleClickToTalk,
+			Setting_ColorlessFabricBreakdown,
+			Setting_CreatureMagicFocus_Info,
+			Setting_CreatureMagicFocus,
+			Setting_CreatureSounds_Info,
+			Setting_CreatureSounds,
+			Setting_CreatureType_Info,
+			Setting_CreatureType,
+			Setting_CustomTitle_Info,
+			Setting_CustomTitle,
+			Setting_DoubleClickToIDItems_Info,
+			Setting_DoubleClickToIDItems,
 			Setting_DoubleClickToTalk_Info,
-			Setting_VendorContainerSell,
-			Setting_VendorContainerSell_Info,
-			Setting_ModernSkills,
-			Setting_ModernSkills_Info,
+			Setting_DoubleClickToTalk,
+			Setting_GumpImages_Info,
+			Setting_GumpImages,
 			Setting_LegacyCarve_Info,
+			Setting_LegacyCarve,
+			Setting_LootOptions_Info,
+			Setting_LootOptions,
+			Setting_MagerySpellColor_Black,
+			Setting_MagerySpellColor_Blue,
+			Setting_MagerySpellColor_Default,
+			Setting_MagerySpellColor_Green,
+			Setting_MagerySpellColor_Info,
+			Setting_MagerySpellColor_Purple,
+			Setting_MagerySpellColor_Red,
+			Setting_MagerySpellColor_White,
+			Setting_MagerySpellColor_Yellow,
+			Setting_MessageColors_Info,
+			Setting_MessageColors,
+			Setting_ModernSkills_Info,
+			Setting_ModernSkills,
+			Setting_MusicPlaylist_Info,
+			Setting_MusicPlaylist,
+			Setting_MusicTone_Info,
+			Setting_MusicTone,
+			Setting_OrdinaryResources_Info,
+			Setting_OrdinaryResources,
+			Setting_Playstyle_Barbaric_Info,
+			Setting_Playstyle_Barbaric,
+			Setting_Playstyle_Evil_Info,
+			Setting_Playstyle_Evil,
+			Setting_Playstyle_Normal_Info,
+			Setting_Playstyle_Normal,
+			Setting_Playstyle_Oriental_Info,
+			Setting_Playstyle_Oriental,
+			Setting_PrivatePlay_Info,
+			Setting_PrivatePlay,
+			Setting_RemoveVendorGoldSafeguard_Info,
+			Setting_RemoveVendorGoldSafeguard,
+			Setting_SetCraftingContainer_Info,
+			Setting_SetCraftingContainer,
+			Setting_SetHarvestingContainer_Info,
+			Setting_SetHarvestingContainer,
+			Setting_SetLootContainer_Info,
+			Setting_SetLootContainer,
+			Setting_SingleAttemptID_Info,
+			Setting_SingleAttemptID,
+			Setting_SkillList_Info,
+			Setting_SkillList,
+			Setting_SkillTitle_Info,
+			Setting_SkillTitle,
+			Setting_SuppressVendorTooltips_Info,
+			Setting_SuppressVendorTooltips,
+			Setting_UseAncientSpellbook_Info,
+			Setting_UseAncientSpellbook,
+			Setting_VendorContainerSell_Info,
+			Setting_VendorContainerSell,
+			Setting_WeaponAbilityBar_Info,
+			Setting_WeaponAbilityBar,
+			Setting_WeaponAbilityNames_Info,
+			Setting_WeaponAbilityNames,
+
+			Show_Chat,
+			Show_Conversations,
+			Show_Emote,
+			Show_MOTD,
+			Show_Quests,
+			Show_QuickBar,
+			Show_RegBar,
+			Show_Settings,
+			Show_SkillList,
+			Show_Statistics,
+			Show_WealthBar,
+			Show_WeaponAbilities,
+			ShowHelp_MagicToolbars,
+
 			Changelog_PageBase = 9000,
 		}
 
 		public static void Initialize()
 		{
 			EventSink.HelpRequest += new HelpRequestEventHandler( EventSink_HelpRequest );
-            CommandSystem.Register("toolbars", AccessLevel.Player, e => OpenHelpGumpPageCommand(e, 7));
+            CommandSystem.Register("toolbars", AccessLevel.Player, e => OpenHelpGumpPageCommand(e, (int)PageActionType.Navigate_MagicToolbars));
 		}
 
         private static void OpenHelpGumpPageCommand(CommandEventArgs e, int pageNumber)
@@ -271,7 +269,7 @@ namespace Server.Engines.Help
 			if ( PageQueue.Contains( e.Mobile ) )
 				e.Mobile.SendMenu( new ContainedMenu( e.Mobile ) );
 			else
-				e.Mobile.SendGump( new HelpGump( e.Mobile, 1 ) );
+				e.Mobile.SendGump( new HelpGump( e.Mobile, (int)PageActionType.Navigate_Main ) );
 		}
 
 		private static bool IsYoung( Mobile m )
@@ -299,6 +297,7 @@ namespace Server.Engines.Help
 		{
 			if ( false == ( mobile is PlayerMobile ) ) return;
 
+			m_PageNumber = page;
 			var from = (PlayerMobile)mobile;
 			string HelpText = MyHelp();
 			string color = TEXT_COLOR;
@@ -405,45 +404,45 @@ namespace Server.Engines.Help
 
 				if (hasResearch)
 				{
-					AddMagicToolbarRow(SECTION_START_X, barS, "Ancient Spell Bar", PageActionType.MagicToolbar_AncientSpellBarI_Config, PageActionType.MagicToolbar_Ancient_I_Open, PageActionType.MagicToolbar_Ancient_I_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Ancient Spell Bar", PageActionType.MagicToolbar_Ancient_I_Config, PageActionType.MagicToolbar_Ancient_I_Open, PageActionType.MagicToolbar_Ancient_I_Close);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_AncientSpellBarII_Config, PageActionType.MagicToolbar_Ancient_II_Open, PageActionType.MagicToolbar_Ancient_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Ancient_II_Config, PageActionType.MagicToolbar_Ancient_II_Open, PageActionType.MagicToolbar_Ancient_II_Close);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_AncientSpellBarIII_Config, PageActionType.MagicToolbar_Ancient_III_Open, PageActionType.MagicToolbar_Ancient_III_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Ancient_III_Config, PageActionType.MagicToolbar_Ancient_III_Open, PageActionType.MagicToolbar_Ancient_III_Close);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_AncientSpellBarIV_Config, PageActionType.MagicToolbar_Ancient_IV_Open, PageActionType.MagicToolbar_Ancient_IV_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Ancient_IV_Config, PageActionType.MagicToolbar_Ancient_IV_Open, PageActionType.MagicToolbar_Ancient_IV_Close);
 					barS += barM;
 				}
 
 				if (hasBarding)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Bard Songs Bar", PageActionType.MagicToolbar_BardSongsBarI_Config, PageActionType.MagicToolbar_Bard_I_Open, PageActionType.MagicToolbar_Bard_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Bard Songs Bar", PageActionType.MagicToolbar_Bard_I_Config, PageActionType.MagicToolbar_Bard_I_Open, PageActionType.MagicToolbar_Bard_I_Close, true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_BardSongsBarII_Config, PageActionType.MagicToolbar_Bard_II_Open, PageActionType.MagicToolbar_Bard_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Bard_II_Config, PageActionType.MagicToolbar_Bard_II_Open, PageActionType.MagicToolbar_Bard_II_Close);
 					barS += barM;
 				}
 
 				if (hasKnightship)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Knight Spell Bar", PageActionType.MagicToolbar_KnightSpellBarI_Config, PageActionType.MagicToolbar_Knight_I_Open, PageActionType.MagicToolbar_Knight_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Knight Spell Bar", PageActionType.MagicToolbar_Knight_I_Config, PageActionType.MagicToolbar_Knight_I_Open, PageActionType.MagicToolbar_Knight_I_Close, true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_KnightSpellBarII_Config, PageActionType.MagicToolbar_Knight_II_Open, PageActionType.MagicToolbar_Knight_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Knight_II_Config, PageActionType.MagicToolbar_Knight_II_Open, PageActionType.MagicToolbar_Knight_II_Close);
 					barS += barM;
 
 					if (hasNegativeKarma)
 					{
 						barS -= BAR_BORDER_HEIGHT;
-						AddMagicToolbarRow(SECTION_START_X, barS, "Death Knight Spell Bar", PageActionType.MagicToolbar_DeathKnightSpellBarI_Config, PageActionType.MagicToolbar_DeathKnight_I_Open, PageActionType.MagicToolbar_DeathKnight_I_Close, true);
+						AddMagicToolbarRow(SECTION_START_X, barS, "Death Knight Spell Bar", PageActionType.MagicToolbar_DeathKnight_I_Config, PageActionType.MagicToolbar_DeathKnight_I_Open, PageActionType.MagicToolbar_DeathKnight_I_Close, true);
 						barS += barM;
 
-						AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_DeathKnightSpellBarII_Config, PageActionType.MagicToolbar_DeathKnight_II_Open, PageActionType.MagicToolbar_DeathKnight_II_Close);
+						AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_DeathKnight_II_Config, PageActionType.MagicToolbar_DeathKnight_II_Open, PageActionType.MagicToolbar_DeathKnight_II_Close);
 						barS += barM;
 					}
 				}
@@ -451,56 +450,56 @@ namespace Server.Engines.Help
 				if (hasElementalism)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Elemental Spell Bar", PageActionType.MagicToolbar_ElementalSpellBarI_Config, PageActionType.MagicToolbar_Elemental_I_Open, PageActionType.MagicToolbar_Elemental_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Elemental Spell Bar", PageActionType.MagicToolbar_Elemental_I_Config, PageActionType.MagicToolbar_Elemental_I_Open, PageActionType.MagicToolbar_Elemental_I_Close, true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_ElementalSpellBarII_Config, PageActionType.MagicToolbar_Elemental_II_Open, PageActionType.MagicToolbar_Elemental_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Elemental_II_Config, PageActionType.MagicToolbar_Elemental_II_Open, PageActionType.MagicToolbar_Elemental_II_Close);
 					barS += barM;
 				}
 
 				if (hasMagery)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Magery Spell Bar", PageActionType.MagicToolbar_MagerySpellBarI_Config, PageActionType.MagicToolbar_Magery_I_Open, PageActionType.MagicToolbar_Magery_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Magery Spell Bar", PageActionType.MagicToolbar_Magery_I_Config, PageActionType.MagicToolbar_Magery_I_Open, PageActionType.MagicToolbar_Magery_I_Close, true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_MagerySpellBarII_Config, PageActionType.MagicToolbar_Magery_II_Open, PageActionType.MagicToolbar_Magery_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Magery_II_Config, PageActionType.MagicToolbar_Magery_II_Open, PageActionType.MagicToolbar_Magery_II_Close);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_MagerySpellBarIII_Config, PageActionType.MagicToolbar_Magery_III_Open, PageActionType.MagicToolbar_Magery_III_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Magery_III_Config, PageActionType.MagicToolbar_Magery_III_Open, PageActionType.MagicToolbar_Magery_III_Close);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_MagerySpellBarIV_Config, PageActionType.MagicToolbar_Magery_IV_Open, PageActionType.MagicToolbar_Magery_IV_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Magery_IV_Config, PageActionType.MagicToolbar_Magery_IV_Open, PageActionType.MagicToolbar_Magery_IV_Close);
 					barS += barM;
 				}
 
 				if (hasMonk)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Monk Ability Bar", PageActionType.MagicToolbar_MonkSpellBarI_Config, PageActionType.MagicToolbar_Monk_I_Open, PageActionType.MagicToolbar_Monk_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Monk Ability Bar", PageActionType.MagicToolbar_Monk_I_Config, PageActionType.MagicToolbar_Monk_I_Open, PageActionType.MagicToolbar_Monk_I_Close, true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_MonkSpellBarII_Config, PageActionType.MagicToolbar_Monk_II_Open, PageActionType.MagicToolbar_Monk_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Monk_II_Config, PageActionType.MagicToolbar_Monk_II_Open, PageActionType.MagicToolbar_Monk_II_Close);
 					barS += barM;
 				}
 
 				if (hasNecromancy)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Necromancer Spell Bar", PageActionType.MagicToolbar_NecromancerSpellBarI_Config, PageActionType.MagicToolbar_Necromancer_I_Open, PageActionType.MagicToolbar_Necromancer_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Necromancer Spell Bar", PageActionType.MagicToolbar_Necromancer_I_Config, PageActionType.MagicToolbar_Necromancer_I_Open, PageActionType.MagicToolbar_Necromancer_I_Close, true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_NecromancerSpellBarII_Config, PageActionType.MagicToolbar_Necromancer_II_Open, PageActionType.MagicToolbar_Necromancer_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Necromancer_II_Config, PageActionType.MagicToolbar_Necromancer_II_Open, PageActionType.MagicToolbar_Necromancer_II_Close);
 					barS += barM;
 				}
 
 				if (hasHolyMan)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Priest Prayer Bar", PageActionType.MagicToolbar_PriestSpellBarI_Config, PageActionType.MagicToolbar_Priest_I_Open, PageActionType.MagicToolbar_Priest_I_Close, true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Priest Prayer Bar", PageActionType.MagicToolbar_Priest_I_Config, PageActionType.MagicToolbar_Priest_I_Open, PageActionType.MagicToolbar_Priest_I_Close, true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_PriestSpellBarII_Config, PageActionType.MagicToolbar_Priest_II_Open, PageActionType.MagicToolbar_Priest_II_Close);
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Priest_II_Config, PageActionType.MagicToolbar_Priest_II_Open, PageActionType.MagicToolbar_Priest_II_Close);
 					barS += barM;
 				}
 			}
@@ -778,6 +777,11 @@ namespace Server.Engines.Help
 			}
 		}
 
+		private void ToggleAutoOpenSpellBar( PlayerMobile from, SpellBarId id )
+		{
+			from.SpellBars.GetState(id).OpenOnLogin = !from.SpellBars.GetState(id).OpenOnLogin;
+		}
+
 		private void AddSetting(int x, int y, PlayerMobile from, string name, PageActionType actionType, PageActionType infoType, bool addActionButton = true)
 		{
 			const int RIGHT_ARROW = 4005;
@@ -993,670 +997,572 @@ namespace Server.Engines.Help
 			}
 
 			if ( ShowHelpInfoWindow( from, actionType ) ) return;
+
+			bool reopenPage = false;
+			switch ( actionType )
+			{
+				case PageActionType.Close:
+				{
+					//from.SendLocalizedMessage( 501235, "", 0x35 ); // Help request aborted.
+					break;
+				}
+				case PageActionType.Navigate_Main:
+				{
+					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Navigate_Main ) );
+					break;
+				}
+				case PageActionType.Do_Achievements:
+				{
+					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Navigate_Main ) );
+					AchievementSystem.OpenGump( from, from );
+					break;
+				}
+				case PageActionType.Do_Toggle_AFK:
+				{
+					InvokeCommand( "afk", from );
+					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Do_Toggle_AFK ) );
+					break;
+				}
+				case PageActionType.Show_Chat:
+				{
+					InvokeCommand( "c", from );
+					break;
+				}
+				case PageActionType.Do_CorpseClear:
+				{
+					InvokeCommand( "corpseclear", from );
+					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Do_CorpseClear ) );
+					break;
+				}
+				case PageActionType.Do_CorpseSearch:
+				{
+					InvokeCommand( "corpse", from );
+					break;
+				}
+				case PageActionType.Show_Emote:
+				{
+					InvokeCommand( "emote", from );
+					break;
+				}
+				case PageActionType.Navigate_MagicToolbars:
+				{
+					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Navigate_MagicToolbars ) );
+					break;
+				}
+				case PageActionType.Do_MoongateSearch:
+				{
+					InvokeCommand( "magicgate", from );
+					break;
+				}
+				case PageActionType.Show_MOTD:
+				{
+					from.CloseGump( typeof( Joeku.MOTD.MOTD_Gump ) );
+					Joeku.MOTD.MOTD_Utility.SendGump( from, false, 0, 1 );
+					break;
+				}
+				case PageActionType.Show_Quests:
+				{
+					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Show_Quests ) );
+					from.SendGump(new QuestLogGump((PlayerMobile)from));
+					break;
+				}
+				case PageActionType.Show_QuickBar:
+				{
+					from.CloseGump( typeof( QuickBar ) );
+					from.SendGump( new QuickBar( from ) );
+					break;
+				}
+				case PageActionType.Show_RegBar:
+				{
+					from.CloseGump( typeof( RegBar ) );
+					from.SendGump( new RegBar( from ) );
+					break;
+				}
+				case PageActionType.Show_Settings:
+				{
+					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Show_Settings ) );
+					break;
+				}
+				case PageActionType.Navigate_Library:
+				{
+					from.CloseGump( typeof( MyLibrary ) );
+					from.SendSound( 0x4A ); 
+					from.SendGump( new MyLibrary( from, (int)PageActionType.Navigate_Library ) );
+					break;
+				}
+				case PageActionType.Show_Statistics:
+				{
+					from.CloseGump( typeof( Server.Statistics.StatisticsGump ) );
+					from.SendGump( new Server.Statistics.StatisticsGump( from, (int)PageActionType.Show_Statistics ) );
+					break;
+				}
+				case PageActionType.Do_StuckInWorld:
+				{
+					BaseHouse house = BaseHouse.FindHouseAt( from );
+
+					if ( house != null && house.IsAosRules )
+					{
+						from.Location = house.BanLocation;
+					}
+					else if ( from.Region.IsPartOf( typeof( Server.Regions.Jail ) ) )
+					{
+						from.SendLocalizedMessage( 1041530, "", 0x35 ); // You'll need a better jailbreak plan then that!
+					}
+					else if ( from.CanUseStuckMenu() && from.Region.CanUseStuckMenu( from ) && !CheckCombat( from ) && !from.Frozen && !from.Criminal && (Core.AOS || from.Kills < 5) )
+					{
+						StuckMenu menu = new StuckMenu( from, from, true );
+
+						menu.BeginClose();
+
+						from.SendGump( menu );
+					}
+
+					break;
+				}
+				case PageActionType.Show_WeaponAbilities:
+				{
+					InvokeCommand( "sad", from );
+					break;
+				}
+				case PageActionType.Show_WealthBar:
+				{
+					from.CloseGump( typeof( WealthBar ) );
+					from.SendGump( new WealthBar( from ) );
+					break;
+				}
+				case PageActionType.Show_Conversations:
+				{
+					from.CloseGump( typeof( MyChat ) );
+					from.SendSound( 0x4A ); 
+					from.SendGump( new MyChat( from, 1 ) );
+					break;
+				}
+				case PageActionType.Navigate_Changelog:
+				{
+					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Navigate_Changelog ) );
+					break;
+				}
+
+				case PageActionType.Setting_OrdinaryResources:
+				{
+					reopenPage = true;
+					if ( from.HarvestOrdinary )
+						from.HarvestOrdinary = false;
+					else
+						from.HarvestOrdinary = true;
+					break;
+				}
+				case PageActionType.Setting_SetLootContainer:
+				case PageActionType.Setting_SetCraftingContainer:
+				case PageActionType.Setting_SetHarvestingContainer:
+				{
+					reopenPage = true;
+					int box;
+					switch(actionType)
+					{
+						case PageActionType.Setting_SetLootContainer: box = 1; break;
+						case PageActionType.Setting_SetCraftingContainer: box = 2; break;
+						case PageActionType.Setting_SetHarvestingContainer: box = 3; break;
+						default: Console.WriteLine("[HelpGump] Invalid container type: {0}", pressed); return;
+					}
+
+					BaseContainer.ContainerSetTarget( from, box );
+					break;
+				}
+				case PageActionType.Setting_WeaponAbilityNames:
+				{
+					reopenPage = true;
+					from.Preferences.CharacterWepAbNames = !from.Preferences.CharacterWepAbNames;
+					break;
+				}
+				case PageActionType.Setting_AutoSheath:
+				{
+					reopenPage = true;
+					from.Preferences.CharacterSheath = !from.Preferences.CharacterSheath;
+					break;
+				}
+				case PageActionType.Setting_MusicTone:
+				{
+					reopenPage = true;
+					string tunes = from.Preferences.CharMusical;
+
+					if ( tunes == "Forest" )
+					{
+						from.Preferences.CharMusical = "Dungeon";
+					}
+					else
+					{
+						from.Preferences.CharMusical = "Forest";
+					}
+					break;
+				}
+				case PageActionType.Setting_PrivatePlay:
+				{
+					reopenPage = true;
+					PlayerMobile pm = (PlayerMobile)from;
+
+					if ( pm.PublicInfo == false )
+					{
+						pm.PublicInfo = true;
+					}
+					else
+					{
+						pm.PublicInfo = false;
+					}
+					break;
+				}
+				case PageActionType.Setting_LootOptions:
+				{
+					from.CloseGump( typeof( LootChoices ) );
+					from.SendGump( new LootChoices( from, 1 ) );
+					break;
+				}
+				case PageActionType.Setting_SkillTitle:
+				{
+					from.CloseGump( typeof( SkillTitleGump ) );
+					from.SendGump( new SkillTitleGump( from ) );
+					break;
+				}
+				case PageActionType.Setting_UseAncientSpellbook:
+				{
+					reopenPage = true;
+					if ( !ResearchSettings.BookCaster( from ) )
+					{
+						((PlayerMobile)from).Preferences.UsingAncientBook = true;
+					}
+					else
+					{
+						((PlayerMobile)from).Preferences.UsingAncientBook = false;
+					}
+					break;
+				}
+				case PageActionType.Setting_SkillList:
+				{
+					reopenPage = true;
+					if ( ((PlayerMobile)from).SkillDisplay > 0 ){ ((PlayerMobile)from).SkillDisplay = 0; } else { ((PlayerMobile)from).SkillDisplay = 1; }
+					Server.Gumps.SkillListingGump.RefreshSkillList( from );
+					break;
+				}
+				case PageActionType.Show_SkillList:
+				{
+					Server.Gumps.SkillListingGump.OpenSkillList( from );
+					break;
+				}
+				case PageActionType.Setting_GumpImages:
+				{
+					reopenPage = true;
+					int gump = ((PlayerMobile)from).Preferences.GumpHue;
+
+					if ( gump > 0 )
+					{
+						((PlayerMobile)from).Preferences.GumpHue = 0;
+					}
+					else
+					{
+						((PlayerMobile)from).Preferences.GumpHue = 1;
+					}
+					break;
+				}
+				case PageActionType.Setting_WeaponAbilityBar:
+				{
+					reopenPage = true;
+					from.Preferences.WeaponBarOpen = !from.Preferences.WeaponBarOpen;
+					break;
+				}
+				case PageActionType.Setting_CreatureMagicFocus:
+				{
+					reopenPage = true;
+					if ( from.RaceMagicSchool == 0 )
+							from.RaceMagicSchool = 1;
+					else if ( from.RaceMagicSchool == 1 )
+							from.RaceMagicSchool = 2;
+					else if ( from.RaceMagicSchool == 2 )
+							from.RaceMagicSchool = 3;
+					else
+							from.RaceMagicSchool = 0;
+
+					if ( from.FindItemOnLayer( Layer.Special ) != null && from.RaceID > 0 )
+					{
+						if ( from.FindItemOnLayer( Layer.Special ) is BaseRace )
+							Server.Items.BaseRace.SetMonsterMagic( from, (BaseRace)(from.FindItemOnLayer( Layer.Special )) );
+					}
+					break;
+				}
+				case PageActionType.Setting_CreatureType:
+				{
+					from.RaceSection = 1;
+					from.SendGump( new Server.Items.RacePotions.RacePotionsGump( from, 1, true ) );
+					break;
+				}
+				case PageActionType.Setting_CreatureSounds:
+				{
+					reopenPage = true;
+					if ( !from.RaceMakeSounds )
+							from.RaceMakeSounds = true;
+					else
+							from.RaceMakeSounds = false;
+					break;
+				}
+				case PageActionType.Setting_Playstyle_Normal:
+				{
+					reopenPage = true;
+					((PlayerMobile)from).Preferences.CharacterEvil = false;
+					((PlayerMobile)from).Preferences.CharacterOriental = false;
+					((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
+					Server.Items.BarbaricSatchel.GetRidOf( from );
+					break;
+				}
+				case PageActionType.Setting_Playstyle_Evil:
+				{
+					reopenPage = true;
+					((PlayerMobile)from).Preferences.CharacterEvil = true;
+					((PlayerMobile)from).Preferences.CharacterOriental = false;
+					((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
+					Server.Items.BarbaricSatchel.GetRidOf( from );
+					break;
+				}
+				case PageActionType.Setting_Playstyle_Oriental:
+				{
+					reopenPage = true;
+					((PlayerMobile)from).Preferences.CharacterEvil = false;
+					((PlayerMobile)from).Preferences.CharacterOriental = true;
+					((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
+					Server.Items.BarbaricSatchel.GetRidOf( from );
+					break;
+				}
+				case PageActionType.Setting_MessageColors:
+				{
+					reopenPage = true;
+					if ( from.RainbowMsg )
+					{
+						from.RainbowMsg = false;
+					}
+					else
+					{
+						from.RainbowMsg = true;
+					}
+					break;
+				}
+				case PageActionType.Setting_AutoAttack:
+				{
+					reopenPage = true;
+					if ( from.NoAutoAttack )
+					{
+						from.NoAutoAttack = false;
+					}
+					else
+					{
+						from.NoAutoAttack = true;
+					}
+					break;
+				}
+				case PageActionType.Setting_Playstyle_Barbaric:
+				{
+					reopenPage = true;
+					if ( ((PlayerMobile)from).Preferences.CharacterBarbaric == 1 && from.Female )
+					{
+						((PlayerMobile)from).Preferences.CharacterBarbaric = 2;
+					}
+					else if ( ((PlayerMobile)from).Preferences.CharacterBarbaric > 0 )
+					{
+						((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
+						Server.Items.BarbaricSatchel.GetRidOf( from );
+					}
+					else
+					{
+						((PlayerMobile)from).Preferences.CharacterEvil = false;
+						((PlayerMobile)from).Preferences.CharacterOriental = false;
+						((PlayerMobile)from).Preferences.CharacterBarbaric = 1;
+						Server.Items.BarbaricSatchel.GivePack( from );
+					}
+					break;
+				}
+				case PageActionType.Setting_ClassicPoisoning:
+				{
+					reopenPage = true;
+					from.Preferences.ClassicPoisoning = !from.Preferences.ClassicPoisoning;
+					break;
+				}
+				case PageActionType.Setting_MusicPlaylist:
+				{
+					from.CloseGump( typeof( MusicPlaylist ) );
+					from.SendGump( new MusicPlaylist( from, 1 ) );
+					break;
+				}
+				case PageActionType.Setting_DoubleClickToIDItems:
+				{
+					reopenPage = true;
+					from.Preferences.DoubleClickID = !from.Preferences.DoubleClickID;
+					break;
+				}
+				case PageActionType.Setting_DoubleClickToTalk:
+				{
+					reopenPage = true;
+					from.Preferences.DoubleClickToTalk = !from.Preferences.DoubleClickToTalk;
+					break;
+				}
+				case PageActionType.Setting_RemoveVendorGoldSafeguard:
+				{
+					reopenPage = true;
+					from.Preferences.IgnoreVendorGoldSafeguard = !from.Preferences.IgnoreVendorGoldSafeguard;
+					break;
+				}
+				case PageActionType.Setting_SuppressVendorTooltips:
+				{
+					reopenPage = true;
+					from.Preferences.SuppressVendorTooltip = !from.Preferences.SuppressVendorTooltip;
+					break;
+				}
+				case PageActionType.Setting_VendorContainerSell:
+				{
+					reopenPage = true;
+					from.CloseGump( typeof( VendorContainerSellConfigGump ) );
+					break;
+				}
+				case PageActionType.Setting_ModernSkills:
+				{
+					reopenPage = true;
+					from.CloseGump( typeof( ModernSkillSetupGump ) );
+					break;
+				}
+				case PageActionType.Setting_SingleAttemptID:
+				{
+					reopenPage = true;
+					from.Preferences.SingleAttemptID = !from.Preferences.SingleAttemptID;
+					break;
+				}
+				case PageActionType.Setting_ColorlessFabricBreakdown:
+				{
+					reopenPage = true;
+					from.Preferences.ColorlessFabricBreakdown = !from.Preferences.ColorlessFabricBreakdown;
+					break;
+				}
+
+				case PageActionType.MagicToolbar_Ancient_I_Close: reopenPage = true; InvokeCommand( "archclose1", from ); break;
+				case PageActionType.MagicToolbar_Ancient_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_1, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Ancient_I_Open: reopenPage = true; InvokeCommand( "archtool1", from ); break;
+				case PageActionType.MagicToolbar_Ancient_II_Close: reopenPage = true; InvokeCommand( "archclose2", from ); break;
+				case PageActionType.MagicToolbar_Ancient_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_2, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Ancient_II_Open: reopenPage = true; InvokeCommand( "archtool2", from ); break;
+				case PageActionType.MagicToolbar_Ancient_III_Close: reopenPage = true; InvokeCommand( "archclose3", from ); break;
+				case PageActionType.MagicToolbar_Ancient_III_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_3, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Ancient_III_Open: reopenPage = true; InvokeCommand( "archtool3", from ); break;
+				case PageActionType.MagicToolbar_Ancient_IV_Close: reopenPage = true; InvokeCommand( "archclose4", from ); break;
+				case PageActionType.MagicToolbar_Ancient_IV_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_4, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Ancient_IV_Open: reopenPage = true; InvokeCommand( "archtool4", from ); break;
+				case PageActionType.MagicToolbar_Bard_I_Close: reopenPage = true; InvokeCommand( "bardclose1", from ); break;
+				case PageActionType.MagicToolbar_Bard_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Bard_1, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Bard_I_Open: reopenPage = true; InvokeCommand( "bardtool1", from ); break;
+				case PageActionType.MagicToolbar_Bard_II_Close: reopenPage = true; InvokeCommand( "bardclose2", from ); break;
+				case PageActionType.MagicToolbar_Bard_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Bard_2, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Bard_II_Open: reopenPage = true; InvokeCommand( "bardtool2", from ); break;
+				case PageActionType.MagicToolbar_DeathKnight_I_Close: reopenPage = true; InvokeCommand( "deathclose1", from ); break;
+				case PageActionType.MagicToolbar_DeathKnight_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Death_1, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_DeathKnight_I_Open: reopenPage = true; InvokeCommand( "deathtool1", from ); break;
+				case PageActionType.MagicToolbar_DeathKnight_II_Close: reopenPage = true; InvokeCommand( "deathclose2", from ); break;
+				case PageActionType.MagicToolbar_DeathKnight_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Death_2, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_DeathKnight_II_Open: reopenPage = true; InvokeCommand( "deathtool2", from ); break;
+				case PageActionType.MagicToolbar_Elemental_I_Close: reopenPage = true; InvokeCommand( "elementclose1", from ); break;
+				case PageActionType.MagicToolbar_Elemental_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Elemental_1, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Elemental_I_Open: reopenPage = true; InvokeCommand( "elementtool1", from ); break;
+				case PageActionType.MagicToolbar_Elemental_II_Close: reopenPage = true; InvokeCommand( "elementclose2", from ); break;
+				case PageActionType.MagicToolbar_Elemental_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Elemental_2, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Elemental_II_Open: reopenPage = true; InvokeCommand( "elementtool2", from ); break;
+				case PageActionType.MagicToolbar_Knight_I_Close: reopenPage = true; InvokeCommand( "knightclose1", from ); break;
+				case PageActionType.MagicToolbar_Knight_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Knight_1, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Knight_I_Open: reopenPage = true; InvokeCommand( "knighttool1", from ); break;
+				case PageActionType.MagicToolbar_Knight_II_Close: reopenPage = true; InvokeCommand( "knightclose2", from ); break;
+				case PageActionType.MagicToolbar_Knight_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Knight_2, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Knight_II_Open: reopenPage = true; InvokeCommand( "knighttool2", from ); break;
+				case PageActionType.MagicToolbar_Magery_I_Close: reopenPage = true; InvokeCommand( "mageclose1", from ); break;
+				case PageActionType.MagicToolbar_Magery_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_1, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Magery_I_Open: reopenPage = true; InvokeCommand( "magetool1", from ); break;
+				case PageActionType.MagicToolbar_Magery_II_Close: reopenPage = true; InvokeCommand( "mageclose2", from ); break;
+				case PageActionType.MagicToolbar_Magery_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_2, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Magery_II_Open: reopenPage = true; InvokeCommand( "magetool2", from ); break;
+				case PageActionType.MagicToolbar_Magery_III_Close: reopenPage = true; InvokeCommand( "mageclose3", from ); break;
+				case PageActionType.MagicToolbar_Magery_III_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_3, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Magery_III_Open: reopenPage = true; InvokeCommand( "magetool3", from ); break;
+				case PageActionType.MagicToolbar_Magery_IV_Close: reopenPage = true; InvokeCommand( "mageclose4", from ); break;
+				case PageActionType.MagicToolbar_Magery_IV_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_4, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Magery_IV_Open: reopenPage = true; InvokeCommand( "magetool4", from ); break;
+				case PageActionType.MagicToolbar_Monk_I_Close: reopenPage = true; InvokeCommand( "monkclose1", from ); break;
+				case PageActionType.MagicToolbar_Monk_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Monk_1, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Monk_I_Open: reopenPage = true; InvokeCommand( "monktool1", from ); break;
+				case PageActionType.MagicToolbar_Monk_II_Close: reopenPage = true; InvokeCommand( "monkclose2", from ); break;
+				case PageActionType.MagicToolbar_Monk_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Monk_2, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Monk_II_Open: reopenPage = true; InvokeCommand( "monktool2", from ); break;
+				case PageActionType.MagicToolbar_Necromancer_I_Close: reopenPage = true; InvokeCommand( "necroclose1", from ); break;
+				case PageActionType.MagicToolbar_Necromancer_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Necro_1, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Necromancer_I_Open: reopenPage = true; InvokeCommand( "necrotool1", from ); break;
+				case PageActionType.MagicToolbar_Necromancer_II_Close: reopenPage = true; InvokeCommand( "necroclose2", from ); break;
+				case PageActionType.MagicToolbar_Necromancer_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Necro_2, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Necromancer_II_Open: reopenPage = true; InvokeCommand( "necrotool2", from ); break;
+				case PageActionType.MagicToolbar_Priest_I_Close: reopenPage = true; InvokeCommand( "holyclose1", from ); break;
+				case PageActionType.MagicToolbar_Priest_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Priest_1, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Priest_I_Open: reopenPage = true; InvokeCommand( "holytool1", from ); break;
+				case PageActionType.MagicToolbar_Priest_II_Close: reopenPage = true; InvokeCommand( "holyclose2", from ); break;
+				case PageActionType.MagicToolbar_Priest_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Priest_2, from, 1 ) ); break;
+				case PageActionType.MagicToolbar_Priest_II_Open: reopenPage = true; InvokeCommand( "holytool2", from ); break;
+
+				case PageActionType.Setting_MagerySpellColor_White:
+				{
+					reopenPage = true;
+					from.Preferences.MagerySpellHue = 0x47E;
+					break;
+				}
+				case PageActionType.Setting_MagerySpellColor_Black:
+				{
+					reopenPage = true;
+					from.Preferences.MagerySpellHue = 0x94E;
+					break;
+				}
+				case PageActionType.Setting_MagerySpellColor_Blue:
+				{
+					reopenPage = true;
+					from.Preferences.MagerySpellHue = 0x48D;
+					break;
+				}
+				case PageActionType.Setting_MagerySpellColor_Red:
+				{
+					reopenPage = true;
+					from.Preferences.MagerySpellHue = 0x48E;
+					break;
+				}
+				case PageActionType.Setting_MagerySpellColor_Green:
+				{
+					reopenPage = true;
+					from.Preferences.MagerySpellHue = 0x48F;
+					break;
+				}
+				case PageActionType.Setting_MagerySpellColor_Purple:
+				{
+					reopenPage = true;
+					from.Preferences.MagerySpellHue = 0x490;
+					break;
+				}
+				case PageActionType.Setting_MagerySpellColor_Yellow:
+				{
+					reopenPage = true;
+					from.Preferences.MagerySpellHue = 0x491;
+					break;
+				}
+				case PageActionType.Setting_MagerySpellColor_Default:
+				{
+					reopenPage = true;
+					from.Preferences.MagerySpellHue = 0;
+					break;
+				}
+
+				case PageActionType.Setting_CustomTitle:
+				{
+					from.SendGump( new CustomTitleGump( from ) );
+					break;
+				}
+			}
 			
-			if ( info.ButtonID >= (int)PageActionType.MARKER_TOOLBAR_START && info.ButtonID <= (int)PageActionType.MARKER_TOOLBAR_END ) // MAGIC BARS OPEN AND CLOSE
-			{
-				from.SendGump( new Server.Engines.Help.HelpGump( from, 7 ) );
-
-				switch (actionType)
-				{
-					case PageActionType.MagicToolbar_Bard_I_Open: InvokeCommand( "bardtool1", from ); break;
-					case PageActionType.MagicToolbar_Bard_I_Close: InvokeCommand( "bardclose1", from ); break;
-					case PageActionType.MagicToolbar_Bard_II_Open: InvokeCommand( "bardtool2", from ); break;
-					case PageActionType.MagicToolbar_Bard_II_Close: InvokeCommand( "bardclose2", from ); break;
-					case PageActionType.MagicToolbar_Knight_I_Open: InvokeCommand( "knighttool1", from ); break;
-					case PageActionType.MagicToolbar_Knight_I_Close: InvokeCommand( "knightclose1", from ); break;
-					case PageActionType.MagicToolbar_Knight_II_Open: InvokeCommand( "knighttool2", from ); break;
-					case PageActionType.MagicToolbar_Knight_II_Close: InvokeCommand( "knightclose2", from ); break;
-					case PageActionType.MagicToolbar_DeathKnight_I_Open: InvokeCommand( "deathtool1", from ); break;
-					case PageActionType.MagicToolbar_DeathKnight_I_Close: InvokeCommand( "deathclose1", from ); break;
-					case PageActionType.MagicToolbar_DeathKnight_II_Open: InvokeCommand( "deathtool2", from ); break;
-					case PageActionType.MagicToolbar_DeathKnight_II_Close: InvokeCommand( "deathclose2", from ); break;
-					case PageActionType.MagicToolbar_Magery_I_Open: InvokeCommand( "magetool1", from ); break;
-					case PageActionType.MagicToolbar_Magery_I_Close: InvokeCommand( "mageclose1", from ); break;
-					case PageActionType.MagicToolbar_Magery_II_Open: InvokeCommand( "magetool2", from ); break;
-					case PageActionType.MagicToolbar_Magery_II_Close: InvokeCommand( "mageclose2", from ); break;
-					case PageActionType.MagicToolbar_Magery_III_Open: InvokeCommand( "magetool3", from ); break;
-					case PageActionType.MagicToolbar_Magery_III_Close: InvokeCommand( "mageclose3", from ); break;
-					case PageActionType.MagicToolbar_Magery_IV_Open: InvokeCommand( "magetool4", from ); break;
-					case PageActionType.MagicToolbar_Magery_IV_Close: InvokeCommand( "mageclose4", from ); break;
-					case PageActionType.MagicToolbar_Necromancer_I_Open: InvokeCommand( "necrotool1", from ); break;
-					case PageActionType.MagicToolbar_Necromancer_I_Close: InvokeCommand( "necroclose1", from ); break;
-					case PageActionType.MagicToolbar_Necromancer_II_Open: InvokeCommand( "necrotool2", from ); break;
-					case PageActionType.MagicToolbar_Necromancer_II_Close: InvokeCommand( "necroclose2", from ); break;
-					case PageActionType.MagicToolbar_Priest_I_Open: InvokeCommand( "holytool1", from ); break;
-					case PageActionType.MagicToolbar_Priest_I_Close: InvokeCommand( "holyclose1", from ); break;
-					case PageActionType.MagicToolbar_Priest_II_Open: InvokeCommand( "holytool2", from ); break;
-					case PageActionType.MagicToolbar_Priest_II_Close: InvokeCommand( "holyclose2", from ); break;
-					case PageActionType.MagicToolbar_Monk_I_Open: InvokeCommand( "monktool1", from ); break;
-					case PageActionType.MagicToolbar_Monk_I_Close: InvokeCommand( "monkclose1", from ); break;
-					case PageActionType.MagicToolbar_Monk_II_Open: InvokeCommand( "monktool2", from ); break;
-					case PageActionType.MagicToolbar_Monk_II_Close: InvokeCommand( "monkclose2", from ); break;
-					case PageActionType.MagicToolbar_Elemental_I_Open: InvokeCommand( "elementtool1", from ); break;
-					case PageActionType.MagicToolbar_Elemental_I_Close: InvokeCommand( "elementclose1", from ); break;
-					case PageActionType.MagicToolbar_Elemental_II_Open: InvokeCommand( "elementtool2", from ); break;
-					case PageActionType.MagicToolbar_Elemental_II_Close: InvokeCommand( "elementclose2", from ); break;
-					case PageActionType.MagicToolbar_Ancient_I_Open: InvokeCommand( "archtool1", from ); break;
-					case PageActionType.MagicToolbar_Ancient_I_Close: InvokeCommand( "archclose1", from ); break;
-					case PageActionType.MagicToolbar_Ancient_II_Open: InvokeCommand( "archtool2", from ); break;
-					case PageActionType.MagicToolbar_Ancient_II_Close: InvokeCommand( "archclose2", from ); break;
-					case PageActionType.MagicToolbar_Ancient_III_Open: InvokeCommand( "archtool3", from ); break;
-					case PageActionType.MagicToolbar_Ancient_III_Close: InvokeCommand( "archclose3", from ); break;
-					case PageActionType.MagicToolbar_Ancient_IV_Open: InvokeCommand( "archtool4", from ); break;
-					case PageActionType.MagicToolbar_Ancient_IV_Close: InvokeCommand( "archclose4", from ); break;
-					default: Console.WriteLine("[HelpGump] Invalid open/close for magic toolbar: {0}", actionType); break;
-				}
-			}
-			else
-			{
-				switch ( actionType )
-				{
-					case PageActionType.Close:
-					{
-						//from.SendLocalizedMessage( 501235, "", 0x35 ); // Help request aborted.
-						break;
-					}
-					case PageActionType.Navigate_Main:
-					{
-						from.SendGump( new Server.Engines.Help.HelpGump( from, pressed ) );
-						break;
-					}
-					case PageActionType.Do_Achievements:
-					{
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						AchievementSystem.OpenGump( from, from );
-						break;
-					}
-					case PageActionType.Do_Toggle_AFK:
-					{
-						InvokeCommand( "afk", from );
-						from.SendGump( new Server.Engines.Help.HelpGump( from, pressed ) );
-						break;
-					}
-					case PageActionType.Show_Chat:
-					{
-						InvokeCommand( "c", from );
-						break;
-					}
-					case PageActionType.Do_CorpseClear:
-					{
-						InvokeCommand( "corpseclear", from );
-						from.SendGump( new Server.Engines.Help.HelpGump( from, pressed ) );
-						break;
-					}
-					case PageActionType.Do_CorpseSearch:
-					{
-						InvokeCommand( "corpse", from );
-						break;
-					}
-					case PageActionType.Show_Emote:
-					{
-						InvokeCommand( "emote", from );
-						break;
-					}
-					case PageActionType.Navigate_MagicToolbars:
-					{
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 7 ) );
-						break;
-					}
-					case PageActionType.Do_MoongateSearch:
-					{
-						InvokeCommand( "magicgate", from );
-						break;
-					}
-					case PageActionType.Show_MOTD:
-					{
-						from.CloseGump( typeof( Joeku.MOTD.MOTD_Gump ) );
-						Joeku.MOTD.MOTD_Utility.SendGump( from, false, 0, 1 );
-						break;
-					}
-					case PageActionType.Show_Quests:
-					{
-						from.SendGump( new Server.Engines.Help.HelpGump( from, pressed ) );
-						from.SendGump(new QuestLogGump((PlayerMobile)from));
-						break;
-					}
-					case PageActionType.Show_QuickBar:
-					{
-						from.CloseGump( typeof( QuickBar ) );
-						from.SendGump( new QuickBar( from ) );
-						break;
-					}
-					case PageActionType.Show_RegBar:
-					{
-						from.CloseGump( typeof( RegBar ) );
-						from.SendGump( new RegBar( from ) );
-						break;
-					}
-					case PageActionType.Show_Settings:
-					{
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Navigate_Library:
-					{
-						from.CloseGump( typeof( MyLibrary ) );
-						from.SendSound( 0x4A ); 
-						from.SendGump( new MyLibrary( from, 1 ) );
-						break;
-					}
-					case PageActionType.Show_Statistics:
-					{
-						from.CloseGump( typeof( Server.Statistics.StatisticsGump ) );
-						from.SendGump( new Server.Statistics.StatisticsGump( from, 1 ) );
-						break;
-					}
-					case PageActionType.Do_StuckInWorld:
-					{
-						BaseHouse house = BaseHouse.FindHouseAt( from );
-
-						if ( house != null && house.IsAosRules )
-						{
-							from.Location = house.BanLocation;
-						}
-						else if ( from.Region.IsPartOf( typeof( Server.Regions.Jail ) ) )
-						{
-							from.SendLocalizedMessage( 1041530, "", 0x35 ); // You'll need a better jailbreak plan then that!
-						}
-						else if ( from.CanUseStuckMenu() && from.Region.CanUseStuckMenu( from ) && !CheckCombat( from ) && !from.Frozen && !from.Criminal && (Core.AOS || from.Kills < 5) )
-						{
-							StuckMenu menu = new StuckMenu( from, from, true );
-
-							menu.BeginClose();
-
-							from.SendGump( menu );
-						}
-
-						break;
-					}
-					case PageActionType.Show_WeaponAbilities:
-					{
-						InvokeCommand( "sad", from );
-						break;
-					}
-					case PageActionType.Show_WealthBar:
-					{
-						from.CloseGump( typeof( WealthBar ) );
-						from.SendGump( new WealthBar( from ) );
-						break;
-					}
-					case PageActionType.Show_Conversations:
-					{
-						from.CloseGump( typeof( MyChat ) );
-						from.SendSound( 0x4A ); 
-						from.SendGump( new MyChat( from, 1 ) );
-						break;
-					}
-					case PageActionType.Navigate_Changelog:
-					{
-						from.SendGump( new Server.Engines.Help.HelpGump( from, pressed ) );
-						break;
-					}
-
-					case PageActionType.Setting_OrdinaryResources:
-					{
-						if ( from.HarvestOrdinary )
-							from.HarvestOrdinary = false;
-						else
-							from.HarvestOrdinary = true;
-
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_SetLootContainer:
-					case PageActionType.Setting_SetCraftingContainer:
-					case PageActionType.Setting_SetHarvestingContainer:
-					{
-						int box;
-						switch(actionType)
-						{
-							case PageActionType.Setting_SetLootContainer: box = 1; break;
-							case PageActionType.Setting_SetCraftingContainer: box = 2; break;
-							case PageActionType.Setting_SetHarvestingContainer: box = 3; break;
-							default: Console.WriteLine("[HelpGump] Invalid container type: {0}", pressed); return;
-						}
-
-						BaseContainer.ContainerSetTarget( from, box );
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_WeaponAbilityNames:
-					{
-						from.Preferences.CharacterWepAbNames = !from.Preferences.CharacterWepAbNames;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_AutoSheath:
-					{
-						from.Preferences.CharacterSheath = !from.Preferences.CharacterSheath;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_MusicTone:
-					{
-						string tunes = from.Preferences.CharMusical;
-
-						if ( tunes == "Forest" )
-						{
-							from.Preferences.CharMusical = "Dungeon";
-						}
-						else
-						{
-							from.Preferences.CharMusical = "Forest";
-						}
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_PrivatePlay:
-					{
-						PlayerMobile pm = (PlayerMobile)from;
-
-						if ( pm.PublicInfo == false )
-						{
-							pm.PublicInfo = true;
-						}
-						else
-						{
-							pm.PublicInfo = false;
-						}
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_LootOptions:
-					{
-						from.CloseGump( typeof( LootChoices ) );
-						from.SendGump( new LootChoices( from, 1 ) );
-						break;
-					}
-					case PageActionType.Setting_SkillTitle:
-					{
-						from.CloseGump( typeof( SkillTitleGump ) );
-						from.SendGump( new SkillTitleGump( from ) );
-						break;
-					}
-					case PageActionType.Setting_UseAncientSpellbook:
-					{
-						if ( !ResearchSettings.BookCaster( from ) )
-						{
-							((PlayerMobile)from).Preferences.UsingAncientBook = true;
-						}
-						else
-						{
-							((PlayerMobile)from).Preferences.UsingAncientBook = false;
-						}
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_SkillList:
-					{
-						if ( ((PlayerMobile)from).SkillDisplay > 0 ){ ((PlayerMobile)from).SkillDisplay = 0; } else { ((PlayerMobile)from).SkillDisplay = 1; }
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						Server.Gumps.SkillListingGump.RefreshSkillList( from );
-						break;
-					}
-					case PageActionType.Show_SkillList:
-					{
-						Server.Gumps.SkillListingGump.OpenSkillList( from );
-						break;
-					}
-					case PageActionType.Setting_GumpImages:
-					{
-						int gump = ((PlayerMobile)from).Preferences.GumpHue;
-
-						if ( gump > 0 )
-						{
-							((PlayerMobile)from).Preferences.GumpHue = 0;
-						}
-						else
-						{
-							((PlayerMobile)from).Preferences.GumpHue = 1;
-						}
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_WeaponAbilityBar:
-					{
-						from.Preferences.WeaponBarOpen = !from.Preferences.WeaponBarOpen;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_CreatureMagicFocus:
-					{
-						if ( from.RaceMagicSchool == 0 )
-								from.RaceMagicSchool = 1;
-						else if ( from.RaceMagicSchool == 1 )
-								from.RaceMagicSchool = 2;
-						else if ( from.RaceMagicSchool == 2 )
-								from.RaceMagicSchool = 3;
-						else
-								from.RaceMagicSchool = 0;
-
-						if ( from.FindItemOnLayer( Layer.Special ) != null && from.RaceID > 0 )
-						{
-							if ( from.FindItemOnLayer( Layer.Special ) is BaseRace )
-								Server.Items.BaseRace.SetMonsterMagic( from, (BaseRace)(from.FindItemOnLayer( Layer.Special )) );
-						}
-
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_CreatureType:
-					{
-						from.RaceSection = 1;
-						from.SendGump( new Server.Items.RacePotions.RacePotionsGump( from, 1, true ) );
-						break;
-					}
-					case PageActionType.Setting_CreatureSounds:
-					{
-						if ( !from.RaceMakeSounds )
-								from.RaceMakeSounds = true;
-						else
-								from.RaceMakeSounds = false;
-
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_Playstyle_Normal:
-					{
-						((PlayerMobile)from).Preferences.CharacterEvil = false;
-						((PlayerMobile)from).Preferences.CharacterOriental = false;
-						((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
-						Server.Items.BarbaricSatchel.GetRidOf( from );
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_Playstyle_Evil:
-					{
-						((PlayerMobile)from).Preferences.CharacterEvil = true;
-						((PlayerMobile)from).Preferences.CharacterOriental = false;
-						((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
-						Server.Items.BarbaricSatchel.GetRidOf( from );
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_Playstyle_Oriental:
-					{
-						((PlayerMobile)from).Preferences.CharacterEvil = false;
-						((PlayerMobile)from).Preferences.CharacterOriental = true;
-						((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
-						Server.Items.BarbaricSatchel.GetRidOf( from );
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_MessageColors:
-					{
-						if ( from.RainbowMsg )
-						{
-							from.RainbowMsg = false;
-						}
-						else
-						{
-							from.RainbowMsg = true;
-						}
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_AutoAttack:
-					{
-						if ( from.NoAutoAttack )
-						{
-							from.NoAutoAttack = false;
-						}
-						else
-						{
-							from.NoAutoAttack = true;
-						}
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_Playstyle_Barbaric:
-					{
-						if ( ((PlayerMobile)from).Preferences.CharacterBarbaric == 1 && from.Female )
-						{
-							((PlayerMobile)from).Preferences.CharacterBarbaric = 2;
-						}
-						else if ( ((PlayerMobile)from).Preferences.CharacterBarbaric > 0 )
-						{
-							((PlayerMobile)from).Preferences.CharacterBarbaric = 0;
-							Server.Items.BarbaricSatchel.GetRidOf( from );
-						}
-						else
-						{
-							((PlayerMobile)from).Preferences.CharacterEvil = false;
-							((PlayerMobile)from).Preferences.CharacterOriental = false;
-							((PlayerMobile)from).Preferences.CharacterBarbaric = 1;
-							Server.Items.BarbaricSatchel.GivePack( from );
-						}
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_ClassicPoisoning:
-					{
-						from.Preferences.ClassicPoisoning = !from.Preferences.ClassicPoisoning;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_MusicPlaylist:
-					{
-						from.CloseGump( typeof( MusicPlaylist ) );
-						from.SendGump( new MusicPlaylist( from, 1 ) );
-						break;
-					}
-					case PageActionType.Setting_DoubleClickToIDItems:
-					{
-						from.Preferences.DoubleClickID = !from.Preferences.DoubleClickID;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_DoubleClickToTalk:
-					{
-						from.Preferences.DoubleClickToTalk = !from.Preferences.DoubleClickToTalk;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_RemoveVendorGoldSafeguard:
-					{
-						from.Preferences.IgnoreVendorGoldSafeguard = !from.Preferences.IgnoreVendorGoldSafeguard;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_SuppressVendorTooltips:
-					{
-						from.Preferences.SuppressVendorTooltip = !from.Preferences.SuppressVendorTooltip;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_VendorContainerSell:
-					{
-						from.CloseGump( typeof( VendorContainerSellConfigGump ) );
-						from.SendGump( new VendorContainerSellConfigGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_ModernSkills:
-					{
-						from.CloseGump( typeof( ModernSkillSetupGump ) );
-						from.SendGump( new ModernSkillSetupGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_SingleAttemptID:
-					{
-						from.Preferences.SingleAttemptID = !from.Preferences.SingleAttemptID;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_ColorlessFabricBreakdown:
-					{
-						from.Preferences.ColorlessFabricBreakdown = !from.Preferences.ColorlessFabricBreakdown;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-
-					case PageActionType.MagicToolbar_BardSongsBarI_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Bard_1, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_BardSongsBarII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Bard_2, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_KnightSpellBarI_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Knight_1, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_KnightSpellBarII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Knight_2, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_DeathKnightSpellBarI_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Death_1, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_DeathKnightSpellBarII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Death_2, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_MagerySpellBarI_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_1, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_MagerySpellBarII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_2, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_MagerySpellBarIII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_3, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_MagerySpellBarIV_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Mage_4, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_NecromancerSpellBarI_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Necro_1, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_NecromancerSpellBarII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Necro_2, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_PriestSpellBarI_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Priest_1, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_PriestSpellBarII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Priest_2, from, 1 ) );
-						break;
-					}
-					case PageActionType.Setting_CustomTitle:
-					{
-						from.SendGump( new CustomTitleGump( from ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_AncientSpellBarI_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_1, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_AncientSpellBarII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_2, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_AncientSpellBarIII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_3, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_AncientSpellBarIV_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Ancient_4, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_MonkSpellBarI_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Monk_1, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_MonkSpellBarII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Monk_2, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_ElementalSpellBarI_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Elemental_1, from, 1 ) );
-						break;
-					}
-					case PageActionType.MagicToolbar_ElementalSpellBarII_Config:
-					{
-						TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Elemental_2, from, 1 ) );
-						break;
-					}
-
-					case PageActionType.Setting_MagerySpellColor_White:
-					{
-						from.Preferences.MagerySpellHue = 0x47E;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_MagerySpellColor_Black:
-					{
-						from.Preferences.MagerySpellHue = 0x94E;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_MagerySpellColor_Blue:
-					{
-						from.Preferences.MagerySpellHue = 0x48D;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_MagerySpellColor_Red:
-					{
-						from.Preferences.MagerySpellHue = 0x48E;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_MagerySpellColor_Green:
-					{
-						from.Preferences.MagerySpellHue = 0x48F;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_MagerySpellColor_Purple:
-					{
-						from.Preferences.MagerySpellHue = 0x490;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_MagerySpellColor_Yellow:
-					{
-						from.Preferences.MagerySpellHue = 0x491;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-					case PageActionType.Setting_MagerySpellColor_Default:
-					{
-						from.Preferences.MagerySpellHue = 0;
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
-						break;
-					}
-				}
-			}
+			if ( reopenPage )
+				from.SendGump( new Server.Engines.Help.HelpGump( from, m_PageNumber ) );
 		}
 
 		public static string MyQuests( Mobile from )
