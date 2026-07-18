@@ -14,6 +14,7 @@ using Scripts.Mythik.Systems.Achievements;
 using Server.SpellBars;
 using Server.ModernSkill;
 using System.Linq;
+using System.Text;
 
 namespace Server.Engines.Help
 {
@@ -1978,92 +1979,6 @@ namespace Server.Engines.Help
 
 				+ "<br><br>"
 
-				+ "Magic Toolbars: Below are the commands you can use to manage magic toolbars that might help you play better.<br><br>"
-				+ "[archspell1 - Opens the 1st ancient spell bar editor.<br>"
-				+ "[archspell2 - Opens the 2nd ancient spell bar editor.<br>"
-				+ "[archspell3 - Opens the 3rd ancient spell bar editor.<br>"
-				+ "[archspell4 - Opens the 4th ancient spell bar editor.<br>"
-				+ "[archtool1 - Opens the 1st ancient spell bar.<br>"
-				+ "[archtool2 - Opens the 2nd ancient spell bar.<br>"
-				+ "[archtool3 - Opens the 3rd ancient spell bar.<br>"
-				+ "[archtool4 - Opens the 4th ancient spell bar.<br>"
-				+ "[archclose1 - Closes the 1st ancient spell bar.<br>"
-				+ "[archclose2 - Closes the 2nd ancient spell bar.<br>"
-				+ "[archclose3 - Closes the 3rd ancient spell bar.<br>"
-				+ "[archclose4 - Closes the 4th ancient spell bar.<br>"
-				+ "<br>"
-
-				+ "[bardsong1 - Opens the 1st bard song bar editor.<br>"
-				+ "[bardsong2 - Opens the 2nd bard song bar editor.<br>"
-				+ "[bardtool1 - Opens the 1st bard song bar.<br>"
-				+ "[bardtool2 - Opens the 2nd bard song bar.<br>"
-				+ "[bardclose1 - Closes the 1st bard song bar.<br>"
-				+ "[bardclose2 - Closes the 2nd bard song bar.<br>"
-				+ "<br>"
-
-				+ "[knightspell1 - Opens the 1st knight spell bar editor.<br>"
-				+ "[knightspell2 - Opens the 2nd knight spell bar editor.<br>"
-				+ "[knighttool1 - Opens the 1st knight spell bar.<br>"
-				+ "[knighttool2 - Opens the 2nd knight spell bar.<br>"
-				+ "[knightclose1 - Closes the 1st knight spell bar.<br>"
-				+ "[knightclose2 - Closes the 2nd knight spell bar.<br>"
-				+ "<br>"
-
-				+ "[deathspell1 - Opens the 1st death knight spell bar editor.<br>"
-				+ "[deathspell2 - Opens the 2nd death knight spell bar editor.<br>"
-				+ "[deathtool1 - Opens the 1st death knight spell bar.<br>"
-				+ "[deathtool2 - Opens the 2nd death knight spell bar.<br>"
-				+ "[deathclose1 - Closes the 1st death knight spell bar.<br>"
-				+ "[deathclose2 - Closes the 2nd death knight spell bar.<br>"
-				+ "<br>"
-
-				+ "[elementspell1 - Opens the 1st elemental spell bar editor.<br>"
-				+ "[elementspell2 - Opens the 2nd elemental spell bar editor.<br>"
-				+ "[elementtool1 - Opens the 1st elemental spell bar.<br>"
-				+ "[elementtool2 - Opens the 2nd elemental spell bar.<br>"
-				+ "[elementclose1 - Closes the 1st elemental spell bar.<br>"
-				+ "[elementclose2 - Closes the 2nd elemental spell bar.<br>"
-				+ "<br>"
-
-				+ "[holyspell1 - Opens the 1st priest prayer bar editor.<br>"
-				+ "[holyspell2 - Opens the 2nd priest prayer bar editor.<br>"
-				+ "[holytool1 - Opens the 1st priest prayer bar.<br>"
-				+ "[holytool2 - Opens the 2nd priest prayer bar.<br>"
-				+ "[holyclose1 - Closes the 1st priest prayer bar.<br>"
-				+ "[holyclose2 - Closes the 2nd priest prayer bar.<br>"
-				+ "<br>"
-
-				+ "[magespell1 - Opens the 1st mage spell bar editor.<br>"
-				+ "[magespell2 - Opens the 2nd mage spell bar editor.<br>"
-				+ "[magespell3 - Opens the 3rd mage spell bar editor.<br>"
-				+ "[magespell4 - Opens the 4th mage spell bar editor.<br>"
-				+ "[magetool1 - Opens the 1st mage spell bar.<br>"
-				+ "[magetool2 - Opens the 2nd mage spell bar.<br>"
-				+ "[magetool3 - Opens the 3rd mage spell bar.<br>"
-				+ "[magetool4 - Opens the 4th mage spell bar.<br>"
-				+ "[mageclose1 - Closes the 1st mage spell bar.<br>"
-				+ "[mageclose2 - Closes the 2nd mage spell bar.<br>"
-				+ "[mageclose3 - Closes the 3rd mage spell bar.<br>"
-				+ "[mageclose4 - Closes the 4th mage spell bar.<br>"
-				+ "<br>"
-
-				+ "[monkspell1 - Opens the 1st monk ability bar editor.<br>"
-				+ "[monkspell2 - Opens the 2nd monk ability bar editor.<br>"
-				+ "[monktool1 - Opens the 1st monk ability bar.<br>"
-				+ "[monktool2 - Opens the 2nd monk ability bar.<br>"
-				+ "[monkclose1 - Closes the 1st monk ability bar.<br>"
-				+ "[monkclose2 - Closes the 2nd monk ability bar.<br>"
-				+ "<br>"
-
-				+ "[necrospell1 - Opens the 1st necromancer spell bar editor.<br>"
-				+ "[necrospell2 - Opens the 2nd necromancer spell bar editor.<br>"
-				+ "[necrotool1 - Opens the 1st necromancer spell bar.<br>"
-				+ "[necrotool2 - Opens the 2nd necromancer spell bar.<br>"
-				+ "[necroclose1 - Closes the 1st necromancer spell bar.<br>"
-				+ "[necroclose2 - Closes the 2nd necromancer spell bar.<br>"
-
-				+ "<br><br>"
-
 				+ "Music: There is many different pieces of classic music in the game, and they play depending on areas you visit. Some of the music is from the original game, but there are some pieces from older games. There are also some pieces from computer games in the 1990's, but they really fit the theme when traveling the land. You can choose to listen to them, or change the music you are listening to when exploring the world. Keep in mind that when you change the music, and you enter a new area, the default music for that area will play and you may have to change your music again. Also keep in mind that your game client will want to play the song for a few seconds before allowing a switch of new music. You can use the below command to open a window that allows you to choose a song to play. Almost all of them play in a loop, where there are three that do not and are marked with an asterisk. There are two pages of songs to choose from so use the top arrow to go back and forth to each screen. When your music begins to play, then press the OKAY button to exit the screen. Although an unnecessary function, it does give you some control over the music in the game.<br><br>"
 				+ "[music - Opens the music playlist and player.<br><br>"
 				+ "The below command will simply toggle your music preference to play a different set of music in the dungeons. When turned on, it will play music you normally hear when traveling the land, instead of the music commonly played in dungeons.<br><br>"
@@ -2184,7 +2099,89 @@ namespace Server.Engines.Help
 				{
 					returnPage = PageActionType.Navigate_MagicToolbars;
 					title = "Magic Toolbars";
-					info = "These toolbars can be configured for all areas of magical-style spells in the game. Each school of magic has two separate toolbars you can customize, except for magery which has four available. The large number of spells for magery benefit from the extra two toolbars. These toolbars allow you to select spells that you like to cast often, and set whether the bar will appear vertical or horizontal. If you choose to have the toolbar appear vertical, you have the additional option of showing the spell names next to the icons. These toolbars can be moved around and you need only single click the appropriate icon to cast the spell. If you have spells selected for a toolbar, but lack the spell in your spellbook, the icon will not appear when you open the toolbar. These toolbars cannot be closed by normal means, to avoid the chance you close them by accident when in combat. You can either use the command button available in the 'Help' section, or the appropriate typed keyboard command.";
+					var builder = new StringBuilder();
+					builder.Append("These toolbars can be configured for all areas of magical-style spells in the game. Each school of magic has two separate toolbars you can customize, except for magery which has four available. The large number of spells for magery benefit from the extra two toolbars. These toolbars allow you to select spells that you like to cast often, and set whether the bar will appear vertical or horizontal. If you choose to have the toolbar appear vertical, you have the additional option of showing the spell names next to the icons. These toolbars can be moved around and you need only single click the appropriate icon to cast the spell. If you have spells selected for a toolbar, but lack the spell in your spellbook, the icon will not appear when you open the toolbar. These toolbars cannot be closed by normal means, to avoid the chance you close them by accident when in combat. You can either use the command button available in the 'Help' section, or the appropriate typed keyboard command.");
+					builder.Append("<br><br>");
+
+					builder.Append("Ancient Spell Bars may be opened with:<br>");
+					builder.Append("[archtool1<br>");
+					builder.Append("[archtool2<br>");
+					builder.Append("[archtool3<br>");
+					builder.Append("[archtool4<br>");
+					builder.Append("Ancient Spell Bars may be closed with:<br>");
+					builder.Append("[archclose1<br>");
+					builder.Append("[archclose2<br>");
+					builder.Append("[archclose3<br>");
+					builder.Append("[archclose4<br>");
+					builder.Append("<br>");
+
+					builder.Append("Bard Song Bars may be opened with:<br>");
+					builder.Append("[bardtool1<br>");
+					builder.Append("[bardtool2<br>");
+					builder.Append("Bard Song Bars may be closed with:<br>");
+					builder.Append("[bardclose1<br>");
+					builder.Append("[bardclose2<br>");
+					builder.Append("<br>");
+
+					builder.Append("Death Knight Spell Bars may be opened with:<br>");
+					builder.Append("[deathtool1<br>");
+					builder.Append("[deathtool2<br>");
+					builder.Append("Death Knight Spell Bars may be closed with:<br>");
+					builder.Append("[deathclose1<br>");
+					builder.Append("[deathclose2<br>");
+					builder.Append("<br>");
+
+					builder.Append("Elemental Spell Bars may be opened with:<br>");
+					builder.Append("[elementtool1<br>");
+					builder.Append("[elementtool2<br>");
+					builder.Append("Elemental Spell Bars may be closed with:<br>");
+					builder.Append("[elementclose1<br>");
+					builder.Append("[elementclose2<br>");
+					builder.Append("<br>");
+
+					builder.Append("Priest Prayer Bars may be opened with:<br>");
+					builder.Append("[holytool1<br>");
+					builder.Append("[holytool2<br>");
+					builder.Append("Priest Prayer Bars may be closed with:<br>");
+					builder.Append("[holyclose1<br>");
+					builder.Append("[holyclose2<br>");
+					builder.Append("<br>");
+
+					builder.Append("Knight Spell Bars may be opened with:<br>");
+					builder.Append("[knighttool1<br>");
+					builder.Append("[knighttool2<br>");
+					builder.Append("Knight Spell Bars may be closed with:<br>");
+					builder.Append("[knightclose1<br>");
+					builder.Append("[knightclose2<br>");
+					builder.Append("<br>");
+
+					builder.Append("Mage Spell Bars may be opened with:<br>");
+					builder.Append("[magetool1<br>");
+					builder.Append("[magetool2<br>");
+					builder.Append("[magetool3<br>");
+					builder.Append("[magetool4<br>");
+					builder.Append("Mage Spell Bars may be closed with:<br>");
+					builder.Append("[mageclose1<br>");
+					builder.Append("[mageclose2<br>");
+					builder.Append("[mageclose3<br>");
+					builder.Append("[mageclose4<br>");
+					builder.Append("<br>");
+
+					builder.Append("Monk Ability Bars may be opened with:<br>");
+					builder.Append("[monktool1<br>");
+					builder.Append("[monktool2<br>");
+					builder.Append("Monk Ability Bars may be closed with:<br>");
+					builder.Append("[monkclose1<br>");
+					builder.Append("[monkclose2<br>");
+					builder.Append("<br>");
+
+					builder.Append("Necromancer Spell Bars may be opened with:<br>");
+					builder.Append("[necrotool1<br>");
+					builder.Append("[necrotool2<br>");
+					builder.Append("Necromancer Spell Bars may be closed with:<br>");
+					builder.Append("[necroclose1<br>");
+					builder.Append("[necroclose2<br>");
+					info = builder.ToString();
 					break;
 				}
 

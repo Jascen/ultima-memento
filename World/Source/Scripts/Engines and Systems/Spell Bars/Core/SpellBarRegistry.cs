@@ -133,15 +133,6 @@ namespace Server.SpellBars
 
 			CommandSystem.Register(definition.CloseCommand, AccessLevel.Player, args =>
 				args.Mobile.CloseGump(GetToolbarGumpType(definition.Id)));
-
-			CommandSystem.Register(definition.SetupCommand, AccessLevel.Player, args =>
-			{
-				var from = args.Mobile as PlayerMobile;
-				if (from == null)
-					return;
-
-				OpenSetup(from, definition.Id, 0);
-			});
 		}
 
 		private static Dictionary<SpellBarId, SpellBarDefinition> BuildDefinitionMap()
@@ -161,11 +152,10 @@ namespace Server.SpellBars
 			int barNumber,
 			string toolCommand,
 			string closeCommand,
-			string setupCommand,
 			string titlePrefix,
 			bool usePaging)
 		{
-			return new SpellBarDefinition(id, school, schoolInstance, barNumber, toolCommand, closeCommand, setupCommand, titlePrefix, usePaging);
+			return new SpellBarDefinition(id, school, schoolInstance, barNumber, toolCommand, closeCommand, titlePrefix, usePaging);
 		}
 	}
 }

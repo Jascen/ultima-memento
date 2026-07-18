@@ -1044,6 +1044,7 @@ namespace Server.Misc
 					builder.Append("- Command - '[Organize' no longer removes items from weight reduction containers<br>");
 					builder.Append("- Command - '[Organize' against yourself will now automatically target your backpack<br>");
 					builder.Append("- Command - Add '[OrganizeMe' command to automatically organize your main backpack<br>");
+					builder.Append("- Command - Explicit commands to open Spell Bar configuration gumps have been removed<br>");
 					builder.Append("- Gather - Double-clicking a harvesting tool may now indicate the self-target feature<br>");
 					builder.Append("- Gather - Add harvesting messages for Librarian and Grave Robbing systems<br>");
 					builder.Append("- Gather - Add automatic target resolution when *self-targeting* for refining resources<br>");
