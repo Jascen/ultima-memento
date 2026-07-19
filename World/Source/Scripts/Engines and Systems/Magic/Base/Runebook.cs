@@ -231,7 +231,6 @@ namespace Server.Items
 					break;
 				}
 			}
-			ItemID = 0x0F3D;
 		}
 
 		public void DropRune( Mobile from, RunebookEntry e )
