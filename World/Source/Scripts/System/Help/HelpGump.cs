@@ -64,6 +64,7 @@ namespace Server.Engines.Help
 
 		private enum PageActionType
 		{
+			None = 0,
 			Close = 0,
 
 			Do_Achievements,
@@ -162,6 +163,9 @@ namespace Server.Engines.Help
 			MagicToolbar_Priest_II_Open,
 			MagicToolbar_Priest_II_ToggleAutoOpen,
 
+			Navigate_Actions,
+			Navigate_Bars,
+			Navigate_Gumps,
 			Navigate_Changelog,
 			Navigate_Library,
 			Navigate_MagicToolbars,
@@ -253,7 +257,10 @@ namespace Server.Engines.Help
 			Show_MOTD,
 			Show_Quests,
 			Show_QuickBar,
+			Show_QuickBarManage,
+			Do_QuickBarAutoOpen,
 			Show_RegBar,
+			Show_CombatBar,
 			Show_Settings,
 			Show_SkillList,
 			Show_Statistics,
@@ -355,49 +362,109 @@ namespace Server.Engines.Help
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			AddAction(nav_x, r, from, "Achievements", PageActionType.Do_Achievements, NAVIGATION_ITEM_WIDTH);
+			AddAction(nav_x, r, from, "Actions", PageActionType.Navigate_Actions, NAVIGATION_ITEM_WIDTH);
 			r += e;
-
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-			AddAction(nav_x, r, from, "AFK", PageActionType.Do_Toggle_AFK, NAVIGATION_ITEM_WIDTH);
-			r += e;
-			if ( page == (int)PageActionType.Do_Toggle_AFK )
+			if ( page == (int)PageActionType.Navigate_Actions )
 			{
-				HelpText = IsActive(from, PageActionType.Do_Toggle_AFK) ? "Your 'Away From Keyboard' Settings Are Enabled." : "Your 'Away From Keyboard' Settings Are Disabled.";
-				AddHtml( 252, 71, 739, 630, @"<BODY><BASEFONT Color=" + color + ">" + HelpText + "</BASEFONT></BODY>", (bool)false, (bool)true);
+				const int SECTION_START_X = 245;
+				const int BAR_BORDER_HEIGHT = 4;
+
+				int rowY = 40;
+				int rowHeight = 40;
+				AddGeneralActionRowHeader(SECTION_START_X, rowY, "Common Actions");
+
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Clear My Corpses", PageActionType.Do_CorpseClear);
+
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Find My Corpse", PageActionType.Do_CorpseSearch);
+
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Find Nearby Moongates", PageActionType.Do_MoongateSearch);
+
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Toggle AFK Mode", PageActionType.Do_Toggle_AFK);
 			}
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			AddAction(nav_x, r, from, "Chat", PageActionType.Show_Chat, NAVIGATION_ITEM_WIDTH);
+			AddAction(nav_x, r, from, "Bars", PageActionType.Navigate_Bars, NAVIGATION_ITEM_WIDTH);
 			r += e;
+
+			if ( page == (int)PageActionType.Navigate_Bars )
+			{
+				const int SECTION_START_X = 245;
+
+				int rowY = 40;
+				int rowHeight = 40;
+				AddMagicToolbarRowHeader(SECTION_START_X, rowY);
+
+				rowY += rowHeight;
+				AddToolbarRowOnlyOpen(SECTION_START_X, rowY, "Combat Bar", PageActionType.Show_CombatBar);
+
+				rowY += rowHeight;
+				AddToolbarRowOnlyOpen(SECTION_START_X, rowY, "Reagent Bar", PageActionType.Show_RegBar);
+
+				rowY += rowHeight;
+				var isAutoOpen = PlayerSettings.GetQuickConfig( from, QuickConfig.KEY_AUTO_OPEN );
+				AddMagicToolbarRow(SECTION_START_X, rowY, "Quick Bar", PageActionType.Show_QuickBarManage, PageActionType.Show_QuickBar, PageActionType.None, PageActionType.Do_QuickBarAutoOpen, isAutoOpen);
+
+				rowY += rowHeight;
+				AddToolbarRowOnlyOpen(SECTION_START_X, rowY, "Weapon Abilities Bar", PageActionType.Show_WeaponAbilities);
+				
+				rowY += rowHeight;
+				AddToolbarRowOnlyOpen(SECTION_START_X, rowY, "Wealth Bar", PageActionType.Show_WealthBar);
+			}
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			AddAction(nav_x, r, from, "Conversations", PageActionType.Show_Conversations, NAVIGATION_ITEM_WIDTH);
+			AddAction(nav_x, r, from, "Gumps", PageActionType.Navigate_Gumps, NAVIGATION_ITEM_WIDTH);
 			r += e;
 
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			if ( page == (int)PageActionType.Navigate_Gumps )
+			{
+				const int SECTION_START_X = 245;
+				const int BAR_BORDER_HEIGHT = 4;
 
-			AddAction(nav_x, r, from, "Corpse Clear", PageActionType.Do_CorpseClear, NAVIGATION_ITEM_WIDTH);
-			r += e;
-			if ( page == (int)PageActionType.Do_CorpseClear ){ AddHtml( 252, 71, 739, 630, @"<BODY><BASEFONT Color=" + color + ">Your empty corpses have been removed.</BASEFONT></BODY>", (bool)false, (bool)true); }
+				int rowY = 40;
+				int rowHeight = 40;
+				AddGeneralActionRowHeader(SECTION_START_X, rowY, "Common Gumps");
 
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				rowY += rowHeight;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Achievements", PageActionType.Do_Achievements);
 
-			AddAction(nav_x, r, from, "Corpse Search", PageActionType.Do_CorpseSearch, NAVIGATION_ITEM_WIDTH);
-			r += e;
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Chat", PageActionType.Show_Chat);
 
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Emote List", PageActionType.Show_Emote);
 
-			AddAction(nav_x, r, from, "Emote", PageActionType.Show_Emote, NAVIGATION_ITEM_WIDTH);
-			r += e;
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Library", PageActionType.Navigate_Library);
 
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Message of the Day", PageActionType.Show_MOTD);
 
-			AddAction(nav_x, r, from, "Library", PageActionType.Navigate_Library, NAVIGATION_ITEM_WIDTH);
-			r += e;
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "NPC Conversations", PageActionType.Show_Conversations);
+
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Skill List", PageActionType.Show_SkillList);
+				
+				rowY += rowHeight;
+				rowY -= BAR_BORDER_HEIGHT;
+				AddGeneralActionRow(SECTION_START_X, rowY, "Statistics", PageActionType.Show_Statistics);
+			}
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -529,29 +596,12 @@ namespace Server.Engines.Help
 				}
 			}
 
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-			AddAction(nav_x, r, from, "Moongate Search", PageActionType.Do_MoongateSearch, NAVIGATION_ITEM_WIDTH);
-			r += e;
-
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-			AddAction(nav_x, r, from, "MOTD", PageActionType.Show_MOTD, NAVIGATION_ITEM_WIDTH);
-			r += e;
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 			AddAction(nav_x, r, from, "Quests", PageActionType.Show_Quests, NAVIGATION_ITEM_WIDTH);
 			r += e;
 			if ( page == (int)PageActionType.Show_Quests ){ AddHtml( 252, 71, 739, 630, @"<BODY><BASEFONT Color=" + color + ">Throughout your journey, you may come across particular events that appear in your quest log. They may be a simple achievement of finding a strange land, or they may reference an item you must find. Quests are handled in a 'virtual' manner. What this means is that any achievements are real, but any references to items found are not. If your quest log states that you found an ebony key, you will not have an ebony key in your backpack...but you will 'virtually' have the item. The quest will keep track of this fact for you. Because of this, you will never lose that ebony key and it remains unique to your character's questing. The quest knows you found it and have it. You may be tasked to find an item in a dungeon. When there is an indication you found it, it will be 'virtually' in your possession. You will often hear a sound of victory when a quest event is reached, along with a message about it. You still may miss it, however. So check your quest log from time to time. One way to get quests is to visit taverns or inns. If you see a bulletin board called 'Seeking Brave Adventurers', single click on it to begin your life questing for fame and fortune.<BR><BR>" + MyQuests( from ) + "<BR><BR></BASEFONT></BODY>", (bool)false, (bool)true); }
-
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-			AddAction(nav_x, r, from, "Quick Bar", PageActionType.Show_QuickBar, NAVIGATION_ITEM_WIDTH);
-			r += e;
-
-			AddAction(nav_x, r, from, "Reagent Bar", PageActionType.Show_RegBar, NAVIGATION_ITEM_WIDTH);
-			r += e;
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -753,16 +803,6 @@ namespace Server.Engines.Help
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			AddAction(nav_x, r, from, "Skill List", PageActionType.Show_SkillList, NAVIGATION_ITEM_WIDTH);
-			r += e;
-
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-			AddAction(nav_x, r, from, "Statistics", PageActionType.Show_Statistics, NAVIGATION_ITEM_WIDTH);
-			r += e;
-
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 			bool house = from.Region is HouseRegion && ((HouseRegion)from.Region).House.IsOwner(from);
 			if ( from.Region.GetLogoutDelay( from ) != TimeSpan.Zero && house == false && !( from.Region is SkyHomeDwelling ) && !( from.Region is PrisonArea ) && !( from.Region is DungeonHomeRegion ) && !( from.Region is GargoyleRegion ) && !( from.Region is SafeRegion ) )
 			{
@@ -776,16 +816,6 @@ namespace Server.Engines.Help
 			r += e;
 			if ( page == (int)PageActionType.Navigate_Changelog )
 				AddChangelogPanel( color, secondaryPageNumber );
-
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-			AddAction(nav_x, r, from, "Wealth Bar", PageActionType.Show_WealthBar, NAVIGATION_ITEM_WIDTH);
-			r += e;
-
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-			AddAction(nav_x, r, from, "Weapon Abilities", PageActionType.Show_WeaponAbilities, NAVIGATION_ITEM_WIDTH);
-			r += e;
 		}
 
         public void InvokeCommand( string c, Mobile from )
@@ -809,17 +839,11 @@ namespace Server.Engines.Help
 
 		private void AddSetting(int x, int y, PlayerMobile from, string name, PageActionType actionType, PageActionType infoType, bool addActionButton = true)
 		{
-			const int RIGHT_ARROW = 4005;
-			const int CHECKED_BOX = 4018;
-			const int UNCHECKED_BOX = 3609;
-			int isSelected = UseArrowIcon(actionType) 
-				? RIGHT_ARROW
-				: IsActive(from, actionType)
-					? CHECKED_BOX
-					: UNCHECKED_BOX;
-
 			if (addActionButton)
+			{
+				int isSelected = GetActionIcon(from, actionType);
 				AddButton(x, y, isSelected, isSelected, (int)actionType, GumpButtonType.Reply, 0);
+			}
 
 			AddButton(x+40, y, 4011, 4011, (int)infoType, GumpButtonType.Reply, 0);
 			AddHtml( x+80, y + 3, 316, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">" + name + "</BASEFONT></BODY>", (bool)false, (bool)false);
@@ -827,14 +851,7 @@ namespace Server.Engines.Help
 
 		private void AddAction(int x, int y, PlayerMobile from, string name, PageActionType actionType, int width = 100)
 		{
-			const int RIGHT_ARROW = 4005;
-			const int CHECKED_BOX = 4018;
-			const int UNCHECKED_BOX = 3609;
-			int isSelected = UseArrowIcon(actionType) 
-				? RIGHT_ARROW
-				: IsActive(from, actionType)
-					? CHECKED_BOX
-					: UNCHECKED_BOX;
+			int isSelected = GetActionIcon(from, actionType);
 			AddButton(x, y, isSelected, isSelected, (int)actionType, GumpButtonType.Reply, 0);
 			AddHtml( x+40, y + 3, width, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">" + name + "</BASEFONT></BODY>", (bool)false, (bool)false);
 		}
@@ -867,6 +884,34 @@ namespace Server.Engines.Help
 			}
 		}
 
+		private void AddGeneralActionRowHeader(int x, int y, string label)
+		{
+			const int HORIZONTAL_LINE = 2700;
+			const int BORDER_WIDTH = 2;
+
+			AddImageTiled(x + 2, y + 25, 740, BORDER_WIDTH, HORIZONTAL_LINE);
+
+			x += 10;
+			AddHtml(x, y + 3, 200, 20, string.Format(@"<BODY><BASEFONT Color={0}>{1}</BASEFONT></BODY>", TEXT_COLOR, label), false, false);
+		}
+
+		private void AddGeneralActionRow(int x, int y, string name, PageActionType action, bool addTopSeparator = false)
+		{
+			const int RIGHT_ARROW = 4005;
+
+			if (addTopSeparator)
+			{
+				const int HORIZONTAL_LINE = 2700;
+				const int BORDER_WIDTH = 1;
+				AddImageTiled(x + 2, y, 740, BORDER_WIDTH, HORIZONTAL_LINE);
+				y += 4;
+			}
+
+			x += 20;
+			AddButton(x, y, RIGHT_ARROW, RIGHT_ARROW, (int)action, GumpButtonType.Reply, 0);
+			AddHtml(x + 40, y + 3, 200, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">" + name + "</BASEFONT></BODY>", false, false);
+		}
+
 		private void AddMagicToolbarRowHeader(int x, int y)
 		{
 			const int HORIZONTAL_LINE = 2700;
@@ -874,9 +919,10 @@ namespace Server.Engines.Help
 
 			AddImageTiled(x + 2, y + 25, 740, BORDER_WIDTH, HORIZONTAL_LINE);
 
+			x += 10;
 			AddHtml(x, y + 3, 200, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Type</BASEFONT></BODY>", false, false);
 
-			x += 225;
+			x += 215;
 			AddHtml(x, y + 3, 100, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Open</BASEFONT></BODY>", false, false);
 
 			x += 50;
@@ -887,6 +933,11 @@ namespace Server.Engines.Help
 
 			x += 75;
 			AddHtml(x, y + 3, 100, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">Open on Login</BASEFONT></BODY>", false, false);
+		}
+
+		private void AddToolbarRowOnlyOpen(int x, int y, string name, PageActionType open, bool addTopSeparator = false)
+		{
+			AddMagicToolbarRow(x, y, name, PageActionType.None, open, PageActionType.None, PageActionType.None, false, addTopSeparator);
 		}
 
 		private void AddMagicToolbarRow(int x, int y, string name, PageActionType config, PageActionType open, PageActionType close, PageActionType toggleAutoOpen, bool isAutoOpen, bool addTopSeparator = false)
@@ -905,32 +956,53 @@ namespace Server.Engines.Help
 				y += 4;
 			}
 
+			x += 20;
 			if (!string.IsNullOrWhiteSpace(name))
 				AddHtml(x, y + 3, 200, 20, @"<BODY><BASEFONT Color=" + TEXT_COLOR + ">" + name + "</BASEFONT></BODY>", false, false);
 
 			// Open
-			x += 225;
+			x += 205;
 			AddButton(x, y, RIGHT_ARROW, RIGHT_ARROW, (int)open, GumpButtonType.Reply, 0);
 
 			// Close
 			x += 50;
-			AddButton(x, y, CANCEL_ICON, CANCEL_ICON, (int)close, GumpButtonType.Reply, 0);
+			if (close != PageActionType.None)
+				AddButton(x, y, CANCEL_ICON, CANCEL_ICON, (int)close, GumpButtonType.Reply, 0);
 
 			// Manage
 			x += 50;
-			AddButton(x, y, PAGE_ICON, PAGE_ICON, (int)config, GumpButtonType.Reply, 0);
+			if (config != PageActionType.None)
+				AddButton(x, y, PAGE_ICON, PAGE_ICON, (int)config, GumpButtonType.Reply, 0);
 
 			// Open on Login
 			x += 75;
-			int isAutoOpenSelected = isAutoOpen ? CHECKED_BOX : UNCHECKED_BOX;
-			AddButton(x, y, isAutoOpenSelected, isAutoOpenSelected, (int)toggleAutoOpen, GumpButtonType.Reply, 0);
+			if (toggleAutoOpen != PageActionType.None)
+			{
+				int isAutoOpenSelected = isAutoOpen ? CHECKED_BOX : UNCHECKED_BOX;
+				AddButton(x, y, isAutoOpenSelected, isAutoOpenSelected, (int)toggleAutoOpen, GumpButtonType.Reply, 0);
+			}
 		}
 
-		private bool UseArrowIcon( PageActionType actionType )
+		private int GetActionIcon( PlayerMobile from, PageActionType actionType )
 		{
+			const int RIGHT_ARROW = 4005;
+			const int CANCEL_ICON = 4020;
+			const int PAGE_ICON = 4011;
+			const int CHECKED_BOX = 4018;
+			const int UNCHECKED_BOX = 3609;
+
 			switch ( actionType )
 			{
 				case PageActionType.Navigate_Main:
+				case PageActionType.Navigate_Actions:
+				case PageActionType.Navigate_Gumps:
+				case PageActionType.Navigate_Bars:
+				case PageActionType.Navigate_MagicToolbars:
+				case PageActionType.Navigate_Changelog:
+				case PageActionType.Show_Quests:
+				case PageActionType.Show_Settings:
+					return m_PageNumber == (int)actionType ? CHECKED_BOX : UNCHECKED_BOX;
+
 				case PageActionType.Do_Achievements:
 				case PageActionType.Show_Chat:
 				case PageActionType.Show_Conversations:
@@ -938,34 +1010,32 @@ namespace Server.Engines.Help
 				case PageActionType.Do_CorpseSearch:
 				case PageActionType.Show_Emote:
 				case PageActionType.Navigate_Library:
-				case PageActionType.Navigate_MagicToolbars:
 				case PageActionType.Do_MoongateSearch:
 				case PageActionType.Show_MOTD:
-				case PageActionType.Show_Quests:
 				case PageActionType.Show_QuickBar:
 				case PageActionType.Show_RegBar:
-				case PageActionType.Show_Settings:
+				case PageActionType.Show_CombatBar:
 				case PageActionType.Show_SkillList:
 				case PageActionType.Show_Statistics:
 				case PageActionType.Do_StuckInWorld:
-				case PageActionType.Navigate_Changelog:
 				case PageActionType.Show_WealthBar:
 				case PageActionType.Show_WeaponAbilities:
 
-				case PageActionType.Setting_CreatureMagicFocus: 
-				case PageActionType.Setting_CreatureType: 
-				case PageActionType.Setting_CustomTitle: 
-				case PageActionType.Setting_LootOptions: 
-				case PageActionType.Setting_MusicPlaylist: 
-				case PageActionType.Setting_SkillTitle: 
-				case PageActionType.Setting_SetCraftingContainer: 
-				case PageActionType.Setting_SetHarvestingContainer: 
+				case PageActionType.Setting_CreatureMagicFocus:
+				case PageActionType.Setting_CreatureType:
+				case PageActionType.Setting_CustomTitle:
+				case PageActionType.Setting_LootOptions:
+				case PageActionType.Setting_MusicPlaylist:
+				case PageActionType.Setting_SkillTitle:
+				case PageActionType.Setting_SetCraftingContainer:
+				case PageActionType.Setting_SetHarvestingContainer:
 				case PageActionType.Setting_SetLootContainer:
-				case PageActionType.Setting_VendorContainerSell: return true;
-				case PageActionType.Setting_ModernSkills: return true;
+				case PageActionType.Setting_VendorContainerSell:
+				case PageActionType.Setting_ModernSkills:
+					return RIGHT_ARROW;
 			}
-
-			return false;
+			
+			return IsActive(from, actionType) ? CHECKED_BOX : UNCHECKED_BOX;
 		}
 
 		private bool IsActive( PlayerMobile from, PageActionType actionType )
@@ -1044,40 +1114,46 @@ namespace Server.Engines.Help
 					break;
 				}
 				case PageActionType.Navigate_Main:
+				case PageActionType.Navigate_Actions:
+				case PageActionType.Navigate_Gumps:
+				case PageActionType.Navigate_Bars:
 				{
-					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Navigate_Main ) );
+					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)actionType ) );
 					break;
 				}
 				case PageActionType.Do_Achievements:
 				{
-					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Navigate_Main ) );
+					reopenPage = true;
 					AchievementSystem.OpenGump( from, from );
 					break;
 				}
 				case PageActionType.Do_Toggle_AFK:
 				{
+					reopenPage = true;
 					InvokeCommand( "afk", from );
-					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Do_Toggle_AFK ) );
 					break;
 				}
 				case PageActionType.Show_Chat:
 				{
+					reopenPage = true;
 					InvokeCommand( "c", from );
 					break;
 				}
 				case PageActionType.Do_CorpseClear:
 				{
+					reopenPage = true;
 					InvokeCommand( "corpseclear", from );
-					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Do_CorpseClear ) );
 					break;
 				}
 				case PageActionType.Do_CorpseSearch:
 				{
+					reopenPage = true;
 					InvokeCommand( "corpse", from );
 					break;
 				}
 				case PageActionType.Show_Emote:
 				{
+					reopenPage = true;
 					InvokeCommand( "emote", from );
 					break;
 				}
@@ -1088,13 +1164,15 @@ namespace Server.Engines.Help
 				}
 				case PageActionType.Do_MoongateSearch:
 				{
+					reopenPage = true;
 					InvokeCommand( "magicgate", from );
 					break;
 				}
 				case PageActionType.Show_MOTD:
 				{
+					reopenPage = true;
 					from.CloseGump( typeof( Joeku.MOTD.MOTD_Gump ) );
-					Joeku.MOTD.MOTD_Utility.SendGump( from, false, 0, 1 );
+					Joeku.MOTD.MOTD_Utility.SendGump( from, false, 0, 0 );
 					break;
 				}
 				case PageActionType.Show_Quests:
@@ -1105,32 +1183,53 @@ namespace Server.Engines.Help
 				}
 				case PageActionType.Show_QuickBar:
 				{
+					reopenPage = true;
 					from.CloseGump( typeof( QuickBar ) );
 					from.SendGump( new QuickBar( from ) );
 					break;
 				}
+				case PageActionType.Show_QuickBarManage:
+				{
+					from.CloseGump( typeof( QuickConfig ) );
+					from.SendGump( new QuickConfig( from ) );
+					break;
+				}
+				case PageActionType.Do_QuickBarAutoOpen:
+				{
+					reopenPage = true;
+					PlayerSettings.SetQuickConfig( from, QuickConfig.KEY_AUTO_OPEN );
+					break;
+				}
 				case PageActionType.Show_RegBar:
 				{
+					reopenPage = true;
 					from.CloseGump( typeof( RegBar ) );
 					from.SendGump( new RegBar( from ) );
 					break;
 				}
+				case PageActionType.Show_CombatBar:
+				{
+					reopenPage = true;
+					from.CloseGump( typeof( CombatBar.CombatBarGump ) );
+					from.SendGump( new CombatBar.CombatBarGump( from ) );
+					break;
+				}
 				case PageActionType.Show_Settings:
 				{
-					from.SendGump( new Server.Engines.Help.HelpGump( from, (int)PageActionType.Show_Settings ) );
+					from.SendGump( new HelpGump( from, (int)PageActionType.Show_Settings ) );
 					break;
 				}
 				case PageActionType.Navigate_Library:
 				{
 					from.CloseGump( typeof( MyLibrary ) );
 					from.SendSound( 0x4A ); 
-					from.SendGump( new MyLibrary( from, (int)PageActionType.Navigate_Library ) );
+					from.SendGump( new MyLibrary( from, (int)PageActionType.Navigate_Gumps ) );
 					break;
 				}
 				case PageActionType.Show_Statistics:
 				{
 					from.CloseGump( typeof( Server.Statistics.StatisticsGump ) );
-					from.SendGump( new Server.Statistics.StatisticsGump( from, (int)PageActionType.Show_Statistics ) );
+					from.SendGump( new Server.Statistics.StatisticsGump( from, (int)PageActionType.Navigate_Gumps ) );
 					break;
 				}
 				case PageActionType.Do_StuckInWorld:
@@ -1158,11 +1257,13 @@ namespace Server.Engines.Help
 				}
 				case PageActionType.Show_WeaponAbilities:
 				{
+					reopenPage = true;
 					InvokeCommand( "sad", from );
 					break;
 				}
 				case PageActionType.Show_WealthBar:
 				{
+					reopenPage = true;
 					from.CloseGump( typeof( WealthBar ) );
 					from.SendGump( new WealthBar( from ) );
 					break;
@@ -1171,7 +1272,7 @@ namespace Server.Engines.Help
 				{
 					from.CloseGump( typeof( MyChat ) );
 					from.SendSound( 0x4A ); 
-					from.SendGump( new MyChat( from, 1 ) );
+					from.SendGump( new MyChat( from, (int)PageActionType.Navigate_Gumps ) );
 					break;
 				}
 				case PageActionType.Navigate_Changelog:
@@ -1282,6 +1383,7 @@ namespace Server.Engines.Help
 				}
 				case PageActionType.Show_SkillList:
 				{
+					reopenPage = true;
 					Server.Gumps.SkillListingGump.OpenSkillList( from );
 					break;
 				}
