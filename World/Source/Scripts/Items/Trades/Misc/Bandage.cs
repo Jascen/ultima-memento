@@ -682,23 +682,23 @@ namespace Server.Items
 
 			if ( patient.Hunger < 6 && patient is PlayerMobile && patient.Alive )
 			{
-				healer.SendMessage( "You cannot heal those that are extremely hungry." );
+				healer.LocalOverheadMessage( MessageType.Regular, 32, false, "You cannot heal those that are extremely hungry." );
 			}
 			else if ( patient is Golem || patient is Robot )
 			{
-				healer.SendLocalizedMessage( 500970 ); // Bandages cannot be used on that.
+				healer.LocalOverheadMessage( MessageType.Regular, 32, 500970 ); // Bandages cannot be used on that.
 			}
 			else if ( patient is BaseCreature && ((BaseCreature)patient).IsAnimatedDead )
 			{
-				healer.SendLocalizedMessage( 500951 ); // You cannot heal that.
+				healer.LocalOverheadMessage( MessageType.Regular, 32, 500951 ); // You cannot heal that.
 			}
 			else if ( !patient.Poisoned && patient.Hits == patient.HitsMax && !BleedAttack.IsBleeding( patient ) && !isDeadPet )
 			{
-				healer.SendLocalizedMessage( 500955 ); // That being is not damaged!
+				healer.LocalOverheadMessage( MessageType.Regular, 1150, 500955 ); // That being is not damaged!
 			}
 			else if ( !patient.Alive && (patient.Map == null || !patient.Map.CanFit( patient.Location, 16, false, false )) )
 			{
-				healer.SendLocalizedMessage( 501042 ); // Target cannot be resurrected at that location.
+				healer.LocalOverheadMessage( MessageType.Regular, 32, 501042 ); // Target cannot be resurrected at that location.
 			}
 			else if ( healer.CanBeBeneficial( patient, true, true ) )
 			{
@@ -716,10 +716,9 @@ namespace Server.Items
 				m_Table[healer] = context;
 
 				if ( healer != patient && patient is PlayerMobile )
-					patient.SendLocalizedMessage( 1008078, false, healer.Name ); //  : Attempting to heal you.
+					patient.LocalOverheadMessage( MessageType.Regular, 1150, 1008078, healer.Name ); //  : Attempting to heal you.
 
-				healer.SendLocalizedMessage( 500956 ); // You begin applying the bandages.
-				healer.LocalOverheadMessage( MessageType.Regular, 1150, 500956 );
+				healer.LocalOverheadMessage( MessageType.Regular, 1150, 500956 ); // You begin applying the bandages.
 
 				BuffInfo.AddBuff( healer, new BuffInfo( BuffIcon.Bandage, 1063670, TimeSpan.FromMilliseconds( milliseconds ), healer ) );
 
