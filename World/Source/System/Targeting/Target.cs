@@ -292,32 +292,32 @@ namespace Server.Targeting
 
 		protected virtual void OnTargetNotAccessible( Mobile from, object targeted )
 		{
-			from.SendLocalizedMessage( 500447 ); // That is not accessible.
+			from.LocalOverheadMessage( MessageType.Regular, 32, 500447 ); // That is not accessible.
 		}
 
 		protected virtual void OnTargetInSecureTrade( Mobile from, object targeted )
 		{
-			from.SendLocalizedMessage( 500447 ); // That is not accessible.
+			from.LocalOverheadMessage( MessageType.Regular, 32, 500447 ); // That is not accessible.
 		}
 
 		protected virtual void OnNonlocalTarget( Mobile from, object targeted )
 		{
-			from.SendLocalizedMessage( 500447 ); // That is not accessible.
+			from.LocalOverheadMessage( MessageType.Regular, 32, 500447 ); // That is not accessible.
 		}
 
 		protected virtual void OnCantSeeTarget( Mobile from, object targeted )
 		{
-			from.SendLocalizedMessage( 500237 ); // Target can not be seen.
+			from.LocalOverheadMessage( MessageType.Regular, 32, 500237 ); // Target can not be seen.
 		}
 
 		protected virtual void OnTargetOutOfLOS( Mobile from, object targeted )
 		{
-			from.SendLocalizedMessage( 500237 ); // Target can not be seen.
+			from.LocalOverheadMessage( MessageType.Regular, 32, 500237 ); // Target can not be seen.
 		}
 
 		protected virtual void OnTargetOutOfRange( Mobile from, object targeted )
 		{
-			from.SendLocalizedMessage( 500446 ); // That is too far away.
+			from.LocalOverheadMessage( MessageType.Regular, 32, 500446 ); // That is too far away.
 		}
 
 		protected virtual void OnTargetDeleted( Mobile from, object targeted )
@@ -326,7 +326,7 @@ namespace Server.Targeting
 
 		protected virtual void OnTargetUntargetable( Mobile from, object targeted )
 		{
-			from.SendLocalizedMessage( 500447 ); // That is not accessible.
+			from.LocalOverheadMessage( MessageType.Regular, 32, 500447 ); // That is not accessible.
 		}
 
 		protected virtual void OnTargetCancel( Mobile from, TargetCancelType cancelType )

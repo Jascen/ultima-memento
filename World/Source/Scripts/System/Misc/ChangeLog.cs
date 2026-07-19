@@ -1095,6 +1095,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Sextant can now convert coordinates on the Vendor Advertiser Bulletin<br>");
 					builder.Append("- Misc - Murder counts now decay after 12 hours, down from 40 hours<br>");
 					builder.Append("- Misc - Spell Bars can now be configured to open automatically on login<br>");
+					builder.Append("- Misc - Generic targeting failures (out of range/LOS, and inccessiblity) are now overhead messages<br>");
 					builder.Append("- Mob - Rocs and Roclings have been rebalanced<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Pets - Pet ghosts no longer have penalized movement speed<br>");
