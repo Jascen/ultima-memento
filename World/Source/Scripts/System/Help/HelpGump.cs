@@ -275,6 +275,7 @@ namespace Server.Engines.Help
 		{
 			EventSink.HelpRequest += new HelpRequestEventHandler( EventSink_HelpRequest );
             CommandSystem.Register("toolbars", AccessLevel.Player, e => OpenHelpGumpPageCommand(e, (int)PageActionType.Navigate_MagicToolbars));
+            CommandSystem.Register("help", AccessLevel.Player, e => OpenHelpGumpPageCommand(e, (int)PageActionType.Navigate_Main));
 		}
 
         private static void OpenHelpGumpPageCommand(CommandEventArgs e, int pageNumber)
