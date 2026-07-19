@@ -1,16 +1,17 @@
 using System;
-using Server;
 using Server.Mobiles;
 using Server.Network;
-using System.Collections; 
-using Server.Items;
 using Server.Misc;
 using Server.Gumps;
+using Server.Utilities;
 
 namespace Server.Items
 {
 	public class GateMoon : Item
 	{
+		private const string PLACEHOLDER_TEXT = "---------------";
+		private const int DYNAMIC_GATE_ID = 30;
+
 		[Constructable]
 		public GateMoon() : base( 0x1B72 )
 		{
@@ -89,6 +90,9 @@ namespace Server.Items
 				int GateNumber = 0;
 				string sPlace = "";
 				int counter = 0;
+				const int RIGHT_ARROW = 4005;
+				const int CANCEL_ICON = 4020;
+				const int UNCHECKED_BOX = 3609;
 
 				while ( GateAmount > 0 )
 				{
@@ -97,7 +101,7 @@ namespace Server.Items
 
 					sPlace = GetGateName( GateNumber, from );
 
-					if ( sPlace != "" )
+					if ( sPlace != null )
 					{
 						counter++;
 
@@ -111,21 +115,22 @@ namespace Server.Items
 						}
 
 						AddHtml( x+50, y, 180, 20, @"<BODY><BASEFONT Color=" + color + ">" + sPlace + "</BASEFONT></BODY>", (bool)false, (bool)false);
-						AddButton(x, y, 4005, 4005, GateNumber, GumpButtonType.Reply, 0);
+						if ( sPlace == PLACEHOLDER_TEXT )
+							AddImage(x, y, UNCHECKED_BOX);
+						else if ( GateNumber == DYNAMIC_GATE_ID && ShowGlade( from ) && ( from.Karma < 1 || 0 < from.Kills ) )
+						{
+							AddImage(x, y, CANCEL_ICON);
+							AddTooltip("Your decisions preclude you from accessing this destination.");
+						}
+						else
+							AddButton(x, y, RIGHT_ARROW, RIGHT_ARROW, GateNumber, GumpButtonType.Reply, 0);
 					}
 				}
 			}
 
 			public bool NearGate( Mobile from )
 			{
-				foreach ( Item i in from.GetItemsInRange( 10 ) )
-				{
-					if ( (i is ObsidianGate || i is GateMoon) && i.Map == from.Map )
-					{
-						return true;
-					}
-				}
-				return false;
+				return WorldUtilities.HasNearbyItem<Item>( from, 10, i => (i is ObsidianGate || i is GateMoon) && i.Map == from.Map );
 			}
 
 			public override void OnResponse( NetState state, RelayInfo info )
@@ -200,7 +205,7 @@ namespace Server.Items
 					else if (gate29){gX = 6377; gY = 302; gZ = 15; map = Map.Lodor;  }
 					else if (gate30)
 					{
-						if ( PlayerSettings.GetDiscovered( from, "the Land of Sosaria" ) && from.Karma >= 0 && from.Kills < 1 && !Server.Items.BaseRace.IsEvil( from ) )
+						if ( PlayerSettings.GetDiscovered( from, Land.Sosaria ) && from.Karma >= 0 && from.Kills < 1 && !Server.Items.BaseRace.IsEvil( from ) )
 						{
 							gX = 3907; gY = 3962; gZ = 5; map = Map.Sosaria;
 						}
@@ -241,53 +246,50 @@ namespace Server.Items
 
 		public static string GetGateName( int gate, Mobile m )
 		{
-			PlayerMobile pm = (PlayerMobile)m;
+			string sGate = null;
 
-			string sGate = "";
+			if ( m.Land == Land.Kuldar && !(PlayerSettings.GetDiscovered( m, Land.Kuldar )) ){}
+			else if ( gate == 1  ){ sGate = PlayerSettings.GetDiscovered( m, Land.Sosaria ) ? "Sosaria - Central" : PLACEHOLDER_TEXT; }
+			else if ( gate == 2 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Sosaria ) ? "Sosaria - Clues" : PLACEHOLDER_TEXT; }
+			else if ( gate == 3 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Sosaria ) ? "Sosaria - Devil Guard" : PLACEHOLDER_TEXT; }
+			else if ( gate == 4 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Sosaria ) ? "Sosaria - East" : PLACEHOLDER_TEXT; }
+			else if ( gate == 5 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Sosaria ) ? "Sosaria - Frozen Isles" : PLACEHOLDER_TEXT; }
+			else if ( gate == 6 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Sosaria ) ? "Sosaria - Montor" : PLACEHOLDER_TEXT; }
+			else if ( gate == 7 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Sosaria ) ? "Sosaria - Moon" : PLACEHOLDER_TEXT; }
+			else if ( gate == 8 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Sosaria ) ? "Sosaria - West" : PLACEHOLDER_TEXT; }
+			else if ( gate == 9 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Sosaria ) ? "Sosaria - Yew" : PLACEHOLDER_TEXT; }
 
-			if ( m.Land == Land.Kuldar && !(PlayerSettings.GetDiscovered( m, "the Bottle World of Kuldar" )) ){}
-			else if ( gate == 1 && PlayerSettings.GetDiscovered( m, "the Land of Sosaria" ) ){ sGate = "Sosaria - Central"; }
-			else if ( gate == 2 && PlayerSettings.GetDiscovered( m, "the Land of Sosaria" )){ sGate = "Sosaria - Clues"; }
-			else if ( gate == 3 && PlayerSettings.GetDiscovered( m, "the Land of Sosaria" )){ sGate = "Sosaria - Devil Guard"; }
-			else if ( gate == 4 && PlayerSettings.GetDiscovered( m, "the Land of Sosaria" )){ sGate = "Sosaria - East"; }
-			else if ( gate == 5 && PlayerSettings.GetDiscovered( m, "the Land of Sosaria" )){ sGate = "Sosaria - Frozen Isles"; }
-			else if ( gate == 6 && PlayerSettings.GetDiscovered( m, "the Land of Sosaria" )){ sGate = "Sosaria - Montor"; }
-			else if ( gate == 7 && PlayerSettings.GetDiscovered( m, "the Land of Sosaria" )){ sGate = "Sosaria - Moon"; }
-			else if ( gate == 8 && PlayerSettings.GetDiscovered( m, "the Land of Sosaria" )){ sGate = "Sosaria - West"; }
-			else if ( gate == 9 && PlayerSettings.GetDiscovered( m, "the Land of Sosaria" )){ sGate = "Sosaria - Yew"; }
+			else if ( gate == 10 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Ambrosia ) ? "Isle of Fire" : PLACEHOLDER_TEXT; }
+			else if ( gate == 11 ){ sGate = PlayerSettings.GetDiscovered( m, Land.UmberVeil ) ? "Lost Isle" : PLACEHOLDER_TEXT; }
 
-			else if ( gate == 10 && PlayerSettings.GetDiscovered( m, "the Land of Ambrosia" ) ){ sGate = "Isle of Fire"; }
-			else if ( gate == 11 && PlayerSettings.GetDiscovered( m, "the Island of Umber Veil" ) ){ sGate = "Lost Isle"; }
+			else if ( gate == 12 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Ambrosia ) ? "Land of Ambrosia" : PLACEHOLDER_TEXT; }
+			else if ( gate == 13 ){ sGate = PlayerSettings.GetDiscovered( m, Land.UmberVeil ) ? "Island of Umber Veil" : PLACEHOLDER_TEXT; }
+			else if ( gate == 14 ){ sGate = PlayerSettings.GetDiscovered( m, Land.IslesDread ) ? "Isles of Dread" : PLACEHOLDER_TEXT; }
 
-			else if ( gate == 12 && PlayerSettings.GetDiscovered( m, "the Land of Ambrosia" ) ){ sGate = "Land of Ambrosia"; }
-			else if ( gate == 13 && PlayerSettings.GetDiscovered( m, "the Island of Umber Veil" ) ){ sGate = "Island of Umber Veil"; }
-			else if ( gate == 14 && PlayerSettings.GetDiscovered( m, "the Isles of Dread" ) ){ sGate = "Isles of Dread"; }
+			else if ( gate == 15 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Lodoria ) ? "Lodoria - Greensky" : PLACEHOLDER_TEXT; }
+			else if ( gate == 16 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Lodoria ) ? "Lodoria - Islegem" : PLACEHOLDER_TEXT; }
+			else if ( gate == 17 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Lodoria ) ? "Lodoria - Portshine" : PLACEHOLDER_TEXT; }
+			else if ( gate == 18 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Lodoria ) ? "Lodoria - South" : PLACEHOLDER_TEXT; }
+			else if ( gate == 19 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Lodoria ) ? "Lodoria - Springvale" : PLACEHOLDER_TEXT; }
+			else if ( gate == 20 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Lodoria ) ? "Lodoria - Whisper" : PLACEHOLDER_TEXT; }
+			else if ( gate == 21 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Lodoria ) ? "Lodoria - Winterlands" : PLACEHOLDER_TEXT; }
 
-			else if ( gate == 15 && PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ){ sGate = "Lodoria - Greensky"; }
-			else if ( gate == 16 && PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ){ sGate = "Lodoria - Islegem"; }
+			else if ( gate == 22 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Serpent ) ? "Serpent Island - North" : PLACEHOLDER_TEXT; }
+			else if ( gate == 23 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Serpent ) ? "Serpent Island - South" : PLACEHOLDER_TEXT; }
+			else if ( gate == 24 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Serpent ) ? "Serpent Island - West" : PLACEHOLDER_TEXT; }
 
-			else if ( gate == 17 && PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ){ sGate = "Lodoria - Portshine"; }
-			else if ( gate == 18 && PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ){ sGate = "Lodoria - South"; }
-			else if ( gate == 19 && PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ){ sGate = "Lodoria - Springvale"; }
-			else if ( gate == 20 && PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ){ sGate = "Lodoria - Whisper"; }
-			else if ( gate == 21 && PlayerSettings.GetDiscovered( m, "the Land of Lodoria" ) ){ sGate = "Lodoria - Winterlands"; }
+			else if ( gate == 25 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Savaged ) ? "Savaged Empire - North" : PLACEHOLDER_TEXT; }
+			else if ( gate == 26 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Savaged ) ? "Savaged Empire - South" : PLACEHOLDER_TEXT; }
+			else if ( gate == 27 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Savaged ) ? "Savaged Empire - West" : PLACEHOLDER_TEXT; }
 
-			else if ( gate == 22 && PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ){ sGate = "Serpent Island - North"; }
-			else if ( gate == 23 && PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ){ sGate = "Serpent Island - South"; }
-			else if ( gate == 24 && PlayerSettings.GetDiscovered( m, "the Serpent Island" ) ){ sGate = "Serpent Island - West"; }
-
-			else if ( gate == 25 && PlayerSettings.GetDiscovered( m, "the Savaged Empire" ) ){ sGate = "Savaged Empire - North"; }
-			else if ( gate == 26 && PlayerSettings.GetDiscovered( m, "the Savaged Empire" ) ){ sGate = "Savaged Empire - South"; }
-			else if ( gate == 27 && PlayerSettings.GetDiscovered( m, "the Savaged Empire" ) ){ sGate = "Savaged Empire - West"; }
-
-			else if ( gate == 28 && PlayerSettings.GetDiscovered( m, "the Bottle World of Kuldar" ) ){ sGate = "Bottle World of Kuldar"; }
-			else if ( gate == 29 && PlayerSettings.GetDiscovered( m, "the Bottle World of Kuldar" ) ){ sGate = "Black Knight's Vault"; }
+			else if ( gate == 28 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Kuldar ) ? "Bottle World of Kuldar" : PLACEHOLDER_TEXT; }
+			else if ( gate == 29 ){ sGate = PlayerSettings.GetDiscovered( m, Land.Kuldar ) ? "Black Knight's Vault" : PLACEHOLDER_TEXT; }
 
 			else if ( gate == 30 )
 			{
-				if ( PlayerSettings.GetDiscovered( m, "the Land of Sosaria" ) && m.Karma >= 0 && m.Kills < 1 && !Server.Items.BaseRace.IsEvil( m ) )
+				if ( ShowGlade( m) )
 				{
-					sGate = "Woodlands - Druid's Glade";
+					sGate = PlayerSettings.GetDiscovered( m, Land.Sosaria ) ? "Woodlands - Druid's Glade" : PLACEHOLDER_TEXT;
 				}
 				else if ( Server.Items.BaseRace.IsEvilSeaCreature( m ) && m.RaceHomeLand == 2 )
 				{
@@ -312,6 +314,11 @@ namespace Server.Items
 			}
 
 			return sGate;
+		}
+
+		private static bool ShowGlade( Mobile m )
+		{
+			return !Server.Items.BaseRace.IsEvil( m );
 		}
 
 		public static void GateMoonTeleport( Mobile m, Point3D loc, Map map )
