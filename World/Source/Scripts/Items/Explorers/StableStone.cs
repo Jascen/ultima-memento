@@ -246,7 +246,11 @@ namespace Server.Items
 				int index = info.ButtonID - 1;
 
 				if ( index >= 0 && index < m_List.Count )
+				{
 					m_Trainer.EndClaimList( m_From, m_List[index] as BaseCreature );
+					if ( 0 < m_From.Stabled.Count )
+						m_Trainer.BeginClaimList( m_From );
+				}
 			}
 		}
 		
