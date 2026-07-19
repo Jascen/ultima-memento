@@ -2,13 +2,9 @@ using System;
 using Server;
 using Server.Gumps;
 using Server.Network;
-using Server.Items;
-using Server.Misc;
 using System.IO;
 using Server.Commands;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Server.Accounting;
 using Server.Regions;
 using Server.Mobiles;
 
@@ -160,7 +156,7 @@ namespace Joeku.MOTD
 
 			ShowMessage( player );
 
-			if ( Server.Misc.PlayerSettings.GetQuickConfig( player, 2 ) )
+			if ( Server.Misc.PlayerSettings.GetQuickConfig( player, QuickConfig.KEY_AUTO_OPEN ) )
 				player.SendGump( new QuickBar( player ) );
 
 			if ( Server.Misc.PlayerSettings.GetReagentConfig( player, 2 ) )

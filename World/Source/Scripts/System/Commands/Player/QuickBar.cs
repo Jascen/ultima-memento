@@ -1,19 +1,9 @@
 using System;
-using Server;
-using Server.Gumps;
 using Server.Network;
-using Server.Menus;
-using Server.Menus.Questions;
-using Server.Accounting;
-using Server.Multis;
 using Server.Mobiles;
-using Server.Regions;
-using System.Collections;
-using System.Collections.Generic;
 using Server.Commands;
 using Server.Misc;
 using Server.Items;
-using System.Globalization;
 using Server.SpellBars;
 
 namespace Server.Gumps 
@@ -473,6 +463,9 @@ namespace Server.Gumps
 
     public class QuickConfig : Gump
     {
+		public const int KEY_HORIZONTAL_BAR = 1;
+		public const int KEY_AUTO_OPEN = 2;
+
 		public QuickConfig( Mobile from ) : base( 50, 50 )
 		{
 			int btn1 = 3609;
@@ -589,10 +582,10 @@ namespace Server.Gumps
 
 			AddHtml( 14, 55, 981, 94, @"<BODY><BASEFONT Color=" + color + ">This toolbar provides a quick and convenient way to keep an eye on certain inventory items, invoke commands, and access information. Images are used to represent the function of the various buttons. You must choose what icons will appear on your quick bar, and you can select those here. The icons for spells, songs, or abilities will open or close the bar for those categories.</BASEFONT></BODY>", (bool)false, (bool)false);
 
-			AddButton(277, 151, btn1, btn1, 1, GumpButtonType.Reply, 0);
+			AddButton(277, 151, btn1, btn1, KEY_HORIZONTAL_BAR, GumpButtonType.Reply, 0);
 			AddHtml( 316, 151, 223, 20, @"<BODY><BASEFONT Color=" + color + ">Horizontal Bar</BASEFONT></BODY>", (bool)false, (bool)false);
 
-			AddButton(580, 151, btn2, btn2, 2, GumpButtonType.Reply, 0);
+			AddButton(580, 151, btn2, btn2, KEY_AUTO_OPEN, GumpButtonType.Reply, 0);
 			AddHtml( 619, 151, 223, 20, @"<BODY><BASEFONT Color=" + color + ">Open At Login</BASEFONT></BODY>", (bool)false, (bool)false);
 
 			int icons = 2;
