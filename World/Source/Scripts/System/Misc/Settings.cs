@@ -468,7 +468,7 @@ namespace Server
 
 		public static double SkillGain()
 		{
-			int skill = 0;
+			int skill = MySettings.S_SkillGain;
 
 			if ( MySettings.S_SkillGain > 10 )
 				skill = 10;
@@ -486,7 +486,7 @@ namespace Server
 
 		public static int FoodCheck()
 		{
-			int time = 5;
+			int time = MySettings.S_FoodCheck;
 
 			if ( MySettings.S_FoodCheck > 60 )
 				time = 60;
