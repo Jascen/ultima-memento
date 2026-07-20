@@ -1117,6 +1117,7 @@ namespace Server.Misc
 					builder.Append("- Skill - Activating Tracking now auto-selects last tracked options when moving<br>");
 					builder.Append("- Skill - Taming will now automatically retry when a creature is angered<br>");
 					builder.Append("- Skill - Druidism now reduces the chance a creature will be angered during taming attempts<br>");
+					builder.Append("- Skill - Magic Resist skill should now gain from any offensive spells (how high is limited by their spell circle)<br>");
 					builder.Append("- Spell - All spells now display their visuals regardless if absorbed<br>");
 					builder.Append("- Spell - Can of Snakes is now capped at 3 summons, down from 2<br>");
 					builder.Append("- Spell - Casting from a rune bag or scroll now halves the mana cost<br>");
@@ -1139,7 +1140,7 @@ namespace Server.Misc
 					builder.Append("- Item - Fix issue where throwing glove types had inconsistent base damage<br>");
 					builder.Append("- Item - Crafted relocking boxes now properly retain their difficulty<br>");
 					builder.Append("- Item - Wolf caps and stag caps are now sold by the fur trader<br>");
-					builder.Append("- Item - Jarred Liquids now refund a Jar when dumping into a Potion Keg<br>");
+					builder.Append("- Item - Jarred Liquids now refund a Jar when crafting/dumping into a Potion Keg<br>");
 					builder.Append("- Item - Increase Lockpick range to 2<br>");
 					builder.Append("- Item - Runebook graphics no longer revert after restarts<br>");
 					builder.Append("- Misc - Fix issue where Dex/Int stat gains couldn't happen if Str gain was on cooldown<br>");

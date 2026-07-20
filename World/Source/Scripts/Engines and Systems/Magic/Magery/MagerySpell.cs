@@ -56,17 +56,6 @@ namespace Server.Spells
 				m.CheckSkill( SkillName.MagicResist, 0.0, m.Skills[SkillName.MagicResist].Cap );
 		}
 
-		public override double GetResistSkill( Mobile m )
-		{
-			int maxSkill = (1 + (int)Circle) * 10;
-			maxSkill += (1 + ((int)Circle / 6)) * 25;
-
-			if( m.Skills[SkillName.MagicResist].Value < maxSkill )
-				m.CheckSkill( SkillName.MagicResist, 0.0, m.Skills[SkillName.MagicResist].Cap );
-
-			return m.Skills[SkillName.MagicResist].Value;
-		}
-
 		public virtual bool CheckResisted( Mobile target )
 		{
 			double n = GetResistPercent( target );

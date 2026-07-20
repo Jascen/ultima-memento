@@ -686,7 +686,13 @@ namespace Server.Spells
 		{
 			DoReflect( ref caster, ref target );
 
-			return !CheckMagicAbsorbed( circle, target );
+			if ( CheckMagicAbsorbed( circle, target ) ) return false;
+
+			int maxSkill = ( 10 * circle ) + ( 25 * circle / 6 );
+			if( target.Skills[SkillName.MagicResist].Value < maxSkill )
+				target.CheckSkill( SkillName.MagicResist, 0.0, 125.0 );
+
+			return true;
 		}
 
 		public static bool ResolveMagicDefense( int circle, Mobile caster, ref Mobile target )

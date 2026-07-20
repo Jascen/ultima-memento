@@ -351,7 +351,7 @@ namespace Server.Spells
 			return Spell.ItemSkillValue( m, DamageSkill, false );
 		}
 
-		public virtual double GetResistSkill( Mobile m )
+		public double GetResistSkill( Mobile m )
 		{
 			return m.Skills[SkillName.MagicResist].Value;
 		}

@@ -68,17 +68,6 @@ namespace Server.Spells.Undead
 			FinishSequence();
 		}
 
-		public override double GetResistSkill( Mobile m )
-		{
-			int maxSkill = (1 + 7) * 10;
-			maxSkill += (1 + (7 / 6)) * 25;
-
-			if( m.Skills[SkillName.MagicResist].Value < maxSkill )
-				m.CheckSkill( SkillName.MagicResist, 0.0, 120.0 );
-
-			return m.Skills[SkillName.MagicResist].Value;
-		}
-
 		public virtual bool CheckResisted( Mobile target )
 		{
 			double n = GetResistPercent( target );

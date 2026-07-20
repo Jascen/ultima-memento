@@ -35,11 +35,6 @@ namespace Server.Spells.Magical
 			return RequiredMana;
 		}
 
-		public override double GetResistSkill( Mobile m )
-		{
-			return m.Skills[SkillName.MagicResist].Value;
-		}
-
 		public virtual bool CheckResisted( Mobile target )
 		{
 			return false;
