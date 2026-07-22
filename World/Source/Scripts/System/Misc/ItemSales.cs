@@ -2394,7 +2394,7 @@ namespace Server
 			new ItemSalesInfo( typeof(	DrakboneTunic	),	242	,	0	,	0	,	false	,	false	,	World.None	,	Category.Armor	,	Material.Scales	,	Market.Smith	),
 			new ItemSalesInfo( typeof(	DrakkhenEggBlack	),	20000	,	0	,	0	,	false	,	false	,	World.None	,	Category.Rare	,	Material.None	,	Market.Stable	),
 			new ItemSalesInfo( typeof(	DrakkhenEggRed	),	20000	,	0	,	0	,	false	,	false	,	World.None	,	Category.Rare	,	Material.None	,	Market.Stable	),
-			new ItemSalesInfo( typeof(	DreadHelm	),	21	,	15	,	0	,	false	,	false	,	World.None	,	Category.Armor	,	Material.None	,	Market.Smith	),
+			new ItemSalesInfo( typeof(	DreadHelm	),	21	,	15	,	0	,	false	,	false	,	World.None	,	Category.Armor	,	Material.Metal	,	Market.Smith	),
 			new ItemSalesInfo( typeof(	Dressform	),	128	,	0	,	0	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Tailor	),
 			new ItemSalesInfo( typeof(	DDRelicDrink	),	1	,	0	,	200	,	false	,	false	,	World.None	,	Category.Tavern	,	Material.None	,	Market.Inn	),
 			new ItemSalesInfo( typeof(	DruidCauldron	),	16	,	15	,	0	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Druid	),

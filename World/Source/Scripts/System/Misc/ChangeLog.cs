@@ -1149,6 +1149,7 @@ namespace Server.Misc
 					builder.Append("- Item - Increase Lockpick range to 2<br>");
 					builder.Append("- Item - Runebook graphics no longer revert after restarts<br>");
 					builder.Append("- Item - Fix issue where gemmed jewelry could show as a bracelet graphic<br>");
+					builder.Append("- Item - Fix issue where Dread Helm could not be sold to vendors<br>");
 					builder.Append("- Misc - Fix issue where Dex/Int stat gains couldn't happen if Str gain was on cooldown<br>");
 					builder.Append("- Misc - Fix issue where where some Library books would show random books<br>");
 					builder.Append("- Misc - Bandages now stop when the healer dies<br>");
