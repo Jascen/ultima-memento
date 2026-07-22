@@ -25,10 +25,6 @@ namespace Server.Engines.Avatar
 
 		public bool IsEnabled { get; set; }
 
-		public static void Configure()
-		{
-		}
-
 		public static void Initialize()
 		{
 			LoadData();
@@ -115,7 +111,7 @@ namespace Server.Engines.Avatar
 						Instance.m_Context.Add(serial, context);
 					}
 
-					Console.WriteLine("Loaded Avatar data for '{0}' characters", Instance.m_Context.Count);
+					Console.WriteLine("[Avatar] Loaded data for '{0}' characters", Instance.m_Context.Count);
 				}
 			);
 
@@ -266,18 +262,10 @@ namespace Server.Engines.Avatar
 			if (context.Active)
 			{
 				m_Context.Remove(player.Serial);
-				Console.WriteLine("Removed context for player '{0}' ({1})", player.Name, player.Serial);
+				Console.WriteLine("[Avatar] Removed context for player '{0}' ({1})", player.Name, player.Serial);
 			}
 
-			// Prune deleted players
-			foreach (var key in m_Context.Keys.ToList())
-			{
-				Mobile mobile;
-				if (World.Mobiles.TryGetValue(key, out mobile) && mobile is PlayerMobile) continue;
-
-				m_Context.Remove(key);
-				Console.WriteLine("Pruned context for deleted serial '{0}' ({1})", key, mobile != null ? mobile.GetType().Name : "DELETED");
-			}
+			Prune();
 		}
 
 		private void OnSkillGain(SkillGainArgs e)
@@ -294,6 +282,7 @@ namespace Server.Engines.Avatar
 
 		private void OnWorldSave(WorldSaveEventArgs e)
 		{
+			Prune();
 			Persistence.Serialize(
 				"Saves//Player//Avatar.bin",
 				writer =>
@@ -308,6 +297,30 @@ namespace Server.Engines.Avatar
 					}
 				}
 			);
+		}
+
+		private void Prune()
+		{
+			var toRemove = Instance.m_Context.Keys.Where(key =>
+			{
+				Mobile mobile;
+				if (!World.Mobiles.TryGetValue(key, out mobile)) return true; // Doesn't exist
+
+				var player = mobile as PlayerMobile;
+				return player == null // Not a player
+					|| player.Deleted // Deleted
+					|| !player.Avatar.Active; // Avatar no longer active
+			});
+
+			if (toRemove.Any())
+			{
+				var removeList = toRemove.ToList();
+				foreach (var key in removeList)
+				{
+					Instance.m_Context.Remove(key);
+				}
+				Console.WriteLine("[Avatar] Removed data for '{0}' characters. A total of '{1}' characters remain.", removeList.Count, Instance.m_Context.Count);
+			}
 		}
 	}
 }
