@@ -1159,6 +1159,7 @@ namespace Server.Misc
 					builder.Append("- Quest - Sage Artifact quest text procedure now matches expectations<br>");
 					builder.Append("- Spell - Natures Passage now transports in one action<br>");
 					builder.Append("- Temptations - Fix app start race condition preventing proper skill cap application<br>");
+					builder.Append("- Temptations - Fix bug where declining Temptations was creating a context anyways<br>");
 					break;
 			}
 		}

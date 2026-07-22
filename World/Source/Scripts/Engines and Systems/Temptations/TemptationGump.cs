@@ -125,9 +125,8 @@ namespace Server.Temptation
 			{
 				case ActionButtonType.Decline:
 					{
-						var context = TemptationEngine.Instance.GetOrCreateContext(m_Target);
-						context.Flags = TemptationFlags.None;
-						TemptationEngine.Instance.ApplyContext(m_Target, context);
+						TemptationEngine.Instance.ReplaceContext(m_Target, PlayerContext.Default);
+						TemptationEngine.Instance.ApplyContext(m_Target, PlayerContext.Default);
 						if (m_OnDecline != null)
 							m_OnDecline();
 						return;
