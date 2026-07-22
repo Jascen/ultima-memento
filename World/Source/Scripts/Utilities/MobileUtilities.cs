@@ -73,7 +73,6 @@ public class MobileUtilities
 			}
 		}
 
-
 		// I don't know why this is done places, but we'll do it anyways
 		var lastDamager = m.FindMostRecentDamager(true);
 
