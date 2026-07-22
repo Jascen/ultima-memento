@@ -1063,6 +1063,7 @@ namespace Server.Misc
 					builder.Append("- Gump - Massive restructuring on Help Gump<br>");
 					builder.Append("- Gump - Add max capacity to stable gump<br>");
 					builder.Append("- Gump - Stable gump now reopens after claiming a pet when you have more stabled pets<br>");
+					builder.Append("- Gump - Add support for MobileUO/TazUO black border behind font on gumps<br>");
 					builder.Append("- Housekeeping - Consolidate logic for gift items<br>");
 					builder.Append("- Housekeeping - Consolidate logic for forge/anvil usage checks<br>");
 					builder.Append("- Item - Learn the Trade scrolls can now be opened from a small distance<br>");
