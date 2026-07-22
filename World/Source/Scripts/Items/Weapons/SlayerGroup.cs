@@ -40,6 +40,12 @@ namespace Server.Items
 			return "Unknown Slayer";
 		}
 
+		public static bool Slays( SlayerName slayerName, Mobile m )
+		{
+			SlayerEntry entry = GetEntryByName( slayerName );
+			return entry != null && entry.Slays( m );
+		}
+
 		public static SlayerName GetLootSlayerType( Type type )
 		{
 			for ( int i = 0; i < m_Groups.Length; ++i )
