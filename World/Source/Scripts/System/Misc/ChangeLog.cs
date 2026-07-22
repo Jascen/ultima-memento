@@ -1143,6 +1143,7 @@ namespace Server.Misc
 					builder.Append("- Item - Jarred Liquids now refund a Jar when crafting/dumping into a Potion Keg<br>");
 					builder.Append("- Item - Increase Lockpick range to 2<br>");
 					builder.Append("- Item - Runebook graphics no longer revert after restarts<br>");
+					builder.Append("- Item - Fix issue where gemmed jewelry could show as a bracelet graphic<br>");
 					builder.Append("- Misc - Fix issue where Dex/Int stat gains couldn't happen if Str gain was on cooldown<br>");
 					builder.Append("- Misc - Fix issue where where some Library books would show random books<br>");
 					builder.Append("- Misc - Bandages now stop when the healer dies<br>");

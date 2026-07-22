@@ -199,14 +199,13 @@ namespace Server.Items
 		{
 			int id = 26413;
 
-			if ( this is JewelryCirclet )
-				id += 1;
-			else if ( this is JewelryEarrings )
-				id += 2;
-			else if ( this is JewelryNecklace )
-				id += 3;
-			else if ( this is JewelryRing )
-				id += 4;
+			switch ( Layer )
+			{
+				case Layer.Helm: id += 1; break;
+				case Layer.Earrings: id += 2; break;
+				case Layer.Neck: id += 3; break;
+				case Layer.Ring: id += 4; break;
+			}
 
 			return ( id += (int)GemType*5 );
 		}
