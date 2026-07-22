@@ -1066,6 +1066,7 @@ namespace Server.Misc
 					builder.Append("- Gump - Add support for MobileUO/TazUO black border behind font on gumps<br>");
 					builder.Append("- Housekeeping - Consolidate logic for gift items<br>");
 					builder.Append("- Housekeeping - Consolidate logic for forge/anvil usage checks<br>");
+					builder.Append("- Housekeeping - Avatar and Temptation engines now prune every save cycle<br>");
 					builder.Append("- Item - Learn the Trade scrolls can now be opened from a small distance<br>");
 					builder.Append("- Item - All vendor-purchased ethereal mounts can now retain dye<br>");
 					builder.Append("- Item - Hide chests and Studded hide chests can now be sold to vendors<br>");
