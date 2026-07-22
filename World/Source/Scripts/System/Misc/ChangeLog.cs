@@ -1156,6 +1156,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Add missing degree symbol for Vendor Advertiser Bulletin<br>");
 					builder.Append("- Misc - Double-click to Talk now properly respects range and LOS<br>");
 					builder.Append("- Misc - Fix special drops triggering when the creature was a pet<br>");
+					builder.Append("- Misc - Fix issue where non-tempted Players had their soul orbs being deleted every restart<br>");
 					builder.Append("- Mobs - Fix case where AI would redundantly curse/poison<br>");
 					builder.Append("- Quest - Kite shield blacksmith quest now clarifies the item type name<br>");
 					builder.Append("- Quest - Sage Artifact quest text procedure now matches expectations<br>");
