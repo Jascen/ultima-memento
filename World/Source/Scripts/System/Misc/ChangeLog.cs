@@ -1101,6 +1101,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Generic targeting failures (out of range/LOS, and inccessiblity) are now overhead messages<br>");
 					builder.Append("- Misc - Bandage failure messages are now overhead messages<br>");
 					builder.Append("- Misc - Dungeon monsters are now ~16% more likely to drop an extra item<br>");
+					builder.Append("- Misc - Increase dungeon difficulty of Destard and Deceit<br>");
 					builder.Append("- Mob - Rocs and Roclings have been rebalanced<br>");
 					builder.Append("- NPC - Animal Trainer and Shephered now have a Search (for Pets) option<br>");
 					builder.Append("- Pets - Pet ghosts no longer have penalized movement speed<br>");

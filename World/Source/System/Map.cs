@@ -59,9 +59,9 @@ namespace Server
 				else if ( reg.IsPartOf( "Dungeon Hythloth" ) ){ Heat = 0; }
 				else if ( reg.IsPartOf( "the Mind Flayer City" ) ){ Heat = 2; }
 				else if ( reg.IsPartOf( "the City of Embers" ) ){ Heat = 0; }
-				else if ( reg.IsPartOf( "Dungeon Destard" ) ){ Heat = 1; }
+				else if ( reg.IsPartOf( "Dungeon Destard" ) ){ Heat = 2; }
 				else if ( reg.IsPartOf( "Dungeon Despise" ) ){ Heat = 2; }
-				else if ( reg.IsPartOf( "Dungeon Deceit" ) ){ Heat = 2; }
+				else if ( reg.IsPartOf( "Dungeon Deceit" ) ){ Heat = 3; }
 				else if ( reg.IsPartOf( "Dungeon Covetous" ) ){ Heat = 2; }
 				else if ( reg.IsPartOf( "the Lodoria Catacombs" ) ){ Heat = 1; }
 				else if ( reg.IsPartOf( "the Halls of Undermountain" ) ){ Heat = 2; }
