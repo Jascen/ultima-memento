@@ -8259,10 +8259,7 @@ namespace Server.Mobiles
 
 		public override bool OnBeforeDeath()
 		{
-			Region reg = Region.Find( this.Location, this.Map );
-
-			SlayerEntry undead = SlayerGroup.GetEntryByName( SlayerName.Silver );
-			SlayerEntry exorcism = SlayerGroup.GetEntryByName( SlayerName.Exorcism );
+			PlayerMobile player = MobileUtilities.TryGetKillingPlayer( this );
 
 			if ( Body == 224 )
 				Body = 13;
@@ -8271,33 +8268,11 @@ namespace Server.Mobiles
 
 			if ( AI == AIType.AI_Citizen )
 			{
-				Mobile murderer = this.LastKiller;
-
-				if (murderer is BaseCreature)
+				if ( player != null )
 				{
-					BaseCreature bc_killer = (BaseCreature)murderer;
-					if(bc_killer.Summoned)
-					{
-						if(bc_killer.SummonMaster != null)
-							murderer = bc_killer.SummonMaster;
-					}
-					else if(bc_killer.Controlled)
-					{
-						if(bc_killer.ControlMaster != null)
-							murderer=bc_killer.ControlMaster;
-					}
-					else if(bc_killer.BardProvoked)
-					{
-						if(bc_killer.BardMaster != null)
-							murderer=bc_killer.BardMaster;
-					}
-				}
-
-				if ( murderer is PlayerMobile )
-				{
-					murderer.Criminal = true;
-					murderer.Kills = murderer.Kills + 1;
-					Server.Items.DisguiseTimers.RemoveDisguise( murderer );
+					player.Criminal = true;
+					player.Kills += 1;
+					Server.Items.DisguiseTimers.RemoveDisguise( player );
 				}
 
 				string bSay = "Help! Guards!";
@@ -8327,27 +8302,29 @@ namespace Server.Mobiles
 			{
 				BeefUpLoot( this, Heat );
 			}
-			
-			// TODO: This code could probably be simplified
-			if ( slayer is PlayerMobile || ( slayer is BaseCreature && ((BaseCreature)slayer).ControlMaster != null && ((BaseCreature)slayer).ControlMaster is PlayerMobile ) )
-			{
-				Server.Misc.IntelligentAction.SaySomethingOnDeath( this, this.LastKiller );
 
+			// Killer was a Player
+			// Should drop loot
+			// Does not belong to a player
+			if ( player != null && !IsEphemeral && !NoKillAwards && MobileUtilities.TryGetMasterPlayer( this ) == null )
+			{
+				Server.Misc.IntelligentAction.SaySomethingOnDeath( this, player );
 				Server.Misc.HoardPile.MakeHoard( this ); // SEE IF A HOARD DROPS NEARBY
-
 				Server.Misc.SummonQuests.WellTheyDied( this, this );
-			}
+				GoldenFeathers.Award(this, player);
 
-			if ( slayer is PlayerMobile )
-			{
 				///////////////////////////////////////////////////////////////////////////////////////
 
 				if ( SeaEnemy() )
 					Server.Engines.Harvest.Fishing.SailorSkill( slayer, (int)( IntelligentAction.GetCreatureLevel( this ) / 10 ) );
 
+				///////////////////////////////////////////////////////////////////////////////////////
+
+				// Reagent drops
+				Region reg = Region.Find( this.Location, this.Map );
 				if ( reg.IsPartOf( typeof( NecromancerRegion ) ) && GetPlayerInfo.EvilPlayer( slayer ) && slayer.Skills[SkillName.Necromancy].Base >= 25 )
 				{
-					if ( undead.Slays(this) || exorcism.Slays(this) )
+					if ( SlayerGroup.Slays( SlayerName.Silver, this ) || SlayerGroup.Slays( SlayerName.Exorcism, this ) )
 					{
 						switch ( Utility.Random( 7 ) )
 						{
@@ -8380,126 +8357,89 @@ namespace Server.Mobiles
 						PackItem( new EmbalmingFluid() );
 					}
 				}
-			}
 
-			///////////////////////////////////////////////////////////////////////////////////////
-
-			SlayerEntry vampAnimal = SlayerGroup.GetEntryByName( SlayerName.AnimalHunter );
-			SlayerEntry vampAvian = SlayerGroup.GetEntryByName( SlayerName.AvianHunter );
-			SlayerEntry vampRepond = SlayerGroup.GetEntryByName( SlayerName.Repond );
-			SlayerEntry vampGiant = SlayerGroup.GetEntryByName( SlayerName.GiantKiller );
-
-			if ( vampAnimal.Slays(this) || vampAvian.Slays(this) || vampRepond.Slays(this) || vampGiant.Slays(this) || this is BaseVendor )
-			{
-				Mobile vampire = this.LastKiller;
-
-				if ( vampire is BaseCreature )
-					vampire = ((BaseCreature)vampire).GetMaster();
-
-				if ( vampire is PlayerMobile && Server.Items.BaseRace.BloodDrinker( vampire.RaceID ) && Utility.RandomBool() )
+				///////////////////////////////////////////////////////////////////////////////////////
+				
+				// Blood bag drops
+				if (
+					this is BaseVendor
+					|| SlayerGroup.Slays( SlayerName.AnimalHunter, this )
+					|| SlayerGroup.Slays( SlayerName.AvianHunter, this )
+					|| SlayerGroup.Slays( SlayerName.Repond, this )
+					|| SlayerGroup.Slays( SlayerName.GiantKiller, this )
+				)
 				{
-					PackItem( new BloodyDrink() );
-				}
-				else if ( vampire is PlayerMobile && Server.Items.BaseRace.BrainEater( vampire.RaceID ) && Utility.RandomBool() )
-				{
-					PackItem( new FreshBrain() );
-				}
-			}
-
-			///////////////////////////////////////////////////////////////////////////////////////
-
-			// GOLDEN FEATHERS FOR THE RANGERS OUTPOST ALTAR
-			GoldenFeathers.Award(this, LastKiller);
-
-			int treasureLevel = TreasureMapLevel;
-
-			if ( treasureLevel == 1 && this.Map == Map.Sosaria )
-			{
-				Mobile killer = this.LastKiller;
-
-				if ( killer is BaseCreature )
-					killer = ((BaseCreature)killer).GetMaster();
-
-				if ( killer is PlayerMobile && ((PlayerMobile)killer).Young )
-					treasureLevel = 0;
-			}
-
-			if ( !Summoned && !IsEphemeral && !NoKillAwards && !IsBonded && treasureLevel >= 0 )
-			{
-				if ( m_Paragon && Paragon.ChestChance > Utility.RandomDouble() )
-					PackItem( new ParagonChest( this.Name, this.Title, treasureLevel, this ) );
-				else if ( TreasureMap.LootChance >= Utility.RandomDouble() )
-				{
-					PackItem( new TreasureMap( treasureLevel, this.Map, this.Location, this.X, this.Y ) );
-				}
-			}
-
-			// Actually generate loot
-			if ( !Summoned && !IsEphemeral && !NoKillAwards && !m_HasGeneratedLoot )
-			{
-				m_HasGeneratedLoot = true;
-				GenerateLoot( false );
-				if ( Backpack != null )
-				{
-					LootPackChange.MakeCoins(this.Backpack, this);
-					var lootingRights = GetLootingRights( this.DamageEntries, this.HitsMax );
-					var mobiles = lootingRights.Select(store => store.m_Mobile);
-					NotIdentified.DoAutoDelete( Backpack, mobiles );
-				}
-			}
-
-			///////////////////////////////////////////////////////////////////////////////////////
-
-			SlayerEntry spreaddeath = SlayerGroup.GetEntryByName( SlayerName.Repond );
-
-			Mobile deathknight = this.LastKiller;										// DEATH KNIGHT HOLDING SOUL LANTERNS
-			if ( spreaddeath.Slays(this) && deathknight != null && this.TotalGold > 0 )	// TURNS THE MONEY TO SOUL COUNT
-			{
-				if ( deathknight is BaseCreature )
-					deathknight = ((BaseCreature)deathknight).GetMaster();
-
-				if ( deathknight is PlayerMobile )
-				{
-					Item lantern = deathknight.FindItemOnLayer( Layer.TwoHanded );
-
-					if ( lantern is SoulLantern )
+					if ( Server.Items.BaseRace.BloodDrinker( player.RaceID ) && Utility.RandomBool() )
 					{
-						SoulLantern souls = (SoulLantern)lantern;
-						souls.TrappedSouls = souls.TrappedSouls + (this.TotalGold * 2);
+						PackItem( new BloodyDrink() );
+					}
+					else if ( Server.Items.BaseRace.BrainEater( player.RaceID ) && Utility.RandomBool() )
+					{
+						PackItem( new FreshBrain() );
+					}
+				}
+
+				///////////////////////////////////////////////////////////////////////////////////////
+
+				// Actually generate loot
+				int treasureLevel = TreasureMapLevel;
+				if ( treasureLevel >= 0 )
+				{
+					if ( m_Paragon && Paragon.ChestChance > Utility.RandomDouble() )
+						PackItem( new ParagonChest( this.Name, this.Title, treasureLevel, this ) );
+					else if ( TreasureMap.LootChance >= Utility.RandomDouble() )
+					{
+						PackItem( new TreasureMap( treasureLevel, this.Map, this.Location, this.X, this.Y ) );
+					}
+				}
+
+				if ( !m_HasGeneratedLoot )
+				{
+					m_HasGeneratedLoot = true;
+					GenerateLoot( false );
+					if ( Backpack != null )
+					{
+						LootPackChange.MakeCoins(this.Backpack, this);
+						var lootingRights = GetLootingRights( this.DamageEntries, this.HitsMax );
+						var mobiles = lootingRights.Select(store => store.m_Mobile);
+						NotIdentified.DoAutoDelete( Backpack, mobiles );
+					}
+				}
+
+				///////////////////////////////////////////////////////////////////////////////////////
+
+				// DEATH KNIGHT HOLDING SOUL LANTERNS
+				// TURNS THE MONEY TO SOUL COUNT
+				if ( SlayerGroup.Slays( SlayerName.Repond, this ) && this.TotalGold > 0 )
+				{
+					SoulLantern souls = player.FindItemOnLayer( Layer.TwoHanded ) as SoulLantern;
+					if ( souls != null )
+					{
+						souls.TrappedSouls += this.TotalGold * 2;
 						if ( souls.TrappedSouls > 100000 ){ souls.TrappedSouls = 100000; }
 						souls.InvalidateProperties();
 
-						Item deathpack = this.FindItemOnLayer( Layer.Backpack );
-						if ( deathpack != null )
+						// Don't create a backpack
+						if ( this.Backpack != null )
 						{
 							Item dtcoins = this.Backpack.FindItemByType( typeof( Gold ) );
 							dtcoins.Delete();
-							deathknight.SendMessage( "A soul has been claimed." );
-							Effects.SendLocationParticles( EffectItem.Create( deathknight.Location, deathknight.Map, EffectItem.DefaultDuration ), 0x376A, 9, 32, 5008 );
-							Effects.PlaySound( deathknight.Location, deathknight.Map, 0x1ED );
+							player.SendMessage( "A soul has been claimed." );
+							Effects.SendLocationParticles( EffectItem.Create( player.Location, player.Map, EffectItem.DefaultDuration ), 0x376A, 9, 32, 5008 );
+							Effects.PlaySound( player.Location, player.Map, 0x1ED );
 						}
 					}
 				}
-			}
 
-			///////////////////////////////////////////////////////////////////////////////////////
+				///////////////////////////////////////////////////////////////////////////////////////
 
-			SlayerEntry holyundead = SlayerGroup.GetEntryByName( SlayerName.Silver );
-			SlayerEntry holydemons = SlayerGroup.GetEntryByName( SlayerName.Exorcism );
-
-			Mobile holyman = this.LastKiller;																		// HOLY MANY HOLDING HOLY SYMBOL
-			if ( ( holyundead.Slays(this) || holydemons.Slays(this) ) && holyman != null && this.TotalGold > 0 )	// TURNS THE MONEY TO BANISH COUNT
-			{
-				if ( holyman is BaseCreature )
-					holyman = ((BaseCreature)holyman).GetMaster();
-
-				if ( holyman is PlayerMobile )
+				// HOLY MANY HOLDING HOLY SYMBOL
+				// TURNS THE MONEY TO BANISH COUNT
+				if ( ( SlayerGroup.Slays( SlayerName.Silver, this ) || SlayerGroup.Slays( SlayerName.Exorcism, this ) ) && this.TotalGold > 0 )
 				{
-					Item symbol = holyman.FindItemOnLayer( Layer.Trinket );
-
-					if ( symbol is HolySymbol )
+					HolySymbol banish = player.FindItemOnLayer( Layer.Trinket ) as HolySymbol;
+					if ( banish != null )
 					{
-						HolySymbol banish = (HolySymbol)symbol;
 						banish.BanishedEvil = banish.BanishedEvil + (this.TotalGold * 2);
 						if ( banish.BanishedEvil > 100000 ){ banish.BanishedEvil = 100000; }
 						banish.InvalidateProperties();
@@ -8509,9 +8449,9 @@ namespace Server.Mobiles
 						{
 							Item dtcoins = this.Backpack.FindItemByType( typeof( Gold ) );
 							dtcoins.Delete();
-							holyman.SendMessage( "Evil has been banished." );
-							holyman.FixedParticles( 0x373A, 10, 15, 5018, EffectLayer.Waist );
-							holyman.PlaySound( 0x1EA );
+							player.SendMessage( "Evil has been banished." );
+							player.FixedParticles( 0x373A, 10, 15, 5018, EffectLayer.Waist );
+							player.PlaySound( 0x1EA );
 						}
 					}
 				}
