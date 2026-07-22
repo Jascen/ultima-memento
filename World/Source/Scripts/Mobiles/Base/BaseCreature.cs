@@ -2263,7 +2263,7 @@ namespace Server.Mobiles
 
 			if ( bc.Backpack != null )
 			{
-				if ( up >= Utility.Random( 7 ) )
+				if ( up >= Utility.Random( (int)Difficulty.Epic ) )
 				{
 					if ( bc.Fame < 1250 )
 						bc.AddLoot( LootPack.Meager );
