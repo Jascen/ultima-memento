@@ -139,8 +139,9 @@ namespace Server.Gumps
 					else
 					{
 						item.OnDoubleClick(from);
-						item.Delete();
 					}
+
+					item.Delete();
 				}
 			}
 			else if ( m_Origin > 0 ){ from.SendGump( new Server.Engines.Help.HelpGump( from, m_Origin ) ); }
