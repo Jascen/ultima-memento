@@ -1124,6 +1124,7 @@ namespace Server.Misc
 					builder.Append("- Spell - All spells now display their visuals regardless if absorbed<br>");
 					builder.Append("- Spell - Can of Snakes is now capped at 3 summons, down from 2<br>");
 					builder.Append("- Spell - Casting from a rune bag or scroll now halves the mana cost<br>");
+					builder.Append("- Vendor - Runebooks with runes are no longer sellable<br>");
 
 					builder.Append("<br>Fixes<br>");
 					builder.Append("- Admin - Remove duplicate doors in Britain castle<br>");

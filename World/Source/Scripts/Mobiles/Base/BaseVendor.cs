@@ -1116,6 +1116,7 @@ namespace Server.Mobiles
 
 			if ( parentcon != null && parentcon.Locked ) return false;
 			if ( item is Container && ( (Container)item ).Items.Count != 0 ) return false;
+			if ( item is Runebook && ( (Runebook)item ).Entries.Count != 0 ) return false;
 			if ( !item.IsStandardLoot() || !item.Movable ) return false;
 
 			foreach ( IShopSellInfo ssi in info )
@@ -1268,6 +1269,8 @@ namespace Server.Mobiles
 						LockableContainer parentcon = item.ParentEntity as LockableContainer;
 
 						if ( item is Container && ( (Container)item ).Items.Count != 0 )
+							continue;
+						if ( item is Runebook && ( (Runebook)item ).Entries.Count != 0 )
 							continue;
 
 						if ( parentcon != null && parentcon.Locked == true )
