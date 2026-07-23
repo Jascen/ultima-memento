@@ -380,7 +380,7 @@ namespace Server.Regions
 				}
 			}
 			else if ( e.HasKeyword( 0x23 ) || Insensitive.Equals(e.Speech, "lockdown") ) // I wish to lock this down
-            {
+			{
 				if ( isCoOwner )
 				{
 					from.SendLocalizedMessage( 502097 ); // Lock what down?
@@ -395,8 +395,8 @@ namespace Server.Regions
 					from.SendLocalizedMessage( 502094 ); // You must be in your house to do this.
 				}
 			}
-			else if ( e.HasKeyword( 0x24 ) || Insensitive.Equals(e.Speech, "release")) // I wish to release this
-            {
+			else if ( e.HasKeyword( 0x24 ) || Insensitive.Equals(e.Speech, "release") ) // I wish to release this
+			{
 				if ( isCoOwner )
 				{
 					from.SendLocalizedMessage( 502100 ); // Choose the item you wish to release
