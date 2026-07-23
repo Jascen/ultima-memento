@@ -379,7 +379,7 @@ namespace Server.Regions
 					from.Target = new HouseBanTarget( true, m_House );
 				}
 			}
-			else if ( e.HasKeyword( 0x23 ) ) // I wish to lock this down
+			else if ( e.HasKeyword( 0x23 ) || Insensitive.Equals(e.Speech, "lockdown") ) // I wish to lock this down
 			{
 				if ( isCoOwner )
 				{
@@ -395,7 +395,7 @@ namespace Server.Regions
 					from.SendLocalizedMessage( 502094 ); // You must be in your house to do this.
 				}
 			}
-			else if ( e.HasKeyword( 0x24 ) ) // I wish to release this
+			else if ( e.HasKeyword( 0x24 ) || Insensitive.Equals(e.Speech, "release") ) // I wish to release this
 			{
 				if ( isCoOwner )
 				{
@@ -411,7 +411,7 @@ namespace Server.Regions
 					from.SendLocalizedMessage( 502094 ); // You must be in your house to do this.
 				}
 			}
-			else if ( e.HasKeyword( 0x25 ) ) // I wish to secure this
+			else if ( e.HasKeyword( 0x25 ) || Insensitive.Equals(e.Speech, "secure") ) // I wish to secure this 
 			{
 				if ( isOwner )
 				{
