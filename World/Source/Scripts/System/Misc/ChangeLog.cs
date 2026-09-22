@@ -1287,6 +1287,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Players with '0' Karma may now access The Glade<br>");
 					builder.Append("- Misc - Fix issue where relic items could be duplicated<br>");
 					builder.Append("- Misc - More fixes for unconsented damage<br>");
+					builder.Append("- Misc - Regular Lockpicks no longer prevent Keycards from being detected<br>");
 					builder.Append("- Spell - Fix typo in Orb of Orcus spell description<br>");
 					builder.Append("- Spell - Fix potential crash when casting too fast<br>");
 					builder.Append("- Spell - Fix crash with Magic Reflection + Parrying combo<br>");
