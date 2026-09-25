@@ -293,6 +293,7 @@ namespace Server.Engines.Craft
 			AddCraft( typeof( WitchCauldron ), 1044046, "witch's cauldron", 20.0, 70.0, typeof( IronIngot ), 1044036, 5, 1044037 );
 			AddCraft( typeof( WoodworkingTools ), 1044046, "woodworking tools", 30.0, 80.0, typeof( IronIngot ), 1044036, 2, 1044037 );
 			AddCraft( typeof( UndertakerKit ), 1044046, "undertaker kit", 35.0, 85.0, typeof( IronIngot ), 1044036, 4, 1044037 );
+			AddCraft( typeof( HiveTool ), 1044046, "hive tool", 50.0, 90.0, typeof( IronIngot ), 1044036, 2, 1044037 );
 
 			#endregion
 

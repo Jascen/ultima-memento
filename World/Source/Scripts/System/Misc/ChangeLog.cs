@@ -1246,6 +1246,7 @@ namespace Server.Misc
 					builder.Append("- Craft - Undertaker kit is now craftable<br>");
 					builder.Append("- Craft - Breakdown should now work on more items<br>");
 					builder.Append("- Craft - Elven Quivers are now craftable<br>");
+					builder.Append("- Craft - Hive tool is now craftable<br>");
 					builder.Append("- Gump - Avatar skill archive is now more compact<br>");
 					builder.Append("- Gump - Combat Bar now refreshes Coins after Avatar purchases<br>");
 					builder.Append("- Gump - Puzzle master temptation now properly hides negatives for Avatars<br>");
@@ -1258,6 +1259,7 @@ namespace Server.Misc
 					builder.Append("- Item - Tablets now show their location when identified<br>");
 					builder.Append("- Item - Mangar's Robe now has SDI instead of LMC and reduced MRegen for increased Int<br>");
 					builder.Append("- Item - Franken Journal tooltip now shows the number of parts gathered and the brain level<br>");
+					builder.Append("- Item - Hive tool is now worth dramatically less<br>");
 					builder.Append("- Misc - Holy Man class no longer requires base skill to activate<br>");
 					builder.Append("- Misc - Mystic class no longer requires base skill to activate<br>");
 					builder.Append("- Misc - Guildmasters now wear their guild rings on their paperdolls<br>");
