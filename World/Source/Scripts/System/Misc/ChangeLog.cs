@@ -1288,6 +1288,8 @@ namespace Server.Misc
 					builder.Append("- Misc - Fix issue where relic items could be duplicated<br>");
 					builder.Append("- Misc - More fixes for unconsented damage<br>");
 					builder.Append("- Misc - Regular Lockpicks no longer prevent Keycards from being detected<br>");
+					builder.Append("- Misc - Fix issue where Golems had to be the first follower to be summoned<br>");
+					builder.Append("- Misc - Fix issue where Fighter Golem required 5 slots to summon despite only needing 3 slots when active<br>");
 					builder.Append("- Spell - Fix typo in Orb of Orcus spell description<br>");
 					builder.Append("- Spell - Fix potential crash when casting too fast<br>");
 					builder.Append("- Spell - Fix crash with Magic Reflection + Parrying combo<br>");
