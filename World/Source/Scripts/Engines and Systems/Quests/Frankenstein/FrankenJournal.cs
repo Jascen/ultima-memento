@@ -64,19 +64,21 @@ namespace Server.Items
 				return;
 			}
 
-			if ( JournalOwner == null || JournalOwner.Deleted )
-				Journal_Owner = from;
-
-			if ( JournalOwner != null && JournalOwner != from )
+			if ( JournalOwner == null )
 			{
-				from.SendMessage( "This journal does not belong to you!" );
-				return;
+				var journal = WorldUtilities.FirstOrDefault<FrankenJournal>( item => item.JournalOwner == from && item != this );
+				if ( journal != null )
+				{
+					from.SendMessage( "You already have a journal! You can only have one at a time." );
+					return;
+				}
+
+				Journal_Owner = from;
 			}
 
-			var journal = WorldUtilities.FirstOrDefault<FrankenJournal>( item => item.JournalOwner == from && item != this );
-			if ( journal != null )
+			if ( JournalOwner != from )
 			{
-				from.SendMessage( "You already have a journal! You can only have one at a time." );
+				from.SendMessage( "This journal does not belong to you!" );
 				return;
 			}
 

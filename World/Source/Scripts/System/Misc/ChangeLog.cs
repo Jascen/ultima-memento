@@ -1282,6 +1282,7 @@ namespace Server.Misc
 					builder.Append("- Item - House teleporters remain active after the marking character is deleted<br>");
 					builder.Append("- Item - Fix inverted Lower Ammo Cost behavior on harpoons, wizard staves, and Kilrathi weapons<br>");
 					builder.Append("- Item - Weighting stones may now be used on bludgeoning/fistfighting weapons<br>");
+					builder.Append("- Item - Fix issue where you could own multiple FrankenJournal<br>");
 					builder.Append("- Misc - Fix crash from concurrent client disconnect on the network thread<br>");
 					builder.Append("- Misc - Fix issue where Strange Portals crossed facets<br>");
 					builder.Append("- Misc - Players with '0' Karma may now access The Glade<br>");
