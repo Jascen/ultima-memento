@@ -1248,6 +1248,7 @@ namespace Server.Misc
 					builder.Append("- Craft - Elven Quivers are now craftable<br>");
 					builder.Append("- Gump - Avatar skill archive is now more compact<br>");
 					builder.Append("- Gump - Combat Bar now refreshes Coins after Avatar purchases<br>");
+					builder.Append("- Gump - Puzzle master temptation now properly hides negatives for Avatars<br>");
 					builder.Append("- Item - Prayer book is now always given when you turn in a wooden mallet and stake<br>");
 					builder.Append("- Item - Prayer book attempts to bind to you when you open it<br>");
 					builder.Append("- Item - Bag of Holding cooldown is now 15s, down from 60s<br>");
