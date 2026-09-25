@@ -1256,6 +1256,7 @@ namespace Server.Misc
 					builder.Append("- Item - Double-clicking on beverages now drinks max by default<br>");
 					builder.Append("- Item - Tablets now show their location when identified<br>");
 					builder.Append("- Item - Mangar's Robe now has SDI instead of LMC and reduced MRegen for increased Int<br>");
+					builder.Append("- Item - Franken Journal tooltip now shows the number of parts gathered and the brain level<br>");
 					builder.Append("- Misc - Holy Man class no longer requires base skill to activate<br>");
 					builder.Append("- Misc - Mystic class no longer requires base skill to activate<br>");
 					builder.Append("- Misc - Guildmasters now wear their guild rings on their paperdolls<br>");

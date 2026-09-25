@@ -56,6 +56,26 @@ namespace Server.Items
 			if ( JournalOwner != null ){ list.Add( 1049644, "Now Belongs to " + JournalOwner.Name + "" ); }
         }
 
+		public override void AppendChildProperties(ObjectPropertyList list)
+		{
+			base.AppendChildProperties(list);
+
+			if ( JournalOwner != null )
+			{
+				list.Add( 1049644, string.Format( "Brain Level: {0}", HasBrain ? BrainLevel.ToString() : "Missing" ) );
+
+				int parts = 0;
+				if (HasHead) parts++;
+				if (HasTorso) parts++;
+				if (HasArmLeft) parts++;
+				if (HasArmRight) parts++;
+				if (HasLegLeft) parts++;
+				if (HasLegRight) parts++;
+
+				list.Add( 1049644, string.Format( "{0}/6 Body Parts", parts ) );
+			}
+		}
+
 		public override void OnDoubleClick( Mobile from )
 		{
 			if ( !IsChildOf( from.Backpack ) )
