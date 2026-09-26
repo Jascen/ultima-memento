@@ -1283,6 +1283,7 @@ namespace Server.Misc
 					builder.Append("- Spell - Army's Paeon song cast time is now 3 seconds, down from 5<br>");
 					builder.Append("- Spell - Mage's Ballad song cast time is now 3 seconds, down from 5<br>");
 					builder.Append("- Spell - Elemenal Call summon Psychology is now 10, down from 40<br>");
+					builder.Append("- Spell - Intellect provides monsters 1% SDI per 5 points, down from 1% SDI per 3 points<br>");
 
 					builder.Append("<br>Fixes<br>");
 					builder.Append("- Avatar - Fix issue where new Templates weren't applying as expected<br>");

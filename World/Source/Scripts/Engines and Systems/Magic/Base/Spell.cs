@@ -204,7 +204,7 @@ namespace Server.Spells
 			if ( inscribeSkill >= 1000 )
 				damageBonus += 10;
 
-			int intBonus = Caster.Int / 3;
+			int intBonus = Caster is BaseCreature ? Caster.Int / 5 : Caster.Int / 3;
 			damageBonus += intBonus;
 
 			int sdiBonus = AosAttributes.GetValue( m_Caster, AosAttribute.SpellDamage );
