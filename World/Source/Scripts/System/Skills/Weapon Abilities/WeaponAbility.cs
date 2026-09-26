@@ -46,21 +46,33 @@ namespace Server.Items
 		public virtual double GetRequiredSkill( Mobile from )
 		{
 			BaseWeapon weapon = from.Weapon as BaseWeapon;
+			var skill = LookupRequiredSkill( weapon, this );
+			if ( skill == 0 )
+			{
+				WeaponAbility weaved;
+				if ( Server.Items.Bladeweave.BladeWeaving( from, out weaved ) && this == weaved )
+				{
+					skill = LookupRequiredSkill( weapon, Bladeweave );
+				}
+			}
 
-            if ( weapon != null && weapon.PrimaryAbility == this )
-                return MyServerSettings.SpecialWeaponAbilSkill();
-            else if ( weapon != null && weapon.SecondaryAbility == this )
-                return MyServerSettings.SpecialWeaponAbilSkill()+10;
-			else if (weapon != null && weapon.SecondaryAbility == Bladeweave)
-                return MyServerSettings.SpecialWeaponAbilSkill()+10;
-            else if ( weapon != null && weapon.ThirdAbility == this )
-                return MyServerSettings.SpecialWeaponAbilSkill()+20;
-            else if ( weapon != null && weapon.FourthAbility == this )
-                return MyServerSettings.SpecialWeaponAbilSkill()+30;
-            else if ( weapon != null && weapon.FifthAbility == this )
-                return MyServerSettings.SpecialWeaponAbilSkill()+40;
-           
-            return 200.0;
+			if ( 0 < skill ) return skill;
+
+			return 200.0;
+		}
+
+		private double LookupRequiredSkill(BaseWeapon weapon, WeaponAbility ability)
+		{
+			if ( weapon != null )
+			{
+				if ( weapon.PrimaryAbility == ability ) return MyServerSettings.SpecialWeaponAbilSkill();
+				else if ( weapon.SecondaryAbility == ability ) return MyServerSettings.SpecialWeaponAbilSkill()+10;
+				else if ( weapon.ThirdAbility == ability ) return MyServerSettings.SpecialWeaponAbilSkill()+20;
+				else if ( weapon.FourthAbility == ability ) return MyServerSettings.SpecialWeaponAbilSkill()+30;
+				else if ( weapon.FifthAbility == ability ) return MyServerSettings.SpecialWeaponAbilSkill()+40;
+			}
+
+			return 0;
 		}
 
 		public virtual int CalculateMana( Mobile from )

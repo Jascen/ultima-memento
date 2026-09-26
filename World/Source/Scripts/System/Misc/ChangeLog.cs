@@ -1278,6 +1278,7 @@ namespace Server.Misc
 					builder.Append("<br>Fixes<br>");
 					builder.Append("- Avatar - Fix issue where new Templates weren't applying as expected<br>");
 					builder.Append("- Combat - Fix issue where harpoons, wizard staves, and Kilrathi weapons ignored peacemaking and shadow strike revealing rules<br>");
+					builder.Append("- Combat - Bladeweave now works on Bokuto, No Dachi, Nunchaku, and Short Sword<br>");
 					builder.Append("- Craft - Wizard staves may now be broken down<br>");
 					builder.Append("- Craft - Wizard staves may now be sold to mages<br>");
 					builder.Append("- Gump - Scribing spells that require arcane scrolls now indicate they need mana<br>");
