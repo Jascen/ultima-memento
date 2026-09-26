@@ -1266,6 +1266,7 @@ namespace Server.Misc
 					builder.Append("- Misc - All players in a party, not just the killer, now check for quest completion<br>");
 					builder.Append("- Misc - Add starter items for Elementalism<br>");
 					builder.Append("- Misc - Stats can now gain regardless if your skill check can gain/fail<br>");
+					builder.Append("- Misc - Bank message now indicates X of Y item capacity<br>");
 					builder.Append("- Quest - Thief guildmembers quest to steal long lost relics for the Nobles is now official<br>");
 					builder.Append("- Quest - Delivery quests are now processed before any other quest<br>");
 					builder.Append("- Quest - Blacksmith recipe quests are now one-time and must be completed in order, starting in Britain<br>");
