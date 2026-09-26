@@ -541,15 +541,69 @@ namespace Server.Mobiles
 		}
 	}
 	
+	public class CharacterStatueSubjectTarget : Target
+	{
+		private Item m_Maker;
+		private StatueType m_Type;
+		private BaseHouse m_House;
+
+		public CharacterStatueSubjectTarget( Item maker, StatueType type, BaseHouse house ) : base( 12, false, TargetFlags.None )
+		{
+			m_Maker = maker;
+			m_Type = type;
+			m_House = house;
+		}
+
+		protected override void OnTarget( Mobile from, object targeted )
+		{
+			if ( m_Maker == null || m_Maker.Deleted )
+				return;
+
+			PlayerMobile subject = targeted as PlayerMobile;
+
+			if ( !m_Maker.IsChildOf( from.Backpack ) )
+				from.SendLocalizedMessage( 1042001 ); // That must be in your pack for you to use it.
+			else if ( CharacterStatueTarget.FindSculptingHouse( from ) != m_House )
+				from.SendLocalizedMessage( 502092 ); // You must be in your house to do this.
+			else if ( subject == null )
+				from.SendMessage( "You can only make a statue of a player." );
+			else if ( !subject.Alive )
+				from.SendMessage( "You cannot make a statue of a ghost." );
+			else if ( subject.IsBodyMod )
+				from.SendMessage( "They must be in their original form to be sculpted." );
+			else
+			{
+				from.SendLocalizedMessage( 1076194 ); // Select a place where you would like to put your statue.
+				from.Target = new CharacterStatueTarget( m_Maker, m_Type, subject );
+			}
+		}
+	}
+
 	public class CharacterStatueTarget : Target
 	{
 		private Item m_Maker;
 		private StatueType m_Type;
+		private Mobile m_Subject;
 
-		public CharacterStatueTarget( Item maker, StatueType type ) : base( -1, true, TargetFlags.None )
+		public CharacterStatueTarget( Item maker, StatueType type ) : this( maker, type, null )
+		{
+		}
+
+		public CharacterStatueTarget( Item maker, StatueType type, Mobile subject ) : base( -1, true, TargetFlags.None )
 		{
 			m_Maker = maker;
 			m_Type = type;
+			m_Subject = subject;
+		}
+
+		public static BaseHouse FindSculptingHouse( Mobile from )
+		{
+			BaseHouse house = BaseHouse.FindHouseAt( from );
+
+			if ( house == null || !house.IsCoOwner( from ) )
+				return null;
+
+			return house;
 		}
 
 		protected override void OnTarget( Mobile from, object targeted )
@@ -560,9 +614,11 @@ namespace Server.Mobiles
 			if ( p == null || map == null || m_Maker == null || m_Maker.Deleted )
 				return;
 
+			Mobile subject = m_Subject != null ? m_Subject : from;
+
 			if ( m_Maker.IsChildOf( from.Backpack ) )
 			{
-				SpellHelper.GetSurfaceTop( ref p );			
+				SpellHelper.GetSurfaceTop( ref p );
 				BaseHouse house = null;
 				Point3D loc = new Point3D( p );
 
@@ -571,17 +627,25 @@ namespace Server.Mobiles
 					from.SendLocalizedMessage( 1076191 ); // Statues can only be placed in houses.
 					return;
 				}
-				else if ( from.IsBodyMod )
+				else if ( subject.Deleted || !subject.Alive )
 				{
-					from.SendLocalizedMessage( 1073648 ); // You may only proceed while in your original state...
+					from.SendMessage( "The subject of your statue is no longer available." );
+					return;
+				}
+				else if ( subject.IsBodyMod )
+				{
+					if ( subject == from )
+						from.SendLocalizedMessage( 1073648 ); // You may only proceed while in your original state...
+					else
+						from.SendMessage( "They must be in their original form to be sculpted." );
 					return;
 				}
 
 				AddonFitResult result = CouldFit( loc, map, from, ref house );
 
 				if ( result == AddonFitResult.Valid )
-				{				
-					CharacterStatue statue = new CharacterStatue( from, m_Type );
+				{
+					CharacterStatue statue = new CharacterStatue( subject, m_Type );
 					CharacterStatuePlinth plinth = new CharacterStatuePlinth( statue );
 
 					house.Addons.Add( plinth );
@@ -608,7 +672,9 @@ namespace Server.Mobiles
 		{			
 			if ( !map.CanFit( p.X, p.Y, p.Z, 20, true, true, true ) )
 				return AddonFitResult.Blocked;
-			else if ( !BaseAddon.CheckHouse( from, p, map, 20, ref house ) )
+			house = BaseHouse.FindHouseAt( p, map, 20 );
+
+			if ( house == null || FindSculptingHouse( from ) != house )
 				return AddonFitResult.NotInHouse;
 			else
 				return CheckDoors( p, 20, house );
@@ -878,18 +944,22 @@ namespace Server.Items
 		
 		public override void OnDoubleClick( Mobile from )
 		{
-			if ( IsChildOf( from.Backpack ) )
+			if ( !IsChildOf( from.Backpack ) )
 			{
-				if ( !from.IsBodyMod )
-				{
-					from.SendLocalizedMessage( 1076194 ); // Select a place where you would like to put your statue.
-					from.Target = new CharacterStatueTarget( this, m_Type );
-				}
-				else
-					from.SendLocalizedMessage( 1073648 ); // You may only proceed while in your original state...
-			}
-			else
 				from.SendLocalizedMessage( 1042001 ); // That must be in your pack for you to use it.
+				return;
+			}
+
+			BaseHouse house = CharacterStatueTarget.FindSculptingHouse( from );
+
+			if ( house == null )
+			{
+				from.SendLocalizedMessage( 502092 ); // You must be in your house to do this.
+				return;
+			}
+
+			from.SendMessage( "Who do you want to make a statue of?" );
+			from.Target = new CharacterStatueSubjectTarget( this, m_Type, house );
 		}
 
 		public override void Serialize( GenericWriter writer )
@@ -897,7 +967,7 @@ namespace Server.Items
 			base.Serialize( writer );
 
 			writer.WriteEncodedInt( (int) 0 ); // version
-			
+
 			writer.Write( (bool) m_IsRewardItem );
 			writer.Write( (int) m_Type );
 		}
@@ -1005,7 +1075,9 @@ namespace Server.Items
 		public override int LabelNumber{ get{ return 1076201; } } // Character Statue
 
 		private CharacterStatue m_Statue;
-		
+
+		public CharacterStatue Statue{ get{ return m_Statue; } }
+
 		public CharacterStatuePlinth( CharacterStatue statue ) : base( 0x32F2 )
 		{
 			m_Statue = statue;

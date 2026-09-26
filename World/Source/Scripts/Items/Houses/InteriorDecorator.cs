@@ -257,6 +257,9 @@ namespace Server.Items
 
 			protected override void OnTarget( Mobile from, object targeted )
 			{
+				if ( targeted is CharacterStatue && ((CharacterStatue)targeted).Plinth != null )
+					targeted = ((CharacterStatue)targeted).Plinth;
+
 				if ( targeted is Mannequin && InteriorDecorator.CheckUse( m_Decorator, from ) )
 				{
 					Mannequin mannequin = (Mannequin)targeted;
@@ -340,7 +343,17 @@ namespace Server.Items
 			{
 				FlipableAttribute[] attributes = (FlipableAttribute[])item.GetType().GetCustomAttributes( typeof( FlipableAttribute ), false );
 
-				if( item is BaseDoor )
+				if( item is CharacterStatuePlinth )
+				{
+					CharacterStatue statue = ((CharacterStatuePlinth)item).Statue;
+
+					if ( statue != null && !statue.Deleted )
+					{
+						statue.Direction = (Direction)( ( (int)statue.Direction + 1 ) & 0x7 );
+						statue.InvalidatePose();
+					}
+				}
+				else if( item is BaseDoor )
 				{
 					from.SendMessage("You cannot move doors around with this.");
 				}
