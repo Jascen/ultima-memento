@@ -1260,6 +1260,8 @@ namespace Server.Misc
 					builder.Append("- Item - Mangar's Robe now has SDI instead of LMC and reduced MRegen for increased Int<br>");
 					builder.Append("- Item - Franken Journal tooltip now shows the number of parts gathered and the brain level<br>");
 					builder.Append("- Item - Hive tool is now worth dramatically less<br>");
+					builder.Append("- Item - All rare boss Relic chests now bind to the killer<br>");
+					builder.Append("- Item - Players must now own Relic chests with to open them<br>");
 					builder.Append("- Misc - Holy Man class no longer requires base skill to activate<br>");
 					builder.Append("- Misc - Mystic class no longer requires base skill to activate<br>");
 					builder.Append("- Misc - Guildmasters now wear their guild rings on their paperdolls<br>");

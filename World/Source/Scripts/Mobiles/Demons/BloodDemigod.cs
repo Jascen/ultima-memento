@@ -86,7 +86,7 @@ namespace Server.Mobiles
 					book.m_Value_5 = 0.0;
 					book.m_Slayer_1 = 24;
 					book.m_Slayer_2 = 0;
-					book.m_Owner = null;
+					book.m_Owner = killer;
 					book.m_Extra = "of Blood";
 					book.m_FromWho = "Taken from the Demigoddess of Blood";
 					book.m_HowGiven = "Acquired by";
