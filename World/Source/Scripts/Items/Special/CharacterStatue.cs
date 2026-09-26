@@ -252,7 +252,7 @@ namespace Server.Mobiles
 
 			Frozen = true;
 
-			if( m_SculptedBy == null || Map == Map.Internal )
+			if( m_SculptedBy == null )
 			{
 				Timer.DelayCall( TimeSpan.Zero, new TimerCallback( Delete ) );
 			}
@@ -260,29 +260,39 @@ namespace Server.Mobiles
 		
 		public void Sculpt( Mobile by )
 		{
+			Sculpt( by, DateTime.Now );
+		}
+
+		public void Sculpt( Mobile by, DateTime on )
+		{
 			m_SculptedBy = by;
-			m_SculptedOn = DateTime.Now;
+			m_SculptedOn = on;
 
 			InvalidateProperties();
 		}
 
 		public void Demolish( Mobile by )
 		{
-			CharacterStatueDeed deed = new CharacterStatueDeed( null );
+			CharacterStatueDeed deed = new CharacterStatueDeed( this );
+			deed.IsRewardItem = m_IsRewardItem;
 
 			if ( by.PlaceInBackpack( deed ) )
 			{
-				Delete();
+				CharacterStatuePlinth plinth = m_Plinth;
+				m_Plinth = null;
 
-				deed.Statue = this;
-				deed.IsRewardItem = m_IsRewardItem;
+				if ( plinth != null )
+				{
+					plinth.ReleaseStatue();
+					plinth.Delete();
+				}
 
-				if ( m_Plinth != null )
-					m_Plinth.Delete();
+				Internalize();
 			}
 			else
 			{
 				by.SendLocalizedMessage( 500720 ); // You don't have enough room in your backpack!
+				deed.Statue = null;
 				deed.Delete();
 			}
 		}
@@ -614,7 +624,8 @@ namespace Server.Mobiles
 			if ( p == null || map == null || m_Maker == null || m_Maker.Deleted )
 				return;
 
-			Mobile subject = m_Subject != null ? m_Subject : from;
+			CharacterStatue backup = m_Maker is CharacterStatueDeed ? ( (CharacterStatueDeed) m_Maker ).Statue : null;
+			Mobile subject = backup != null ? backup : ( m_Subject != null ? m_Subject : from );
 
 			if ( m_Maker.IsChildOf( from.Backpack ) )
 			{
@@ -652,7 +663,11 @@ namespace Server.Mobiles
 
 					statue.Plinth = plinth;
 					plinth.MoveToWorld( loc, map );
-					statue.InvalidatePose();
+
+					if ( backup != null )
+						statue.Restore( backup );
+					else
+						statue.InvalidatePose();
 
 					from.CloseGump( typeof( CharacterStatueGump ) );
 					from.SendGump( new CharacterStatueGump( m_Maker, statue, from ) );
@@ -828,18 +843,29 @@ namespace Server.Gumps
 				
 			if ( info.ButtonID == (int) Buttons.Sculpt )
 			{					
+				Mobile sculptor = state.Mobile;
+				DateTime sculptedOn = DateTime.Now;
+
 				if ( m_Maker is CharacterStatueDeed )
 				{
 					CharacterStatue backup = ( (CharacterStatueDeed) m_Maker ).Statue;
-					
+
 					if ( backup != null )
+					{
+						if ( backup.SculptedBy != null )
+						{
+							sculptor = backup.SculptedBy;
+							sculptedOn = backup.SculptedOn;
+						}
+
 						backup.Delete();
+					}
 				}
-					
+
 				if ( m_Maker != null )
 					m_Maker.Delete();
-					
-				m_Statue.Sculpt( state.Mobile );
+
+				m_Statue.Sculpt( sculptor, sculptedOn );
 			}
 			else if ( info.ButtonID == (int) Buttons.PosePrev )
 			{
@@ -1077,6 +1103,11 @@ namespace Server.Items
 		private CharacterStatue m_Statue;
 
 		public CharacterStatue Statue{ get{ return m_Statue; } }
+
+		public void ReleaseStatue()
+		{
+			m_Statue = null;
+		}
 
 		public CharacterStatuePlinth( CharacterStatue statue ) : base( 0x32F2 )
 		{
