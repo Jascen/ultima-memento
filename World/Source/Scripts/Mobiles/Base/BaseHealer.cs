@@ -98,7 +98,7 @@ namespace Server.Mobiles
 		}
 
 		private DateTime m_NextResurrect;
-		private static TimeSpan ResurrectDelay = TimeSpan.FromSeconds( 2.0 );
+		private static TimeSpan ResurrectDelay = TimeSpan.FromSeconds( 5.0 );
 
 		public virtual void OfferResurrection( Mobile m )
 		{
