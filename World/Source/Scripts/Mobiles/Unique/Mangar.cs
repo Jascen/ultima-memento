@@ -329,10 +329,10 @@ namespace Server.Items
 					int IamBard = 0;
 					int IamElemental = 0;
 
-					if ( from.Skills[SkillName.Necromancy].Base > 0 ){ IamNecro = (int)from.Skills[SkillName.Necromancy].Base; }
-					if ( from.Skills[SkillName.Magery].Base > 0 ){ IamMage = (int)from.Skills[SkillName.Magery].Base; }
-					if ( from.Skills[SkillName.Musicianship].Base > 0 ){ IamBard = (int)from.Skills[SkillName.Musicianship].Base; }
-					if ( from.Skills[SkillName.Elementalism].Base > 0 ){ IamElemental = (int)from.Skills[SkillName.Elementalism].Base; }
+					if ( 50 <= from.Skills[SkillName.Necromancy].Value ){ IamNecro = (int)from.Skills[SkillName.Necromancy].Value; }
+					if ( 50 <= from.Skills[SkillName.Magery].Value ){ IamMage = (int)from.Skills[SkillName.Magery].Value; }
+					if ( 50 <= from.Skills[SkillName.Musicianship].Value ){ IamBard = (int)from.Skills[SkillName.Musicianship].Value; }
+					if ( 50 <= from.Skills[SkillName.Elementalism].Value ){ IamElemental = (int)from.Skills[SkillName.Elementalism].Value; }
 
 					if ( !Server.Misc.PlayerSettings.GetSpecialsKilled( from, "Mangar" ) )
 					{
@@ -362,77 +362,51 @@ namespace Server.Items
 							MyChest.DropItem( lexicon );
 					}
 
-					if ( IamBard > IamMage && IamBard > IamNecro && IamBard > IamElemental && IamBard > 0 )
+					var highestSkill = Math.Max( Math.Max( IamMage, IamNecro ), Math.Max( IamElemental, IamBard ) );
+					if ( highestSkill > 0 )
 					{
-						MyChest.DropItem( new BardicFeatheredCap() );
-						SongBook newBook = new SongBook();
-						newBook.Name = "Songs of Skara Brae";
-						newBook.Content = 0xFFFF;
-						MyChest.DropItem( newBook );
+						if ( highestSkill == IamMage )
+						{
+							MyChest.DropItem( new MangarRobe() );
+							var newBook = new Spellbook();
+							newBook.Hue = 0x497;
+							newBook.Content = 0xFFFFFFFFFFFF; // All spells through 6th Circle
+							var eachWord = newBook.Name.Split( '\'' );
+							if ( eachWord.Length > 1 ) newBook.Name = string.Format( "Mangar'{0}", eachWord[eachWord.Length - 1] );
+							MyChest.DropItem( newBook );
+						}
+						else if ( highestSkill == IamNecro )
+						{
+							MyChest.DropItem( new MangarNecroRobe() );
+							var newBook = new NecromancerSpellbook();
+							newBook.Hue = 0x497;
+							newBook.Content = 0x1FFFF; // All spells
+							var eachWord = newBook.Name.Split( '\'' );
+							if ( eachWord.Length > 1 ) newBook.Name = string.Format( "Mangar'{0}", eachWord[eachWord.Length - 1] );
+							MyChest.DropItem( newBook );
+						}
+						else if ( highestSkill == IamElemental )
+						{
+							MyChest.DropItem( new MangarElementalistRobe() );
+							var newBook = new ElementalSpellbook();
+							newBook.Hue = 0;
+							newBook.Content = 0xFFFFFF; // All spells through 6th Sphere
+							newBook.Name = "Mangar's Book of Elements";
+							MyChest.DropItem( newBook );
+						}
+						else if ( highestSkill == IamBard )
+						{
+							MyChest.DropItem( new BardicFeatheredCap() );
+							var newBook = new SongBook();
+							newBook.Name = "Songs of Skara Brae";
+							newBook.Content = 0xFFFF; // All songs
+							MyChest.DropItem( newBook );
+						}
 					}
-					else if ( IamMage > IamBard && IamMage > IamNecro && IamMage > IamElemental && IamMage > 0 )
+					else
 					{
-						MyChest.DropItem( new MangarRobe() );
-						Spellbook newBook = new Spellbook();
-						newBook.Hue = 0x497;
-						string book = newBook.Name;
-						string[] eachWord = book.Split('\'');
-						int nLine = 1; foreach (string eachWords in eachWord){ if ( nLine != 1 ){ newBook.Name = "Mangar'" + eachWords; } else { nLine = 2; } }
-						MyChest.DropItem( newBook );
-					}
-					else if ( IamNecro > IamBard && IamNecro > IamMage && IamNecro > IamElemental && IamNecro > 0 )
-					{
-						MyChest.DropItem( new MangarNecroRobe() );
-						NecromancerSpellbook newBook = new NecromancerSpellbook();
-						newBook.Hue = 0x497;
-						string book = newBook.Name;
-						string[] eachWord = book.Split('\'');
-						int nLine = 1; foreach (string eachWords in eachWord){ if ( nLine != 1 ){ newBook.Name = "Mangar'" + eachWords; } else { nLine = 2; } }
-						MyChest.DropItem( newBook );
-					}
-					else if ( IamElemental > IamBard && IamElemental > IamMage && IamElemental > IamNecro && IamElemental > 0 )
-					{
-						MyChest.DropItem( new MangarElementalistRobe() );
-						ElementalSpellbook newBook = new ElementalSpellbook();
-						newBook.Hue = 0;
-						newBook.Name = "Mangar's Book of Elements";
-						MyChest.DropItem( newBook );
-					}
-					else if ( IamMage > 0 )
-					{
-						MyChest.DropItem( new MangarRobe() );
-						Spellbook newBook = new Spellbook();
-						newBook.Hue = 0x497;
-						string book = newBook.Name;
-						string[] eachWord = book.Split('\'');
-						int nLine = 1; foreach (string eachWords in eachWord){ if ( nLine != 1 ){ newBook.Name = "Mangar'" + eachWords; } else { nLine = 2; } }
-						MyChest.DropItem( newBook );
-					}
-					else if ( IamNecro > 0 )
-					{
-						MyChest.DropItem( new MangarNecroRobe() );
-						NecromancerSpellbook newBook = new NecromancerSpellbook();
-						newBook.Hue = 0x497;
-						string book = newBook.Name;
-						string[] eachWord = book.Split('\'');
-						int nLine = 1; foreach (string eachWords in eachWord){ if ( nLine != 1 ){ newBook.Name = "Mangar'" + eachWords; } else { nLine = 2; } }
-						MyChest.DropItem( newBook );
-					}
-					else if ( IamElemental > 0 )
-					{
-						MyChest.DropItem( new MangarElementalistRobe() );
-						ElementalSpellbook newBook = new ElementalSpellbook();
-						newBook.Hue = 0;
-						newBook.Name = "Mangar's Book of Elements";
-						MyChest.DropItem( newBook );
-					}
-					else if ( IamBard > 0 )
-					{
-						MyChest.DropItem( new BardicFeatheredCap() );
-						SongBook newBook = new SongBook();
-						newBook.Name = "Songs of Skara Brae";
-						newBook.Content = 0xFFFF;
-						MyChest.DropItem( newBook );
+						var wand = new MagicalWand(Utility.RandomMinMax(5, 8));
+						MyChest.DropItem( wand );
 					}
 
 					MyChest.MoveToWorld( from.Location, from.Map );
