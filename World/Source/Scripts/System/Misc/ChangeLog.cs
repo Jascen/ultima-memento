@@ -1283,6 +1283,7 @@ namespace Server.Misc
 					builder.Append("- Gump - Fix issue where Avatar gump would incorrectly cache skill archive entries<br>");
 					builder.Append("- Gump - Closing the manage toolbar gump properly returns to Toolbars Help page<br>");
 					builder.Append("- Gump - Toolbars Help page can now properly Open toolbars<br>");
+					builder.Append("- Gump - Druidism gump now display equal length key/value columns<br>");
 					builder.Append("- Item - House teleporters remain active after the marking character is deleted<br>");
 					builder.Append("- Item - Fix inverted Lower Ammo Cost behavior on harpoons, wizard staves, and Kilrathi weapons<br>");
 					builder.Append("- Item - Weighting stones may now be used on bludgeoning/fistfighting weapons<br>");

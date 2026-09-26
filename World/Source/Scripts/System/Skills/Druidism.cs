@@ -418,6 +418,7 @@ namespace Server.SkillHandlers
 			if (value.Length == 0) { }
 			else if (label.Length < value.Length) leftWidth = 50;
 			else if (value.Length < label.Length) leftWidth = 125;
+			else leftWidth /= 2;
 
 			int rightWidth = TOTAL_WIDTH - leftWidth;
 			TextDefinition.AddHtmlText(this, x, y, leftWidth, 16, label, false, false, m_Color, m_Color);
