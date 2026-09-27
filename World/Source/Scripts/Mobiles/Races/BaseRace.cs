@@ -165,6 +165,23 @@ namespace Server.Items
 			return false;
 		}
 
+		public static int GetMonsterSizeTier( int race )
+		{
+			int size = 1;
+
+			string configs = RaceDefined( GetID( race ) );
+
+			if ( configs.Length > 0 )
+			{
+				string[] setups = configs.Split(',');
+
+				if ( setups.Length >= 13 )
+					size = Int32.Parse( setups[12] );
+			}
+
+			return size;
+		}
+
 		public static int GetMonsterFood( int race )
 		{
 			if ( race > 80000 ){ race = GetBody( (race-80000) ); }
