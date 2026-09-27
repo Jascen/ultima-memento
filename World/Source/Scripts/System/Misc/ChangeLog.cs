@@ -1311,6 +1311,8 @@ namespace Server.Misc
 					builder.Append("- Spell - Fix typo in Orb of Orcus spell description<br>");
 					builder.Append("- Spell - Fix potential crash when casting too fast<br>");
 					builder.Append("- Spell - Fix crash with Magic Reflection + Parrying combo<br>");
+					builder.Append("- Spell - Fix serialization issue in Blend with Forest<br>");
+					builder.Append("- Spell - Fix permanent mute case in Blend with Forest<br>");
 					break;
 			}
 		}
