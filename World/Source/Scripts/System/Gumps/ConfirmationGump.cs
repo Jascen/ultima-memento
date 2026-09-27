@@ -29,14 +29,14 @@ namespace Server.Gumps
 		{
 		}
 
-		public ConfirmationGump(Mobile player, string title, string message, Action onConfirmed = null, Action onDeclined = null) : base(25, 25)
+		public ConfirmationGump(Mobile player, string title, string message, Action onConfirmed = null, Action onDeclined = null, int height = 280) : base(25, 25)
 		{
 			player.CloseGump(typeof(ConfirmationGump));
 
 			_onConfirmed = onConfirmed;
 			_onDeclined = onDeclined;
 			const int WIDTH = 475;
-			const int HEIGHT = 280;
+			int HEIGHT = height;
 			const int PAGE_PADDING = 20;
 			const int BODY_START = PAGE_PADDING;
 			const int BODY_WIDTH = WIDTH - PAGE_PADDING * 2;
@@ -52,7 +52,7 @@ namespace Server.Gumps
 				y += 80;
 			}
 
-			TextDefinition.AddHtmlText(this, BODY_START, y, BODY_WIDTH, 170, message, HtmlColors.WHITE);
+			TextDefinition.AddHtmlText(this, BODY_START, y, BODY_WIDTH, HEIGHT - 110, message, HtmlColors.WHITE);
 
 			int buttonY = HEIGHT - 50;
 			int buttonX = 100;
