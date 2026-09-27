@@ -259,6 +259,8 @@ namespace Server.Items
 			{
 				if ( targeted is CharacterStatue && ((CharacterStatue)targeted).Plinth != null )
 					targeted = ((CharacterStatue)targeted).Plinth;
+				else if ( targeted is CharacterStatuePlinthPiece && ((CharacterStatuePlinthPiece)targeted).Plinth != null )
+					targeted = ((CharacterStatuePlinthPiece)targeted).Plinth;
 
 				if ( targeted is Mannequin && InteriorDecorator.CheckUse( m_Decorator, from ) )
 				{
@@ -316,6 +318,10 @@ namespace Server.Items
 					{
 						from.SendLocalizedMessage( 1062491 ); // You cannot use the house decorator on that object.
 					}
+					else if ( item is CharacterStatuePlinth && !PlinthFits( (CharacterStatuePlinth)item, house, m_Decorator.Command ) )
+					{
+						from.SendMessage( "You cannot move it that way any further." );
+					}
 					else if ( ( isShanty( item, from ) || isLawn( item, from ) ) && ( m_Decorator.Command == DecorateCommand.Turn || m_Decorator.Command == DecorateCommand.Deed || m_Decorator.Command == DecorateCommand.Release || m_Decorator.Command == DecorateCommand.Secure || m_Decorator.Command == DecorateCommand.Lock || m_Decorator.Command == DecorateCommand.Turn || m_Decorator.Command == DecorateCommand.Turn ) )
 					{
 						from.SendMessage( "You can only move these items up, down, north, south, east, or west." );
@@ -337,6 +343,22 @@ namespace Server.Items
 				}
 
 				from.Target = new InternalTarget( m_Decorator );
+			}
+
+			private static bool PlinthFits( CharacterStatuePlinth plinth, BaseHouse house, DecorateCommand command )
+			{
+				int dx = 0, dy = 0;
+
+				switch ( command )
+				{
+					case DecorateCommand.North: dy = -1; break;
+					case DecorateCommand.East:  dx =  1; break;
+					case DecorateCommand.South: dy =  1; break;
+					case DecorateCommand.West:  dx = -1; break;
+					default: return true;
+				}
+
+				return plinth.FootprintFits( new Point3D( plinth.X + dx, plinth.Y + dy, plinth.Z ), house );
 			}
 
 			private static void Turn( Item item, Mobile from )

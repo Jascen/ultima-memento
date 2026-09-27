@@ -190,10 +190,13 @@ namespace Server.Mobiles
 
 		protected override void OnLocationChange( Point3D oldLocation )
 		{
-			InvalidatePose();
-
 			if ( m_Plinth != null )
-				m_Plinth.Location = new Point3D( X, Y, Z - 5 );
+			{
+				Point2D offset = m_Plinth.StatueOffset;
+				m_Plinth.Location = new Point3D( X - offset.X, Y - offset.Y, Z - 5 );
+			}
+
+			InvalidatePose();
 		}
 
 		public override bool CanBeRenamedBy( Mobile from )
@@ -394,6 +397,16 @@ namespace Server.Mobiles
 						break;
 			}
 
+			// The poses above are human animations; other bodies number their animations differently, so they stand idle instead.
+			if ( !Body.IsHuman )
+			{
+				m_Animation = Body.IsMonster ? 1 : 2;
+				m_Frames = 0;
+			}
+
+			if ( m_Plinth != null && !World.Loading )
+				m_Plinth.UpdateFootprint();
+
 			if( Map != null )
 			{
 				ProcessDelta();
@@ -510,13 +523,8 @@ namespace Server.Mobiles
 		{
 			if ( IsChildOf( from.Backpack ) )
 			{
-				if ( !from.IsBodyMod )
-				{
-					from.SendLocalizedMessage( 1076194 ); // Select a place where you would like to put your statue.
-					from.Target = new CharacterStatueTarget( this, StatueType );
-				}
-				else
-					from.SendLocalizedMessage( 1073648 ); // You may only proceed while in your original state...
+				from.SendLocalizedMessage( 1076194 ); // Select a place where you would like to put your statue.
+				from.Target = new CharacterStatueTarget( this, StatueType );
 			}
 			else
 				from.SendLocalizedMessage( 1042001 ); // That must be in your pack for you to use it.
@@ -579,7 +587,7 @@ namespace Server.Mobiles
 				from.SendMessage( "You can only make a statue of a player." );
 			else if ( !subject.Alive )
 				from.SendMessage( "You cannot make a statue of a ghost." );
-			else if ( subject.IsBodyMod )
+			else if ( !CharacterStatueTarget.InOriginalForm( subject ) )
 				from.SendMessage( "They must be in their original form to be sculpted." );
 			else
 			{
@@ -616,6 +624,11 @@ namespace Server.Mobiles
 			return house;
 		}
 
+		public static bool InOriginalForm( Mobile m )
+		{
+			return !m.IsBodyMod || ( m.RaceID > 0 && m.BodyMod.BodyID == m.RaceID );
+		}
+
 		protected override void OnTarget( Mobile from, object targeted )
 		{
 			IPoint3D p = targeted as IPoint3D;
@@ -643,7 +656,7 @@ namespace Server.Mobiles
 					from.SendMessage( "The subject of your statue is no longer available." );
 					return;
 				}
-				else if ( subject.IsBodyMod )
+				else if ( !InOriginalForm( subject ) )
 				{
 					if ( subject == from )
 						from.SendLocalizedMessage( 1073648 ); // You may only proceed while in your original state...
@@ -652,7 +665,7 @@ namespace Server.Mobiles
 					return;
 				}
 
-				AddonFitResult result = CouldFit( loc, map, from, ref house );
+				AddonFitResult result = CouldFit( loc, map, from, ref house, CharacterStatuePlinth.IsLargeBody( subject.Body ) );
 
 				if ( result == AddonFitResult.Valid )
 				{
@@ -669,6 +682,8 @@ namespace Server.Mobiles
 					else
 						statue.InvalidatePose();
 
+					plinth.UpdateFootprint();
+
 					from.CloseGump( typeof( CharacterStatueGump ) );
 					from.SendGump( new CharacterStatueGump( m_Maker, statue, from ) );
 				}
@@ -684,15 +699,30 @@ namespace Server.Mobiles
 		}
 
 		public static AddonFitResult CouldFit( Point3D p, Map map, Mobile from, ref BaseHouse house )
-		{			
-			if ( !map.CanFit( p.X, p.Y, p.Z, 20, true, true, true ) )
-				return AddonFitResult.Blocked;
+		{
+			return CouldFit( p, map, from, ref house, false );
+		}
+
+		public static AddonFitResult CouldFit( Point3D p, Map map, Mobile from, ref BaseHouse house, bool large )
+		{
 			house = BaseHouse.FindHouseAt( p, map, 20 );
 
 			if ( house == null || FindSculptingHouse( from ) != house )
 				return AddonFitResult.NotInHouse;
-			else
-				return CheckDoors( p, 20, house );
+
+			foreach ( Point3D tile in CharacterStatuePlinth.Footprint( p, large ) )
+			{
+				if ( !map.CanFit( tile.X, tile.Y, tile.Z, 20, true, true, true ) )
+					return AddonFitResult.Blocked;
+
+				if ( BaseHouse.FindHouseAt( tile, map, 20 ) != house )
+					return AddonFitResult.NotInHouse;
+
+				if ( CheckDoors( tile, 20, house ) != AddonFitResult.Valid )
+					return AddonFitResult.DoorTooClose;
+			}
+
+			return AddonFitResult.Valid;
 		}
 
 		public static AddonFitResult CheckDoors( Point3D p, int height, BaseHouse house )
@@ -1101,8 +1131,114 @@ namespace Server.Items
 		public override int LabelNumber{ get{ return 1076201; } } // Character Statue
 
 		private CharacterStatue m_Statue;
+		private List<Item> m_Pieces = new List<Item>();
 
 		public CharacterStatue Statue{ get{ return m_Statue; } }
+
+		// Large races stand on a 2x2 base: the statue's tile plus these three.
+		private static readonly Point2D[] m_LargeOffsets = new Point2D[]{ new Point2D( 1, 0 ), new Point2D( 0, 1 ), new Point2D( 1, 1 ) };
+
+		// Large-tier bodies whose art still fits a single base tile.
+		private static readonly int[] m_SingleBaseBodies = new int[]
+		{
+			2, 10, 18, 38, 40, 43, 75, 76, 102, 174, 195, 257, 285, 310, 475, 601, 768
+		};
+
+		public static bool IsLargeBody( Body body )
+		{
+			return BaseRace.GetMonsterSizeTier( body.BodyID ) >= 2 && Array.IndexOf( m_SingleBaseBodies, body.BodyID ) < 0;
+		}
+
+		public static List<Point3D> Footprint( Point3D p, bool large )
+		{
+			List<Point3D> tiles = new List<Point3D>();
+			tiles.Add( p );
+
+			if ( large )
+			{
+				foreach ( Point2D offset in m_LargeOffsets )
+					tiles.Add( new Point3D( p.X + offset.X, p.Y + offset.Y, p.Z ) );
+			}
+
+			return tiles;
+		}
+
+		public bool FootprintFits( Point3D p, BaseHouse house )
+		{
+			List<Point3D> current = Footprint( Location, m_Pieces.Count > 0 );
+
+			foreach ( Point3D tile in Footprint( p, m_Pieces.Count > 0 ) )
+			{
+				if ( !house.IsInside( tile, 20 ) )
+					return false;
+
+				// Tiles the base already covers are occupied by its own pieces and statue.
+				if ( !current.Contains( tile ) && !Map.CanFit( tile.X, tile.Y, tile.Z, 20, false, true, true ) )
+					return false;
+			}
+
+			return true;
+		}
+
+		public void UpdateFootprint()
+		{
+			bool large = m_Statue != null && IsLargeBody( m_Statue.Body );
+
+			if ( Map == null || Map == Map.Internal )
+				return;
+
+			if ( large && m_Pieces.Count == 0 )
+			{
+				foreach ( Point2D offset in m_LargeOffsets )
+				{
+					CharacterStatuePlinthPiece piece = new CharacterStatuePlinthPiece( this );
+					piece.Hue = Hue;
+					piece.MoveToWorld( new Point3D( X + offset.X, Y + offset.Y, Z ), Map );
+					m_Pieces.Add( piece );
+				}
+			}
+			else if ( !large && m_Pieces.Count > 0 )
+			{
+				DeletePieces();
+			}
+
+			if ( m_Statue != null )
+				m_Statue.Location = StatueLocation;
+		}
+
+		// Bodies whose art reads better standing on the front (south) tile of a 2x2 base than on the back one.
+		private static readonly int[] m_FrontStandingBodies = new int[]
+		{
+			9, 88, 89, 137, 138, 144, 146, 172, 189, 191, 259, 264, 303, 309, 311, 312, 313, 314, 316, 320, 325, 427, 428, 433, 436, 485,
+			509, 670, 725, 726, 729, 730, 732, 748, 758, 764, 765, 766, 770, 771, 772, 773, 774, 777, 792, 999
+		};
+
+		public Point2D StatueOffset
+		{
+			get
+			{
+				if ( m_Pieces.Count > 0 && m_Statue != null && Array.IndexOf( m_FrontStandingBodies, m_Statue.Body.BodyID ) >= 0 )
+					return new Point2D( 1, 1 );
+
+				return new Point2D( 0, 0 );
+			}
+		}
+
+		public Point3D StatueLocation
+		{
+			get { return new Point3D( X + StatueOffset.X, Y + StatueOffset.Y, Z + 5 ); }
+		}
+
+		private void DeletePieces()
+		{
+			foreach ( Item piece in m_Pieces )
+			{
+				if ( !piece.Deleted )
+					piece.Delete();
+			}
+
+			m_Pieces.Clear();
+		}
 
 		public void ReleaseStatue()
 		{
@@ -1124,6 +1260,8 @@ namespace Server.Items
 		{
 			base.OnAfterDelete();
 
+			DeletePieces();
+
 			if ( m_Statue != null && !m_Statue.Deleted )
 				m_Statue.Delete();
 		}
@@ -1132,12 +1270,18 @@ namespace Server.Items
 		{
 			if ( m_Statue != null )
 				m_Statue.Map = Map;
+
+			foreach ( Item piece in m_Pieces )
+				piece.Map = Map;
 		}
 
 		public override void OnLocationChange( Point3D oldLocation )
 		{
 			if ( m_Statue != null )
-				m_Statue.Location = new Point3D( X, Y, Z + 5 );
+				m_Statue.Location = StatueLocation;
+
+			for ( int i = 0; i < m_Pieces.Count; i++ )
+				m_Pieces[i].Location = new Point3D( X + m_LargeOffsets[i].X, Y + m_LargeOffsets[i].Y, Z );
 		}
 
 		public override void OnDoubleClick( Mobile from )
@@ -1150,9 +1294,10 @@ namespace Server.Items
 		{
 			base.Serialize( writer );
 
-			writer.WriteEncodedInt( (int) 0 ); // version
+			writer.WriteEncodedInt( (int) 1 ); // version
 
 			writer.Write( (Mobile) m_Statue );
+			writer.Write( m_Pieces );
 		}
 
 		public override void Deserialize( GenericReader reader )
@@ -1162,6 +1307,9 @@ namespace Server.Items
 			int version = reader.ReadEncodedInt();
 
 			m_Statue = reader.ReadMobile() as CharacterStatue;
+
+			if ( version >= 1 )
+				m_Pieces = reader.ReadStrongItemList();
 
 			if( m_Statue == null || m_Statue.SculptedBy == null || Map == Map.Internal )
 			{
@@ -1173,26 +1321,29 @@ namespace Server.Items
 		{
 			if ( m_Statue != null )
 				Hue = 0xB8F + (int) m_Statue.StatueType * 4 + (int) m_Statue.Material;
+
+			foreach ( Item piece in m_Pieces )
+				piece.Hue = Hue;
 		}
 
 		public virtual bool CouldFit( IPoint3D p, Map map )
 		{
-			Point3D point = new Point3D( p.X, p.Y, p.Z );
-			
-			if ( map == null || !map.CanFit( point, 20 ) )
+			if ( map == null )
 				return false;
 
+			Point3D point = new Point3D( p.X, p.Y, p.Z );
 			BaseHouse house = BaseHouse.FindHouseAt( point, map, 20 );
-			
+
 			if ( house == null )
 				return false;
 
-			AddonFitResult result = CharacterStatueTarget.CheckDoors( point, 20, house );
+			foreach ( Point3D tile in Footprint( point, m_Pieces.Count > 0 ) )
+			{
+				if ( !map.CanFit( tile, 20 ) || CharacterStatueTarget.CheckDoors( tile, 20, house ) != AddonFitResult.Valid )
+					return false;
+			}
 
-			if ( result == AddonFitResult.Valid )
-				return true;
-
-			return false;
+			return true;
 		}
 
 		private class CharacterPlinthGump : Gump
@@ -1221,6 +1372,51 @@ namespace Server.Items
 					default: return 1076181;
 				}
 			}
+		}
+	}
+
+	public class CharacterStatuePlinthPiece : Static
+	{
+		public override int LabelNumber{ get{ return 1076201; } } // Character Statue
+
+		private CharacterStatuePlinth m_Plinth;
+
+		public CharacterStatuePlinth Plinth{ get{ return m_Plinth; } }
+
+		public CharacterStatuePlinthPiece( CharacterStatuePlinth plinth ) : base( 0x32F2 )
+		{
+			m_Plinth = plinth;
+		}
+
+		public CharacterStatuePlinthPiece( Serial serial ) : base( serial )
+		{
+		}
+
+		public override void OnDoubleClick( Mobile from )
+		{
+			if ( m_Plinth != null && !m_Plinth.Deleted )
+				m_Plinth.OnDoubleClick( from );
+		}
+
+		public override void Serialize( GenericWriter writer )
+		{
+			base.Serialize( writer );
+
+			writer.WriteEncodedInt( (int) 0 ); // version
+
+			writer.Write( (Item) m_Plinth );
+		}
+
+		public override void Deserialize( GenericReader reader )
+		{
+			base.Deserialize( reader );
+
+			int version = reader.ReadEncodedInt();
+
+			m_Plinth = reader.ReadItem() as CharacterStatuePlinth;
+
+			if ( m_Plinth == null )
+				Timer.DelayCall( TimeSpan.Zero, new TimerCallback( Delete ) );
 		}
 	}
 }
