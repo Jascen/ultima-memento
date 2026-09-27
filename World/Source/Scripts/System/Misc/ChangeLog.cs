@@ -1265,9 +1265,10 @@ namespace Server.Misc
 					builder.Append("- Item - Players must now own Relic chests with to open them<br>");
 					builder.Append("- Misc - Mangar's Rewards<br>");
 					builder.Append("       - Static rewards no longer require *base* (actually invested) skill points <br>");
-					builder.Append("       - Static rewards now require `Apprentice` level skill, up from `1.0 base skill` <br>");
-					builder.Append("       - Static reward spellbooks now include *many* spells <br>");
-					builder.Append("       - Players who doesn't get a static reward drop will instead get a high level wand <br>");
+					builder.Append("       - Static rewards now require `Apprentice` level skill, up from `1.0 base skill`<br>");
+					builder.Append("       - Static reward spellbooks now include *many* spells<br>");
+					builder.Append("       - Static rewards recipients no longer get a random artefact<br>");
+					builder.Append("       - Players who doesn't get a static reward drop will instead get a high level wand<br>");
 					builder.Append("- Misc - Holy Man class no longer requires base skill to activate<br>");
 					builder.Append("- Misc - Mystic class no longer requires base skill to activate<br>");
 					builder.Append("- Misc - Guildmasters now wear their guild rings on their paperdolls<br>");

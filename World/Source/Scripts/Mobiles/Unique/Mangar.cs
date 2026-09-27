@@ -314,9 +314,6 @@ namespace Server.Items
 					MyChest.Name = "Mangar's Vault";
 					MyChest.Hue = 0x497;
 
-					Item arty = Loot.RandomArty();
-					MyChest.DropItem( arty );
-
 					DDRelicPainting painting = new DDRelicPainting();
 					painting.CoinPrice = Utility.RandomMinMax( 100, 200 ) * 50;
 					painting.Name = "Painting of Mangar the Dark";
@@ -405,6 +402,9 @@ namespace Server.Items
 					}
 					else
 					{
+						Item arty = Loot.RandomArty();
+						MyChest.DropItem( arty );
+
 						var wand = new MagicalWand(Utility.RandomMinMax(5, 8));
 						MyChest.DropItem( wand );
 					}
