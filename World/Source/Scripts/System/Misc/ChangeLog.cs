@@ -1239,6 +1239,7 @@ namespace Server.Misc
 				default:
 					builder.Append(Version());
 					builder.Append("<br>Changes<br>");
+					builder.Append("- Admin - Add `S_AllowTravelToSpecialPlaces` server setting<br>");
 					builder.Append("- Avatar - Focus and Meditation are no longer locked by default<br>");
 					builder.Append("- Avatar - Add ability to drop skills from Skill Archive when at Gypsy Encampment<br>");
 					builder.Append("- Avatar - Coins generated per kill is now a function of monster strength<br>");
