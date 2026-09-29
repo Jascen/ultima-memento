@@ -167,7 +167,7 @@ namespace Server.Mobiles
 			TimeSpan duration = TimeSpan.FromSeconds( 30 + caster.Skills.Ninjitsu.Fixed / 40 );
 
 			BuffInfo.RemoveBuff( m_Caster, BuffIcon.Projection );
-			BuffInfo.AddBuff( m_Caster, new BuffInfo( BuffIcon.Projection, 1060617, duration, m_Caster ) );
+			BuffInfo.AddBuff( m_Caster, new BuffInfo( BuffIcon.Projection, 1060617, 1063286, duration, m_Caster ) );
 
 			new UnsummonTimer( caster, this, duration ).Start();
 			SummonEnd = DateTime.Now + duration;
