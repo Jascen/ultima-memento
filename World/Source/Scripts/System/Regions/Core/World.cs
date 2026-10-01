@@ -825,7 +825,7 @@ namespace Server.Misc
 				case 66: loc = new Point3D(5950, 1654, -5); map = Map.Lodor; break; // the Depths of Carthax Lake
 				case 67: loc = new Point3D(5989, 484, 1); map = Map.Lodor; break; // Argentrock Castle
 				case 68: loc = new Point3D(6021, 1968, 0); map = Map.Lodor; break; // the Sanctum of Saltmarsh
-				case 69: loc = new Point3D(1125, 3684, 0); map = Map.Lodor; break; // the Ancient Sky Ship
+				case 69: loc = new Point3D(1125, 3684, 0); map = Map.SavagedEmpire; break; // the Ancient Sky Ship
 			}
 
 			if ( m is PlayerMobile )

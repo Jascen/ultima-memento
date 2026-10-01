@@ -1324,7 +1324,7 @@ namespace Server.Misc
 					builder.Append("<br>");
 
 					builder.Append("<br>Fixes<br>");
-					builder.Append("<br>");
+					builder.Append("- Misc - Fix issue where rare mobs could be teleported to Lodoria instead of a dungeon<br>");
 					break;
 			}
 		}
