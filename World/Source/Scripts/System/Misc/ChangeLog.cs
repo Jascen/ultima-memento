@@ -923,7 +923,7 @@ namespace Server.Misc
 
 				// Version 2.3.1
 				case 11:
-					builder.Append(Version());
+					builder.Append("Version: 2.3.1");
 					builder.Append("<br>Changes<br>");
 					builder.Append("- Ability - Magic Protection now adds 14 magic damage absorb, up from setting 6<br>");
 					builder.Append("- Ability - Greater Magic Protection now adds 20 magic damage absorb, up from setting 8<br>");
@@ -1016,7 +1016,7 @@ namespace Server.Misc
 
 				// Version 2.4.0
 				case 12:
-					builder.Append(Version());
+					builder.Append("Version: 2.4.0");
 					builder.Append("<br>Changes<br>");
 					builder.Append("- Avatar - Coins are now properly split between party members<br>");
 					builder.Append("- Boat - Corpses belonging to Players or their (bonded) pets now move with the boat<br>");
@@ -1167,7 +1167,7 @@ namespace Server.Misc
 
 				// Version 2.4.1
 				case 13:
-					builder.Append(Version());
+					builder.Append("Version: 2.4.1");
 					builder.Append("<br>Changes<br>");
 					builder.Append("- Admin - Add '[Avatar-Migrate--Game-Time' command to fix avatar's lifetime game time<br>");
 					builder.Append("- Admin - `S_HouseStoragePercent` setting has been added<br>");
@@ -1236,8 +1236,7 @@ namespace Server.Misc
 
 				// Version 2.5.0
 				case 14:
-				default:
-					builder.Append(Version());
+					builder.Append("Version: 2.5.0");
 					builder.Append("<br>Changes<br>");
 					builder.Append("- Admin - Add `S_AllowTravelToSpecialPlaces` server setting<br>");
 					builder.Append("- Avatar - Focus and Meditation are no longer locked by default<br>");
