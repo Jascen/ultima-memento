@@ -6,11 +6,11 @@ namespace Server.Misc
 	{
 		// Chronological index: 0 = oldest release, 11 = current release.
 		// When shipping a new version, increment RELEASE_COUNT and add a new case at the end.
-		public const int RELEASE_COUNT = 15;
+		public const int RELEASE_COUNT = 16;
 
 		public static string Version()
 		{
-			return "Version: 2.5.0";
+			return "Version: 2.6.0";
 		}
 
 		public static string GetRelease(int page)
@@ -1314,6 +1314,17 @@ namespace Server.Misc
 					builder.Append("- Spell - Fix crash with Magic Reflection + Parrying combo<br>");
 					builder.Append("- Spell - Fix serialization issue in Blend with Forest<br>");
 					builder.Append("- Spell - Fix permanent mute case in Blend with Forest<br>");
+					break;
+
+				// Version 2.6.0
+				case 15:
+				default:
+					builder.Append(Version());
+					builder.Append("<br>Changes<br>");
+					builder.Append("<br>");
+
+					builder.Append("<br>Fixes<br>");
+					builder.Append("<br>");
 					break;
 			}
 		}
