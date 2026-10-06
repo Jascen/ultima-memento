@@ -71,9 +71,6 @@ namespace Server.Mobiles
 		{ 
 			base.Deserialize( reader ); 
 			int version = reader.ReadInt();
-
-			LeaveNowTimer thisTimer = new LeaveNowTimer( this ); 
-			thisTimer.Start(); 
 		} 
 
 		public override bool IsSnoop( Mobile from )
