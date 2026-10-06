@@ -1323,6 +1323,8 @@ namespace Server.Misc
 					builder.Append("<br>Changes<br>");
 					builder.Append("- Misc - Added discord announcement for stolen items<br>");
 					builder.Append("- Misc - Lawn Tools and Remodeling Tools can now deduct from Checks<br>");
+					builder.Append("- Misc - Elementalism cannot be taught if the student has Magery or Necromancy<br>");
+					builder.Append("- Misc - Magery or Necromancy cannot be taught if the student has Elementalism<br>");
 
 					builder.Append("<br>Fixes<br>");
 					builder.Append("- Misc - Fix issue where rare mobs could be teleported to Lodoria instead of a dungeon<br>");
