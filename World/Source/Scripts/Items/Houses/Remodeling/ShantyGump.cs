@@ -83,7 +83,7 @@ namespace Server.Gumps
 			{
 				AddImage(0+locMod-2, -2, 9589, Server.Misc.PlayerSettings.GetGumpHue( owner ));
 
-				if (m_SelectedID > 0)
+				if (m_CurrentCategory != null && m_SelectedID > 0)
 				{
 					Remodeling.ItemLayout( m_SelectedID, m_ItemTitle, this );
 				}
@@ -109,7 +109,7 @@ namespace Server.Gumps
 					AddHtml( 300+locMod, 378, 134, 20, @"<BODY><BASEFONT Color=" + color + ">" + String.Format("{0:0,0} Gold", m_PlayerGold) + "</BASEFONT></BODY>", (bool)false, (bool)false);
 				}
 
-				if (m_SelectedID > 0)
+				if (m_CurrentCategory != null && m_SelectedID > 0)
 				{
 					//Buy Button
 					AddButton(379+locMod, 13, 4023, 4023, (int)Buttons.Place, GumpButtonType.Reply, 0);
