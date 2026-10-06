@@ -47,8 +47,18 @@ namespace Server.Items
 			list.Add( 1073841, "{0}\t{1}\t{2}", TotalItems, MaxItems, TotalWeight ); // Contents: ~1_COUNT~/~2_MAXCOUNT~ items, ~3_WEIGHT~ stones
 		}
 
+		public void SetSize( int slots )
+		{
+			Weight = slots / 10;
+			MaxItems = slots;
+			ItemID = slots >= 20 ? Utility.RandomList( 0x6568, 0x6569 ) : Utility.RandomList( 0x658D, 0x658E );
+		}
+
 		public override bool OnDragDropInto( Mobile from, Item dropped, Point3D p )
         {
+			if ( HoldingBagCombiner.TryCombine( from, this, dropped ) )
+				return false;
+
 			if ( dropped is Container )
 			{
                 from.SendMessage("You cannot store containers in this bag.");
@@ -60,6 +70,9 @@ namespace Server.Items
 
 		public override bool OnDragDrop( Mobile from, Item dropped )
         {
+			if ( HoldingBagCombiner.TryCombine( from, this, dropped ) )
+				return false;
+
 			if ( dropped is Container )
 			{
                 from.SendMessage("You cannot store containers in this bag.");
