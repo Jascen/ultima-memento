@@ -1235,25 +1235,11 @@ namespace Server.Engines.Craft
 					else if ( item is BlankScroll )
 						item.Amount *= 10;
 
-					if ( ( item.Resource == CraftResource.None || item.Resource == CraftResource.None ) && ( item is WoodenPlateLegs || item is WoodenPlateGloves || item is WoodenPlateGorget || item is WoodenPlateArms || item is WoodenPlateChest || item is WoodenPlateHelm ) )
-					{
-						item.Resource = CraftResource.RegularWood;
-						item.Hue = 0x840;
-					}
-					else if ( item is MagicalWand )
+					if ( item is MagicalWand )
 					{
 						string nameString = context.NameString;
 						item.Delete();
 						item = new MagicalWand( SpellItems.GetWand( nameString ) );
-					}
-					else if ( item is BaseContainer || item is BaseBook || item is BaseLight || item is Spyglass || item is Runebook || item is Spellbook || item is TenFootPole || item is DragonPedStatue || item is HorseArmor || item is PotionKeg || item is TrapKit )
-					{
-						Type resourceType = typeRes;
-						if ( resourceType == null )
-							resourceType = Resources.GetAt( 0 ).ItemType;
-
-						CraftResource thisResource = CraftResources.GetFromType( resourceType );
-						item.Resource = thisResource;
 					}
 					else if ( item.Catalog == Catalogs.Stone )
 					{
@@ -1279,45 +1265,51 @@ namespace Server.Engines.Craft
 						if ( item is BaseStatueDeed )
 							Server.Items.Statues.SetStatue( (BaseStatueDeed)item, (int)item.Weight, item.Hue, material, maker, item.Name, true, from, thisResource );
 					}
-					else if ( item is ShortMusicStand || 
-						item is Scales || 
-						item is Key || 
-						item is Globe || 
-						item is WindChimes || 
-						item is FancyWindChimes || 
-						item is TallMusicStand || 
-						item is Easle || 
-						item is ShojiScreen || 
-						item is BambooScreen || 
-						item is FootStool || 
-						item is Stool || 
-						item is BambooChair || 
-						item is WoodenChair || 
-						item is FancyWoodenChairCushion || 
-						item is WoodenChairCushion || 
-						item is WoodenBench || 
-						item is WoodenThrone || 
-						item is Throne || 
-						item is Nightstand || 
-						item is WritingTable || 
-						item is YewWoodTable || 
-						item is CounterWood || 
-						item is CounterWooden || 
-						item is CounterRustic || 
-						item is LargeTable || 
-						item is ElegantLowTable || 
-						item is PlainLowTable || 
-						item is CandleLarge || 
-						item is Candelabra || 
-						item is CandelabraStand )
+					else if (!item.Stackable)
 					{
 						Type resourceType = typeRes;
 						if ( resourceType == null )
 							resourceType = Resources.GetAt( 0 ).ItemType;
 
 						CraftResource thisResource = CraftResources.GetFromType( resourceType );
+						if ( item.Resource == CraftResource.None )
+							item.Resource = thisResource;
 
-						item.Hue = CraftResources.GetClr( thisResource );
+						// For some reason, we force Hue
+						if ( item is ShortMusicStand || 
+							item is Scales || 
+							item is Key || 
+							item is Globe || 
+							item is WindChimes || 
+							item is FancyWindChimes || 
+							item is TallMusicStand || 
+							item is Easle || 
+							item is ShojiScreen || 
+							item is BambooScreen || 
+							item is FootStool || 
+							item is Stool || 
+							item is BambooChair || 
+							item is WoodenChair || 
+							item is FancyWoodenChairCushion || 
+							item is WoodenChairCushion || 
+							item is WoodenBench || 
+							item is WoodenThrone || 
+							item is Throne || 
+							item is Nightstand || 
+							item is WritingTable || 
+							item is YewWoodTable || 
+							item is CounterWood || 
+							item is CounterWooden || 
+							item is CounterRustic || 
+							item is LargeTable || 
+							item is ElegantLowTable || 
+							item is PlainLowTable || 
+							item is CandleLarge || 
+							item is Candelabra || 
+							item is CandelabraStand )
+						{
+							item.Hue = CraftResources.GetClr( thisResource );
+						}
 					}
 
 					if ( item is Spear ){ item.ItemID = 0xF62; }
