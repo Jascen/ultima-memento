@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
-using Server;
-using Server.Gumps;
 using Server.Network;
 using Server.Items;
-using Server.Mobiles;
 using Server.Multis;
-using System.Collections;
 using Server.Misc;
-using System.Text;
+using Server.Mobiles;
 
 namespace Server.Gumps
 {
@@ -38,9 +33,7 @@ namespace Server.Gumps
             }
             m_ShantyTools.Category = currentCategory;
             m_ShantyTools.Page = currentPage;
-
-            ComputeGold(owner);
-
+			m_PlayerGold = ComputeGold(owner);
             Closable = true;
             Disposable = true;
             Dragable = true;
@@ -292,21 +285,19 @@ namespace Server.Gumps
             }
         }
 
-        public void ComputeGold(Mobile from)
-        {
-            int goldInPack = 0;
-            int goldInBank = 0;
-            foreach (Gold gold in from.Backpack.FindItemsByType<Gold>(true))
-            {
-                goldInPack += gold.Amount;
-            }
+		private int ComputeGold(Mobile from)
+		{
+			int amount = Banker.GetBalance(from);
+			if (from.Backpack != null)
+			{
+				foreach (Gold gold in from.Backpack.FindItemsByType<Gold>(true))
+				{
+					amount += gold.Amount;
+				}
 
-            foreach (Gold gold in from.BankBox.FindItemsByType<Gold>(true))
-            {
-                goldInBank += gold.Amount;
-            }
+			}
 
-            m_PlayerGold = goldInPack + goldInBank;
-        }
+			return amount;
+		}
     }
 }

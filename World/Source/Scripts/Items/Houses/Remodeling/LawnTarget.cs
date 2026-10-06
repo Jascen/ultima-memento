@@ -1,15 +1,8 @@
-using System;
-using Server;
-using Server.Network;
 using Server.Items;
 using Server.Mobiles;
-using System.Collections;
-using System.Text;
 using Server.Targeting;
-using Server.Misc;
 using Server.Multis;
 using Server.Gumps;
-using Server.Regions;
 
 namespace Server.Misc
 {
@@ -107,14 +100,11 @@ namespace Server.Misc
 
 		public void EndPlace(Point3D loc)
 		{
-			bool Paid = false;
-			if (m_From.Backpack.ConsumeTotal(typeof(Gold), m_Price))
+			var cont = m_From.Backpack;
+			var Paid = cont != null && cont.ConsumeTotal(typeof(Gold), m_Price);
+			if (!Paid) // Fallback to Bank
 			{
-				Paid = true;
-			}
-			else if (m_From.BankBox.ConsumeTotal(typeof(Gold), m_Price))
-			{
-				Paid = true;
+				Paid = Banker.Withdraw(m_From, m_Price);
 			}
 
 			if (Paid)
