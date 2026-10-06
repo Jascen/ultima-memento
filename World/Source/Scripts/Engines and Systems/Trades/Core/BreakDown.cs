@@ -210,81 +210,96 @@ namespace Server.Engines.Craft
 						
 						from.SendGump( new CraftGump( from, m_CraftSystem, m_Tool, num ) );
 					}
-					else if ( targeted is Container )
-					{
-						var container = (Container)targeted;
-						var confirmationGump = new ConfirmationGump(
-							from,
-							TextDefinition.GetColorizedText("Break down", HtmlColors.RED) + " container contents",
-							string.Format("Are you absolutely sure you want to break down all '{0}' items in the container '{1}' ?", 
-								TextDefinition.GetColorizedText(container.TotalItems.ToString(), HtmlColors.RED),
-								TextDefinition.GetColorizedText(container.Name.ToString(), HtmlColors.RED)
-							),
-							() =>
-								{
-									if (!from.Alive) return;
-
-									var success = false;
-									var noSkill = false;
-									var invalid = false;
-									var badAmount = false;
-
-									foreach (var item in container.Items.ToList())
-									{
-										if (item is Container) continue;
-
-										// Bulk breakdown only supports items that can be crafted by the CraftSystem
-										CraftItem craftItem = m_CraftSystem.CraftItems.SearchFor( item.GetType() );
-										if ( craftItem == null || craftItem.Resources.Count == 0 )
-										{
-											invalid = true;
-											continue;
-										}
-
-										BreakDownResult result = BreakDown(from, item, item.Resource);
-										switch (result)
-										{
-											case BreakDownResult.Invalid: invalid = true; break;
-											case BreakDownResult.NoSkill: noSkill = true; break;
-											case BreakDownResult.BadAmnt: badAmount = true; break;
-											case BreakDownResult.Success: success = true; break;
-										}
-									}
-
-									if (invalid) from.SendLocalizedMessage(1044272); // You can't seem to break that item down.
-									if (noSkill) from.SendLocalizedMessage(1044149); // You have no idea how to break this item down.
-									if (badAmount) from.SendLocalizedMessage(1044144); // There is not enough here to break this down.
-									if (success) from.SendLocalizedMessage(1044148); // You break the item down into ordinary resources.
-
-									from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, null));
-								},
-							() =>
-								{
-									if (!from.Alive) return;
-
-									from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, null));
-								}
-						);
-
-						from.SendGump(confirmationGump);
-					}
 					else
 					{
-						BreakDownResult result = BreakDownResult.Invalid;
-						int message;
-
-						result = BreakDown( from, (Item)targeted, ((Item)targeted).Resource );
-
-						switch ( result )
+						var onlyBreakdownChildren = false;
+						if ( targeted is Container )
 						{
-							default:
-							case BreakDownResult.Invalid: message = 1044272; break; // You can't seem to break that item down.
-							case BreakDownResult.NoSkill: message = 1044149; break; // You have no idea how to break this item down.
-							case BreakDownResult.Success: message = 1044148; break; // You break the item down into ordinary resources.
-							case BreakDownResult.BadAmnt: message = 1044144; break; // There is not enough here to break this down.
+							var container = (Container)targeted;
+							onlyBreakdownChildren = 0 < container.TotalItems;
+
+							// Check if it's a lockable container with it's own key
+							if ( 1 <= container.TotalItems && container is LockableContainer && 0 < ((LockableContainer)container).MaxLockLevel)
+								onlyBreakdownChildren = 1 < container.TotalItems || container.FindItemByType<Key>() == null;
 						}
-						
-						from.SendGump( new CraftGump( from, m_CraftSystem, m_Tool, message ) );
+
+						if ( onlyBreakdownChildren )
+						{
+							var container = (Container)targeted;
+
+							var confirmationGump = new ConfirmationGump(
+								from,
+								TextDefinition.GetColorizedText("Break down", HtmlColors.RED) + " container contents",
+								string.Format("Are you absolutely sure you want to break down all '{0}' items in the container '{1}' ?", 
+									TextDefinition.GetColorizedText(container.TotalItems.ToString(), HtmlColors.RED),
+									TextDefinition.GetColorizedText(container.Name.ToString(), HtmlColors.RED)
+								),
+								() =>
+									{
+										if (!from.Alive) return;
+
+										var success = false;
+										var noSkill = false;
+										var invalid = false;
+										var badAmount = false;
+
+										foreach (var item in container.Items.ToList())
+										{
+											if (item is Container) continue;
+
+											// Bulk breakdown only supports items that can be crafted by the CraftSystem
+											CraftItem craftItem = m_CraftSystem.CraftItems.SearchFor( item.GetType() );
+											if ( craftItem == null || craftItem.Resources.Count == 0 )
+											{
+												invalid = true;
+												continue;
+											}
+
+											BreakDownResult result = BreakDown(from, item, item.Resource);
+											switch (result)
+											{
+												case BreakDownResult.Invalid: invalid = true; break;
+												case BreakDownResult.NoSkill: noSkill = true; break;
+												case BreakDownResult.BadAmnt: badAmount = true; break;
+												case BreakDownResult.Success: success = true; break;
+											}
+										}
+
+										if (invalid) from.SendLocalizedMessage(1044272); // You can't seem to break that item down.
+										if (noSkill) from.SendLocalizedMessage(1044149); // You have no idea how to break this item down.
+										if (badAmount) from.SendLocalizedMessage(1044144); // There is not enough here to break this down.
+										if (success) from.SendLocalizedMessage(1044148); // You break the item down into ordinary resources.
+
+										from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, null));
+									},
+								() =>
+									{
+										if (!from.Alive) return;
+
+										from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, null));
+									}
+							);
+
+							from.SendGump(confirmationGump);
+						}
+						else
+						{
+							BreakDownResult result = BreakDownResult.Invalid;
+							int message;
+
+							result = BreakDown( from, (Item)targeted, ((Item)targeted).Resource );
+
+							switch ( result )
+							{
+								default:
+								case BreakDownResult.Invalid: message = 1044272; break; // You can't seem to break that item down.
+								case BreakDownResult.NoSkill: message = 1044149; break; // You have no idea how to break this item down.
+								case BreakDownResult.Success: message = 1044148; break; // You break the item down into ordinary resources.
+								case BreakDownResult.BadAmnt: message = 1044144; break; // There is not enough here to break this down.
+							}
+							
+							from.SendGump( new CraftGump( from, m_CraftSystem, m_Tool, message ) );
+						}
 					}
 				}
 			}
