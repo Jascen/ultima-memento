@@ -1334,6 +1334,7 @@ namespace Server.Misc
 					builder.Append("- Item - Research bag can only consume Magery or Necromancy spellbooks<br>");
 					builder.Append("- Misc - Fix issue where rare mobs could be teleported to Lodoria instead of a dungeon<br>");
 					builder.Append("- Misc - Fix crash from Lawn Tools and Remodeling Tools placement<br>");
+					builder.Append("- Misc - Fix issue where Hoard Minions would not delete after server restart<br>");
 					break;
 			}
 		}

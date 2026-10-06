@@ -1,3 +1,4 @@
+using System;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -38,6 +39,7 @@ namespace Server.Mobiles
 			base.Deserialize( reader );
 
 			int version = reader.ReadInt();
+			Timer.DelayCall( TimeSpan.FromMinutes( HoardMinionFamiliarItem.SUMMON_DURATION_MINUTES ), () => Delete() );
 		}
 	}
 }
