@@ -1,10 +1,10 @@
-using Server;
 using System;
 using System.Collections;
-using Server.Network;
 using Server.Misc;
 using Server.Mobiles;
 using System.Globalization;
+using Server.Gumps;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -36,40 +36,40 @@ namespace Server.Items
 		{
 			if ( from is PlayerMobile )
 			{
-				bool HasTome = false;
-
-				ArrayList targets = new ArrayList();
+				List<QuestTome> targets = new List<QuestTome>();
 				foreach ( Item item in World.Items.Values )
 				{
 					if ( item is QuestTome )
 					{
-						if ( ((QuestTome)item).QuestTomeOwner == from )
+						var tome = (QuestTome)item;
+						if ( !tome.Deleted && tome.QuestTomeOwner == from )
 						{
-							targets.Add( item );
-							HasTome = true;
+							targets.Add( (QuestTome)item );
 						}
 					}
 				}
-				for ( int i = 0; i < targets.Count; ++i )
-				{
-					Item item = ( Item )targets[ i ];
-					item.ItemID = ItemID;
-					item.Name = Name;
-					item.Hue = Hue;
-					from.AddToBackpack( item );
-					from.SendMessage( "You take possession of the book!" );
-					from.SendSound( 0x3D );
-					this.Delete();
-				}
 
-				if ( !HasTome )
-				{
-					SetupBook( from );
-					from.SendMessage( "You take possession of the book!" );
-					from.SendSound( 0x3D );
-					LoggingFunctions.LogGeneric( from, "has found a Book of Questing." );
-					this.Delete();
-				}
+				ConfirmationGump.PromptIfFalse(
+					from,
+					0 < targets.Count,
+					() => {
+						SetupBook( from );
+						from.SendMessage( "You take possession of the book!" );
+						from.SendSound( 0x3D );
+						LoggingFunctions.LogGeneric( from, "has found a Book of Questing." );
+						this.Delete();
+						foreach(var tome in targets)
+						{
+							tome.Delete();
+						}
+					},
+					onConfirmed => new ConfirmationGump(
+						from,
+						"Abandon Quest?",
+						string.Format("You are already searching for {0}, do you want to abandon your search and start a new quest?", TextDefinition.GetColorizedText(targets[0].Name, HtmlColors.KHAKI)), 
+						onConfirmed
+					)
+				);
 			}
 		}
 

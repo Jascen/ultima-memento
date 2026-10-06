@@ -1322,6 +1322,7 @@ namespace Server.Misc
 					builder.Append(Version());
 					builder.Append("<br>Changes<br>");
 					builder.Append("- Item - Research bag now warns before destroying spellbooks<br>");
+					builder.Append("- Item - Journal quest tomes now warn before pickup<br>");
 					builder.Append("- Misc - Added discord announcement for stolen items<br>");
 					builder.Append("- Misc - Lawn Tools and Remodeling Tools can now deduct from Checks<br>");
 					builder.Append("- Misc - Elementalism cannot be taught if the student has Magery or Necromancy<br>");
