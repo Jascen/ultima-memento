@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Server;
+using Server.Engines.Avatar;
 using Server.Engines.Craft;
+using Server.Mobiles;
 using Server.Network;
 using Server.SkillHandlers;
 
@@ -199,6 +200,23 @@ namespace Server.Items
 		{
 			if( from.AccessLevel < AccessLevel.GameMaster )
 			{
+				if ( this is IAvatarOnlyItem )
+				{
+					var avatarOnlyItem = this as IAvatarOnlyItem;
+					var player = from as PlayerMobile;
+					if ( player == null || !player.Avatar.Active )
+					{
+						from.SendMessage("Only an Avatar may use this item.");
+						return false;
+					}
+
+					if ( avatarOnlyItem.PlayerOwner != player )
+					{
+						from.SendMessage("This item belongs to another.");
+						return false;
+					}
+				}
+
 				if( RequiredRace != null && from.Race != RequiredRace )
 				{
 					if( RequiredRace == Race.Elf )

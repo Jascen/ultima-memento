@@ -1,5 +1,7 @@
 using System;
+using Server.Engines.Avatar;
 using Server.Engines.Craft;
+using Server.Mobiles;
 
 namespace Server.Items
 {
@@ -178,6 +180,31 @@ namespace Server.Items
 
 		public virtual int InitMinHits{ get{ return 0; } }
 		public virtual int InitMaxHits{ get{ return 0; } }
+
+		public override bool CanEquip( Mobile from )
+		{
+			if( from.AccessLevel < AccessLevel.GameMaster )
+			{
+				if ( this is IAvatarOnlyItem )
+				{
+					var avatarOnlyItem = this as IAvatarOnlyItem;
+					var player = from as PlayerMobile;
+					if ( player == null || !player.Avatar.Active )
+					{
+						from.SendMessage("Only an Avatar may use this item.");
+						return false;
+					}
+
+					if ( avatarOnlyItem.PlayerOwner != player )
+					{
+						from.SendMessage("This item belongs to another.");
+						return false;
+					}
+				}
+			}
+
+			return base.CanEquip( from );
+		}
 
 		public CraftAttributeInfo GetResourceAttrs()
 		{
