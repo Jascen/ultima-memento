@@ -3723,6 +3723,16 @@ namespace Server.Mobiles
 			MLQuestSystem.HandleDeletion( this );
 
 			DisguiseTimers.RemoveTimer( this );
+
+			WorldUtilities.DeleteAllItems<Item>( item => {
+				if (item is IAvatarOnlyItem)
+				{
+					var avatarOnlyItem = (IAvatarOnlyItem)item;
+					return !avatarOnlyItem.IsPersistent && avatarOnlyItem.PlayerOwner == this;
+				}
+
+				return false;
+			} );
 		}
 
 		public override bool NewGuildDisplay { get { return Server.Guilds.Guild.NewGuildSystem; } }
