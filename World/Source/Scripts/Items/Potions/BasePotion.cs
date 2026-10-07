@@ -95,6 +95,14 @@ namespace Server.Items
 		ElixirTracking,
 		ElixirVeterinary,
 		ElixirWrestling,
+		// Skip - Magic skills
+		// ElixirElementalism,
+		// ElixirMagery,
+		// ElixirNecromancy,
+		// ElixirKnightship,
+		// ElixirBushido,
+		// ElixirNinjitsu,
+		// Skip - Magic skills
 		MixtureSlime,
 		MixtureIceSlime,
 		MixtureFireSlime,
