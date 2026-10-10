@@ -7,6 +7,7 @@ namespace Server.Items
 	public class TreasurePile2Addon : BaseAddon
 	{
 		public override string AddonName{ get{ return "treasure pile"; } }
+		public override bool IgnoreCanFit{ get{ return true; } }
 
         private static int[,] m_AddOnSimpleComponents = new int[,] {
 			  {6981, 3, -2, 0}, {6988, -2, -1, 0}, {6989, -2, -2, 0}// 1	2	3	

@@ -1331,6 +1331,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Elementalism cannot be taught if the student has Magery or Necromancy<br>");
 					builder.Append("- Misc - Magery or Necromancy cannot be taught if the student has Elementalism<br>");
 					builder.Append("- Misc - Summoned pack animals that are invulnerable no longer delete after server restart<br>");
+					builder.Append("- Misc - Reduce strictness when placing Treasure Pile addons<br>");
 
 					builder.Append("<br>Fixes<br>");
 					builder.Append("- Item - Research bag can only consume Magery or Necromancy spellbooks<br>");
