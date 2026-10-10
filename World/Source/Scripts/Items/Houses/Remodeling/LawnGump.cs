@@ -288,8 +288,13 @@ namespace Server.Gumps
                         m_ItemTitle = entry.Title;
                     }
 
-		private int ComputeGold(Mobile from)
-		{
+                    from.SendGump(new LawnGump(from, m_LawnTools, m_CurrentCategory.Name, m_CurrentPage, m_SelectedID, m_ItemPrice, m_ItemTitle));
+                }
+            }
+        }
+
+        private int ComputeGold(Mobile from)
+        {
 			int amount = Banker.GetBalance(from);
 			if (from.Backpack != null)
 			{
@@ -301,6 +306,6 @@ namespace Server.Gumps
 			}
 
 			return amount;
-		}
+        }
     }
 }
