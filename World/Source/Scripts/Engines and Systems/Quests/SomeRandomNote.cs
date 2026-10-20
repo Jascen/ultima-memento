@@ -345,6 +345,7 @@ namespace Server.Items
 				case "Dungeon Destard": return "flame of Dramulox";
 				case "the City of Embers": return "crown of Vorgol";
 				case "Dungeon Hythloth": return "claw of Saramon";
+				case "the Frozen Hells":
 				case "the Ice Fiend Lair": return "horn of the frozen hells";
 				case "Dungeon Shame": return "elemental salt";
 				case "Terathan Keep": return "eye of plagues";
