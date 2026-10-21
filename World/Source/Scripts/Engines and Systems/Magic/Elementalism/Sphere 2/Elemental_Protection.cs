@@ -56,6 +56,8 @@ namespace Server.Spells.Elementalism
 
 			if ( mods == null )
 			{
+				Server.Spells.Second.ProtectionSpell.EndProtection( target );
+
 				target.PlaySound( 0x1E9 );
 				target.FixedParticles( 0x373A, 9, 20, 5016, hue-1, 0, EffectLayer.Waist );
 

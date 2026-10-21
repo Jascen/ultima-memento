@@ -62,6 +62,8 @@ namespace Server.Spells.Second
 
 			if ( mods == null )
 			{
+				Server.Spells.Elementalism.Elemental_Protection_Spell.EndProtection( target );
+
 				target.PlaySound( 0x1E9 );
 				target.FixedParticles( 0x375A, 9, 20, 5016, PlayerSettings.GetMySpellHue( true, caster, 0 ), 0, EffectLayer.Waist );
 
