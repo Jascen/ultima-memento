@@ -237,14 +237,14 @@ namespace Server.Spells
 			Register( 289, typeof( Jedi.Replicate ) );
 
 			// Shinobi abilities
-			Register( 290, typeof( Shinobi.CheetahPaws ) );
-			Register( 291, typeof( Shinobi.Deception ) );
-			Register( 292, typeof( Shinobi.EagleEye ) );
-			Register( 293, typeof( Shinobi.Espionage ) );
-			Register( 294, typeof( Shinobi.FerretFlee ) );
-			Register( 295, typeof( Shinobi.MonkeyLeap ) );
-			Register( 296, typeof( Shinobi.MysticShuriken ) );
-			Register( 297, typeof( Shinobi.TigerStrength ) );
+			Register( Shinobi.CheetahPaws.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.CheetahPaws ) );
+			Register( Shinobi.Deception.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.Deception ) );
+			Register( Shinobi.EagleEye.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.EagleEye ) );
+			Register( Shinobi.Espionage.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.Espionage ) );
+			Register( Shinobi.FerretFlee.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.FerretFlee ) );
+			Register( Shinobi.MonkeyLeap.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.MonkeyLeap ) );
+			Register( Shinobi.MysticShuriken.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.MysticShuriken ) );
+			Register( Shinobi.TigerStrength.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.TigerStrength ) );
 
 			// Samurai abilities
 			Register( 400, typeof( Bushido.HonorableExecution ) );

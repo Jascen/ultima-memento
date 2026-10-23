@@ -1,25 +1,34 @@
 using System;
 using Server.Mobiles;
-using Server.Network;
 using Server.Targeting;
 
 namespace Server.Spells.Shinobi
 {
 	public class TigerStrength : ShinobiSpell
 	{
-		public override int spellIndex { get { return 297; } }
-		private static SpellInfo m_Info = new SpellInfo(
-				"Tiger Strength", "Taigasutorengusu",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 297,
+					IconGraphic = 10878,
+					Name = "Tiger Strength",
+					PowerWords = "Taigasutorengusu",
+					Description = "Calls forth a mystical tiger from the realm of Durama to fight with the ninja during their journey.",
+					ManaCost = 70,
+					TithingCost = 75,
+					MinSkill = 90,
+					TargetType = TargetFlags.None
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "skill" ))); } }
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "points" )); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "mana" )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public TigerStrength( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public TigerStrength( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

@@ -1,31 +1,33 @@
 using System;
-using System.Collections;
-using Server.Network;
-using Server.Items;
 using Server.Targeting;
-using Server.Spells.Necromancy;
-using Server.Spells.Fourth;
-using Server.Mobiles;
-using System.Collections.Generic;
-using Server.Misc;
 
 namespace Server.Spells.Shinobi
 {
 	public class FerretFlee : ShinobiSpell
 	{
-		public override int spellIndex { get { return 294; } }
-		private static SpellInfo m_Info = new SpellInfo(
-				"Ferret Flee", "Ferettoran",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 294,
+					IconGraphic = 10874,
+					Name = "Ferret Flee",
+					PowerWords = "Ferettoran",
+					Description = "If held in place by things such as paralysis magic, spider webbing, or nets the ninja can attempt to free themselves from such holds and escape.",
+					ManaCost = 30,
+					TithingCost = 35,
+					MinSkill = 50,
+					TargetType = TargetFlags.None
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "skill" ))); } }
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "points" )); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "mana" )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public FerretFlee( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public FerretFlee( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

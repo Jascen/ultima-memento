@@ -1,25 +1,33 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Mobiles;
 
 namespace Server.Spells.Shinobi
 {
 	public class MysticShuriken : ShinobiSpell
 	{
-		public override int spellIndex { get { return 296; } }
-		private static SpellInfo m_Info = new SpellInfo(
-				"Mystic Shuriken", "Misutikku Shuriken",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 296,
+					IconGraphic = 10877,
+					Name = "Mystic Shuriken",
+					PowerWords = "Misutikku Shuriken",
+					Description = "Summons a shuriken out of thin air and hurdles it toward your opponent, causing much damage from afar.",
+					ManaCost = 40,
+					TithingCost = 45,
+					MinSkill = 60,
+					TargetType = TargetFlags.Harmful
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "skill" ))); } }
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "points" )); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "mana" )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public MysticShuriken( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public MysticShuriken( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

@@ -1,11 +1,8 @@
 using System;
+using Server.Targeting;
 using System.Collections;
-using Server;
 using Server.Mobiles;
-using Server.Misc;
 using Server.Items;
-using Server.Gumps;
-using Server.Spells;
 using Server.Spells.Fifth;
 using Server.Spells.Seventh;
 
@@ -13,19 +10,29 @@ namespace Server.Spells.Shinobi
 {
 	public class Deception : ShinobiSpell
 	{
-		public override int spellIndex { get { return 291; } }
-		private static SpellInfo m_Info = new SpellInfo(
-				"Deception", "Azamuku Koto",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 291,
+					IconGraphic = 10871,
+					Name = "Deception",
+					PowerWords = "Azamuku Koto",
+					Description = "The ninja can disguise themselves, where others would not recognize them and some guards may look the other way.",
+					ManaCost = 15,
+					TithingCost = 20,
+					MinSkill = 30,
+					TargetType = TargetFlags.None
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "skill" ))); } }
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "points" )); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "mana" )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public Deception( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public Deception( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

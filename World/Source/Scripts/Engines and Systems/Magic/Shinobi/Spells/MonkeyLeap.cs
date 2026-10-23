@@ -1,7 +1,5 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
 using Server.Items;
 using Server.Mobiles;
 
@@ -9,19 +7,29 @@ namespace Server.Spells.Shinobi
 {
 	public class MonkeyLeap : ShinobiSpell
 	{
-		public override int spellIndex { get { return 295; } }
-		private static SpellInfo m_Info = new SpellInfo(
-				"Monkey Leap", "Monkiripu",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 295,
+					IconGraphic = 10875,
+					Name = "Monkey Leap",
+					PowerWords = "Monkiripu",
+					Description = "Allows the ninja to leap toward or away from a location very quickly.",
+					ManaCost = 20,
+					TithingCost = 25,
+					MinSkill = 40,
+					TargetType = TargetFlags.Beneficial
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "skill" ))); } }
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "points" )); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "mana" )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public MonkeyLeap( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public MonkeyLeap( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 
