@@ -1,12 +1,8 @@
 using System;
-using Server.Network;
 using Server.Gumps;
-using Server.Spells;
+using Server.Spells.Mystic;
 using Server.Mobiles;
-using System.Collections.Generic;
-using Server.Misc;
 using System.Collections;
-using Server.Regions;
 
 namespace Server.Items
 {
@@ -16,8 +12,8 @@ namespace Server.Items
 		public override string DefaultDescription{ get{ return "This book is used by mystics, in order for them to use various abilities akin to this ancient order of peaceful nomads. Dropping such scrolls onto this book will place the mystical abilities within its pages. The scrolls can lead a mystic far and wide, as they search for the places of worship and meditate to acquire the knowledge."; } }
 
 		public override SpellbookType SpellbookType{ get{ return SpellbookType.Mystic; } }
-		public override int BookOffset{ get{ return 250; } }
-		public override int BookCount{ get{ return 10; } }
+		public override int BookOffset{ get{ return MysticSpellProvider.FirstSpellId; } }
+		public override int BookCount{ get{ return MysticSpellProvider.SpellCount; } }
 
 		[Constructable]
 		public MysticSpellbook() : this( (ulong)0 )

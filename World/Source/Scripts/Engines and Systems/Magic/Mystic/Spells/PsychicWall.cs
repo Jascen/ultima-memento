@@ -1,27 +1,35 @@
 using System;
 using System.Collections;
-using Server;
 using Server.Targeting;
-using Server.Network;
-using Server.Items;
 
 namespace Server.Spells.Mystic
 {
 	public class PsychicWall : MysticSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Psychic Wall", "Cah Summ Om Lum",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 256,
+					IconGraphic = 0x1A,
+					Name = "Psychic Wall",
+					PowerWords = "Cah Summ Om Lum",
+					Description = "You sheer force of will creates a barrier around you, deflecting magical attacks. This does not work against odd magics like necromancy. Affected spells will often bounce back onto the caster.",
+					ManaCost = 45,
+					TithingCost = 500,
+					MinSkill = 60,
+					TargetType = TargetFlags.None
+				},
 				269,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3 ); } }
-		public override int RequiredTithing{ get{ return 500; } }
-		public override double RequiredSkill{ get{ return 60.0; } }
-		public override int RequiredMana{ get{ return 45; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 		public override int MysticSpellCircle{ get{ return 4; } }
 
-		public PsychicWall( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public PsychicWall( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

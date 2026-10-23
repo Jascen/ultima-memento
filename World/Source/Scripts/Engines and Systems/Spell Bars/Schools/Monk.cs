@@ -1,5 +1,5 @@
-using Server.Items;
 using Server.Mobiles;
+using Server.Spells.Mystic;
 
 namespace Server.SpellBars
 {
@@ -7,19 +7,8 @@ namespace Server.SpellBars
 	{
 		public static readonly MonkSpellSchool Instance = new MonkSpellSchool();
 
-		private static readonly int[] SpellIcons =
-		{
-			0x500E, 0x410, 0x15, 0x971, 0x4B2, 0x5DC2, 0x1A, 0x96D, 0x5001, 0x19
-		};
-
-		private static readonly string[] SpellNames =
-		{
-			"Astral Projection", "Astral Travel", "Create Robe", "Gentle Touch", "Leap",
-			"Psionic Blast", "Psychic Wall", "Purity of Body", "Quivering Palm", "Wind Runner"
-		};
-
 		public int MaxSlots
-		{ get { return 10; } }
+		{ get { return MysticSpellProvider.SpellCount; } }
 
 		public SpellBarSchool School
 		{ get { return SpellBarSchool.Monk; } }
@@ -28,27 +17,22 @@ namespace Server.SpellBars
 		{ return 11169; }
 
 		public int GetIcon(PlayerMobile from, int slotIndex)
-		{ return SpellIcons[slotIndex - 1]; }
+		{ return MysticSpellProvider.SpellDefinitions[slotIndex - 1].IconGraphic; }
 
 		public string GetName(int slotIndex)
 		{
-			if (slotIndex < 1 || slotIndex > SpellNames.Length)
+			if (slotIndex < 1 || slotIndex > MysticSpellProvider.SpellCount)
 				return string.Empty;
 
-			return SpellNames[slotIndex - 1];
+			return MysticSpellProvider.SpellDefinitions[slotIndex - 1].Name.String;
 		}
 
 		public int GetRegistrySpellId(int slotIndex)
-		{ return 250 - 1 + slotIndex; }
+		{ return MysticSpellProvider.SpellDefinitions[slotIndex - 1].SpellID; }
 
 		public bool HasSpell(PlayerMobile from, int registrySpellId)
 		{
-			Spellbook book = Spellbook.Find(from, registrySpellId);
-
-			if (book is MysticSpellbook && ((MysticSpellbook)book).owner != from)
-				book = null;
-
-			return book != null && book.HasSpell(registrySpellId);
+			return MysticSpellProvider.HasSpell(from, registrySpellId);
 		}
 	}
 

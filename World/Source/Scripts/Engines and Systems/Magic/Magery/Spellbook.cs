@@ -10,6 +10,7 @@ using System.Globalization;
 using Server.Spells.HolyMan;
 using Server.Spells.Song;
 using Server.Spells.DeathKnight;
+using Server.Spells.Mystic;
 
 namespace Server.Items
 {
@@ -259,7 +260,7 @@ namespace Server.Items
 				return SpellbookType.DeathKnight;
 			else if ( spellID >= HolyManSpellProvider.FirstSpellId && spellID <= HolyManSpellProvider.LastSpellId)
 				return SpellbookType.HolyMan;
-			else if ( spellID >= 250 && spellID < 260 )
+			else if ( spellID >= MysticSpellProvider.FirstSpellId && spellID <= MysticSpellProvider.LastSpellId )
 				return SpellbookType.Mystic;
 			else if ( spellID >= 270 && spellID < 280 )
 				return SpellbookType.Syth;

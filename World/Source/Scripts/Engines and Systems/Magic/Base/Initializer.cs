@@ -189,16 +189,16 @@ namespace Server.Spells
 			Register( Chivalry.SacredJourneySpell.SpellInfo.SpellDefinition.SpellID, typeof( Chivalry.SacredJourneySpell ) );
 
 			// Mystic abilities
-			Register( 250, typeof( Mystic.AstralProjection ) );
-			Register( 251, typeof( Mystic.AstralTravel ) );
-			Register( 252, typeof( Mystic.CreateRobe ) );
-			Register( 253, typeof( Mystic.GentleTouch ) );
-			Register( 254, typeof( Mystic.Leap ) );
-			Register( 255, typeof( Mystic.PsionicBlast ) );
-			Register( 256, typeof( Mystic.PsychicWall ) );
-			Register( 257, typeof( Mystic.PurityOfBody ) );
-			Register( 258, typeof( Mystic.QuiveringPalm ) );
-			Register( 259, typeof( Mystic.WindRunner ) );
+			Register( Mystic.AstralProjection.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.AstralProjection ) );
+			Register( Mystic.AstralTravel.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.AstralTravel ) );
+			Register( Mystic.CreateRobe.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.CreateRobe ) );
+			Register( Mystic.GentleTouch.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.GentleTouch ) );
+			Register( Mystic.Leap.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.Leap ) );
+			Register( Mystic.PsionicBlast.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.PsionicBlast ) );
+			Register( Mystic.PsychicWall.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.PsychicWall ) );
+			Register( Mystic.PurityOfBody.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.PurityOfBody ) );
+			Register( Mystic.QuiveringPalm.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.QuiveringPalm ) );
+			Register( Mystic.WindRunner.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.WindRunner ) );
 
 			// Jester abilities
 			Register( Jester.CanOfSnakes.SpellInfo.SpellDefinition.SpellID, typeof( Jester.CanOfSnakes ) ); // 260

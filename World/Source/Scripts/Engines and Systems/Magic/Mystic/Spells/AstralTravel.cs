@@ -4,7 +4,6 @@ using Server.Multis;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
-using Server.Regions;
 using Server.Spells.Necromancy;
 using Server.Misc;
 
@@ -12,16 +11,27 @@ namespace Server.Spells.Mystic
 {
 	public class AstralTravel : MysticSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Astral Travel", "Ahm Mu Ra Beh",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 251,
+					IconGraphic = 0x410,
+					Name = "Astral Travel",
+					PowerWords = "Ahm Mu Ra Beh",
+					Description = "Travel through the astral plane to another location with the use of a magical recall rune. The rune must be marked by other magical means before you can travel to that location. If you wish to travel using a rune book, then set your rune book's default location and then you can target the book while using this ability.",
+					ManaCost = 40,
+					TithingCost = 35,
+					MinSkill = 50,
+					TargetType = TargetFlags.None
+				},
 				269,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3 ); } }
-		public override int RequiredTithing{ get{ return 35; } }
-		public override double RequiredSkill{ get{ return 50.0; } }
-		public override int RequiredMana{ get{ return 40; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 		public override int MysticSpellCircle{ get{ return 4; } }
 
 		private RunebookEntry m_Entry;
@@ -31,7 +41,7 @@ namespace Server.Spells.Mystic
 		{
 		}
 
-		public AstralTravel( Mobile caster, Item scroll, RunebookEntry entry, Runebook book ) : base( caster, scroll, m_Info )
+		public AstralTravel( Mobile caster, Item scroll, RunebookEntry entry, Runebook book ) : base( caster, scroll, SpellInfo )
 		{
 			m_Entry = entry;
 			m_Book = book;

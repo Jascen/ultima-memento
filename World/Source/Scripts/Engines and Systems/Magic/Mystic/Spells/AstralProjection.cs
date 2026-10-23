@@ -1,24 +1,33 @@
 using System;
+using Server.Targeting;
 using System.Collections;
-using Server;
 using Server.Items;
-using Server.Gumps;
-using Server.Spells;
 
 namespace Server.Spells.Mystic
 {
 	public class AstralProjection : MysticSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Astral Projection", "Beh Cah Summ Om",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 250,
+					IconGraphic = 0x500E,
+					Name = "Astral Projection",
+					PowerWords = "Beh Cah Summ Om",
+					Description = "Enter the astral plane where your soul is immune to harm. While you are in this state, you can freely travel but your interraction with the world is minimal. The better your skill, the longer it lasts. Monks use this ability to safely travel through dangerous areas.",
+					ManaCost = 55,
+					TithingCost = 300,
+					MinSkill = 80,
+					TargetType = TargetFlags.None
+				},
 				269,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3 ); } }
-		public override int RequiredTithing{ get{ return 300; } }
-		public override double RequiredSkill{ get{ return 80.0; } }
-		public override int RequiredMana{ get{ return 55; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 		public override int MysticSpellCircle{ get{ return 8; } }
 
         private int m_NewBody;
@@ -26,7 +35,7 @@ namespace Server.Spells.Mystic
         private int m_NewHue;
         private int m_OldHue;
 
-        public AstralProjection(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
+        public AstralProjection(Mobile caster, Item scroll) : base(caster, scroll, SpellInfo)
         {
         }
 

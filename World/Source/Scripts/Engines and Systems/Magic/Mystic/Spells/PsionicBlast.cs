@@ -1,25 +1,34 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Mobiles;
 
 namespace Server.Spells.Mystic
 {
 	public class PsionicBlast : MysticSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Psionic Blast", "Lum Om Summ Cah",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 255,
+					IconGraphic = 0x5DC2,
+					Name = "Psionic Blast",
+					PowerWords = "Lum Om Summ Cah",
+					Description = "Summon your Ki to perform a mental attack that deals an amount of energy damage based upon your fist fighting and intelligence values. Elemental Resistances may reduce damage done by this attack.",
+					ManaCost = 35,
+					TithingCost = 15,
+					MinSkill = 30,
+					TargetType = TargetFlags.Harmful
+				},
 				269,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3 ); } }
-		public override int RequiredTithing{ get{ return 15; } }
-		public override double RequiredSkill{ get{ return 30.0; } }
-		public override int RequiredMana{ get{ return 35; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 		public override int MysticSpellCircle{ get{ return 5; } }
 
-		public PsionicBlast( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public PsionicBlast( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 
