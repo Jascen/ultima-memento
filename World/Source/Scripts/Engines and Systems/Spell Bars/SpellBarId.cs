@@ -35,5 +35,8 @@ namespace Server.SpellBars
 
 		Shinobi_1,
 		Shinobi_2,
+
+		Jester_1,
+		Jester_2,
 	}
 }

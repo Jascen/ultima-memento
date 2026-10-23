@@ -12,5 +12,6 @@ namespace Server.SpellBars
 		Necromancy,
 		Priest,
 		Shinobi,
+		Jester,
 	}
 }

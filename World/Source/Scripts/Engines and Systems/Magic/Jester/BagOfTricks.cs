@@ -105,7 +105,7 @@ namespace Server.Items
 
 		public static string JesterSpeech()
 		{
-			return "Jesters are the entertainers of the land, juggling and leaping about, spreading humorous stories and trying to make others laugh. They beg for laughs and can use psychology on their audience to be more effective for the show. Jesters also have a mischievous side, which makes them able adventurers in their own way.<br><br>If you want to become a jester, you will need to hone your skills in begging and psychology of others. You will also need to get yourself a bag of tricks and some jester clothes to fill the role. Without these things, you will not be able to perform the comedic arts. Most jesters belong to the Thieves Guild, as they sometimes dabble in hiding, stealth, and sleight of hand. You, however, could pursue whatever secondary career you wish.<br><br>There are a few jesters around the land that can sell you such items, but the royal jester will not. These jesters can be found in taverns, ships, or hanging out with actors. As mentioned already, you must wear at least one piece of jester clothing. This can be a jester hat, jester suit, or even jester shoes. A bag of tricks will have ten individual tricks that you can perform as long as you have the mana and the prank points to perform them. You don't need much skill to perform these tricks, but they will be of little use if you do not practice both of the skills mentioned.<br><br>A jester needs gold to buy pranks to fill their bags, and they can only fill it up to 50,000 prank points before it is full. To add more gold to the bag, you must be next to a local jester or even the royal jester. Drag the gold onto the bag to fill it. The points will deplete as you use your tricks.<br><br>Double click the bag to open it and learn about the tricks you can do. In this first view, you can select an ability icon to do the ability, or you can click the button next to each icon to learn about the ability in more detail. There are also options to open quick bars for these abilities, and they come in two different layouts with two different sizes.<br><br>To have a title that is commensurate to your chosen profession, you can set your skill title to 'Beggar', which will give you the title of 'Jester'. You can also set your skill title to 'Psychology', which will give you the title of 'Joker'.<br><br>If this also interests you, jesters may have circus tents for sale. These require a plot of land already placed, and then you can place the tent on the plot of land. These are different from regular tents because they have two different colors at once. So if you have a circus tent, you can dye it one color (red for example). Then you can single click the tent and select the 'Next' option to switch it to the secondary color. Then you can dye the tent a different color (blue for example). When you place the tent, it will be in the colors of red and blue. If you want to reverse the pattern, chop the tent with an axe and then use the 'Next' option on the tent to swap the colors. Then you can build the tent on your plot of land again.<br><br>Throwing gloves are the preferred weapon for jesters, but you can use whatever weapon you wish. If you do use throwing gloves, however, you will have additional options for things to throw at your enemies. Instead of just rocks, darts, or knives...you will be able to throw tomatoes or playing cards. You would just need to set your throwing gloves to use that particular object to throw.<br><br>You may also use [Spells_Jester to see the commands to cast Jester spells";
+			return "Jesters are the entertainers of the land, juggling and leaping about, spreading humorous stories and trying to make others laugh. They beg for laughs and can use psychology on their audience to be more effective for the show. Jesters also have a mischievous side, which makes them able adventurers in their own way.<br><br>If you want to become a jester, you will need to hone your skills in begging and psychology of others. You will also need to get yourself a bag of tricks and some jester clothes to fill the role. Without these things, you will not be able to perform the comedic arts. Most jesters belong to the Thieves Guild, as they sometimes dabble in hiding, stealth, and sleight of hand. You, however, could pursue whatever secondary career you wish.<br><br>There are a few jesters around the land that can sell you such items, but the royal jester will not. These jesters can be found in taverns, ships, or hanging out with actors. As mentioned already, you must wear at least one piece of jester clothing. This can be a jester hat, jester suit, or even jester shoes. A bag of tricks will have ten individual tricks that you can perform as long as you have the mana and the prank points to perform them. You don't need much skill to perform these tricks, but they will be of little use if you do not practice both of the skills mentioned.<br><br>A jester needs gold to buy pranks to fill their bags, and they can only fill it up to 50,000 prank points before it is full. To add more gold to the bag, you must be next to a local jester or even the royal jester. Drag the gold onto the bag to fill it. The points will deplete as you use your tricks.<br><br>Double click the bag to open it and learn about the tricks you can do. In this first view, you can select an ability icon to do the ability, or you can click the button next to each icon to learn about the ability in more detail. You can also set up horizontal or vertical trick bars to use these abilities quickly from the Magic Toolbars section of [toolbars.<br><br>To have a title that is commensurate to your chosen profession, you can set your skill title to 'Beggar', which will give you the title of 'Jester'. You can also set your skill title to 'Psychology', which will give you the title of 'Joker'.<br><br>If this also interests you, jesters may have circus tents for sale. These require a plot of land already placed, and then you can place the tent on the plot of land. These are different from regular tents because they have two different colors at once. So if you have a circus tent, you can dye it one color (red for example). Then you can single click the tent and select the 'Next' option to switch it to the secondary color. Then you can dye the tent a different color (blue for example). When you place the tent, it will be in the colors of red and blue. If you want to reverse the pattern, chop the tent with an axe and then use the 'Next' option on the tent to swap the colors. Then you can build the tent on your plot of land again.<br><br>Throwing gloves are the preferred weapon for jesters, but you can use whatever weapon you wish. If you do use throwing gloves, however, you will have additional options for things to throw at your enemies. Instead of just rocks, darts, or knives...you will be able to throw tomatoes or playing cards. You would just need to set your throwing gloves to use that particular object to throw.<br><br>You may also use [Spells_Jester to see the commands to cast Jester spells";
 		}
 
 		public class BagOfTricksGump : Gump
@@ -154,32 +154,11 @@ namespace Server.Items
 					}
 				}
 
-				int v = -261;
-				AddButton(665, 330+v, 4005, 4005, 10, GumpButtonType.Reply, 0);
-				AddHtml( 705, 330+v, 106, 20, @"<BODY><BASEFONT Color=" + color + ">Large Column</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(665, 360+v, 4005, 4005, 20, GumpButtonType.Reply, 0);
-				AddHtml( 705, 360+v, 106, 20, @"<BODY><BASEFONT Color=" + color + ">Large Row</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(665, 390+v, 4005, 4005, 30, GumpButtonType.Reply, 0);
-				AddHtml( 705, 390+v, 106, 20, @"<BODY><BASEFONT Color=" + color + ">Small Column</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(665, 420+v, 4005, 4005, 40, GumpButtonType.Reply, 0);
-				AddHtml( 705, 420+v, 106, 20, @"<BODY><BASEFONT Color=" + color + ">Small Row</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(665, 450+v, 4017, 4017, 50, GumpButtonType.Reply, 0);
-				AddHtml( 705, 450+v, 106, 20, @"<BODY><BASEFONT Color=" + color + ">Close All</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(665, 480+v, 4020, 4020, 60, GumpButtonType.Reply, 0);
-				AddHtml( 705, 480+v, 106, 20, @"<BODY><BASEFONT Color=" + color + ">Cancel</BASEFONT></BODY>", (bool)false, (bool)false);
 			}
 
-			public override void OnResponse( NetState state, RelayInfo info ) 
+			public override void OnResponse( NetState state, RelayInfo info )
 			{
-				Mobile from = state.Mobile; 
-
-				if ( info.ButtonID > 0 && info.ButtonID < 60 )
-				{
-					from.CloseGump( typeof( TricksLargeRow ) );
-					from.CloseGump( typeof( TricksLargeColumn ) );
-					from.CloseGump( typeof( TricksSmallRow ) );
-					from.CloseGump( typeof( TricksSmallColumn ) );
-				}
+				Mobile from = state.Mobile;
 
 				if ( info.ButtonID > DETAIL_SPELL_ACTION_BASE )
 				{
@@ -193,135 +172,9 @@ namespace Server.Items
 					int spellID = info.ButtonID - CAST_SPELL_ACTION_BASE;
 					JesterSpellProvider.Cast(from, spellID);
 				}
-				else if ( info.ButtonID == 10 ){ from.SendGump( new TricksLargeColumn( from ) ); }
-				else if ( info.ButtonID == 20 ){ from.SendGump( new TricksLargeRow( from ) ); }
-				else if ( info.ButtonID == 30 ){ from.SendGump( new TricksSmallColumn( from ) ); }
-				else if ( info.ButtonID == 40 ){ from.SendGump( new TricksSmallRow( from ) ); }
 
 				if ( info.ButtonID > 20000 ){ from.SendSound( 0x4A ); }
 				else { from.PlaySound( 0x48 ); }
-			}
-		}
-
-		public class TricksLargeRow : Gump
-		{
-			public TricksLargeRow( Mobile from ): base( 50, 50 )
-			{
-				this.Closable=false;
-				this.Disposable=true;
-				this.Dragable=true;
-				this.Resizable=false;
-
-				AddPage(0);
-				AddImage(0, 0, 10864);
-				int index = 0;
-				foreach ( var definition in JesterSpellProvider.SpellDefinitions )
-				{
-					AddButton(77 + 50 * index, 0, definition.IconGraphic, definition.IconGraphic, definition.SpellID, GumpButtonType.Reply, 0);
-					index++;
-				}
-			}
-
-			public override void OnResponse( NetState state, RelayInfo info )
-			{
-				Mobile from = state.Mobile;
-				if ( JesterSpellProvider.GetDefinition( info.ButtonID ) != null ){ JesterSpellProvider.Cast( from, info.ButtonID ); }
-				if ( Server.Misc.GetPlayerInfo.isJester ( from ) )
-				{
-					from.SendGump( new TricksLargeRow( from ) );
-				}
-			}
-		}
-
-		public class TricksLargeColumn : Gump
-		{
-			public TricksLargeColumn( Mobile from ): base( 50, 50 )
-			{
-				this.Closable=false;
-				this.Disposable=true;
-				this.Dragable=true;
-				this.Resizable=false;
-
-				AddPage(0);
-				AddImage(0, 0, 10864);
-				int index = 0;
-				foreach ( var definition in JesterSpellProvider.SpellDefinitions )
-				{
-					AddButton(15, 53 + 50 * index, definition.IconGraphic, definition.IconGraphic, definition.SpellID, GumpButtonType.Reply, 0);
-					index++;
-				}
-			}
-
-			public override void OnResponse( NetState state, RelayInfo info )
-			{
-				Mobile from = state.Mobile;
-				if ( JesterSpellProvider.GetDefinition( info.ButtonID ) != null ){ JesterSpellProvider.Cast( from, info.ButtonID ); }
-				if ( Server.Misc.GetPlayerInfo.isJester ( from ) )
-				{
-					from.SendGump( new TricksLargeColumn( from ) );
-				}
-			}
-		}
-
-		public class TricksSmallRow : Gump
-		{
-			public TricksSmallRow( Mobile from ): base( 50, 50 )
-			{
-				this.Closable=false;
-				this.Disposable=true;
-				this.Dragable=true;
-				this.Resizable=false;
-
-				AddPage(0);
-				AddImage(0, 0, 10865);
-				int index = 0;
-				foreach ( var definition in JesterSpellProvider.SpellDefinitions )
-				{
-					int icon = definition.IconGraphic + 10; // Small icon variant
-					AddButton(43 + 33 * index, 0, icon, icon, definition.SpellID, GumpButtonType.Reply, 0);
-					index++;
-				}
-			}
-
-			public override void OnResponse( NetState state, RelayInfo info )
-			{
-				Mobile from = state.Mobile;
-				if ( JesterSpellProvider.GetDefinition( info.ButtonID ) != null ){ JesterSpellProvider.Cast( from, info.ButtonID ); }
-				if ( Server.Misc.GetPlayerInfo.isJester ( from ) )
-				{
-					from.SendGump( new TricksSmallRow( from ) );
-				}
-			}
-		}
-
-		public class TricksSmallColumn : Gump
-		{
-			public TricksSmallColumn( Mobile from ): base( 50, 50 )
-			{
-				this.Closable=false;
-				this.Disposable=true;
-				this.Dragable=true;
-				this.Resizable=false;
-
-				AddPage(0);
-				AddImage(0, 0, 10865);
-				int index = 0;
-				foreach ( var definition in JesterSpellProvider.SpellDefinitions )
-				{
-					int icon = definition.IconGraphic + 10; // Small icon variant
-					AddButton(7, 30 + 33 * index, icon, icon, definition.SpellID, GumpButtonType.Reply, 0);
-					index++;
-				}
-			}
-
-			public override void OnResponse( NetState state, RelayInfo info )
-			{
-				Mobile from = state.Mobile;
-				if ( JesterSpellProvider.GetDefinition( info.ButtonID ) != null ){ JesterSpellProvider.Cast( from, info.ButtonID ); }
-				if ( Server.Misc.GetPlayerInfo.isJester ( from ) )
-				{
-					from.SendGump( new TricksSmallColumn( from ) );
-				}
 			}
 		}
 

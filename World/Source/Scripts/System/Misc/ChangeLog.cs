@@ -1325,6 +1325,7 @@ namespace Server.Misc
 					builder.Append("- Craft - Break down now works on containers<br>");
 					builder.Append("- Craft - Experimental change to enable breaking down more items<br>");
 					builder.Append("- Gump - Shinobi spellbars are now accessible via [toolbars<br>");
+					builder.Append("- Gump - Jester spellbars are now accessible via [toolbars<br>");
 					builder.Append("- Item - Research bag now warns before destroying spellbooks<br>");
 					builder.Append("- Item - Journal quest tomes now warn before pickup<br>");
 					builder.Append("- Misc - Added discord announcement for stolen items<br>");
