@@ -1,30 +1,35 @@
 using System;
-using System.Collections;
-using Server;
 using Server.Targeting;
-using Server.Network;
 using Server.Items;
 
 namespace Server.Spells.Syth
 {
 	public class Absorption : SythSpell
 	{
-		public override int spellIndex { get { return 276; } }
-		public int CirclePower = 6;
-		public static int spellID = 276;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Syth.SythSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Syth.SythSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 276,
+					IconGraphic = 0x59E7,
+					Name = "Absorption",
+					PowerWords = "Taral Wai",
+					Description = "This power gives the essence of the Syth the ability to absorb most damaging magery spells, and the Syth then redirects those spells back at the one who cast it. The amount that a Syth can absorb is dependent on their power.",
+					ManaCost = 28,
+					TithingCost = 500,
+					MinSkill = 70,
+					TargetType = TargetFlags.None
+				},
 				203,
 				0
 			);
 
-		public Absorption( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public int CirclePower = 6;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+		public Absorption( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

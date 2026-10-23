@@ -213,16 +213,16 @@ namespace Server.Spells
 			Register( Jester.SurpriseGift.SpellInfo.SpellDefinition.SpellID, typeof( Jester.SurpriseGift ) ); // 269
 
 			// Syth abilities
-			Register( 270, typeof( Syth.Psychokinesis ) );
-			Register( 271, typeof( Syth.DeathGrip ) );
-			Register( 272, typeof( Syth.Projection ) );
-			Register( 273, typeof( Syth.ThrowSword ) );
-			Register( 274, typeof( Syth.SythSpeed ) );
-			Register( 275, typeof( Syth.SythLightning ) );
-			Register( 276, typeof( Syth.Absorption ) );
-			Register( 277, typeof( Syth.PsychicBlast ) );
-			Register( 278, typeof( Syth.DrainLife ) );
-			Register( 279, typeof( Syth.CloneBody ) );
+			Register( Syth.Psychokinesis.SpellInfo.SpellDefinition.SpellID, typeof( Syth.Psychokinesis ) );
+			Register( Syth.DeathGrip.SpellInfo.SpellDefinition.SpellID, typeof( Syth.DeathGrip ) );
+			Register( Syth.Projection.SpellInfo.SpellDefinition.SpellID, typeof( Syth.Projection ) );
+			Register( Syth.ThrowSword.SpellInfo.SpellDefinition.SpellID, typeof( Syth.ThrowSword ) );
+			Register( Syth.SythSpeed.SpellInfo.SpellDefinition.SpellID, typeof( Syth.SythSpeed ) );
+			Register( Syth.SythLightning.SpellInfo.SpellDefinition.SpellID, typeof( Syth.SythLightning ) );
+			Register( Syth.Absorption.SpellInfo.SpellDefinition.SpellID, typeof( Syth.Absorption ) );
+			Register( Syth.PsychicBlast.SpellInfo.SpellDefinition.SpellID, typeof( Syth.PsychicBlast ) );
+			Register( Syth.DrainLife.SpellInfo.SpellDefinition.SpellID, typeof( Syth.DrainLife ) );
+			Register( Syth.CloneBody.SpellInfo.SpellDefinition.SpellID, typeof( Syth.CloneBody ) );
 
 			// Jedi abilities
 			Register( Jedi.ForceGrip.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.ForceGrip ) );

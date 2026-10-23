@@ -1,28 +1,34 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Mobiles;
 
 namespace Server.Spells.Syth
 {
 	public class PsychicBlast : SythSpell
 	{
-		public override int spellIndex { get { return 277; } }
-		public int CirclePower = 6;
-		public static int spellID = 277;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Syth.SythSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Syth.SythSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 277,
+					IconGraphic = 0x59E2,
+					Name = "Psychic Blast",
+					PowerWords = "Wai Kusk",
+					Description = "Summon your rage to perform a mental attack that deals an amount of energy damage based upon your power as a Syth. Elemental Resistances may reduce damage done by this attack. The damage dealt can be between 80-125 points.",
+					ManaCost = 32,
+					TithingCost = 48,
+					MinSkill = 80,
+					TargetType = TargetFlags.Harmful
+				},
 				-1,
 				0
 			);
 
-		public PsychicBlast( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public int CirclePower = 6;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+		public PsychicBlast( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

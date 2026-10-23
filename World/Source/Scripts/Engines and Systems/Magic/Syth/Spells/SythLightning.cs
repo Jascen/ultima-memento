@@ -1,31 +1,36 @@
 using System;
 using System.Collections;
-using Server.Network;
-using Server.Items;
 using Server.Targeting;
-using Server.Regions;
 using Server.Mobiles;
 
 namespace Server.Spells.Syth
 {
 	public class SythLightning : SythSpell
 	{
-		public override int spellIndex { get { return 275; } }
-		public int CirclePower = 4;
-		public static int spellID = 275;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Syth.SythSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Syth.SythSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 275,
+					IconGraphic = 0x03F2,
+					Name = "Syth Lightning",
+					PowerWords = "Sutta Wo",
+					Description = "The power of Syth lightning can be massive, and the stronger the Syth, the more enemies that will be struck by the power of this lightning. The damage dealt will be around 12-75 points of energy damage for each that are struck.",
+					ManaCost = 24,
+					TithingCost = 32,
+					MinSkill = 60,
+					TargetType = TargetFlags.Harmful
+				},
 				203,
 				0
 			);
 
-		public SythLightning( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public int CirclePower = 4;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+		public SythLightning( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

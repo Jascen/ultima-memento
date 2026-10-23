@@ -42,5 +42,7 @@ namespace Server.SpellBars
 		Jedi_1,
 		Jedi_2,
 
+		Syth_1,
+		Syth_2,
 	}
 }

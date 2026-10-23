@@ -1,30 +1,35 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
 using Server.Items;
-using Server.Mobiles;
 
 namespace Server.Spells.Syth
 {
 	public class DeathGrip : SythSpell
 	{
-		public override int spellIndex { get { return 271; } }
-		public int CirclePower = 1;
-		public static int spellID = 271;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Syth.SythSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Syth.SythSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 271,
+					IconGraphic = 0x03EA,
+					Name = "Death Grip",
+					PowerWords = "Zayin Kun",
+					Description = "The Syth can reach out with their hatred and anger, psychically gripping a foe for 5-20 points of damage every few seconds. This effect lasts for 2-75 seconds. The more a Syth is skilled with swords and tactics, and their accumulated hatred and anger, increases the effectiveness of this power.",
+					ManaCost = 8,
+					TithingCost = 16,
+					MinSkill = 20,
+					TargetType = TargetFlags.Harmful
+				},
 				203,
 				0
 			);
 
-		public DeathGrip( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public int CirclePower = 1;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+		public DeathGrip( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

@@ -1,13 +1,9 @@
-using System;
-using Server; 
-using System.Collections;
 using System.Globalization;
 using Server.Items; 
 using Server.Misc; 
 using Server.Network; 
 using Server.Spells; 
 using Server.Spells.Syth; 
-using Server.Prompts;
 
 namespace Server.Gumps 
 { 
@@ -24,6 +20,40 @@ namespace Server.Gumps
 				return (m_Book.HasSpell(spellID));
 			else
 				return false;
+		}
+
+		private const int CAST_SPELL_ACTION_BASE = 100;
+
+		public struct SythMysticron
+		{
+			public readonly string Map;
+			public readonly string Dungeon;
+			public readonly string World;
+			public readonly string Lord;
+
+			public SythMysticron( string map, string dungeon, string world, string lord )
+			{
+				Map = map;
+				Dungeon = dungeon;
+				World = world;
+				Lord = lord;
+			}
+		}
+
+		public static SythMysticron GetMysticron( int spellID )
+		{
+			if ( spellID == Psychokinesis.SpellInfo.SpellDefinition.SpellID ) return new SythMysticron( "Sosaria", "the Fires of Hell", "Land of Sosaria", "Prince Myrhal of Rax" );
+			if ( spellID == DeathGrip.SpellInfo.SpellDefinition.SpellID ) return new SythMysticron( "Sosaria", "Dungeon Doom", "Land of Sosaria", "Lady Kath of Naelex" );
+			if ( spellID == Projection.SpellInfo.SpellDefinition.SpellID ) return new SythMysticron( "Sosaria", "the Ancient Pyramid", "Land of Sosaria", "Saint Kargoth" );
+			if ( spellID == ThrowSword.SpellInfo.SpellDefinition.SpellID ) return new SythMysticron( "Sosaria", "Dungeon Exodus", "Land of Sosaria", "Sir Maeril of Naelax" );
+			if ( spellID == SythSpeed.SpellInfo.SpellDefinition.SpellID ) return new SythMysticron( "Sosaria", "Dungeon Clues", "Land of Sosaria", "Lord Monduiz Dephaar" );
+			if ( spellID == SythLightning.SpellInfo.SpellDefinition.SpellID ) return new SythMysticron( "Sosaria", "the Mausoleum", "Island of Umber Veil", "Lord Androma of Gara" );
+			if ( spellID == Absorption.SpellInfo.SpellDefinition.SpellID ) return new SythMysticron( "Sosaria", "the City of the Dead", "Land of Ambrosia", "Sir Farian of Lirtham" );
+			if ( spellID == PsychicBlast.SpellInfo.SpellDefinition.SpellID ) return new SythMysticron( "Lodor", "Dungeon Wrong", "Land of Lodoria", "Lord Thyrian of Naelax" );
+			if ( spellID == DrainLife.SpellInfo.SpellDefinition.SpellID ) return new SythMysticron( "Lodor", "the Lodoria Catacombs", "Land of Lodoria", "Sir Minar of Darmen" );
+			if ( spellID == CloneBody.SpellInfo.SpellDefinition.SpellID ) return new SythMysticron( "Lodor", "Dungeon Deceit", "Land of Lodoria", "Sir Rezinar of Haxx" );
+
+			return default( SythMysticron );
 		}
 
 		public SythSpellbookGump( Mobile from, SythSpellbook book, int page ) : base( 25, 25 ) 
@@ -63,93 +93,25 @@ namespace Server.Gumps
 				if ( Server.Misc.GetPlayerInfo.isSyth ( from, true ) ){ AddHtml( 310, 85, 183, 20, @"<BODY><BASEFONT Color=#00FF06>You Are One With The Syth</BASEFONT></BODY>", (bool)false, (bool)false); }
 				else { AddHtml( 310, 85, 183, 20, @"<BODY><BASEFONT Color=#FF0000>You Are Not A Syth!</BASEFONT></BODY>", (bool)false, (bool)false); }
 
-				AddHtml( 105, 236, 246, 20, @"<BODY><BASEFONT Color=#FF0000>Open Horizontal Quick Bar</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(60, 236, 4005, 4005, 3, GumpButtonType.Reply, 0);
-				AddHtml( 105, 276, 246, 20, @"<BODY><BASEFONT Color=#FF0000>Open Vertical Quick Bar</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(60, 276, 4005, 4005, 4, GumpButtonType.Reply, 0);
-
-				int name_show = 3609; if ( m_Book.names > 0 ){ name_show = 4017; }
-
-				AddHtml( 105, 316, 246, 20, @"<BODY><BASEFONT Color=#FF0000>Vertical Bar Names</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(60, 316, name_show, name_show, 5, GumpButtonType.Reply, 0);
-
-				AddHtml( 350, 236, 246, 20, @"<BODY><BASEFONT Color=#FF0000>Close Quick Bars</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(305, 236, 4005, 4005, 9, GumpButtonType.Reply, 0);
+				AddHtml( 60, 236, 435, 60, @"<BODY><BASEFONT Color=#FF0000>Quick bars for these powers can be set up in the Magic Toolbars section of [toolbars</BASEFONT></BODY>", (bool)false, (bool)false);
 
 				AddHtml( 350, 316, 246, 20, @"<BODY><BASEFONT Color=#FF0000>Construct Laser Sword</BASEFONT></BODY>", (bool)false, (bool)false);
 				AddButton(305, 316, 4011, 4011, 6, GumpButtonType.Reply, 0);
 
-				string wordColor = "#FF0000";
+				int index = 0;
+				foreach ( SpellDefinition definition in SythSpellProvider.SpellDefinitions )
+				{
+					int x = index < 5 ? 0 : 370;
+					int y = 380 + ( index % 5 ) * 50;
+					index++;
 
-				wordColor = "#FF0000";
-				if ( HasSpell( from, 270 ) ){ wordColor = "#00FF06"; AddButton(100, 380, 4005, 4005, 370, GumpButtonType.Reply, 0); }
-				else { AddImage(100, 380, 4005 ); }
-				AddItem(60, 377, 19679);
-				AddHtml( 145, 380, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + Server.Spells.Syth.SythSpell.SpellInfo( 270, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(305, 380, 4011, 4011, 270, GumpButtonType.Reply, 0);
-
-				wordColor = "#FF0000"; 
-				if ( HasSpell( from, 271 ) ){ wordColor = "#00FF06"; AddButton(100, 430, 4005, 4005, 371, GumpButtonType.Reply, 0); }
-				else { AddImage(100, 430, 4005 ); }
-				AddItem(60, 427, 19679);
-				AddHtml( 145, 430, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + Server.Spells.Syth.SythSpell.SpellInfo( 271, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(305, 430, 4011, 4011, 271, GumpButtonType.Reply, 0);
-
-				wordColor = "#FF0000"; 
-				if ( HasSpell( from, 272 ) ){ wordColor = "#00FF06"; AddButton(100, 480, 4005, 4005, 372, GumpButtonType.Reply, 0); }
-				else { AddImage(100, 480, 4005 ); }
-				AddItem(60, 477, 19679);
-				AddHtml( 145, 480, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + Server.Spells.Syth.SythSpell.SpellInfo( 272, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(305, 480, 4011, 4011, 272, GumpButtonType.Reply, 0);
-
-				wordColor = "#FF0000"; 
-				if ( HasSpell( from, 273 ) ){ wordColor = "#00FF06"; AddButton(100, 530, 4005, 4005, 373, GumpButtonType.Reply, 0); }
-				else { AddImage(100, 530, 4005 ); }
-				AddItem(60, 527, 19679);
-				AddHtml( 145, 530, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + Server.Spells.Syth.SythSpell.SpellInfo( 273, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(305, 530, 4011, 4011, 273, GumpButtonType.Reply, 0);
-
-				wordColor = "#FF0000"; 
-				if ( HasSpell( from, 274 ) ){ wordColor = "#00FF06"; AddButton(100, 580, 4005, 4005, 374, GumpButtonType.Reply, 0); }
-				else { AddImage(100, 580, 4005 ); }
-				AddItem(60, 577, 19679);
-				AddHtml( 145, 580, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + Server.Spells.Syth.SythSpell.SpellInfo( 274, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(305, 580, 4011, 4011, 274, GumpButtonType.Reply, 0);
-
-				wordColor = "#FF0000"; 
-				if ( HasSpell( from, 275 ) ){ wordColor = "#00FF06"; AddButton(470, 380, 4005, 4005, 375, GumpButtonType.Reply, 0); }
-				else { AddImage(470, 380, 4005 ); }
-				AddItem(430, 377, 19679);
-				AddHtml( 515, 380, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + Server.Spells.Syth.SythSpell.SpellInfo( 275, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(675, 380, 4011, 4011, 275, GumpButtonType.Reply, 0);
-
-				wordColor = "#FF0000"; 
-				if ( HasSpell( from, 276 ) ){ wordColor = "#00FF06"; AddButton(470, 430, 4005, 4005, 376, GumpButtonType.Reply, 0); }
-				else { AddImage(470, 430, 4005 ); }
-				AddItem(430, 427, 19679);
-				AddHtml( 515, 430, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + Server.Spells.Syth.SythSpell.SpellInfo( 276, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(675, 430, 4011, 4011, 276, GumpButtonType.Reply, 0);
-
-				wordColor = "#FF0000"; 
-				if ( HasSpell( from, 277 ) ){ wordColor = "#00FF06"; AddButton(470, 480, 4005, 4005, 377, GumpButtonType.Reply, 0); }
-				else { AddImage(470, 480, 4005 ); }
-				AddItem(430, 477, 19679);
-				AddHtml( 515, 480, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + Server.Spells.Syth.SythSpell.SpellInfo( 277, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(675, 480, 4011, 4011, 277, GumpButtonType.Reply, 0);
-
-				wordColor = "#FF0000"; 
-				if ( HasSpell( from, 278 ) ){ wordColor = "#00FF06"; AddButton(470, 530, 4005, 4005, 378, GumpButtonType.Reply, 0); }
-				else { AddImage(470, 530, 4005 ); }
-				AddItem(430, 527, 19679);
-				AddHtml( 515, 530, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + Server.Spells.Syth.SythSpell.SpellInfo( 278, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(675, 530, 4011, 4011, 278, GumpButtonType.Reply, 0);
-
-				wordColor = "#FF0000"; 
-				if ( HasSpell( from, 279 ) ){ wordColor = "#00FF06"; AddButton(470, 580, 4005, 4005, 379, GumpButtonType.Reply, 0); }
-				else { AddImage(470, 580, 4005 ); }
-				AddItem(430, 577, 19679);
-				AddHtml( 515, 580, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + Server.Spells.Syth.SythSpell.SpellInfo( 279, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddButton(675, 580, 4011, 4011, 279, GumpButtonType.Reply, 0);
+					string wordColor = "#FF0000";
+					if ( HasSpell( from, definition.SpellID ) ){ wordColor = "#00FF06"; AddButton(100 + x, y, 4005, 4005, CAST_SPELL_ACTION_BASE + definition.SpellID, GumpButtonType.Reply, 0); }
+					else { AddImage(100 + x, y, 4005 ); }
+					AddItem(60 + x, y - 3, 19679);
+					AddHtml( 145 + x, y, 154, 20, @"<BODY><BASEFONT Color=" + wordColor + ">" + definition.Name + "</BASEFONT></BODY>", (bool)false, (bool)false);
+					AddButton(305 + x, y, 4011, 4011, definition.SpellID, GumpButtonType.Reply, 0);
+				}
 			}
 			else if ( page == 2 )
 			{
@@ -158,7 +120,7 @@ namespace Server.Gumps
 						lowreg = "";
 
 				AddHtml( 50, 40, 437, 20, @"<BODY><BASEFONT Color=#FF0000>DATACRON OF SYTH KNOWLEDGE</BASEFONT></BODY>", (bool)false, (bool)false);
-				AddHtml( 57, 77, 652, 528, @"<BODY><BASEFONT Color=#00FF06>You can hear the voice of Malek the Syth Lord from within your own mind. He tells you that if you are worthy of the path, you can one day become a powerful Syth yourself. A Syth pursues their goals with their psychic abilities and their sword. Any other type of weapon is virtually useless to a Syth. <br><br>He continues to explain that the knowledge this datacron contained was stolen by ten traitors of the Syth order. You will need to find their tombs to obtain each of the Syth powers once wielded by Malak. Each power is described within the datacron, and the location of where an aspiring Syth may find the tomb. Find the tomb, speak the words in the ancient Syth language, and claim your prize.<br><br>To be one with the Syth, you need to have negative karma. The lower your karma, the more rage you possess and thus your powers will have a potential of greater effect. To use a Syth power, one would need an equal amount of skill in both psychology and sword fighting. Tactics can help a Syth not only fight better, but tactics (along with sword fighting) can also increase the effectiveness of Syth powers. There are certain criteria to be a Syth. They must always wield a sword and wear clothing or trinkets named after our order. These could be either trinkets, robes, hoods, cowls, or shields. Metallic helmets also can be that of the Syth, and thus count as well. Only one piece of clothing, trinket, or helm need be worn at a time. Without a datacron of their own, a Syth cannot be. Since datacrons cannot be created on this primitive world, you will have to settle for mine. Keep it with you at all times or you will not be one with the Syth. If you find clothing, trinkets, or helms that you wish to keep, place them onto the datacron and it will transform the item into something appropriate for a Syth. <br><br>A Syth cannot rely solely on the power of the mind, as we need the energy we can drain from syrcarak crystals to power our datacrons and give us the force we need to unleash our power. We could not find syrcarak crystals on this world, as they are normally from the Syth home world. We did discover, however, that demonic creatures have an element of syrcarak crystals within their bones. This was discovered by Asajj Ventress by accident, when she cleaved a balron in two. It was a discovery that allowed the Syth to exist here, and you must know this if you pursue this life. With this new found knowledge, we spoke with the demon in the Black Magic Guild. They offered to exchange a syrcarak crystal for every five gold we give him. The necromancers call these crystals hell shards, but no matter the name, we need them. Seek this demon out, and give him the gold he craves. Then you will have the crystals for this datacron and your journey can begin. Otherwise, you must hunt down the demons of the land and claim what you need from their corpses." + lowreg + "<br><br>If you want to have the grand title of 'Syth', then make sure your skill title is set to that of psychology and that you also follow the Syth ways. Syth are looked upon as a scourge of this world, and many believe us to be death knights at times. Their minds cannot comprehend the origin of our power and that they do not come from spiritual demons or gods. It is the raw power of the raging mind that gives the Syth strength. Nevertheless, we Syth seem to be embraced by the Black Magic Guild and have also been welcome on Dracula’s island to build a home and live. Once a Syth becomes powerful, city guards will attempt to slay you and villages will not welcome you into their borders. We did find two settlements that paid us no attention, and one was a small city of Umbra.<br><br>Go forth, and bring order to this world. Remain in the shadows but rule from the darkness!<br><br>You can use these powers by a typed command, which allows you to make macros for using these if you want. Each of these commands are listed below:<br><br>[Psychokinesis<br><br>[DeathGrip<br><br>[Projection<br><br>[ThrowSword<br><br>[SythSpeed<br><br>[SythLightning<br><br>[Absorption<br><br>[PsychicBlast<br><br>[DrainLife<br><br>[CloneBody <br><br><br><br></BASEFONT></BODY>", (bool)false, (bool)true);
+				AddHtml( 57, 77, 652, 528, @"<BODY><BASEFONT Color=#00FF06>You can hear the voice of Malek the Syth Lord from within your own mind. He tells you that if you are worthy of the path, you can one day become a powerful Syth yourself. A Syth pursues their goals with their psychic abilities and their sword. Any other type of weapon is virtually useless to a Syth. <br><br>He continues to explain that the knowledge this datacron contained was stolen by ten traitors of the Syth order. You will need to find their tombs to obtain each of the Syth powers once wielded by Malak. Each power is described within the datacron, and the location of where an aspiring Syth may find the tomb. Find the tomb, speak the words in the ancient Syth language, and claim your prize.<br><br>To be one with the Syth, you need to have negative karma. The lower your karma, the more rage you possess and thus your powers will have a potential of greater effect. To use a Syth power, one would need an equal amount of skill in both psychology and sword fighting. Tactics can help a Syth not only fight better, but tactics (along with sword fighting) can also increase the effectiveness of Syth powers. There are certain criteria to be a Syth. They must always wield a sword and wear clothing or trinkets named after our order. These could be either trinkets, robes, hoods, cowls, or shields. Metallic helmets also can be that of the Syth, and thus count as well. Only one piece of clothing, trinket, or helm need be worn at a time. Without a datacron of their own, a Syth cannot be. Since datacrons cannot be created on this primitive world, you will have to settle for mine. Keep it with you at all times or you will not be one with the Syth. If you find clothing, trinkets, or helms that you wish to keep, place them onto the datacron and it will transform the item into something appropriate for a Syth. <br><br>A Syth cannot rely solely on the power of the mind, as we need the energy we can drain from syrcarak crystals to power our datacrons and give us the force we need to unleash our power. We could not find syrcarak crystals on this world, as they are normally from the Syth home world. We did discover, however, that demonic creatures have an element of syrcarak crystals within their bones. This was discovered by Asajj Ventress by accident, when she cleaved a balron in two. It was a discovery that allowed the Syth to exist here, and you must know this if you pursue this life. With this new found knowledge, we spoke with the demon in the Black Magic Guild. They offered to exchange a syrcarak crystal for every five gold we give him. The necromancers call these crystals hell shards, but no matter the name, we need them. Seek this demon out, and give him the gold he craves. Then you will have the crystals for this datacron and your journey can begin. Otherwise, you must hunt down the demons of the land and claim what you need from their corpses." + lowreg + "<br><br>If you want to have the grand title of 'Syth', then make sure your skill title is set to that of psychology and that you also follow the Syth ways. Syth are looked upon as a scourge of this world, and many believe us to be death knights at times. Their minds cannot comprehend the origin of our power and that they do not come from spiritual demons or gods. It is the raw power of the raging mind that gives the Syth strength. Nevertheless, we Syth seem to be embraced by the Black Magic Guild and have also been welcome on Dracula’s island to build a home and live. Once a Syth becomes powerful, city guards will attempt to slay you and villages will not welcome you into their borders. We did find two settlements that paid us no attention, and one was a small city of Umbra.<br><br>Go forth, and bring order to this world. Remain in the shadows but rule from the darkness!<br><br>You can use these powers by a typed command, which allows you to make macros for using these if you want. Type [Spells_Syth to see each of these commands.<br><br></BASEFONT></BODY>", (bool)false, (bool)true);
 				AddButton(691, 38, 4017, 4017, 1, GumpButtonType.Reply, 0);
 				AddItem(634, 34, 19680);
 			}
@@ -211,50 +173,53 @@ namespace Server.Gumps
 					AddButton(97, 538, 4005, 4005, 8, GumpButtonType.Reply, 0);
 				}
 			}
-			else if ( page >= 270 && page < 280 )
+			else if ( SythSpellProvider.GetDefinition( page ) != null )
 			{
+				SpellDefinition definition = SythSpellProvider.GetDefinition( page );
+				SythMysticron mysticron = GetMysticron( page );
+
 				AddHtml( 50, 40, 437, 20, @"<BODY><BASEFONT Color=#FF0000>DATACRON OF SYTH KNOWLEDGE</BASEFONT></BODY>", (bool)false, (bool)false);
 				AddButton(691, 38, 4017, 4017, 1, GumpButtonType.Reply, 0);
 
 				AddImage(517, 43, 11426);
 				AddItem(307, 82, 19679);
-				AddHtml( 114, 83, 154, 20, @"<BODY><BASEFONT Color=#00FF06>" + Server.Spells.Syth.SythSpell.SpellInfo( page, 1 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
+				AddHtml( 114, 83, 154, 20, @"<BODY><BASEFONT Color=#00FF06>" + definition.Name + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
-				AddHtml( 57, 286, 652, 186, @"<BODY><BASEFONT Color=#00FF06>" + Server.Spells.Syth.SythSpell.SpellInfo( page, 0 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
+				AddHtml( 57, 286, 652, 186, @"<BODY><BASEFONT Color=#00FF06>" + definition.Description + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
-				int prev = m_Book.page - 1; if ( prev < 270 ){ prev = 279; }
-				int next = m_Book.page + 1; if ( next > 279 ){ next = 270; }
+				int prev = m_Book.page - 1; if ( prev < SythSpellProvider.FirstSpellId ){ prev = SythSpellProvider.LastSpellId; }
+				int next = m_Book.page + 1; if ( next > SythSpellProvider.LastSpellId ){ next = SythSpellProvider.FirstSpellId; }
 
-				AddImage(56, 73, ( Int32.Parse( Server.Spells.Syth.SythSpell.SpellInfo( page, 11 ) ) ), 0x22);
+				AddImage(56, 73, definition.IconGraphic, 0x22);
 
 				AddButton(45, 586, 4014, 4014, prev, GumpButtonType.Reply, 0);
 				AddButton(691, 586, 4005, 4005, next, GumpButtonType.Reply, 0);
 
 				AddItem(46, 132, 16314);
 					AddHtml( 115, 135, 70, 20, @"<BODY><BASEFONT Color=#FF0000>Skill:</BASEFONT></BODY>", (bool)false, (bool)false);
-						AddHtml( 210, 135, 54, 20, @"<BODY><BASEFONT Color=#00FF06>" + Server.Spells.Syth.SythSpell.SpellInfo( page, 2 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
+						AddHtml( 210, 135, 54, 20, @"<BODY><BASEFONT Color=#00FF06>" + definition.MinSkill + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
 				AddItem(63, 182, 9698);
 					AddHtml( 115, 185, 70, 20, @"<BODY><BASEFONT Color=#FF0000>Mana:</BASEFONT></BODY>", (bool)false, (bool)false);
-						AddHtml( 210, 185, 54, 20, @"<BODY><BASEFONT Color=#00FF06>" + Server.Spells.Syth.SythSpell.SpellInfo( page, 3 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
+						AddHtml( 210, 185, 54, 20, @"<BODY><BASEFONT Color=#00FF06>" + definition.ManaCost + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
 				AddItem(54, 232, 0x3003, 0x869);
 					AddHtml( 115, 235, 70, 20, @"<BODY><BASEFONT Color=#FF0000>Crystals:</BASEFONT></BODY>", (bool)false, (bool)false);
-						AddHtml( 210, 235, 54, 20, @"<BODY><BASEFONT Color=#00FF06>" + Server.Spells.Syth.SythSpell.SpellInfo( page, 10 ) + "</BASEFONT></BODY>", (bool)false, (bool)false);
+						AddHtml( 210, 235, 54, 20, @"<BODY><BASEFONT Color=#00FF06>" + definition.TithingCost + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
 				if ( HasSpell( from, page ) ){ AddHtml( 352, 82, 154, 20, @"<BODY><BASEFONT Color=#00FF06>Learned</BASEFONT></BODY>", (bool)false, (bool)false); }
 				else
 				{
 					AddHtml( 352, 82, 154, 20, @"<BODY><BASEFONT Color=#FF0000>Not Learned</BASEFONT></BODY>", (bool)false, (bool)false);
 
-					string hidden = "You can find the Syth Mysticron of " + Server.Spells.Syth.SythSpell.SpellInfo( page, 1 ) + " at " + Server.Spells.Syth.SythSpell.SpellInfo( page, 6 ) + " in the " + Server.Spells.Syth.SythSpell.SpellInfo( page, 7 ) + ".";
-					hidden = hidden + " It is hidden in the tomb of a Syth Lord known as " + Server.Spells.Syth.SythSpell.SpellInfo( page, 8 ) + ", and it can be revealed by speaking the words '" + Server.Spells.Syth.SythSpell.SpellInfo( page, 4 ) + "'. The last known coordinates of the tomb's outer entrance is:<br><br>";
+					string hidden = "You can find the Syth Mysticron of " + definition.Name + " at " + mysticron.Dungeon + " in the " + mysticron.World + ".";
+					hidden = hidden + " It is hidden in the tomb of a Syth Lord known as " + mysticron.Lord + ", and it can be revealed by speaking the words '" + definition.PowerWords + "'. The last known coordinates of the tomb's outer entrance is:<br><br>";
 
-					string map = Server.Spells.Syth.SythSpell.SpellInfo( page, 5 );
+					string map = mysticron.Map;
 					Map land = Map.Sosaria;
 						if ( map == "Lodor" ){ land = Map.Lodor; }
 
-					hidden = hidden + Server.Misc.Worlds.GetAreaEntrance( 0, "" + Server.Spells.Syth.SythSpell.SpellInfo( page, 6 ) + "", land, out placer, out xc, out yc );
+					hidden = hidden + Server.Misc.Worlds.GetAreaEntrance( 0, mysticron.Dungeon, land, out placer, out xc, out yc );
 
 					AddHtml( 57, 480, 664, 100, @"<BODY><BASEFONT Color=#FF0000>" + hidden + "</BASEFONT></BODY>", (bool)false, (bool)false);
 
@@ -264,7 +229,7 @@ namespace Server.Gumps
 
 				if ( Server.Misc.GetPlayerInfo.isSyth ( from, true ) )
 				{
-					if ( Server.Spells.Syth.SythSpell.GetSythSkill( from, ( Int32.Parse( Server.Spells.Syth.SythSpell.SpellInfo( page, 2 ) ) ) ) )
+					if ( Server.Spells.Syth.SythSpell.GetSythSkill( from, definition.MinSkill ) )
 					{
 						AddHtml( 352, 226, 300, 20, @"<BODY><BASEFONT Color=#00FF06>You Are One With The Syth</BASEFONT></BODY>", (bool)false, (bool)false);
 					}
@@ -336,27 +301,17 @@ namespace Server.Gumps
 				from.SendGump( new SythSpellbookGump( from, m_Book, pg ) );
 				from.SendGump( new Sextants.MapGump( from, placer, xc, yc, null ) );
 			}
-			else if ( info.ButtonID >= 270 && info.ButtonID < 280 )
+			else if ( SythSpellProvider.GetDefinition( info.ButtonID ) != null )
 			{
 				m_Book.page = info.ButtonID;
 				from.SendSound( 0x54B );
 				int page = info.ButtonID;
 				from.SendGump( new SythSpellbookGump( from, m_Book, page ) );
 			}
-			else if ( info.ButtonID >= 370 )
+			else if ( SythSpellProvider.GetDefinition( info.ButtonID - CAST_SPELL_ACTION_BASE ) != null )
 			{
 				m_Book.page = 1;
-				int spell = info.ButtonID - 100;
-				if ( spell == 270 && HasSpell( from, 270 ) ){ new Psychokinesis( from, null ).Cast(); }
-				else if ( spell == 271 && HasSpell( from, 271 ) ){ new DeathGrip( from, null ).Cast(); }
-				else if ( spell == 272 && HasSpell( from, 272 ) ){ new Projection( from, null ).Cast(); }
-				else if ( spell == 273 && HasSpell( from, 273 ) ){ new ThrowSword( from, null ).Cast(); }
-				else if ( spell == 274 && HasSpell( from, 274 ) ){ new SythSpeed( from, null ).Cast(); }
-				else if ( spell == 275 && HasSpell( from, 275 ) ){ new SythLightning( from, null ).Cast(); }
-				else if ( spell == 276 && HasSpell( from, 276 ) ){ new Absorption( from, null ).Cast(); }
-				else if ( spell == 277 && HasSpell( from, 277 ) ){ new PsychicBlast( from, null ).Cast(); }
-				else if ( spell == 278 && HasSpell( from, 278 ) ){ new DrainLife( from, null ).Cast(); }
-				else if ( spell == 279 && HasSpell( from, 279 ) ){ new CloneBody( from, null ).Cast(); }
+				SythSpellProvider.Cast( from, info.ButtonID - CAST_SPELL_ACTION_BASE );
 
 				from.SendGump( new SythSpellbookGump( from, m_Book, 1 ) );
 				from.SendSound( 0x54B );
@@ -365,14 +320,6 @@ namespace Server.Gumps
 			{
 				m_Book.page = 2;
 				from.SendGump( new SythSpellbookGump( from, m_Book, 2 ) );
-				from.SendSound( 0x54B );
-			}
-			else if ( info.ButtonID == 3 ){ from.SendSound( 0x54D ); from.CloseGump( typeof( Server.Items.SythSpellbook.PowerColumn ) ); from.CloseGump( typeof( Server.Items.SythSpellbook.PowerRow ) ); from.SendGump( new Server.Items.SythSpellbook.PowerRow( from, m_Book ) ); }
-			else if ( info.ButtonID == 4 ){ from.SendSound( 0x54D ); from.CloseGump( typeof( Server.Items.SythSpellbook.PowerColumn ) ); from.CloseGump( typeof( Server.Items.SythSpellbook.PowerRow ) ); from.SendGump( new Server.Items.SythSpellbook.PowerColumn( from, m_Book ) ); }
-			else if ( info.ButtonID == 5 )
-			{
-				if ( m_Book.names == 1 ){ m_Book.names = 0; } else { m_Book.names = 1; }
-				from.SendGump( new SythSpellbookGump( from, m_Book, 1 ) );
 				from.SendSound( 0x54B );
 			}
 			else if ( info.ButtonID == 6 )
@@ -402,7 +349,6 @@ namespace Server.Gumps
 					from.PlaySound( 0x653 );
 				}
 			}
-			else if ( info.ButtonID == 9 ){ from.SendSound( 0x54D ); from.CloseGump( typeof( Server.Items.SythSpellbook.PowerColumn ) ); from.CloseGump( typeof( Server.Items.SythSpellbook.PowerRow ) );  }
 			else if ( m_Book.page > 1 )
 			{
 				m_Book.page = 1;

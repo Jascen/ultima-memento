@@ -1,31 +1,35 @@
 using System;
-using System.Collections;
-using Server.Network;
 using Server.Items;
 using Server.Targeting;
-using Server.Regions;
-using Server.Mobiles;
 
 namespace Server.Spells.Syth
 {
 	public class CloneBody : SythSpell
 	{
-		public override int spellIndex { get { return 279; } }
-		public int CirclePower = 8;
-		public static int spellID = 279;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Syth.SythSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Syth.SythSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 279,
+					IconGraphic = 0x08D5,
+					Name = "Clone",
+					PowerWords = "Itsu Sutta",
+					Description = "This power allows the Syth to create a cloning crystal that can hold the Syth's genetic pattern. If the Syth meets an untimely end, the crystal will activate in 30 seconds and create a clone body that the Syth's soul can then occupy. These crystal are quite fragile so you would need to make sure the crystal did not crumble while you were resting for long periods of time.",
+					ManaCost = 40,
+					TithingCost = 250,
+					MinSkill = 100,
+					TargetType = TargetFlags.None
+				},
 				203,
 				0
 			);
 
-		public CloneBody( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public int CirclePower = 8;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+		public CloneBody( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

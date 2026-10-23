@@ -1,13 +1,11 @@
 using System;
 using Server.Network;
 using Server.Items;
-using Server.Commands;
 
 namespace Server.Spells.Syth
 {
 	public abstract class SythSpell : Spell
 	{
-		public virtual int spellIndex { get { return 1; } }
 		public abstract int RequiredTithing { get; }
 		public abstract double RequiredSkill { get; }
 		public abstract int RequiredMana{ get; }
@@ -22,62 +20,11 @@ namespace Server.Spells.Syth
 
 		public static string SpellDescription( int spell )
 		{
-			string txt = "This contains the knowledge of a Syth ability: " + SpellInfo( spell, 0 ) + "";
+			SpellDefinition definition = SythSpellProvider.GetDefinition( spell );
+			if ( definition == null )
+				return "";
 
-			return txt + " It requires a Syth to be at least a " + SpellInfo( spell, 2 ) + " in ability.";
-		}
-
-		public static string SpellInfo( int spellID, int slice )
-		{
-			string value = "";
-			string name = "";
-			string mantra = "";
-			string map = "";
-			string dungeon = "";
-			string syth = "";
-			string world = "";
-			string scroll = "";
-			string describe = "";
-			string mana = "";
-			string skill = "";
-			string crystal = "";
-			string icon = "";
-
-			if ( spellID == 270 ){ name = "Psychokinesis"; icon="1038"; crystal = "6"; skill = "10"; mana = "5"; mantra = "Dzwol Hyal"; map = "Sosaria"; dungeon = "the Fires of Hell"; world = "Land of Sosaria"; syth = "Prince Myrhal of Rax"; scroll = "SythDatacron01"; 
-				describe = "Allows a Syth to use or move an object that is out of reach. Can be used to set off some Chest Traps from a safe distance as well."; }
-			else if ( spellID == 271 ){ name = "Death Grip"; icon="1002"; crystal = "16"; skill = "20"; mana = "8"; mantra = "Zayin Kun"; map = "Sosaria"; dungeon = "Dungeon Doom"; world = "Land of Sosaria"; syth = "Lady Kath of Naelex"; scroll = "SythDatacron02"; 
-				describe = "The Syth can reach out with their hatred and anger, psychically gripping a foe for 5-20 points of damage every few seconds. This effect lasts for 2-75 seconds. The more a Syth is skilled with swords and tactics, and their accumulated hatred and anger, increases the effectiveness of this power."; }
-			else if ( spellID == 272 ){ name = "Projection"; icon="21287"; crystal = "24"; skill = "30"; mana = "12"; mantra = "Rhak Skuri"; map = "Sosaria"; dungeon = "the Ancient Pyramid"; world = "Land of Sosaria"; syth = "Saint Kargoth"; scroll = "SythDatacron03"; 
-				describe = "This power allows the Syth to create a projection of themselves that can distract foes from the Syth themselves. This projection contains physical attributes as the psychic energy of the Syth can maintain the illusion for up to about 3 minutes, depending on how powerful they are."; }
-			else if ( spellID == 273 ){ name = "Throw Sword"; icon="1005"; crystal = "12"; skill = "40"; mana = "16"; mantra = "Chwit Sutta"; map = "Sosaria"; dungeon = "Dungeon Exodus"; world = "Land of Sosaria"; syth = "Sir Maeril of Naelax"; scroll = "SythDatacron04"; 
-				describe = "The Syth can throw their equipped sword at an enemy, doing not only the sword's normal damage but also an extra 17-53 points of damage. The types of resistances that the sword inflicts damage on match that of the sword. The sword quickly returns to the Syth's hand upon throwing it."; }
-			else if ( spellID == 274 ){ name = "Speed"; icon="1043"; crystal = "80"; skill = "50"; mana = "20"; mantra = "Qyasik Tukata"; map = "Sosaria"; dungeon = "Dungeon Clues"; world = "Land of Sosaria"; syth = "Lord Monduiz Dephaar"; scroll = "SythDatacron05"; 
-				describe = "This increases the running speed of the Syth for about 10-25 minutes, making them run as fast as a stallion. This power cannot be called upon within certain areas and will often cease to function when entering those areas."; }
-			else if ( spellID == 275 ){ name = "Syth Lightning"; icon="1010"; crystal = "32"; skill = "60"; mana = "24"; mantra = "Sutta Wo"; map = "Sosaria"; dungeon = "the Mausoleum"; world = "Island of Umber Veil"; syth = "Lord Androma of Gara"; scroll = "SythDatacron06"; 
-				describe = "The power of Syth lightning can be massive, and the stronger the Syth, the more enemies that will be struck by the power of this lightning. The damage dealt will be around 12-75 points of energy damage for each that are struck."; }
-			else if ( spellID == 276 ){ name = "Absorption"; icon="23015"; crystal = "500"; skill = "70"; mana = "28"; mantra = "Taral Wai"; map = "Sosaria"; dungeon = "the City of the Dead"; world = "Land of Ambrosia"; syth = "Sir Farian of Lirtham"; scroll = "SythDatacron07"; 
-				describe = "This power gives the essence of the Syth the ability to absorb most damaging magery spells, and the Syth then redirects those spells back at the one who cast it. The amount that a Syth can absorb is dependent on their power."; }
-			else if ( spellID == 277 ){ name = "Psychic Blast"; icon="23010"; crystal = "48"; skill = "80"; mana = "32"; mantra = "Wai Kusk"; map = "Lodor"; dungeon = "Dungeon Wrong"; world = "Land of Lodoria"; syth = "Lord Thyrian of Naelax"; scroll = "SythDatacron08"; 
-				describe = "Summon your rage to perform a mental attack that deals an amount of energy damage based upon your power as a Syth. Elemental Resistances may reduce damage done by this attack. The damage dealt can be between 80-125 points."; }
-			else if ( spellID == 278 ){ name = "Drain Life"; icon="1026"; crystal = "52"; skill = "90"; mana = "36"; mantra = "Derriphan Tyuk"; map = "Lodor"; dungeon = "the Lodoria Catacombs"; world = "Land of Lodoria"; syth = "Sir Minar of Darmen"; scroll = "SythDatacron09"; 
-				describe = "This power will drain about 10-15 points of life, every few seconds, from a creature for 10-60 seconds, where such life is transferred to the Syth. This power cannot affect supernatural creatures, constructs, golems, or elementals."; }
-			else if ( spellID == 279 ){ name = "Clone"; icon="2261"; crystal = "250"; skill = "100"; mana = "40"; mantra = "Itsu Sutta"; map = "Lodor"; dungeon = "Dungeon Deceit"; world = "Land of Lodoria"; syth = "Sir Rezinar of Haxx"; scroll = "SythDatacron10"; 
-				describe = "This power allows the Syth to create a cloning crystal that can hold the Syth's genetic pattern. If the Syth meets an untimely end, the crystal will activate in 30 seconds and create a clone body that the Syth's soul can then occupy. These crystal are quite fragile so you would need to make sure the crystal did not crumble while you were resting for long periods of time."; }
-
-			if ( slice == 1 ){ value = name; }
-			else if ( slice == 2 ){ value = skill; }
-			else if ( slice == 3 ){ value = mana; }
-			else if ( slice == 4 ){ value = mantra; }
-			else if ( slice == 5 ){ value = map; }
-			else if ( slice == 6 ){ value = dungeon; }
-			else if ( slice == 7 ){ value = world; }
-			else if ( slice == 8 ){ value = syth; }
-			else if ( slice == 9 ){ value = scroll; }
-			else if ( slice == 10 ){ value = crystal; }
-			else if ( slice == 11 ){ value = icon; }
-			else { value = describe; }
-
-			return value;
+			return "This contains the knowledge of a Syth ability: " + definition.Description + " It requires a Syth to be at least a " + definition.MinSkill + " in ability.";
 		}
 
 		public static bool SythNotIllegal( Mobile from, bool checkSword )
@@ -381,40 +328,5 @@ namespace Server.Spells.Syth
 
 			return from.Skills[SkillName.Psychology].Value;
 		}
-
-		public static bool HasSpell( Mobile from, int spellID )
-		{
-			Spellbook book = Spellbook.Find( from, spellID );
-
-			return ( book != null && book.HasSpell( spellID ) );
-		}
-
-		public static void CastSpell( Mobile from, int spell, bool validate = true ) //////////////////////////////////////////////////////////////////////////////////////
-		{
-			if ( validate && !Server.Misc.GetPlayerInfo.isSyth( from, true ) )
-			{
-				from.SendMessage( "Your Syth Powers Are Not Strong Enough!" );
-				return;
-			}
-
-			if ( HasSpell( from, spell ) )
-			{
-				if ( spell == 270 ){ InvokeCommand( "Psychokinesis", from ); }
-				else if ( spell == 271 ){ InvokeCommand( "DeathGrip", from ); }
-				else if ( spell == 272 ){ InvokeCommand( "Projection", from ); }
-				else if ( spell == 273 ){ InvokeCommand( "ThrowSword", from ); }
-				else if ( spell == 274 ){ InvokeCommand( "SythSpeed", from ); }
-				else if ( spell == 275 ){ InvokeCommand( "SythLightning", from ); }
-				else if ( spell == 276 ){ InvokeCommand( "Absorption", from ); }
-				else if ( spell == 277 ){ InvokeCommand( "PsychicBlast", from ); }
-				else if ( spell == 278 ){ InvokeCommand( "DrainLife", from ); }
-				else if ( spell == 279 ){ InvokeCommand( "CloneBody", from ); }
-			}
-		}
-
-        public static void InvokeCommand( string c, Mobile from )
-        {
-            CommandSystem.Handle(from, String.Format("{0}{1}", CommandSystem.Prefix, c));
-        }
 	}
 }

@@ -14,5 +14,6 @@ namespace Server.SpellBars
 		Shinobi,
 		Jester,
 		Jedi,
+		Syth,
 	}
 }

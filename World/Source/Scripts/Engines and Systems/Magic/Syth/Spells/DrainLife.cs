@@ -1,8 +1,4 @@
 using System;
-using Server;
-using System.Collections;
-using Server.Network;
-using System.Text;
 using Server.Items;
 using Server.Mobiles;
 using Server.Targeting;
@@ -11,22 +7,30 @@ namespace Server.Spells.Syth
 {
 	public class DrainLife : SythSpell
 	{
-		public override int spellIndex { get { return 278; } }
-		public int CirclePower = 7;
-		public static int spellID = 278;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Syth.SythSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Syth.SythSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Syth.SythSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 278,
+					IconGraphic = 0x0402,
+					Name = "Drain Life",
+					PowerWords = "Derriphan Tyuk",
+					Description = "This power will drain about 10-15 points of life, every few seconds, from a creature for 10-60 seconds, where such life is transferred to the Syth. This power cannot affect supernatural creatures, constructs, golems, or elementals.",
+					ManaCost = 36,
+					TithingCost = 52,
+					MinSkill = 90,
+					TargetType = TargetFlags.Harmful
+				},
 				203,
 				0
 			);
 
-		public DrainLife( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public int CirclePower = 7;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+		public DrainLife( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 
