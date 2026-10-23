@@ -186,6 +186,14 @@ namespace Server.Engines.Help
 			MagicToolbar_Jester_II_Config,
 			MagicToolbar_Jester_II_Open,
 			MagicToolbar_Jester_II_ToggleAutoOpen,
+			MagicToolbar_Jedi_I_Close,
+			MagicToolbar_Jedi_I_Config,
+			MagicToolbar_Jedi_I_Open,
+			MagicToolbar_Jedi_I_ToggleAutoOpen,
+			MagicToolbar_Jedi_II_Close,
+			MagicToolbar_Jedi_II_Config,
+			MagicToolbar_Jedi_II_Open,
+			MagicToolbar_Jedi_II_ToggleAutoOpen,
 
 			Navigate_Actions,
 			Navigate_Bars,
@@ -523,6 +531,7 @@ namespace Server.Engines.Help
 				var hasResearch = Server.Misc.ResearchSettings.ResearchMaterials(from) != null || ResearchSettings.BookCaster( from );
 				var hasShinobi = 0 < from.Skills[SkillName.Ninjitsu].Value;
 				var hasJester = 0 < from.Skills[SkillName.Begging].Value && 0 < from.Skills[SkillName.Psychology].Value;
+var hasJedi = Spellbook.FindJedi(from) != null;
 
 				const int SECTION_START_X = 245;
 				const int BAR_BORDER_HEIGHT = 4;
@@ -657,6 +666,16 @@ namespace Server.Engines.Help
 					barS += barM;
 
 					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Jester_II_Config, PageActionType.MagicToolbar_Jester_II_Open, PageActionType.MagicToolbar_Jester_II_Close, PageActionType.MagicToolbar_Jester_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jester_2));
+					barS += barM;
+				}
+
+				if (hasJedi)
+				{
+					barS -= BAR_BORDER_HEIGHT;
+					AddMagicToolbarRow(SECTION_START_X, barS, "Jedi Power Bar", PageActionType.MagicToolbar_Jedi_I_Config, PageActionType.MagicToolbar_Jedi_I_Open, PageActionType.MagicToolbar_Jedi_I_Close, PageActionType.MagicToolbar_Jedi_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jedi_1), true);
+					barS += barM;
+
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Jedi_II_Config, PageActionType.MagicToolbar_Jedi_II_Open, PageActionType.MagicToolbar_Jedi_II_Close, PageActionType.MagicToolbar_Jedi_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jedi_2));
 					barS += barM;
 				}
 			}
@@ -1599,6 +1618,14 @@ namespace Server.Engines.Help
 				case PageActionType.MagicToolbar_Jester_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Jester_2, from, (int)PageActionType.Navigate_MagicToolbars ) ); break;
 				case PageActionType.MagicToolbar_Jester_II_Open: reopenPage = true; SpellBarRegistry.OpenToolbarGump(from, SpellBarId.Jester_2); break;
 				case PageActionType.MagicToolbar_Jester_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Jester_2 ); break;
+				case PageActionType.MagicToolbar_Jedi_I_Close: reopenPage = true; SpellBarRegistry.CloseToolbar(from, SpellBarId.Jedi_1); break;
+				case PageActionType.MagicToolbar_Jedi_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Jedi_1, from, (int)PageActionType.Navigate_MagicToolbars ) ); break;
+				case PageActionType.MagicToolbar_Jedi_I_Open: reopenPage = true; SpellBarRegistry.OpenToolbarGump(from, SpellBarId.Jedi_1); break;
+				case PageActionType.MagicToolbar_Jedi_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Jedi_1 ); break;
+				case PageActionType.MagicToolbar_Jedi_II_Close: reopenPage = true; SpellBarRegistry.CloseToolbar(from, SpellBarId.Jedi_2); break;
+				case PageActionType.MagicToolbar_Jedi_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Jedi_2, from, (int)PageActionType.Navigate_MagicToolbars ) ); break;
+				case PageActionType.MagicToolbar_Jedi_II_Open: reopenPage = true; SpellBarRegistry.OpenToolbarGump(from, SpellBarId.Jedi_2); break;
+				case PageActionType.MagicToolbar_Jedi_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Jedi_2 ); break;
 
 				case PageActionType.Setting_MagerySpellColor_White:
 				{

@@ -34,6 +34,8 @@ namespace Server.SpellBars
 				case SpellBarId.Shinobi_2: return typeof(SpellBarSetupGump_Shinobi_2);
 				case SpellBarId.Jester_1: return typeof(SpellBarSetupGump_Jester_1);
 				case SpellBarId.Jester_2: return typeof(SpellBarSetupGump_Jester_2);
+				case SpellBarId.Jedi_1: return typeof(SpellBarSetupGump_Jedi_1);
+				case SpellBarId.Jedi_2: return typeof(SpellBarSetupGump_Jedi_2);
 				default: throw new ArgumentOutOfRangeException("id");
 			}
 		}
@@ -68,6 +70,8 @@ namespace Server.SpellBars
 				case SpellBarId.Shinobi_2: return typeof(SpellBarToolbarGump_Shinobi_2);
 				case SpellBarId.Jester_1: return typeof(SpellBarToolbarGump_Jester_1);
 				case SpellBarId.Jester_2: return typeof(SpellBarToolbarGump_Jester_2);
+				case SpellBarId.Jedi_1: return typeof(SpellBarToolbarGump_Jedi_1);
+				case SpellBarId.Jedi_2: return typeof(SpellBarToolbarGump_Jedi_2);
 				default: throw new ArgumentOutOfRangeException("id");
 			}
 		}
@@ -102,6 +106,8 @@ namespace Server.SpellBars
 				Bar(SpellBarId.Shinobi_2, SpellBarSchool.Shinobi, ShinobiSpellSchool.Instance, 2, "shinobitool2", "shinobiclose2", "SPELL BAR - SHINOBI", false),
 				Bar(SpellBarId.Jester_1, SpellBarSchool.Jester, JesterSpellSchool.Instance, 1, "jestertool1", "jesterclose1", "SPELL BAR - JESTER", false),
 				Bar(SpellBarId.Jester_2, SpellBarSchool.Jester, JesterSpellSchool.Instance, 2, "jestertool2", "jesterclose2", "SPELL BAR - JESTER", false),
+				Bar(SpellBarId.Jedi_1, SpellBarSchool.Jedi, JediSpellSchool.Instance, 1, "jeditool1", "jediclose1", "SPELL BAR - JEDI", false),
+				Bar(SpellBarId.Jedi_2, SpellBarSchool.Jedi, JediSpellSchool.Instance, 2, "jeditool2", "jediclose2", "SPELL BAR - JEDI", false),
 			};
 		}
 	}

@@ -13,5 +13,6 @@ namespace Server.SpellBars
 		Priest,
 		Shinobi,
 		Jester,
+		Jedi,
 	}
 }

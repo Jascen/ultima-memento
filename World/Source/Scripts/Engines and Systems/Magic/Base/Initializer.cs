@@ -225,16 +225,16 @@ namespace Server.Spells
 			Register( 279, typeof( Syth.CloneBody ) );
 
 			// Jedi abilities
-			Register( 280, typeof( Jedi.ForceGrip ) );
-			Register( 281, typeof( Jedi.MindsEye ) );
-			Register( 282, typeof( Jedi.Mirage ) );
-			Register( 283, typeof( Jedi.ThrowSabre ) );
-			Register( 284, typeof( Jedi.Celerity ) );
-			Register( 285, typeof( Jedi.PsychicAura ) );
-			Register( 286, typeof( Jedi.Deflection ) );
-			Register( 287, typeof( Jedi.SoothingTouch ) );
-			Register( 288, typeof( Jedi.StasisField ) );
-			Register( 289, typeof( Jedi.Replicate ) );
+			Register( Jedi.ForceGrip.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.ForceGrip ) );
+			Register( Jedi.MindsEye.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.MindsEye ) );
+			Register( Jedi.Mirage.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.Mirage ) );
+			Register( Jedi.ThrowSabre.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.ThrowSabre ) );
+			Register( Jedi.Celerity.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.Celerity ) );
+			Register( Jedi.PsychicAura.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.PsychicAura ) );
+			Register( Jedi.Deflection.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.Deflection ) );
+			Register( Jedi.SoothingTouch.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.SoothingTouch ) );
+			Register( Jedi.StasisField.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.StasisField ) );
+			Register( Jedi.Replicate.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.Replicate ) );
 
 			// Shinobi abilities
 			Register( Shinobi.CheetahPaws.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.CheetahPaws ) );

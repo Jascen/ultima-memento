@@ -1,26 +1,35 @@
 using System;
+using Server.Targeting;
 using Server.Items;
 
 namespace Server.Spells.Jedi
 {
 	public class Deflection : JediSpell
 	{
-		public override int spellIndex { get { return 286; } }
-		public int CirclePower = 6;
-		public static int spellID = 286;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 286,
+					IconGraphic = 0x2BC4,
+					Name = "Deflection",
+					PowerWords = "Morden",
+					Description = "This power gives the essence of the Jedi the ability to deflect most damaging magery spells back at the one who cast it. The amount that a Jedi can deflect is dependent on their power.",
+					ManaCost = 28,
+					TithingCost = 500,
+					MinSkill = 70,
+					TargetType = TargetFlags.None
+				},
 				203,
 				0
 			);
 
-		public Deflection( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public int CirclePower = 6;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+		public Deflection( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

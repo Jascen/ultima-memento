@@ -1,28 +1,35 @@
 using System;
 using System.Collections;
 using Server.Targeting;
-using Server.Network;
 
 namespace Server.Spells.Jedi
 {
     public class PsychicAura : JediSpell
 	{
-		public override int spellIndex { get { return 285; } }
-		public int CirclePower = 1;
-		public static int spellID = 285;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 285,
+					IconGraphic = 0x2BE5,
+					Name = "Psychic Aura",
+					PowerWords = "Wilems",
+					Description = "The Jedi can create an aura around them that will protect them better from physical and energy damage, but also makes them weaker against cold, fire, and poison damage. A Jedi will have to use to power again in order to remove these effects.",
+					ManaCost = 24,
+					TithingCost = 32,
+					MinSkill = 20,
+					TargetType = TargetFlags.None
+				},
 				236,
 				0
 			);
 
-        public PsychicAura(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
+		public int CirclePower = 1;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+        public PsychicAura(Mobile caster, Item scroll) : base(caster, scroll, SpellInfo)
         {
         }
 

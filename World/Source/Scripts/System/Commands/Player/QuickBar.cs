@@ -269,7 +269,7 @@ namespace Server.Gumps
 						AddButton(x, y, QuickConfig.rowNumber(i,from), QuickConfig.rowNumber(i,from), i, GumpButtonType.Reply, 0);
 					}
 
-					if ( i == 25 || i == 26 || i == 27 || i == 29 || i == 31 || i == 33 || i == 34 || i == 35 || i == 37 )
+					if ( i == 25 || i == 26 || i == 27 || i == 29 || i == 30 || i == 31 || i == 33 || i == 34 || i == 35 || i == 37 )
 					{
 						x=x+v; y=y+w; AddButton(x, y, QuickConfig.rowNumber(i,from), QuickConfig.rowNumber(i,from), i*10, GumpButtonType.Reply, 0);
 					}
@@ -346,29 +346,8 @@ namespace Server.Gumps
 			}
 			else if ( info.ButtonID == 29 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Elemental_1 ); }
 			else if ( info.ButtonID == 290 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Elemental_2 ); }
-			else if ( info.ButtonID == 30 )
-			{ 
-				if ( from.HasGump( typeof( JediSpellbook.PowerColumn ) ) )
-				{
-					from.CloseGump( typeof( JediSpellbook.PowerColumn ) );
-					if ( from.Backpack.FindItemByType( typeof ( JediSpellbook ) ) != null )
-					{
-						JediSpellbook jedi = (JediSpellbook)(from.Backpack.FindItemByType( typeof ( JediSpellbook ) ));
-						if ( jedi.owner == from )
-							from.SendGump( new Server.Items.JediSpellbook.PowerRow( from, jedi ) );
-					}
-				}
-				else if ( from.HasGump( typeof( JediSpellbook.PowerRow ) ) )
-				{
-					from.CloseGump( typeof( JediSpellbook.PowerRow ) );
-				}
-				else if ( from.Backpack.FindItemByType( typeof ( JediSpellbook ) ) != null )
-				{
-					JediSpellbook cube = (JediSpellbook)(from.Backpack.FindItemByType( typeof ( JediSpellbook ) ));
-					if ( cube.owner == from )
-						from.SendGump( new Server.Items.JediSpellbook.PowerColumn( from, cube ) );
-				}
-			}
+			else if ( info.ButtonID == 30 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Jedi_1 ); }
+			else if ( info.ButtonID == 300 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Jedi_2 ); }
 			else if ( info.ButtonID == 31 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Jester_1 ); }
 			else if ( info.ButtonID == 310 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Jester_2 ); }
 			else if ( info.ButtonID == 32 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Mage_1 ); }

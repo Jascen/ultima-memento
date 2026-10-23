@@ -11,6 +11,7 @@ using Server.Spells.HolyMan;
 using Server.Spells.Song;
 using Server.Spells.DeathKnight;
 using Server.Spells.Mystic;
+using Server.Spells.Jedi;
 
 namespace Server.Items
 {
@@ -264,7 +265,7 @@ namespace Server.Items
 				return SpellbookType.Mystic;
 			else if ( spellID >= 270 && spellID < 280 )
 				return SpellbookType.Syth;
-			else if ( spellID >= 280 && spellID < 290 )
+			else if ( spellID >= JediSpellProvider.FirstSpellId && spellID <= JediSpellProvider.LastSpellId )
 				return SpellbookType.Jedi;
 			else if ( spellID >= 600 && spellID < 664 )
 				return SpellbookType.Archmage;

@@ -1,35 +1,38 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Server.Misc;
 using Server.Targeting;
-using Server.Network;
 using Server.Items;
-using Server.Mobiles;
-using Server.Multis;
-using Server.Regions;
 using Server.Spells.Sixth;
 
 namespace Server.Spells.Jedi
 {
     public class MindsEye : JediSpell
 	{
-		public override int spellIndex { get { return 281; } }
-		public int CirclePower = 1;
-		public static int spellID = 281;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 281,
+					IconGraphic = 0x2BEB,
+					Name = "Mind's Eye",
+					PowerWords = "Vincent",
+					Description = "Allows the Jedi to concentrate and see that which cannot be seen. They may be able to notice something hidden or a concealed trap.",
+					ManaCost = 8,
+					TithingCost = 16,
+					MinSkill = 20,
+					TargetType = TargetFlags.Beneficial
+				},
 				206,
 				0
 			);
 
-        public MindsEye(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
+		public int CirclePower = 1;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+        public MindsEye(Mobile caster, Item scroll) : base(caster, scroll, SpellInfo)
         {
         }
 

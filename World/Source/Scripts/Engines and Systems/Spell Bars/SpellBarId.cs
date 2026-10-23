@@ -38,5 +38,9 @@ namespace Server.SpellBars
 
 		Jester_1,
 		Jester_2,
+
+		Jedi_1,
+		Jedi_2,
+
 	}
 }

@@ -1,5 +1,4 @@
 using System;
-using Server;
 using Server.Targeting;
 using Server.Network;
 using Server.Mobiles;
@@ -9,22 +8,30 @@ namespace Server.Spells.Jedi
 {
     public class SoothingTouch : JediSpell
 	{
-		public override int spellIndex { get { return 287; } }
-		public int CirclePower = 1;
-		public static int spellID = 287;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 287,
+					IconGraphic = 0x2BCD,
+					Name = "Soothing Touch",
+					PowerWords = "Kurklan",
+					Description = "The Jedi can heal themselves and others. With a high enough level of Jedi power, they could potentially cure poison, stop bleeding, and heal mortal wounds.",
+					ManaCost = 32,
+					TithingCost = 48,
+					MinSkill = 10,
+					TargetType = TargetFlags.Beneficial
+				},
 				204,
 				0
 			);
 
-        public SoothingTouch(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
+		public int CirclePower = 1;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+        public SoothingTouch(Mobile caster, Item scroll) : base(caster, scroll, SpellInfo)
         {
         }
 

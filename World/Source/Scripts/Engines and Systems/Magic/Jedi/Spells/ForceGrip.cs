@@ -1,29 +1,35 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
 using Server.Items;
 
 namespace Server.Spells.Jedi
 {
     public class ForceGrip : JediSpell
 	{
-		public override int spellIndex { get { return 280; } }
-		public int CirclePower = 1;
-		public static int spellID = 280;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 280,
+					IconGraphic = 0x2BEC,
+					Name = "Force Grip",
+					PowerWords = "Drumat",
+					Description = "Allows a Jedi to use or move an object that is out of reach. Can be used to set off some Chest Traps from a safe distance as well.",
+					ManaCost = 5,
+					TithingCost = 6,
+					MinSkill = 10,
+					TargetType = TargetFlags.Beneficial
+				},
 				203,
 				0
 			);
 
-        public ForceGrip(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
+		public int CirclePower = 1;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+        public ForceGrip(Mobile caster, Item scroll) : base(caster, scroll, SpellInfo)
         {
         }
 
