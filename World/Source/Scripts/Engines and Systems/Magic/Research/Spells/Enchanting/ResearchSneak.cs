@@ -30,13 +30,17 @@ namespace Server.Spells.Research
 		{
 		}
 
-        public override void OnCast()
+        public static void Initialize()
         {
-			Caster.Target = new InternalTarget( this );
 			EventSink.Logout += OnLogout;
         }
 
-        private void OnLogout(LogoutEventArgs e)
+        public override void OnCast()
+        {
+			Caster.Target = new InternalTarget( this );
+        }
+
+        private static void OnLogout(LogoutEventArgs e)
         {
 			ResearchSneak.RemoveEffect(e.Mobile);
         }

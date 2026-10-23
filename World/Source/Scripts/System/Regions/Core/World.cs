@@ -522,6 +522,17 @@ namespace Server.Misc
 			return false;
 		}
 
+		public static bool IsRoughWaters( Region reg )
+		{
+			if ( !reg.IsPartOf( typeof( PirateRegion ) ) )
+				return false;
+
+			if ( MySettings.S_AllowTravelToSpecialPlaces && reg.IsPartOf( "the Island of Poseidon" ) )
+				return false;
+
+			return true;
+		}
+
 		public static bool RegionAllowedTeleport( Map map, Point3D location, int x, int y )
 		{
 			Land land = Server.Lands.GetLand( map, location, x, y );
@@ -530,17 +541,7 @@ namespace Server.Misc
 			if ( reg.IsPartOf( typeof( DungeonRegion ) ) )
 				return false;
 
-			if ( land == Land.Kuldar )
-				return false;
-
 			if ( reg.IsPartOf( "the Time Lord Chamber" ) )
-				return false;
-
-			if ( land == Land.Underworld )
-				return false;
-
-			// The one true Ambrosia. All others (ex: dungeon home) are fake
-			if ( land == Land.Ambrosia && map == Map.Sosaria )
 				return false;
 
 			if ( land == Land.SkaraBrae )
@@ -558,16 +559,7 @@ namespace Server.Misc
 			if ( reg.IsPartOf( "the Lyceum" ) )
 				return false;
 
-			if ( reg.IsPartOf( "the Island of Stonegate" ) )
-				return false;
-
 			if ( reg.IsPartOf( "the Painting of the Glade" ) )
-				return false;
-
-			if ( reg.IsPartOf( "the Island of the Black Knight" ) )
-				return false;
-
-			if ( reg.IsPartOf( "the Castle of the Black Knight" ) )
 				return false;
 
 			if ( reg.IsPartOf( "the Castle of the Black Knight" ) )
@@ -582,14 +574,33 @@ namespace Server.Misc
 			if ( reg.IsPartOf( typeof( PublicRegion ) ) )
 				return false;
 
-			if ( reg.IsPartOf( "the Island of Poseidon" ) )
-				return false;
-
-			if ( reg.IsPartOf( "the Village of Ravendark" ) )
-				return false;
-
 			if ( reg.IsPartOf( typeof( BargeDeadRegion ) ) )
 				return false;
+
+			if ( !MySettings.S_AllowTravelToSpecialPlaces )
+			{
+				if ( land == Land.Kuldar )
+					return false;
+
+				if ( land == Land.Underworld )
+					return false;
+
+				// The one true Ambrosia. All others (ex: dungeon home) are fake
+				if ( land == Land.Ambrosia && map == Map.Sosaria )
+					return false;
+
+				if ( reg.IsPartOf( "the Island of Stonegate" ) )
+					return false;
+
+				if ( reg.IsPartOf( "the Island of the Black Knight" ) )
+					return false;
+
+				if ( reg.IsPartOf( "the Island of Poseidon" ) )
+					return false;
+
+				if ( reg.IsPartOf( "the Village of Ravendark" ) )
+					return false;
+			}
 
 			return true;
 		}
@@ -814,7 +825,7 @@ namespace Server.Misc
 				case 66: loc = new Point3D(5950, 1654, -5); map = Map.Lodor; break; // the Depths of Carthax Lake
 				case 67: loc = new Point3D(5989, 484, 1); map = Map.Lodor; break; // Argentrock Castle
 				case 68: loc = new Point3D(6021, 1968, 0); map = Map.Lodor; break; // the Sanctum of Saltmarsh
-				case 69: loc = new Point3D(1125, 3684, 0); map = Map.Lodor; break; // the Ancient Sky Ship
+				case 69: loc = new Point3D(1125, 3684, 0); map = Map.SavagedEmpire; break; // the Ancient Sky Ship
 			}
 
 			if ( m is PlayerMobile )

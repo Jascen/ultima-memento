@@ -7,6 +7,7 @@ namespace Server.Items
 	public class TreasurePile05Addon : BaseAddon
 	{
 		public override string AddonName{ get{ return "treasure pile"; } }
+		public override bool IgnoreCanFit{ get{ return true; } }
 
 		public override BaseAddonDeed Deed
 		{

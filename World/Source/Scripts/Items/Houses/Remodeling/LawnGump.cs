@@ -1,14 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Server;
-using Server.Gumps;
 using Server.Network;
 using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
-using System.Collections;
 using Server.Misc;
-using System.Text;
 
 namespace Server.Gumps
 {
@@ -38,8 +34,7 @@ namespace Server.Gumps
             }
             m_LawnTools.Category = currentCategory;
             m_LawnTools.Page = currentPage;
-
-            ComputeGold(owner);
+			m_PlayerGold = ComputeGold(owner);
 
             Closable = true;
             Disposable = true;
@@ -89,7 +84,7 @@ namespace Server.Gumps
 			{
 				AddImage(0+locMod-2, -2, 9588, Server.Misc.PlayerSettings.GetGumpHue( owner ));
 
-				if (m_SelectedID > 0)
+				if (m_CurrentCategory != null && m_SelectedID > 0)
 				{
 					Remodeling.ItemLayout( m_SelectedID, m_ItemTitle, this );
 				}
@@ -115,7 +110,7 @@ namespace Server.Gumps
 					AddHtml( 300+locMod, 378, 134, 20, @"<BODY><BASEFONT Color=" + color + ">" + String.Format("{0:0,0} Gold", m_PlayerGold) + "</BASEFONT></BODY>", (bool)false, (bool)false);
 				}
 
-				if (m_SelectedID > 0)
+				if (m_CurrentCategory != null && m_SelectedID > 0)
 				{
 					//Buy Button
 					AddButton(319+locMod, 13, 4023, 4023, (int)Buttons.Place, GumpButtonType.Reply, 0);
@@ -298,21 +293,19 @@ namespace Server.Gumps
             }
         }
 
-        public void ComputeGold(Mobile from)
+        private int ComputeGold(Mobile from)
         {
-            int goldInPack = 0;
-            int goldInBank = 0;
-            foreach (Gold gold in from.Backpack.FindItemsByType<Gold>(true))
-            {
-                goldInPack += gold.Amount;
-            }
+			int amount = Banker.GetBalance(from);
+			if (from.Backpack != null)
+			{
+				foreach (Gold gold in from.Backpack.FindItemsByType<Gold>(true))
+				{
+					amount += gold.Amount;
+				}
 
-            foreach (Gold gold in from.BankBox.FindItemsByType<Gold>(true))
-            {
-                goldInBank += gold.Amount;
-            }
+			}
 
-            m_PlayerGold = goldInPack + goldInBank;
+			return amount;
         }
     }
 }

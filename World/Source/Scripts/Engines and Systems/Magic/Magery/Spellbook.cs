@@ -253,7 +253,7 @@ namespace Server.Items
 				return SpellbookType.Ninja;
 			else if ( spellID >= 300 && spellID < 332 )
 				return SpellbookType.Elementalism;
-			else if ( spellID >= BardSongProvider.FirstSpellId && spellID < BardSongProvider.LastSpellId )
+			else if ( spellID >= BardSongProvider.FirstSpellId && spellID <= BardSongProvider.LastSpellId )
 				return SpellbookType.Song;
 			else if ( spellID >= DeathKnightSpellProvider.FirstSpellId && spellID <= DeathKnightSpellProvider.LastSpellId )
 				return SpellbookType.DeathKnight;

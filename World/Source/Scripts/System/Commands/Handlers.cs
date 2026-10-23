@@ -979,6 +979,14 @@ namespace Server.Commands
 		{
 			BroadcastMessage( AccessLevel.Player, 0x482, String.Format( "Staff message from {0}:", e.Mobile.Name ) );
 			BroadcastMessage( AccessLevel.Player, 0x482, e.ArgString );
+
+			var overhead = string.Format( "{0}: {1}", e.Mobile.Name, e.ArgString );
+			foreach ( var state in NetState.Instances )
+			{
+				if (state == null || state.Mobile == null) continue;
+
+				state.Mobile.LocalOverheadMessage( MessageType.Regular, 32, false, overhead );
+			}
 		}
 
 		public static void BroadcastMessage ( AccessLevel ac, int hue, string message ) 

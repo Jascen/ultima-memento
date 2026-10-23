@@ -1,9 +1,5 @@
-using System; 
-using System.Collections; 
-using Server.Misc; 
+using System;
 using Server.Items; 
-using Server.Mobiles; 
-using Server.Network;
 using System.Collections.Generic;
 using Server.ContextMenus;
 
@@ -12,6 +8,8 @@ namespace Server.Mobiles
 	[CorpseName( "a broken machine" )] 
 	public class GolemPorter : BaseCreature
 	{
+		public const int MaxControlSlots = 5;
+		
 		public int PorterExodus;
 		[CommandProperty(AccessLevel.Owner)]
 		public int Porter_Exodus{ get { return PorterExodus; } set { PorterExodus = value; InvalidateProperties(); } }
@@ -34,7 +32,7 @@ namespace Server.Mobiles
 
 			Name = "a golem";
 			Body = 752;
-			ControlSlots = 5;
+			ControlSlots = MaxControlSlots;
 			Blessed = true;
 			ActiveSpeed = 0.1;
 			PassiveSpeed = 0.2;
@@ -105,9 +103,6 @@ namespace Server.Mobiles
 			base.Deserialize( reader ); 
 			int version = reader.ReadInt();
 			PorterExodus = reader.ReadInt();
-
-			LeaveNowTimer thisTimer = new LeaveNowTimer( this ); 
-			thisTimer.Start(); 
 		} 
 
 		public override bool IsSnoop( Mobile from )

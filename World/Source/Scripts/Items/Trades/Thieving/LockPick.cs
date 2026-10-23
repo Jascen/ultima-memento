@@ -122,7 +122,7 @@ namespace Server.Items
 
 		public static bool ValidateLockpickType( Lockpick lockpick, Item targeted )
 		{
-			return lockpick.IsSciFi ? targeted.Catalog == Catalogs.SciFi : true;
+			return targeted.Catalog == Catalogs.SciFi ? lockpick.IsSciFi : !lockpick.IsSciFi;
 		}
 
 		public static bool CanDoEffect( Mobile from, Lockpick lockpick, Item targeted, bool isLocked )

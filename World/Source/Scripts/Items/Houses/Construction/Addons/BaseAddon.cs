@@ -64,6 +64,8 @@ namespace Server.Items
 
 		public virtual bool RetainDeedHue{ get{ return false; } }
 
+		public virtual bool IgnoreCanFit{ get{ return false; } }
+
 		public virtual void OnChop( Mobile from )
 		{
 			BaseHouse house = BaseHouse.FindHouseAt( this );
@@ -136,7 +138,7 @@ namespace Server.Items
 			{
 				Point3D p3D = new Point3D( p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z );
 
-				if ( !map.CanFit( p3D.X, p3D.Y, p3D.Z, c.ItemData.Height, false, true, ( c.Z == 0 ) ) )
+				if ( !IgnoreCanFit && !map.CanFit( p3D.X, p3D.Y, p3D.Z, c.ItemData.Height, false, true, ( c.Z == 0 ) ) )
 					return AddonFitResult.Blocked;
 				else if ( !CheckHouse( from, p3D, map, c.ItemData.Height, ref house ) )
 					return AddonFitResult.NotInHouse;

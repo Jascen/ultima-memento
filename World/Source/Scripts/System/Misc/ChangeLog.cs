@@ -6,11 +6,11 @@ namespace Server.Misc
 	{
 		// Chronological index: 0 = oldest release, 11 = current release.
 		// When shipping a new version, increment RELEASE_COUNT and add a new case at the end.
-		public const int RELEASE_COUNT = 15;
+		public const int RELEASE_COUNT = 16;
 
 		public static string Version()
 		{
-			return "Version: 2.5.0";
+			return "Version: 2.6.0";
 		}
 
 		public static string GetRelease(int page)
@@ -923,7 +923,7 @@ namespace Server.Misc
 
 				// Version 2.3.1
 				case 11:
-					builder.Append(Version());
+					builder.Append("Version: 2.3.1");
 					builder.Append("<br>Changes<br>");
 					builder.Append("- Ability - Magic Protection now adds 14 magic damage absorb, up from setting 6<br>");
 					builder.Append("- Ability - Greater Magic Protection now adds 20 magic damage absorb, up from setting 8<br>");
@@ -1016,7 +1016,7 @@ namespace Server.Misc
 
 				// Version 2.4.0
 				case 12:
-					builder.Append(Version());
+					builder.Append("Version: 2.4.0");
 					builder.Append("<br>Changes<br>");
 					builder.Append("- Avatar - Coins are now properly split between party members<br>");
 					builder.Append("- Boat - Corpses belonging to Players or their (bonded) pets now move with the boat<br>");
@@ -1167,7 +1167,7 @@ namespace Server.Misc
 
 				// Version 2.4.1
 				case 13:
-					builder.Append(Version());
+					builder.Append("Version: 2.4.1");
 					builder.Append("<br>Changes<br>");
 					builder.Append("- Admin - Add '[Avatar-Migrate--Game-Time' command to fix avatar's lifetime game time<br>");
 					builder.Append("- Admin - `S_HouseStoragePercent` setting has been added<br>");
@@ -1236,18 +1236,21 @@ namespace Server.Misc
 
 				// Version 2.5.0
 				case 14:
-				default:
-					builder.Append(Version());
+					builder.Append("Version: 2.5.0");
 					builder.Append("<br>Changes<br>");
+					builder.Append("- Admin - Add `S_AllowTravelToSpecialPlaces` server setting<br>");
 					builder.Append("- Avatar - Focus and Meditation are no longer locked by default<br>");
 					builder.Append("- Avatar - Add ability to drop skills from Skill Archive when at Gypsy Encampment<br>");
 					builder.Append("- Avatar - Coins generated per kill is now a function of monster strength<br>");
 					builder.Append("- Combat - AI is now notably less likely to teleport<br>");
+					builder.Append("- Command - Staff broadcasting now shows overhead messages<br>");
 					builder.Append("- Craft - Undertaker kit is now craftable<br>");
 					builder.Append("- Craft - Breakdown should now work on more items<br>");
 					builder.Append("- Craft - Elven Quivers are now craftable<br>");
+					builder.Append("- Craft - Hive tool is now craftable<br>");
 					builder.Append("- Gump - Avatar skill archive is now more compact<br>");
 					builder.Append("- Gump - Combat Bar now refreshes Coins after Avatar purchases<br>");
+					builder.Append("- Gump - Puzzle master temptation now properly hides negatives for Avatars<br>");
 					builder.Append("- Item - Prayer book is now always given when you turn in a wooden mallet and stake<br>");
 					builder.Append("- Item - Prayer book attempts to bind to you when you open it<br>");
 					builder.Append("- Item - Bag of Holding cooldown is now 15s, down from 60s<br>");
@@ -1256,12 +1259,24 @@ namespace Server.Misc
 					builder.Append("- Item - Double-clicking on beverages now drinks max by default<br>");
 					builder.Append("- Item - Tablets now show their location when identified<br>");
 					builder.Append("- Item - Mangar's Robe now has SDI instead of LMC and reduced MRegen for increased Int<br>");
+					builder.Append("- Item - Franken Journal tooltip now shows the number of parts gathered and the brain level<br>");
+					builder.Append("- Item - Hive tool is now worth dramatically less<br>");
+					builder.Append("- Item - All rare boss Relic chests now bind to the killer<br>");
+					builder.Append("- Item - Players must now own Relic chests with to open them<br>");
+					builder.Append("- Misc - Mangar's Rewards<br>");
+					builder.Append("       - Static rewards no longer require *base* (actually invested) skill points <br>");
+					builder.Append("       - Static rewards now require `Apprentice` level skill, up from `1.0 base skill`<br>");
+					builder.Append("       - Static reward spellbooks now include *many* spells<br>");
+					builder.Append("       - Static rewards recipients no longer get a random artefact<br>");
+					builder.Append("       - Players who doesn't get a static reward drop will instead get a high level wand<br>");
 					builder.Append("- Misc - Holy Man class no longer requires base skill to activate<br>");
 					builder.Append("- Misc - Mystic class no longer requires base skill to activate<br>");
 					builder.Append("- Misc - Guildmasters now wear their guild rings on their paperdolls<br>");
 					builder.Append("- Misc - All players in a party, not just the killer, now check for quest completion<br>");
 					builder.Append("- Misc - Add starter items for Elementalism<br>");
 					builder.Append("- Misc - Stats can now gain regardless if your skill check can gain/fail<br>");
+					builder.Append("- Misc - Bank message now indicates X of Y item capacity<br>");
+					builder.Append("- NPC - Healers now attempt to resurrect every 5 seconds, up from 2 seconds<br>");
 					builder.Append("- Quest - Thief guildmembers quest to steal long lost relics for the Nobles is now official<br>");
 					builder.Append("- Quest - Delivery quests are now processed before any other quest<br>");
 					builder.Append("- Quest - Blacksmith recipe quests are now one-time and must be completed in order, starting in Britain<br>");
@@ -1269,27 +1284,65 @@ namespace Server.Misc
 					builder.Append("- Spell - Army's Paeon song cast time is now 3 seconds, down from 5<br>");
 					builder.Append("- Spell - Mage's Ballad song cast time is now 3 seconds, down from 5<br>");
 					builder.Append("- Spell - Elemenal Call summon Psychology is now 10, down from 40<br>");
+					builder.Append("- Spell - Intellect provides monsters 1% SDI per 5 points, down from 1% SDI per 3 points<br>");
 
 					builder.Append("<br>Fixes<br>");
 					builder.Append("- Avatar - Fix issue where new Templates weren't applying as expected<br>");
 					builder.Append("- Combat - Fix issue where harpoons, wizard staves, and Kilrathi weapons ignored peacemaking and shadow strike revealing rules<br>");
+					builder.Append("- Combat - Bladeweave now works on Bokuto, No Dachi, Nunchaku, and Short Sword<br>");
 					builder.Append("- Craft - Wizard staves may now be broken down<br>");
 					builder.Append("- Craft - Wizard staves may now be sold to mages<br>");
 					builder.Append("- Gump - Scribing spells that require arcane scrolls now indicate they need mana<br>");
 					builder.Append("- Gump - Fix issue where Avatar gump would incorrectly cache skill archive entries<br>");
 					builder.Append("- Gump - Closing the manage toolbar gump properly returns to Toolbars Help page<br>");
 					builder.Append("- Gump - Toolbars Help page can now properly Open toolbars<br>");
+					builder.Append("- Gump - Druidism gump now display equal length key/value columns<br>");
 					builder.Append("- Item - House teleporters remain active after the marking character is deleted<br>");
 					builder.Append("- Item - Fix inverted Lower Ammo Cost behavior on harpoons, wizard staves, and Kilrathi weapons<br>");
 					builder.Append("- Item - Weighting stones may now be used on bludgeoning/fistfighting weapons<br>");
+					builder.Append("- Item - Fix issue where you could own multiple FrankenJournal<br>");
 					builder.Append("- Misc - Fix crash from concurrent client disconnect on the network thread<br>");
 					builder.Append("- Misc - Fix issue where Strange Portals crossed facets<br>");
 					builder.Append("- Misc - Players with '0' Karma may now access The Glade<br>");
 					builder.Append("- Misc - Fix issue where relic items could be duplicated<br>");
 					builder.Append("- Misc - More fixes for unconsented damage<br>");
+					builder.Append("- Misc - Regular Lockpicks no longer prevent Keycards from being detected<br>");
+					builder.Append("- Misc - Fix issue where Golems had to be the first follower to be summoned<br>");
+					builder.Append("- Misc - Fix issue where Fighter Golem required 5 slots to summon despite only needing 3 slots when active<br>");
 					builder.Append("- Spell - Fix typo in Orb of Orcus spell description<br>");
 					builder.Append("- Spell - Fix potential crash when casting too fast<br>");
 					builder.Append("- Spell - Fix crash with Magic Reflection + Parrying combo<br>");
+					builder.Append("- Spell - Fix serialization issue in Blend with Forest<br>");
+					builder.Append("- Spell - Fix permanent mute case in Blend with Forest<br>");
+					break;
+
+				// Version 2.6.0
+				case 15:
+				default:
+					builder.Append(Version());
+					builder.Append("<br>Changes<br>");
+					builder.Append("- Craft - Librarian Shoppe no longer creates Orders that require Arcane Scrolls<br>");
+					builder.Append("- Craft - Break down now works on containers<br>");
+					builder.Append("- Craft - Experimental change to enable breaking down more items<br>");
+					builder.Append("- Item - Research bag now warns before destroying spellbooks<br>");
+					builder.Append("- Item - Journal quest tomes now warn before pickup<br>");
+					builder.Append("- Misc - Added discord announcement for stolen items<br>");
+					builder.Append("- Misc - Lawn Tools and Remodeling Tools can now deduct from Checks<br>");
+					builder.Append("- Misc - Elementalism cannot be taught if the student has Magery or Necromancy<br>");
+					builder.Append("- Misc - Magery or Necromancy cannot be taught if the student has Elementalism<br>");
+					builder.Append("- Misc - Summoned pack animals that are invulnerable no longer delete after server restart<br>");
+					builder.Append("- Misc - Reduce strictness when placing Treasure Pile addons<br>");
+
+					builder.Append("<br>Fixes<br>");
+					builder.Append("- Achievement - Fix issue where Halls of Ogrimar didn't have a quest item<br>");
+					builder.Append("- Achievement - Fix issue where the Frozen Hells didn't have a quest item<br>");
+					builder.Append("- Craft - Restore hack to grant resource benefits to certain items<br>");
+					builder.Append("- Item - Research bag can only consume Magery or Necromancy spellbooks<br>");
+					builder.Append("- Misc - Fix issue where rare mobs could be teleported to Lodoria instead of a dungeon<br>");
+					builder.Append("- Misc - Fix crash from Lawn Tools and Remodeling Tools placement<br>");
+					builder.Append("- Misc - Fix issue where Hoard Minions would not delete after server restart<br>");
+					builder.Append("- Spell - Fix excessive item iteration with Enchant after player logouts<br>");
+					builder.Append("- Spell - Elemental Protection now reduces Faster Casting cap<br>");
 					break;
 			}
 		}

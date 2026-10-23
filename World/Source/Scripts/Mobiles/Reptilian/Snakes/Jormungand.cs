@@ -149,7 +149,7 @@ namespace Server.Mobiles
 						book.m_Value_5 = 0.0;
 						book.m_Slayer_1 = 34;
 						book.m_Slayer_2 = 8;
-						book.m_Owner = null;
+						book.m_Owner = killer;
 						book.m_Extra = "of Midgard";
 						book.m_FromWho = "Taken from Jormungandr the Serpent of Midgard";
 						book.m_HowGiven = "Acquired by";

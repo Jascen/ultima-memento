@@ -80,7 +80,7 @@ namespace Server.Mobiles
 						book.m_Value_5 = 0.0;
 						book.m_Slayer_1 = 6;
 						book.m_Slayer_2 = 0;
-						book.m_Owner = null;
+						book.m_Owner = killer;
 						book.m_Extra = "of the Lich King";
 						book.m_FromWho = "Taken from the King of the Dead";
 						book.m_HowGiven = "Acquired by";

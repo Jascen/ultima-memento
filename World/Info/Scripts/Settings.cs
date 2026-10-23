@@ -136,6 +136,11 @@ namespace Server
 
 		public static int S_BoneDecay = 1430;
 
+	// If true, then magical travel (recall, mark, gate travel, etc.) will be allowed in some special outdoor locations that
+	// normally block it (like Poseidon, Ambrosia, and the Underworld). Dungeons and other restricted areas will still block magical travel.
+
+		public static bool S_AllowTravelToSpecialPlaces = false;
+
 
 
 

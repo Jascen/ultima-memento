@@ -3312,7 +3312,17 @@ namespace Server.Misc
 						foreach ( Item stuff in belongings )
 						{
 							o++;
-							if ( c == o ){ ((BaseCreature)m).PackItem( stuff ); from.LocalOverheadMessage(MessageType.Emote, 0x916, true, m.Name + " stole something from you!"); }
+							if ( c == o )
+							{
+								((BaseCreature)m).PackItem( stuff );
+								if ( from is PlayerMobile )
+								{
+									from.LocalOverheadMessage(MessageType.Emote, 0x916, true, m.Name + " stole something from you!");
+									Server.Misc.LoggingFunctions.LogStandard( from, string.Format( "had their '{0}' stolen by {1}!", stuff.Name, m.Name) );
+								}
+
+								return;
+							}
 						}
 					}
 				}

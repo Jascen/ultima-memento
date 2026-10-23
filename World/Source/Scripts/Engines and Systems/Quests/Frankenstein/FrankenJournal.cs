@@ -56,6 +56,26 @@ namespace Server.Items
 			if ( JournalOwner != null ){ list.Add( 1049644, "Now Belongs to " + JournalOwner.Name + "" ); }
         }
 
+		public override void AppendChildProperties(ObjectPropertyList list)
+		{
+			base.AppendChildProperties(list);
+
+			if ( JournalOwner != null )
+			{
+				list.Add( 1049644, string.Format( "Brain Level: {0}", HasBrain ? BrainLevel.ToString() : "Missing" ) );
+
+				int parts = 0;
+				if (HasHead) parts++;
+				if (HasTorso) parts++;
+				if (HasArmLeft) parts++;
+				if (HasArmRight) parts++;
+				if (HasLegLeft) parts++;
+				if (HasLegRight) parts++;
+
+				list.Add( 1049644, string.Format( "{0}/6 Body Parts", parts ) );
+			}
+		}
+
 		public override void OnDoubleClick( Mobile from )
 		{
 			if ( !IsChildOf( from.Backpack ) )
@@ -64,19 +84,21 @@ namespace Server.Items
 				return;
 			}
 
-			if ( JournalOwner == null || JournalOwner.Deleted )
-				Journal_Owner = from;
-
-			if ( JournalOwner != null && JournalOwner != from )
+			if ( JournalOwner == null )
 			{
-				from.SendMessage( "This journal does not belong to you!" );
-				return;
+				var journal = WorldUtilities.FirstOrDefault<FrankenJournal>( item => item.JournalOwner == from && item != this );
+				if ( journal != null )
+				{
+					from.SendMessage( "You already have a journal! You can only have one at a time." );
+					return;
+				}
+
+				Journal_Owner = from;
 			}
 
-			var journal = WorldUtilities.FirstOrDefault<FrankenJournal>( item => item.JournalOwner == from && item != this );
-			if ( journal != null )
+			if ( JournalOwner != from )
 			{
-				from.SendMessage( "You already have a journal! You can only have one at a time." );
+				from.SendMessage( "This journal does not belong to you!" );
 				return;
 			}
 

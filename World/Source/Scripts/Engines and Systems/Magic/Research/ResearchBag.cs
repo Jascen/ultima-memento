@@ -1,13 +1,9 @@
 using System;
-using Server;
 using Server.Network;
-using Server.Multis;
 using Server.Gumps;
 using Server.Misc;
 using Server.Mobiles;
 using Server.Accounting;
-using System.Collections;
-using System.Collections.Generic;
 using Server.Commands;
 using Server.SpellBars;
 
@@ -136,134 +132,181 @@ namespace Server.Items
 				}
 				else if ( dropped is Spellbook )
 				{
-					if ( !(dropped is AncientSpellbook) )
-						Server.Misc.Research.GetRidOfBook( from );
-					Spellbook book = (Spellbook)dropped;
-					Spellbook rune = new AncientSpellbook();
-					book.Content = 0;
-					book.OnAfterDuped( rune );
-					((AncientSpellbook)rune).Owner = from;
-					((AncientSpellbook)rune).names = from.Name;
-					rune.BuiltBy = book.BuiltBy;
-					rune.Slayer = book.Slayer;
-					rune.Slayer2 = book.Slayer2;
-					rune.Hue = dropped.Hue;
-						if ( rune.Hue < 1 ){ rune.Hue = 0xB01; }
-					rune.Name = "ancient spells of " + from.Name;
-
-					if ( dropped is AncientSpellbook )
+					var book = (Spellbook)dropped;
+					switch (book.SpellbookType)
 					{
-						((AncientSpellbook)rune).Paper = ((AncientSpellbook)dropped).Paper;
-						((AncientSpellbook)rune).Quill = ((AncientSpellbook)dropped).Quill;
+						case SpellbookType.Regular:
+						case SpellbookType.Necromancer:
+							from.SendGump( new ConfirmationGump(
+								from,
+								"Create Ancient Spellbook",
+								string.Format("You may destroy this spellbook and create a new ancient spellbook. You may only have one ancient spellbook at a time, all others will be destroyed. {0}<br><br>Do you want to continue?",
+								TextDefinition.GetColorizedText("This cannot be undone.", HtmlColors.RED)
+								),
+								() => ConvertSpellbook( from, book ),
+								() => { if ( !from.Deleted ) from.SendMessage( "You leave the spellbook intact." ); } ) );
+							break;
 					}
-
-					bool hasMagery = false;
-					bool hasNecros = false;
-
-					if ( rune.SkillBonuses.Skill_1_Name == SkillName.Magery || rune.SkillBonuses.Skill_2_Name == SkillName.Magery || rune.SkillBonuses.Skill_3_Name == SkillName.Magery || rune.SkillBonuses.Skill_4_Name == SkillName.Magery || rune.SkillBonuses.Skill_5_Name == SkillName.Magery )
-						hasMagery = true;
-					if ( rune.SkillBonuses.Skill_1_Name == SkillName.Necromancy || rune.SkillBonuses.Skill_2_Name == SkillName.Necromancy || rune.SkillBonuses.Skill_3_Name == SkillName.Necromancy || rune.SkillBonuses.Skill_4_Name == SkillName.Necromancy || rune.SkillBonuses.Skill_5_Name == SkillName.Necromancy )
-						hasNecros = true;
-
-					if ( rune.SkillBonuses.Skill_1_Name == SkillName.Elementalism )
-					{
-						if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
-							rune.SkillBonuses.Skill_1_Name = SkillName.Magery;
-						else if ( !hasNecros )
-							rune.SkillBonuses.Skill_1_Name = SkillName.Necromancy;
-						else
-						{
-							rune.SkillBonuses.Skill_1_Name = SkillName.Alchemy;
-							rune.SkillBonuses.Skill_1_Value = 0;
-						}
-					}
-
-					if ( rune.SkillBonuses.Skill_1_Name == SkillName.Elementalism )
-					{
-						if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
-							rune.SkillBonuses.Skill_1_Name = SkillName.Magery;
-						else if ( !hasNecros )
-							rune.SkillBonuses.Skill_1_Name = SkillName.Necromancy;
-						else
-						{
-							rune.SkillBonuses.Skill_1_Name = SkillName.Alchemy;
-							rune.SkillBonuses.Skill_1_Value = 0;
-						}
-					}
-
-					if ( rune.SkillBonuses.Skill_2_Name == SkillName.Elementalism )
-					{
-						if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
-							rune.SkillBonuses.Skill_2_Name = SkillName.Magery;
-						else if ( !hasNecros )
-							rune.SkillBonuses.Skill_2_Name = SkillName.Necromancy;
-						else
-						{
-							rune.SkillBonuses.Skill_2_Name = SkillName.Alchemy;
-							rune.SkillBonuses.Skill_2_Value = 0;
-						}
-					}
-
-					if ( rune.SkillBonuses.Skill_3_Name == SkillName.Elementalism )
-					{
-						if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
-							rune.SkillBonuses.Skill_3_Name = SkillName.Magery;
-						else if ( !hasNecros )
-							rune.SkillBonuses.Skill_3_Name = SkillName.Necromancy;
-						else
-						{
-							rune.SkillBonuses.Skill_3_Name = SkillName.Alchemy;
-							rune.SkillBonuses.Skill_3_Value = 0;
-						}
-					}
-
-					if ( rune.SkillBonuses.Skill_4_Name == SkillName.Elementalism )
-					{
-						if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
-							rune.SkillBonuses.Skill_4_Name = SkillName.Magery;
-						else if ( !hasNecros )
-							rune.SkillBonuses.Skill_4_Name = SkillName.Necromancy;
-						else
-						{
-							rune.SkillBonuses.Skill_4_Name = SkillName.Alchemy;
-							rune.SkillBonuses.Skill_4_Value = 0;
-						}
-					}
-
-					if ( rune.SkillBonuses.Skill_5_Name == SkillName.Elementalism )
-					{
-						if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
-							rune.SkillBonuses.Skill_5_Name = SkillName.Magery;
-						else if ( !hasNecros )
-							rune.SkillBonuses.Skill_5_Name = SkillName.Necromancy;
-						else
-						{
-							rune.SkillBonuses.Skill_5_Name = SkillName.Alchemy;
-							rune.SkillBonuses.Skill_5_Value = 0;
-						}
-					}
-
-					if ( Server.Misc.ResearchSettings.ResearchMaterials( from ) != null )
-					{
-						int spells = 0;
-
-						while ( spells < 65 )
-						{
-							spells++;
-
-							if ( Server.Misc.Research.GetResearch( this, spells ) )
-								rune.AddAncient( Int32.Parse( Research.SpellInformation( spells, 12 ) ) );
-						}
-					}
-
-					book.Delete();
-					from.SendMessage( "Using your research, you make a new spellbook." );
-					
-					from.AddToBackpack( rune );
-					from.PlaySound( 0x55 );
 				}
 			}
+
 			return false;
+		}
+
+		private void ConvertSpellbook( Mobile from, Spellbook book )
+		{
+			if ( from == null || from.Deleted )
+				return;
+
+			if ( Deleted || BagOwner != from )
+			{
+				from.SendMessage( "You can no longer use that research pack." );
+				return;
+			}
+
+			if ( book == null || book.Deleted )
+			{
+				from.SendMessage( "That spellbook is no longer there." );
+				return;
+			}
+
+			object root = book.RootParent;
+			if ( root is Mobile && root != from )
+			{
+				from.SendMessage( "That spellbook is no longer in your possession." );
+				return;
+			}
+
+			if ( root != from && ( book.Map != from.Map || !from.InRange( book.GetWorldLocation(), 2 ) ) )
+			{
+				from.SendMessage( "That spellbook is too far away." );
+				return;
+			}
+
+			if ( !(book is AncientSpellbook) )
+				Server.Misc.Research.GetRidOfBook( from );
+			Spellbook rune = new AncientSpellbook();
+			book.Content = 0;
+			book.OnAfterDuped( rune );
+			((AncientSpellbook)rune).Owner = from;
+			((AncientSpellbook)rune).names = from.Name;
+			rune.BuiltBy = book.BuiltBy;
+			rune.Slayer = book.Slayer;
+			rune.Slayer2 = book.Slayer2;
+			rune.Hue = book.Hue;
+				if ( rune.Hue < 1 ){ rune.Hue = 0xB01; }
+			rune.Name = "ancient spells of " + from.Name;
+
+			if ( book is AncientSpellbook )
+			{
+				((AncientSpellbook)rune).Paper = ((AncientSpellbook)book).Paper;
+				((AncientSpellbook)rune).Quill = ((AncientSpellbook)book).Quill;
+			}
+
+			bool hasMagery = false;
+			bool hasNecros = false;
+
+			if ( rune.SkillBonuses.Skill_1_Name == SkillName.Magery || rune.SkillBonuses.Skill_2_Name == SkillName.Magery || rune.SkillBonuses.Skill_3_Name == SkillName.Magery || rune.SkillBonuses.Skill_4_Name == SkillName.Magery || rune.SkillBonuses.Skill_5_Name == SkillName.Magery )
+				hasMagery = true;
+			if ( rune.SkillBonuses.Skill_1_Name == SkillName.Necromancy || rune.SkillBonuses.Skill_2_Name == SkillName.Necromancy || rune.SkillBonuses.Skill_3_Name == SkillName.Necromancy || rune.SkillBonuses.Skill_4_Name == SkillName.Necromancy || rune.SkillBonuses.Skill_5_Name == SkillName.Necromancy )
+				hasNecros = true;
+
+			if ( rune.SkillBonuses.Skill_1_Name == SkillName.Elementalism )
+			{
+				if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
+					rune.SkillBonuses.Skill_1_Name = SkillName.Magery;
+				else if ( !hasNecros )
+					rune.SkillBonuses.Skill_1_Name = SkillName.Necromancy;
+				else
+				{
+					rune.SkillBonuses.Skill_1_Name = SkillName.Alchemy;
+					rune.SkillBonuses.Skill_1_Value = 0;
+				}
+			}
+
+			if ( rune.SkillBonuses.Skill_1_Name == SkillName.Elementalism )
+			{
+				if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
+					rune.SkillBonuses.Skill_1_Name = SkillName.Magery;
+				else if ( !hasNecros )
+					rune.SkillBonuses.Skill_1_Name = SkillName.Necromancy;
+				else
+				{
+					rune.SkillBonuses.Skill_1_Name = SkillName.Alchemy;
+					rune.SkillBonuses.Skill_1_Value = 0;
+				}
+			}
+
+			if ( rune.SkillBonuses.Skill_2_Name == SkillName.Elementalism )
+			{
+				if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
+					rune.SkillBonuses.Skill_2_Name = SkillName.Magery;
+				else if ( !hasNecros )
+					rune.SkillBonuses.Skill_2_Name = SkillName.Necromancy;
+				else
+				{
+					rune.SkillBonuses.Skill_2_Name = SkillName.Alchemy;
+					rune.SkillBonuses.Skill_2_Value = 0;
+				}
+			}
+
+			if ( rune.SkillBonuses.Skill_3_Name == SkillName.Elementalism )
+			{
+				if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
+					rune.SkillBonuses.Skill_3_Name = SkillName.Magery;
+				else if ( !hasNecros )
+					rune.SkillBonuses.Skill_3_Name = SkillName.Necromancy;
+				else
+				{
+					rune.SkillBonuses.Skill_3_Name = SkillName.Alchemy;
+					rune.SkillBonuses.Skill_3_Value = 0;
+				}
+			}
+
+			if ( rune.SkillBonuses.Skill_4_Name == SkillName.Elementalism )
+			{
+				if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
+					rune.SkillBonuses.Skill_4_Name = SkillName.Magery;
+				else if ( !hasNecros )
+					rune.SkillBonuses.Skill_4_Name = SkillName.Necromancy;
+				else
+				{
+					rune.SkillBonuses.Skill_4_Name = SkillName.Alchemy;
+					rune.SkillBonuses.Skill_4_Value = 0;
+				}
+			}
+
+			if ( rune.SkillBonuses.Skill_5_Name == SkillName.Elementalism )
+			{
+				if ( !hasMagery && ( Utility.RandomBool() && !hasNecros ) )
+					rune.SkillBonuses.Skill_5_Name = SkillName.Magery;
+				else if ( !hasNecros )
+					rune.SkillBonuses.Skill_5_Name = SkillName.Necromancy;
+				else
+				{
+					rune.SkillBonuses.Skill_5_Name = SkillName.Alchemy;
+					rune.SkillBonuses.Skill_5_Value = 0;
+				}
+			}
+
+			if ( Server.Misc.ResearchSettings.ResearchMaterials( from ) != null )
+			{
+				int spells = 0;
+
+				while ( spells < 65 )
+				{
+					spells++;
+
+					if ( Server.Misc.Research.GetResearch( this, spells ) )
+						rune.AddAncient( Int32.Parse( Research.SpellInformation( spells, 12 ) ) );
+				}
+			}
+
+			book.Delete();
+			from.SendMessage( "Using your research, you make a new spellbook." );
+
+			from.AddToBackpack( rune );
+			from.PlaySound( 0x55 );
 		}
 
         public static void InvokeCommand( string c, Mobile from )

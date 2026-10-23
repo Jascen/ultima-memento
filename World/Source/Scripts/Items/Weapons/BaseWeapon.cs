@@ -11,6 +11,7 @@ using Server.Spells.Ninjitsu;
 using Server.Engines.Craft;
 using System.Collections.Generic;
 using Server.SkillHandlers;
+using Server.Engines.Avatar;
 
 namespace Server.Items
 {
@@ -709,38 +710,56 @@ namespace Server.Items
 
 		public override bool CanEquip( Mobile from )
 		{
-			if( RequiredRace != null && from.Race != RequiredRace )
+			if( from.AccessLevel < AccessLevel.GameMaster )
 			{
-				if( RequiredRace == Race.Elf )
-					from.SendLocalizedMessage( 1072203 ); // Only Elves may use this.
-				else
-					from.SendMessage( "Only {0} may use this.", RequiredRace.PluralName );
+				if ( this is IAvatarOnlyItem )
+				{
+					var avatarOnlyItem = this as IAvatarOnlyItem;
+					var player = from as PlayerMobile;
+					if ( player == null || !player.Avatar.Active )
+					{
+						from.SendMessage("Only an Avatar may use this item.");
+						return false;
+					}
 
-				return false;
+					if ( avatarOnlyItem.PlayerOwner != player )
+					{
+						from.SendMessage("This item belongs to another.");
+						return false;
+					}
+				}
+
+				if( RequiredRace != null && from.Race != RequiredRace )
+				{
+					if( RequiredRace == Race.Elf )
+						from.SendLocalizedMessage( 1072203 ); // Only Elves may use this.
+					else
+						from.SendMessage( "Only {0} may use this.", RequiredRace.PluralName );
+
+					return false;
+				}
+				else if ( from.Dex < DexRequirement )
+				{
+					from.SendMessage( "You are not nimble enough to equip that." );
+					return false;
+				} 
+				else if ( from.Str < AOS.Scale( StrRequirement, 100 - GetLowerStatReq() ) )
+				{
+					from.SendLocalizedMessage( 500213 ); // You are not strong enough to equip that.
+					return false;
+				}
+				else if ( from.Int < IntRequirement )
+				{
+					from.SendMessage( "You are not intelligent enough to equip that." );
+					return false;
+				}
+				else if ( !from.CanBeginAction( typeof( BaseWeapon ) ) )
+				{
+					return false;
+				}
 			}
-			else if ( from.Dex < DexRequirement )
-			{
-				from.SendMessage( "You are not nimble enough to equip that." );
-				return false;
-			} 
-			else if ( from.Str < AOS.Scale( StrRequirement, 100 - GetLowerStatReq() ) )
-			{
-				from.SendLocalizedMessage( 500213 ); // You are not strong enough to equip that.
-				return false;
-			}
-			else if ( from.Int < IntRequirement )
-			{
-				from.SendMessage( "You are not intelligent enough to equip that." );
-				return false;
-			}
-			else if ( !from.CanBeginAction( typeof( BaseWeapon ) ) )
-			{
-				return false;
-			}
-			else
-			{
-				return base.CanEquip( from );
-			}
+
+			return base.CanEquip( from );
 		}
 
 		public virtual bool UseSkillMod{ get{ return !Core.AOS; } }

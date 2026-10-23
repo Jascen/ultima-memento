@@ -2674,7 +2674,7 @@ namespace Server
 			new ItemSalesInfo( typeof(	AlienHides	),	16	,	0	,	80	,	false	,	false	,	World.None	,	Category.Resource	,	Material.None	,	Market.Tanner	),
 			new ItemSalesInfo( typeof(	HikingBoots	),	800	,	15	,	0	,	false	,	false	,	World.None	,	Category.MonsterRace	,	Material.Leather	,	Market.Shoes	),
 			new ItemSalesInfo( typeof(	Hinge	),	2	,	5	,	80	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Tinker	),
-			new ItemSalesInfo( typeof(	HiveTool	),	100	,	15	,	0	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Wax	),
+			new ItemSalesInfo( typeof(	HiveTool	),	23	,	15	,	0	,	false	,	false	,	World.None	,	Category.None	,	Material.None	,	Market.Wax	),
 			new ItemSalesInfo( typeof(	HolidayBell	),	280	,	3	,	0	,	false	,	false	,	World.None	,	Category.Christmas	,	Material.None	,	Market.None	),
 			new ItemSalesInfo( typeof(	HolidayBells	),	560	,	3	,	0	,	false	,	false	,	World.None	,	Category.Christmas	,	Material.None	,	Market.None	),
 			new ItemSalesInfo( typeof(	HolidayTreeDeed	),	860	,	3	,	0	,	false	,	false	,	World.None	,	Category.Christmas	,	Material.None	,	Market.None	),

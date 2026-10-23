@@ -49,7 +49,7 @@ namespace Server.Spells.Herbalist
 			{
 				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
 			}
-			else if ( reg.IsPartOf( typeof( PirateRegion ) ) )
+			else if ( Worlds.IsRoughWaters( reg ) )
 			{
 				Caster.SendMessage( "These waters are too rough to cast this spell." );
 			}

@@ -188,9 +188,13 @@ namespace Server.Temptation
 							case ActionButtonType.Puzzle_master:
 								var builder = new StringBuilder();
 								builder.Append("This temptation removes the need for integrating Stealing and Snooping into your template.<br><br>");
-								builder.Append("Permanently reduced skill cap bonuses<br>");
-								builder.Append("- Fugitives begin with a +200 skill cap bonus, down from +300<br>");
-								builder.Append("- Titan of Ether quest completion grants +200 skill cap bonus, down from +500<br>");
+								if (!m_Target.Avatar.Active)
+								{
+									builder.Append("Permanently reduced skill cap bonuses<br>");
+									builder.Append("- Fugitives begin with a +200 skill cap bonus, down from +300<br>");
+									builder.Append("- Titan of Ether quest completion grants +200 skill cap bonus, down from +500<br>");	
+								}
+
 								builder.Append("<br>");
 
 								builder.Append("Monster racial bonuses<br>");
@@ -287,10 +291,16 @@ namespace Server.Temptation
 					return "+ Your stat and skill gain rate is impacted by your Hunger"
 					+ "<br>x Hunger and thirst decay twice as fast";
 
-				case ActionButtonType.Puzzle_master:
-					return "+ You learn how to solve puzzle boxes"
-					+ "<br>x Permanently reduced skill cap bonuses"
-					+ "<br>x Monster racial bonuses work differently";
+				case ActionButtonType.Puzzle_master: {
+					var text = "+ You learn how to solve puzzle boxes";
+					if (!m_Target.Avatar.Active)
+					{
+						text += "<br>x Permanently reduced skill cap bonuses";
+						text += "<br>x Monster racial bonuses work differently";
+					}
+
+					return text;
+				}
 
 				case ActionButtonType.This_is_just_a_tribute: return "- Tribute quests rewards are changed";
 				case ActionButtonType.Deathwish:

@@ -5,7 +5,7 @@ namespace Server.Items
 {
 	public class HoardMinionFamiliarItem : Item
 	{
-		private const int SUMMON_DURATION_MINUTES = 10;
+		public const int SUMMON_DURATION_MINUTES = 10;
 
 		[Constructable]
 		public HoardMinionFamiliarItem() : base( 0x2611 )

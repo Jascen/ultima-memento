@@ -7060,6 +7060,24 @@ namespace Server.Mobiles
 					}
 					else
 					{
+						var hasElementalism = 0 < m.Skills[SkillName.Elementalism].Base;
+						var hasMagery = 0 < m.Skills[SkillName.Magery].Base;
+						var hasNecromancy = 0 < m.Skills[SkillName.Necromancy].Base;
+
+						if ( skill == SkillName.Elementalism && (hasMagery || hasNecromancy) )
+						{
+							if (hasMagery)
+								Say( "I cannot teach thee. Thy mind is already enthralled by the mundane, simple magicks of Magery." );
+							else
+								Say( "I cannot teach thee. Thy mind is already corrupted by the parasitic forces of Necromancy." );
+							return false;
+						}
+						else if ( hasElementalism && (skill == SkillName.Magery || skill == SkillName.Necromancy) )
+						{
+							Say( "I cannot teach thee. Thy wits have grown far too dull and brutish from the raw channels of Elementalism." );
+							return false;
+						}
+
 						// I will teach thee all I know, if paid the amount in full.  The price is:
 						Say( 1019077, AffixType.Append, String.Format( " {0}", pointsToLearn ), "" );
 						Say( 1043108 ); // For less I shall teach thee less.
