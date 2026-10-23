@@ -9,7 +9,7 @@ namespace Server.Spells.Jester
 	public abstract class JesterSpell : Spell
 	{
 		public abstract int RequiredTithing { get; }
-		public double RequiredSkill { get { return 10; } }
+		public abstract double RequiredSkill { get; }
 		public abstract int RequiredMana{ get; }
 		public override bool ClearHandsOnCast { get { return false; } }
 		public override SkillName CastSkill { get { return SkillName.Begging; } }

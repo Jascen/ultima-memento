@@ -1,25 +1,33 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
-using Server.Items;
-using Server.Mobiles;
 
 namespace Server.Spells.Jester
 {
 	public class RabbitInAHat : JesterSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Rabbit in a Hat", "What's in the hat?",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 267,
+					IconGraphic = 20753,
+					Name = "Rabbit in a Hat",
+					PowerWords = "What's in the hat?",
+					Description = "Alakazam! Pull rabbits from a hat to dazzle your audience, although petting them may be unwise. Said to be the babies of the killer rabbit of Caerbannog, these critters will follow your commands for a short period of time, and maul those you set them loose on. The strength of the rabbits, and the time they remain, is dependent on your jester skills.",
+					ManaCost = 30,
+					TithingCost = 150,
+					MinSkill = 10,
+					TargetType = TargetFlags.None
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3.0 ); } }
-		public override int RequiredTithing{ get{ return 150; } }
-		public override int RequiredMana{ get{ return 30; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public RabbitInAHat( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public RabbitInAHat( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

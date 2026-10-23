@@ -1,26 +1,34 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
-using Server.Items;
-using Server.Mobiles;
 using System.Collections;
 
 namespace Server.Spells.Jester
 {
 	public class Insult : JesterSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Insult", "You know what?",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 264,
+					IconGraphic = 20747,
+					Name = "Insult",
+					PowerWords = "You know what?",
+					Description = "Get ready to deal a sharp tongued insult! Although your words won't have them slipping on their tears, it will demoralize them to the point where their mana will begin to fade as they reflect on their hurt feelings. The duration of the decline, as well as how much mana is lost each second, is dependent on your jester skills.",
+					ManaCost = 60,
+					TithingCost = 40,
+					MinSkill = 10,
+					TargetType = TargetFlags.Harmful
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.0 ); } }
-		public override int RequiredTithing{ get{ return 60; } }
-		public override int RequiredMana{ get{ return 40; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public Insult( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public Insult( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

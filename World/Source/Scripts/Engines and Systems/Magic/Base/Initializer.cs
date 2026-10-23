@@ -201,16 +201,16 @@ namespace Server.Spells
 			Register( 259, typeof( Mystic.WindRunner ) );
 
 			// Jester abilities
-			Register( 260, typeof( Jester.CanOfSnakes ) );
-			Register( 261, typeof( Jester.Clowns ) );
-			Register( 262, typeof( Jester.FlowerPower ) );
-			Register( 263, typeof( Jester.Hilarity ) );
-			Register( 264, typeof( Jester.Insult ) );
-			Register( 265, typeof( Jester.JumpAround ) );
-			Register( 266, typeof( Jester.PoppingBalloon ) );
-			Register( 267, typeof( Jester.RabbitInAHat ) );
-			Register( 268, typeof( Jester.SeltzerBottle ) );
-			Register( 269, typeof( Jester.SurpriseGift ) );
+			Register( Jester.CanOfSnakes.SpellInfo.SpellDefinition.SpellID, typeof( Jester.CanOfSnakes ) ); // 260
+			Register( Jester.Clowns.SpellInfo.SpellDefinition.SpellID, typeof( Jester.Clowns ) ); // 261
+			Register( Jester.FlowerPower.SpellInfo.SpellDefinition.SpellID, typeof( Jester.FlowerPower ) ); // 262
+			Register( Jester.Hilarity.SpellInfo.SpellDefinition.SpellID, typeof( Jester.Hilarity ) ); // 263
+			Register( Jester.Insult.SpellInfo.SpellDefinition.SpellID, typeof( Jester.Insult ) ); // 264
+			Register( Jester.JumpAround.SpellInfo.SpellDefinition.SpellID, typeof( Jester.JumpAround ) ); // 265
+			Register( Jester.PoppingBalloon.SpellInfo.SpellDefinition.SpellID, typeof( Jester.PoppingBalloon ) ); // 266
+			Register( Jester.RabbitInAHat.SpellInfo.SpellDefinition.SpellID, typeof( Jester.RabbitInAHat ) ); // 267
+			Register( Jester.SeltzerBottle.SpellInfo.SpellDefinition.SpellID, typeof( Jester.SeltzerBottle ) ); // 268
+			Register( Jester.SurpriseGift.SpellInfo.SpellDefinition.SpellID, typeof( Jester.SurpriseGift ) ); // 269
 
 			// Syth abilities
 			Register( 270, typeof( Syth.Psychokinesis ) );

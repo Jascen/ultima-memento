@@ -1,25 +1,33 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
-using Server.Items;
-using Server.Mobiles;
 
 namespace Server.Spells.Jester
 {
 	public class SurpriseGift : JesterSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Surprise Gift", "Here is a gift for you!",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 269,
+					IconGraphic = 20752,
+					Name = "Surprise Gift",
+					PowerWords = "Here is a gift for you!",
+					Description = "Surprise your audience with a gift they will never forget. These presents are placed on the ground where nearby foes may be intrigued enough to go open it. They will be surprise by a nice fiery bang. The explosion is equitable to your jester skills, and the range of the explosion will also increase with those skilled as fools.",
+					ManaCost = 20,
+					TithingCost = 80,
+					MinSkill = 10,
+					TargetType = TargetFlags.Harmful
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3.0 ); } }
-		public override int RequiredTithing{ get{ return 80; } }
-		public override int RequiredMana{ get{ return 20; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public SurpriseGift( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public SurpriseGift( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

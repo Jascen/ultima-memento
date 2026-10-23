@@ -1,25 +1,33 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
-using Server.Items;
-using Server.Mobiles;
 
 namespace Server.Spells.Jester
 {
 	public class PoppingBalloon : JesterSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Popping Balloon", "Would you like a balloon?",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 266,
+					IconGraphic = 20746,
+					Name = "Popping Balloon",
+					PowerWords = "Would you like a balloon?",
+					Description = "Everyong likes balloons, until they decide to play with one of yours. These balloons will float toward your foes, where it will be easily popped and thus cause a physically explosive force. The explosion is equitable to your jester skills, and the range of the explosion will also increase with those skilled as fools.",
+					ManaCost = 20,
+					TithingCost = 100,
+					MinSkill = 10,
+					TargetType = TargetFlags.Harmful
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3.0 ); } }
-		public override int RequiredTithing{ get{ return 100; } }
-		public override int RequiredMana{ get{ return 20; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public PoppingBalloon( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public PoppingBalloon( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 
