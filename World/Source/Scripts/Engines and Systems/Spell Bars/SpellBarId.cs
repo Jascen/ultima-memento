@@ -32,5 +32,8 @@ namespace Server.SpellBars
 
 		Priest_1,
 		Priest_2,
+
+		Shinobi_1,
+		Shinobi_2,
 	}
 }

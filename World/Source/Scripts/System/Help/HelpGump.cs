@@ -170,6 +170,14 @@ namespace Server.Engines.Help
 			MagicToolbar_Priest_II_Config,
 			MagicToolbar_Priest_II_Open,
 			MagicToolbar_Priest_II_ToggleAutoOpen,
+			MagicToolbar_Shinobi_I_Close,
+			MagicToolbar_Shinobi_I_Config,
+			MagicToolbar_Shinobi_I_Open,
+			MagicToolbar_Shinobi_I_ToggleAutoOpen,
+			MagicToolbar_Shinobi_II_Close,
+			MagicToolbar_Shinobi_II_Config,
+			MagicToolbar_Shinobi_II_Open,
+			MagicToolbar_Shinobi_II_ToggleAutoOpen,
 
 			Navigate_Actions,
 			Navigate_Bars,
@@ -505,6 +513,7 @@ namespace Server.Engines.Help
 				var hasMonk = Server.Misc.GetPlayerInfo.isMonk(from);
 				var hasNecromancy = 0 < from.Skills[SkillName.Necromancy].Value;
 				var hasResearch = Server.Misc.ResearchSettings.ResearchMaterials(from) != null || ResearchSettings.BookCaster( from );
+				var hasShinobi = 0 < from.Skills[SkillName.Ninjitsu].Value;
 
 				const int SECTION_START_X = 245;
 				const int BAR_BORDER_HEIGHT = 4;
@@ -619,6 +628,16 @@ namespace Server.Engines.Help
 					barS += barM;
 
 					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Priest_II_Config, PageActionType.MagicToolbar_Priest_II_Open, PageActionType.MagicToolbar_Priest_II_Close, PageActionType.MagicToolbar_Priest_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Priest_2));
+					barS += barM;
+				}
+
+				if (hasShinobi)
+				{
+					barS -= BAR_BORDER_HEIGHT;
+					AddMagicToolbarRow(SECTION_START_X, barS, "Shinobi Ability Bar", PageActionType.MagicToolbar_Shinobi_I_Config, PageActionType.MagicToolbar_Shinobi_I_Open, PageActionType.MagicToolbar_Shinobi_I_Close, PageActionType.MagicToolbar_Shinobi_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Shinobi_1), true);
+					barS += barM;
+
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Shinobi_II_Config, PageActionType.MagicToolbar_Shinobi_II_Open, PageActionType.MagicToolbar_Shinobi_II_Close, PageActionType.MagicToolbar_Shinobi_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Shinobi_2));
 					barS += barM;
 				}
 			}
@@ -1545,6 +1564,14 @@ namespace Server.Engines.Help
 				case PageActionType.MagicToolbar_Priest_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Priest_2, from, (int)PageActionType.Navigate_MagicToolbars ) ); break;
 				case PageActionType.MagicToolbar_Priest_II_Open: reopenPage = true; SpellBarRegistry.OpenToolbarGump(from, SpellBarId.Priest_2); break;
 				case PageActionType.MagicToolbar_Priest_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Priest_2 ); break;
+				case PageActionType.MagicToolbar_Shinobi_I_Close: reopenPage = true; SpellBarRegistry.CloseToolbar(from, SpellBarId.Shinobi_1); break;
+				case PageActionType.MagicToolbar_Shinobi_I_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Shinobi_1, from, (int)PageActionType.Navigate_MagicToolbars ) ); break;
+				case PageActionType.MagicToolbar_Shinobi_I_Open: reopenPage = true; SpellBarRegistry.OpenToolbarGump(from, SpellBarId.Shinobi_1); break;
+				case PageActionType.MagicToolbar_Shinobi_I_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Shinobi_1 ); break;
+				case PageActionType.MagicToolbar_Shinobi_II_Close: reopenPage = true; SpellBarRegistry.CloseToolbar(from, SpellBarId.Shinobi_2); break;
+				case PageActionType.MagicToolbar_Shinobi_II_Config: TryConfigureSpellBar( SpellBarRegistry.CreateSetupGump( SpellBarId.Shinobi_2, from, (int)PageActionType.Navigate_MagicToolbars ) ); break;
+				case PageActionType.MagicToolbar_Shinobi_II_Open: reopenPage = true; SpellBarRegistry.OpenToolbarGump(from, SpellBarId.Shinobi_2); break;
+				case PageActionType.MagicToolbar_Shinobi_II_ToggleAutoOpen: reopenPage = true; ToggleAutoOpenSpellBar( from, SpellBarId.Shinobi_2 ); break;
 
 				case PageActionType.Setting_MagerySpellColor_White:
 				{

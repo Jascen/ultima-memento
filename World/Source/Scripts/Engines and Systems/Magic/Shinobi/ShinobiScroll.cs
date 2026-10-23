@@ -34,6 +34,11 @@ namespace Server.Items
 		[CommandProperty(AccessLevel.GameMaster)]
 		public bool HasTigerStrength { get; set; }
 
+		private const int FIRST_ABILITY_PAGE = 2;
+
+		private static int LastPage
+		{ get { return FIRST_ABILITY_PAGE + ShinobiSpellProvider.SpellCount - 1; } }
+
 		public int Page;
 		[CommandProperty(AccessLevel.GameMaster)]
 		public int Page_ { get { return Page; } set { Page = value; InvalidateProperties(); } }
@@ -87,7 +92,7 @@ namespace Server.Items
 				InvalidateProperties();
 			}
 
-			if ( Page == 0 ){ Page = 1; } else if ( Page < 2 ){ Page = 10; } else if ( Page > 10 ){ Page = 1; }
+			if ( Page < 1 || Page > LastPage ){ Page = 1; }
 
 			if ( remove )
 			{
@@ -227,7 +232,7 @@ namespace Server.Items
 				text = text + "To prove yourself of being worthy of these abilities, you will have to overcome a series of trials. Each ability will list the item you must seek and the place where it can be sought. The ninja has a choice of trial to undertake, as each ability provides two choices. One is in the land of Sosaria and the other is in the land of Lodoria. Slay the beasts and get the items. Place them on this scroll and the shinobi secrets will be revealed to you. ";
 			}
 
-			text = text + "<br><br>Each ability will display the description as well as the skill required, the tithing gold needed, along with the mana necessary. To tithe gold to the spirits, find a Shrine of Durama where you can select it and then offer the gold you wish to part with. You can usually find these shrines in a dojo, and some ninjas tithe gold to almost any other deity. There are choices for having a horizontal or vertical menu bar to use these abilities quickly, but you can also select the icon within this scroll to use the skill.";
+			text = text + "<br><br>Each ability will display the description as well as the skill required, the tithing gold needed, along with the mana necessary. To tithe gold to the spirits, find a Shrine of Durama where you can select it and then offer the gold you wish to part with. You can usually find these shrines in a dojo, and some ninjas tithe gold to almost any other deity. You can set up horizontal or vertical ability bars to use these abilities quickly from the Magic Toolbars section of [toolbars, but you can also select the icon within this scroll to use the skill.";
 
 			text = text + "<br><br>You may also use [Spells_Shinobi to see the commands to use your shinobi abilities.";
 
@@ -268,8 +273,6 @@ namespace Server.Items
 
 		public class ShinobiScrollGump : Gump
 		{
-			private const int FIRST_ABILITY_PAGE = 3;
-
 			private ShinobiScroll mScroll;
 			public ShinobiScrollGump( Mobile from, ShinobiScroll scroll ): base( 100, 100 )
 			{
@@ -281,8 +284,8 @@ namespace Server.Items
 
 				AddPage(0);
 
-				int left = scroll.Page - 1; 	if ( left < 1 ){ left = 10; }
-				int right = scroll.Page + 1;	if ( right > 10 ){ right = 1; }
+				int left = scroll.Page - 1; 	if ( left < 1 ){ left = LastPage; }
+				int right = scroll.Page + 1;	if ( right > LastPage ){ right = 1; }
 
 				AddImage(0, 0, 10879);
 				AddButton(41, 12, 4014, 4014, left, GumpButtonType.Reply, 0);
@@ -292,18 +295,7 @@ namespace Server.Items
 				{
 					AddHtml( 71, 75, 384, 140, @"<BODY><BASEFONT Color=#111111><BIG>" + ShinobiSpeech( mScroll ) + "</BIG></BASEFONT></BODY>", (bool)false, (bool)true, false);
 				}
-				else if ( scroll.Page == 2 )
-				{
-					AddButton(60, 90, 4011, 4011, 21, GumpButtonType.Reply, 0);
-					AddHtml( 100, 90, 340, 21, @"<BODY><BASEFONT Color=#111111><BIG>Open Horizontal Ability Bar</BIG></BASEFONT></BODY>", (bool)false, (bool)false,  false);
-
-					AddButton(60, 135, 4011, 4011, 22, GumpButtonType.Reply, 0);
-					AddHtml( 100, 135, 340, 21, @"<BODY><BASEFONT Color=#111111><BIG>Open Vertical Ability Bar</BIG></BASEFONT></BODY>", (bool)false, (bool)false,  false);
-
-					AddButton(60, 180, 4017, 4017, 23, GumpButtonType.Reply, 0);
-					AddHtml( 100, 180, 340, 21, @"<BODY><BASEFONT Color=#111111><BIG>Close Ability Bar</BIG></BASEFONT></BODY>", (bool)false, (bool)false,  false);
-				}
-				else if ( scroll.Page >= FIRST_ABILITY_PAGE && scroll.Page < FIRST_ABILITY_PAGE + ShinobiSpellProvider.SpellCount )
+				else if ( scroll.Page >= FIRST_ABILITY_PAGE && scroll.Page <= LastPage )
 				{
 					SpellDefinition definition = ShinobiSpellProvider.SpellDefinitions[scroll.Page - FIRST_ABILITY_PAGE];
 					string clue = "";
@@ -346,94 +338,13 @@ namespace Server.Items
 
 				if ( info.ButtonID < 1 ){ showScroll = false; }
 				else if ( isAbility ){ ShinobiSpellProvider.Cast( from, info.ButtonID ); }
-				else if ( info.ButtonID > 20 && info.ButtonID < 24 )
-				{
-					from.CloseGump( typeof( ShinobiRow ) );
-					from.CloseGump( typeof( ShinobiColumn ) );
-					showScroll = false;
-				}
-
-				if ( info.ButtonID == 21 ){ 		from.SendGump( new ShinobiRow( from, mScroll ) ); 		showScroll = false; }
-				else if ( info.ButtonID == 22 ){ 	from.SendGump( new ShinobiColumn( from, mScroll ) ); 	showScroll = false; }
 
 				if ( !isAbility && info.ButtonID > 0 ){ from.SendSound( 0x4A ); }
 
-				from.CloseGump( typeof( ShinobiScrollGump ) );
-
 				if ( showScroll )
 				{
-					if ( info.ButtonID >= 1 && info.ButtonID <= 10 ){ mScroll.Page = info.ButtonID; }
+					if ( info.ButtonID >= 1 && info.ButtonID <= LastPage ){ mScroll.Page = info.ButtonID; }
 					from.SendGump( new ShinobiScrollGump( from, mScroll ) );
-				}
-			}
-		}
-
-		public class ShinobiRow : Gump
-		{
-			private ShinobiScroll mScroll;
-			public ShinobiRow( Mobile from, ShinobiScroll scroll ): base( 25, 25 )
-			{
-				mScroll = scroll;
-				this.Closable=false;
-				this.Disposable=true;
-				this.Dragable=true;
-				this.Resizable=false;
-
-				AddPage(0);
-				AddImage(2, 0, 10880);
-				int line = 0;
-				foreach ( var definition in ShinobiSpellProvider.SpellDefinitions )
-				{
-					if ( !scroll.GetAbility( definition.SpellID ) ) continue;
-
-					line = line+50;
-					AddButton(line, 2, definition.IconGraphic, definition.IconGraphic, definition.SpellID, GumpButtonType.Reply, 0);
-				}
-			}
-
-			public override void OnResponse( NetState state, RelayInfo info )
-			{
-				Mobile from = state.Mobile;
-				if ( ShinobiSpellProvider.GetDefinition( info.ButtonID ) != null ){ ShinobiSpellProvider.Cast( from, info.ButtonID ); }
-				from.CloseGump( typeof( ShinobiRow ) );
-				if ( mScroll.owner == from )
-				{
-					from.SendGump( new ShinobiRow( from, mScroll ) );
-				}
-			}
-		}
-
-		public class ShinobiColumn : Gump
-		{
-			private ShinobiScroll mScroll;
-			public ShinobiColumn( Mobile from, ShinobiScroll scroll ): base( 25, 25 )
-			{
-				mScroll = scroll;
-				this.Closable=false;
-				this.Disposable=true;
-				this.Dragable=true;
-				this.Resizable=false;
-
-				AddPage(0);
-				AddImage(4, 0, 10880);
-				int line = 3;
-				foreach ( var definition in ShinobiSpellProvider.SpellDefinitions )
-				{
-					if ( !scroll.GetAbility( definition.SpellID ) ) continue;
-
-					line = line+50;
-					AddButton(2, line, definition.IconGraphic, definition.IconGraphic, definition.SpellID, GumpButtonType.Reply, 0);
-				}
-			}
-
-			public override void OnResponse( NetState state, RelayInfo info )
-			{
-				Mobile from = state.Mobile;
-				if ( ShinobiSpellProvider.GetDefinition( info.ButtonID ) != null ){ ShinobiSpellProvider.Cast( from, info.ButtonID ); }
-				from.CloseGump( typeof( ShinobiColumn ) );
-				if ( mScroll.owner == from )
-				{
-					from.SendGump( new ShinobiColumn( from, mScroll ) );
 				}
 			}
 		}

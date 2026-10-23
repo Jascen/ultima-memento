@@ -269,7 +269,7 @@ namespace Server.Gumps
 						AddButton(x, y, QuickConfig.rowNumber(i,from), QuickConfig.rowNumber(i,from), i, GumpButtonType.Reply, 0);
 					}
 
-					if ( i == 25 || i == 26 || i == 27 || i == 29 || i == 33 || i == 34 || i == 35 )
+					if ( i == 25 || i == 26 || i == 27 || i == 29 || i == 33 || i == 34 || i == 35 || i == 37 )
 					{
 						x=x+v; y=y+w; AddButton(x, y, QuickConfig.rowNumber(i,from), QuickConfig.rowNumber(i,from), i*10, GumpButtonType.Reply, 0);
 					}
@@ -391,29 +391,8 @@ namespace Server.Gumps
 			else if ( info.ButtonID == 360 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Ancient_2 ); }
 			else if ( info.ButtonID == 396 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Ancient_3 ); }
 			else if ( info.ButtonID == 432 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Ancient_4 ); }
-			else if ( info.ButtonID == 37 )
-			{
-				if ( from.HasGump( typeof( ShinobiScroll.ShinobiColumn ) ) )
-				{
-					from.CloseGump( typeof( ShinobiScroll.ShinobiColumn ) );
-					if ( from.Backpack.FindItemByType( typeof ( ShinobiScroll ) ) != null )
-					{
-						ShinobiScroll scroll = (ShinobiScroll)(from.Backpack.FindItemByType( typeof ( ShinobiScroll ) ));
-						if ( scroll.owner == from )
-							from.SendGump( new Server.Items.ShinobiScroll.ShinobiRow( from, scroll ) );
-					}
-				}
-				else if ( from.HasGump( typeof( ShinobiScroll.ShinobiRow ) ) )
-				{
-					from.CloseGump( typeof( ShinobiScroll.ShinobiRow ) );
-				}
-				else if ( from.Backpack.FindItemByType( typeof ( ShinobiScroll ) ) != null )
-				{
-					ShinobiScroll scroll = (ShinobiScroll)(from.Backpack.FindItemByType( typeof ( ShinobiScroll ) ));
-					if ( scroll.owner == from )
-						from.SendGump( new Server.Items.ShinobiScroll.ShinobiColumn( from, scroll ) );
-				}
-			}
+			else if ( info.ButtonID == 37 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Shinobi_1 ); }
+			else if ( info.ButtonID == 370 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Shinobi_2 ); }
 			else if ( info.ButtonID == 38 )
 			{ 
 				if ( from.HasGump( typeof( SythSpellbook.PowerColumn ) ) )
