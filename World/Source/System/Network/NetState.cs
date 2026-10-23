@@ -96,6 +96,20 @@ namespace Server.Network {
 			}
 		}
 
+		/// <summary>
+		/// Replaces the address reported by the socket. This is used for clients that
+		/// connect through a proxy, such as web clients, so IP limits and logging use
+		/// the real client address instead of the proxy address.
+		/// </summary>
+		public void OverrideAddress( IPAddress address ) {
+			if ( address == null ) {
+				return;
+			}
+
+			m_Address = Utility.Intern( address );
+			m_ToString = m_Address.ToString();
+		}
+
 		private ClientFlags m_Flags;
 
 		private static bool m_Paused;

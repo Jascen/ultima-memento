@@ -81,6 +81,23 @@ namespace Server
 
 		public static bool S_AutoDetect = true;
 
+	// WebIdentity is used by the ClassicUO Web client (CUOWEB) and compatible web clients (LUOWEB). The secret must
+	// match the secret configured by the web proxy. Multiple secrets can be comma separated, for example if CUOWEB
+	// and LUOWEB use different secrets. Leave this blank to accept identities without validating them, but keep in
+	// mind that anyone can then forge the connecting IP address.
+
+		public static string S_WebIdentitySecret = "";
+
+	// If true, a web client that sends an incorrect WebIdentity secret will be disconnected.
+
+		public static bool S_WebIdentityKickOnBadSecret = true;
+
+	// If true, the real IP address supplied by the web proxy is used for IP limits, account restrictions, and logs.
+	// This also moves IP limit checks from connection time to login time so web clients sharing the proxy address
+	// are not disconnected before their identity can be read.
+
+		public static bool S_WebIdentityIpLimitWorkaround = true;
+
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
