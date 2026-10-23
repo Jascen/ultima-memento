@@ -582,24 +582,14 @@ namespace Server.Engines.Help
 					barS += barM;
 				}
 
-				if (hasKnightship)
+				if (hasKnightship && hasNegativeKarma)
 				{
 					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Knight Spell Bar", PageActionType.MagicToolbar_Knight_I_Config, PageActionType.MagicToolbar_Knight_I_Open, PageActionType.MagicToolbar_Knight_I_Close, PageActionType.MagicToolbar_Knight_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Knight_1), true);
+					AddMagicToolbarRow(SECTION_START_X, barS, "Death Knight Spell Bar", PageActionType.MagicToolbar_DeathKnight_I_Config, PageActionType.MagicToolbar_DeathKnight_I_Open, PageActionType.MagicToolbar_DeathKnight_I_Close, PageActionType.MagicToolbar_DeathKnight_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Death_1), true);
 					barS += barM;
 
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Knight_II_Config, PageActionType.MagicToolbar_Knight_II_Open, PageActionType.MagicToolbar_Knight_II_Close, PageActionType.MagicToolbar_Knight_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Knight_2));
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_DeathKnight_II_Config, PageActionType.MagicToolbar_DeathKnight_II_Open, PageActionType.MagicToolbar_DeathKnight_II_Close, PageActionType.MagicToolbar_DeathKnight_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Death_2));
 					barS += barM;
-
-					if (hasNegativeKarma)
-					{
-						barS -= BAR_BORDER_HEIGHT;
-						AddMagicToolbarRow(SECTION_START_X, barS, "Death Knight Spell Bar", PageActionType.MagicToolbar_DeathKnight_I_Config, PageActionType.MagicToolbar_DeathKnight_I_Open, PageActionType.MagicToolbar_DeathKnight_I_Close, PageActionType.MagicToolbar_DeathKnight_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Death_1), true);
-						barS += barM;
-
-						AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_DeathKnight_II_Config, PageActionType.MagicToolbar_DeathKnight_II_Open, PageActionType.MagicToolbar_DeathKnight_II_Close, PageActionType.MagicToolbar_DeathKnight_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Death_2));
-						barS += barM;
-					}
 				}
 
 				if (hasElementalism)
@@ -609,6 +599,36 @@ namespace Server.Engines.Help
 					barS += barM;
 
 					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Elemental_II_Config, PageActionType.MagicToolbar_Elemental_II_Open, PageActionType.MagicToolbar_Elemental_II_Close, PageActionType.MagicToolbar_Elemental_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Elemental_2));
+					barS += barM;
+				}
+
+				if (hasJedi)
+				{
+					barS -= BAR_BORDER_HEIGHT;
+					AddMagicToolbarRow(SECTION_START_X, barS, "Jedi Power Bar", PageActionType.MagicToolbar_Jedi_I_Config, PageActionType.MagicToolbar_Jedi_I_Open, PageActionType.MagicToolbar_Jedi_I_Close, PageActionType.MagicToolbar_Jedi_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jedi_1), true);
+					barS += barM;
+
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Jedi_II_Config, PageActionType.MagicToolbar_Jedi_II_Open, PageActionType.MagicToolbar_Jedi_II_Close, PageActionType.MagicToolbar_Jedi_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jedi_2));
+					barS += barM;
+				}
+
+				if (hasJester)
+				{
+					barS -= BAR_BORDER_HEIGHT;
+					AddMagicToolbarRow(SECTION_START_X, barS, "Jester Trick Bar", PageActionType.MagicToolbar_Jester_I_Config, PageActionType.MagicToolbar_Jester_I_Open, PageActionType.MagicToolbar_Jester_I_Close, PageActionType.MagicToolbar_Jester_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jester_1), true);
+					barS += barM;
+
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Jester_II_Config, PageActionType.MagicToolbar_Jester_II_Open, PageActionType.MagicToolbar_Jester_II_Close, PageActionType.MagicToolbar_Jester_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jester_2));
+					barS += barM;
+				}
+
+				if (hasKnightship)
+				{
+					barS -= BAR_BORDER_HEIGHT;
+					AddMagicToolbarRow(SECTION_START_X, barS, "Knight Spell Bar", PageActionType.MagicToolbar_Knight_I_Config, PageActionType.MagicToolbar_Knight_I_Open, PageActionType.MagicToolbar_Knight_I_Close, PageActionType.MagicToolbar_Knight_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Knight_1), true);
+					barS += barM;
+
+					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Knight_II_Config, PageActionType.MagicToolbar_Knight_II_Open, PageActionType.MagicToolbar_Knight_II_Close, PageActionType.MagicToolbar_Knight_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Knight_2));
 					barS += barM;
 				}
 
@@ -665,26 +685,6 @@ namespace Server.Engines.Help
 					barS += barM;
 
 					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Shinobi_II_Config, PageActionType.MagicToolbar_Shinobi_II_Open, PageActionType.MagicToolbar_Shinobi_II_Close, PageActionType.MagicToolbar_Shinobi_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Shinobi_2));
-					barS += barM;
-				}
-
-				if (hasJester)
-				{
-					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Jester Trick Bar", PageActionType.MagicToolbar_Jester_I_Config, PageActionType.MagicToolbar_Jester_I_Open, PageActionType.MagicToolbar_Jester_I_Close, PageActionType.MagicToolbar_Jester_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jester_1), true);
-					barS += barM;
-
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Jester_II_Config, PageActionType.MagicToolbar_Jester_II_Open, PageActionType.MagicToolbar_Jester_II_Close, PageActionType.MagicToolbar_Jester_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jester_2));
-					barS += barM;
-				}
-
-				if (hasJedi)
-				{
-					barS -= BAR_BORDER_HEIGHT;
-					AddMagicToolbarRow(SECTION_START_X, barS, "Jedi Power Bar", PageActionType.MagicToolbar_Jedi_I_Config, PageActionType.MagicToolbar_Jedi_I_Open, PageActionType.MagicToolbar_Jedi_I_Close, PageActionType.MagicToolbar_Jedi_I_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jedi_1), true);
-					barS += barM;
-
-					AddMagicToolbarRow(SECTION_START_X, barS, null, PageActionType.MagicToolbar_Jedi_II_Config, PageActionType.MagicToolbar_Jedi_II_Open, PageActionType.MagicToolbar_Jedi_II_Close, PageActionType.MagicToolbar_Jedi_II_ToggleAutoOpen, autoOpenSpellBarIds.Contains(SpellBarId.Jedi_2));
 					barS += barM;
 				}
 
