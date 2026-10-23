@@ -10,6 +10,15 @@ namespace Server.Scripts.Commands
 	{
 		private static List<Docs.DocCommandEntry> m_HelpEntries;
 
+		// Commands that predate the spell names they cast
+		private static readonly Dictionary<int, string> m_LegacyCommands = new Dictionary<int, string>
+		{
+			{ HellfireSpell.SpellInfo.SpellDefinition.SpellID, "DKHellfire" },
+			{ OrbOfOrcusSpell.SpellInfo.SpellDefinition.SpellID, "DKOrbOrcus" },
+			{ ShieldOfHateSpell.SpellInfo.SpellDefinition.SpellID, "DKShieldHate" },
+			{ StrengthOfSteelSpell.SpellInfo.SpellDefinition.SpellID, "DKStrengthSteel" },
+		};
+
 		public static void Initialize()
 		{
 			m_HelpEntries = CastSpellCommand.RegisterAll(
@@ -18,6 +27,10 @@ namespace Server.Scripts.Commands
 				DeathKnightSpellProvider.Cast,
 				definition =>
 				{
+					string legacyCommand;
+					if (m_LegacyCommands.TryGetValue(definition.SpellID, out legacyCommand))
+						return new string[] { legacyCommand };
+
 					var spellNameNormalized = definition.Name.String.Replace(" ", "").Replace("'", "");
 					return new string[] { string.Format("DK{0}", spellNameNormalized) };
 				}

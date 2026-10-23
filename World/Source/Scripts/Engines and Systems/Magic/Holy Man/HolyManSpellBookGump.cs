@@ -99,7 +99,7 @@ namespace Server.Gumps
 
 				AddHtml( 78, 80, 250, 314, @"<BODY><BASEFONT Color=" + color + ">" + info + "</BASEFONT></BODY>", (bool)false, (bool)true);
 
-				info = "Magic Toolbars: Here are the commands you can use (include the bracket) to manage magic toolbars that might help you play better.<br><br>[holyspell1 - Opens the 1st priest spell bar editor.<BR><BR>[holyspell2 - Opens the 2nd priest spell bar editor.<BR><BR>[holytool1 - Opens the 1st priest spell bar.<BR><BR>[holytool2 - Opens the 2nd priest spell bar.<BR><BR>[holyclose1 - Closes the 1st priest spell bar.<BR><BR>[holyclose2 - Closes the 2nd priest spell bar.<BR><BR>Below are the [ commands you can either type to quickly cast a particular spell, or set a hot key to issue this command and cast the spell.<BR><BR>[HMBanish<BR>    Cast Banish<BR><BR>[HMDampenSpirit<BR>    Cast Dampen Spirit<BR><BR>[HMEnchant<BR>    Cast Enchant<BR><BR>[HMHammerFaith<BR>    Cast Hammer of Faith<BR><BR>[HMHeavenlyLight<BR>    Cast Heavenly Light<BR><BR>[HMNourish<BR>    Cast Nourish<BR><BR>[HMPurge<BR>    Cast Purge<BR><BR>[HMRebirth<BR>    Cast Rebirth<BR><BR>[HMSacredBoon<BR>    Cast Sacred Boon<BR><BR>[HMSanctify<BR>    Cast Sanctify<BR><BR>[HMSeance<BR>    Cast Seance<BR><BR>[HMSmite<BR>    Cast Smite<BR><BR>[HMTouchLife<BR>    Cast Touch of Life<BR><BR>[HMTrialFire<BR>    Cast Trial by Fire<BR><BR>";
+				info = "Quick bars for these prayers can be set up in the Magic Toolbars section of [toolbars<BR><BR>You can use these prayers by a typed command, which allows you to make macros for using these if you want. Type [Spells_HolyMan to see each of these commands.";
 
 				AddHtml( 366, 80, 250, 314, @"<BODY><BASEFONT Color=" + color + ">" + info + "</BASEFONT></BODY>", (bool)false, (bool)true);
 			}

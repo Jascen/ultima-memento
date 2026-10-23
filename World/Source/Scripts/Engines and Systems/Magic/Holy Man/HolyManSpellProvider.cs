@@ -52,9 +52,9 @@ namespace Server.Spells.HolyMan
 
 		public static bool HasSpell(Mobile from, int spellID)
 		{
-			Spellbook book = Spellbook.Find(from, spellID, SpellbookType.HolyMan);
+			HolyManSpellbook book = Spellbook.Find(from, spellID, SpellbookType.HolyMan) as HolyManSpellbook;
 
-			return book != null && book.HasSpell(spellID);
+			return book != null && book.owner == from && book.HasSpell(spellID);
 		}
 	}
 }
