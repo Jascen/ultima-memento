@@ -167,7 +167,7 @@ namespace Server.Items
         public override int DefaultMaxItems { get { return ContainerMaxItems; } }
         public override int MaxWeight { get { return WeightReductionAmount == 1.0 ? 0 : 400; } }
 
-        private DateTime NextAccessTime = DateTime.Now;
+        internal DateTime NextAccessTime = DateTime.Now;
 
         public WeightReductionContainer() : this(0xE76)
         {
@@ -180,8 +180,25 @@ namespace Server.Items
             Hue = ContainerHue;
         }
 
+        public override bool OnDragDropInto(Mobile from, Item item, Point3D p)
+        {
+            if (HoldingBagCombiner.TryCombine(from, this, item))
+                return false;
+
+            if (item is Container)
+            {
+                from.SendMessage("That item is not allowed in this container");
+                return false;
+            }
+
+            return base.OnDragDropInto(from, item, p);
+        }
+
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
+            if (HoldingBagCombiner.TryCombine(from, this, dropped))
+                return false;
+
             if (dropped is Container)
             {
                 from.SendMessage("That item is not allowed in this container");
