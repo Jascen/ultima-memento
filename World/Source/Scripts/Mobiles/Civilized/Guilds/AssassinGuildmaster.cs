@@ -1,13 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Server;
-using Server.Targeting;
 using Server.Items;
-using Server.Network;
 using Server.ContextMenus;
-using Server.Gumps;
-using Server.Misc;
-using Server.Mobiles;
 
 namespace Server.Mobiles
 {
@@ -95,7 +89,7 @@ namespace Server.Mobiles
 			{
 				m_From = from;
 				m_Giver = giver;
-				Enabled = m_Giver.CheckVendorAccess( from );
+				Enabled = m_Giver.CheckVendorAccess( from, true ); // Bribery is open to non-members
 			}
 
 			public override void OnClick()
