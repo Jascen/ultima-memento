@@ -42,7 +42,6 @@ namespace Server.Engines.Avatar
 							"If you believe your template is unplayable, you may restart the drafting process.",
 							() =>
 							{
-								context.SetDraftModeEnabled(from, false);
 								context.SetDraftModeEnabled(from, true);
 								// from.Kill();
 								// from.Resurrect();
@@ -94,7 +93,7 @@ namespace Server.Engines.Avatar
 			}
 
 			var isInitialDraft = context.DraftPicksSpent < Constants.DRAFT_START_PICK_AMOUNT;
-			var skills = context.DraftPicksSpent <= Constants.DRAFT_START_PICK_AMOUNT
+			var skills = context.DraftPicksSpent < Constants.DRAFT_START_PICK_AMOUNT
 				? allSkills.Where(skillName => context.IsSmartSkill(skillName))
 				: allSkills;
 			foreach (var skillName in skills)
