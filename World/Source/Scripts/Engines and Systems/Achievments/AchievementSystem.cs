@@ -230,7 +230,7 @@ namespace Scripts.Mythik.Systems.Achievements
 			AddDungeon(149, 3, discoverLodoria, "Dungeon Despise");
 			AddDungeon(150, 3, discoverLodoria, "Dungeon Deceit");
 			AddDungeon(151, 3, discoverLodoria, "Dungeon Destard");
-			AddDungeon(152, 3, discoverLodoria, "the Frozen Hells", false);
+			AddDungeon(152, 3, discoverLodoria, "the Frozen Hells");
 			AddDungeon(153, 3, discoverLodoria, "Dungeon Hythloth");
 			AddDungeon(154, 3, discoverLodoria, "Dungeon Wrong", false);
 			AddDungeon(155, 3, discoverLodoria, "the Lizardman Cave", false);
@@ -250,7 +250,7 @@ namespace Scripts.Mythik.Systems.Achievements
 			AddDungeon(178, 3, discoverSavagedEmpire, "the Corrupt Pass", false);
 			AddDungeon(179, 3, discoverSavagedEmpire, "the Catacombs of Azerok");
 			AddDungeon(180, 3, discoverSavagedEmpire, "the Dungeon of the Lich King");
-			AddDungeon(181, 3, discoverSavagedEmpire, "the Halls of Ogrimar", false);
+			AddDungeon(181, 3, discoverSavagedEmpire, "the Halls of Ogrimar");
 			AddDungeon(182, 3, discoverSavagedEmpire, "the Great Pyramid", false);
 			AddDungeon(183, 3, discoverSavagedEmpire, "the Ratmen Mines", false);
 			AddDungeon(184, 3, discoverSavagedEmpire, "Dungeon Rock");

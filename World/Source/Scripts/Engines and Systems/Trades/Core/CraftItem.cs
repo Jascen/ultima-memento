@@ -1272,7 +1272,20 @@ namespace Server.Engines.Craft
 							resourceType = Resources.GetAt( 0 ).ItemType;
 
 						CraftResource thisResource = CraftResources.GetFromType( resourceType );
-						if ( item.Resource == CraftResource.None )
+						if ( item.Resource == CraftResource.None || (
+							// Used to force these. Restoring for now.
+							item is BaseContainer ||
+							item is BaseBook ||
+							item is BaseLight ||
+							item is Spyglass ||
+							item is Runebook ||
+							item is Spellbook ||
+							item is TenFootPole ||
+							item is DragonPedStatue ||
+							item is HorseArmor ||
+							item is PotionKeg ||
+							item is TrapKit
+						))
 							item.Resource = thisResource;
 
 						// For some reason, we force Hue

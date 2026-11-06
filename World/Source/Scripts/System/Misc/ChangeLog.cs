@@ -1334,6 +1334,9 @@ namespace Server.Misc
 					builder.Append("- Misc - Reduce strictness when placing Treasure Pile addons<br>");
 
 					builder.Append("<br>Fixes<br>");
+					builder.Append("- Achievement - Fix issue where Halls of Ogrimar didn't have a quest item<br>");
+					builder.Append("- Achievement - Fix issue where the Frozen Hells didn't have a quest item<br>");
+					builder.Append("- Craft - Restore hack to grant resource benefits to certain items<br>");
 					builder.Append("- Item - Research bag can only consume Magery or Necromancy spellbooks<br>");
 					builder.Append("- Misc - Fix issue where rare mobs could be teleported to Lodoria instead of a dungeon<br>");
 					builder.Append("- Misc - Fix crash from Lawn Tools and Remodeling Tools placement<br>");
@@ -1341,6 +1344,7 @@ namespace Server.Misc
 					builder.Append("- Npc - Assassin guildmaster can now be Hired by non-guildmembers<br>");
 					builder.Append("- Spell - Fix excessive item iteration with Enchant after player logouts<br>");
 					builder.Append("- Spell - Protection and Elemental Protection no longer stack<br>");
+					builder.Append("- Spell - Elemental Protection now reduces Faster Casting cap<br>");
 					break;
 			}
 		}

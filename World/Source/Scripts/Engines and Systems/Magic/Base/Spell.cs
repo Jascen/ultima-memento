@@ -241,10 +241,7 @@ namespace Server.Spells
 
 			if ( IsCasting )
 			{
-				object o = ProtectionSpell.Registry[m_Caster];
-
-				if ( o == null )
-					o = Elemental_Protection_Spell.Registry[m_Caster];
+				object o = ProtectionSpell.Registry[m_Caster] ?? Elemental_Protection_Spell.Registry[m_Caster];
 
 				bool disturb = true;
 
@@ -791,7 +788,7 @@ namespace Server.Spells
 			if ( fc > fcMax )
 				fc = fcMax;
 
-			if ( ProtectionSpell.Registry.Contains( m_Caster ) )
+			if ( ProtectionSpell.Registry.Contains( m_Caster ) || Elemental_Protection_Spell.Registry.Contains( m_Caster ) )
 				fc -= 2;
 
 			TimeSpan baseDelay = CastDelayBase;
