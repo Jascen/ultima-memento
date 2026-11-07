@@ -28,5 +28,22 @@ namespace Server.Utilities
 				hue
 			);
 		}
+
+		public static void AddRightAlignedItemToGump(Gump gump, int itemId, int x, int y, int hue = 0)
+		{
+			if (ItemBounds.Table.Length < itemId)
+			{
+				Console.WriteLine("Attempted to look up item bounds for itemId {0}, but ItemBounds.Table.Length is {1}", itemId, ItemBounds.Table.Length);
+				return;
+			}
+
+			Rectangle2D bounds = ItemBounds.Table[itemId];
+			gump.AddItem(
+				x - bounds.X - bounds.Width,
+				y - bounds.Y,
+				itemId,
+				hue
+			);
+		}
 	}
 }
