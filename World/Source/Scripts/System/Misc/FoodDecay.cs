@@ -44,6 +44,9 @@ namespace Server.Misc
 
 					BuffInfo.CleanupIcons( m, false );
 
+					var player = (PlayerMobile)m;
+					if (!player.Temptations.HasFeastOrFamine && !player.Avatar.Active) return;
+
 					bool InsideInn = false;
 
 					if ( MySettings.S_Belly )
@@ -107,6 +110,9 @@ namespace Server.Misc
 				if ( m is PlayerMobile )
 				{
 					Server.Items.BaseRace.SyncRace( m, true );
+
+					var player = (PlayerMobile)m;
+					if (!player.Temptations.HasFeastOrFamine && !player.Avatar.Active) return;
 
 					bool InsideInn = false;
 

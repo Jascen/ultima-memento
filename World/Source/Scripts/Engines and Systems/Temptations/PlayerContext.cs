@@ -53,6 +53,13 @@ namespace Server.Temptation
 		}
 
 		[CommandProperty(AccessLevel.GameMaster)]
+		public bool HasFeastOrFamine
+		{
+			get { return GetFlag(TemptationFlags.Feast_or_Famine); }
+			set { SetFlag(TemptationFlags.Feast_or_Famine, value); }
+		}
+
+		[CommandProperty(AccessLevel.GameMaster)]
 		public bool HasPermanentDeath
 		{
 			get { return GetFlag(TemptationFlags.Deathwish); }

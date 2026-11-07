@@ -1332,6 +1332,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Magery or Necromancy cannot be taught if the student has Elementalism<br>");
 					builder.Append("- Misc - Summoned pack animals that are invulnerable no longer delete after server restart<br>");
 					builder.Append("- Misc - Reduce strictness when placing Treasure Pile addons<br>");
+					builder.Append("- Temptation - Added *Feast or Famine* now controls hunger/thirst decay<br>");
 
 					builder.Append("<br>Fixes<br>");
 					builder.Append("- Achievement - Fix issue where Halls of Ogrimar didn't have a quest item<br>");

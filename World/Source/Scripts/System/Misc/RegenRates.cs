@@ -50,6 +50,14 @@ namespace Server.Misc
 			return AnimalForm.UnderTransformation( m, type );
 		}
 
+		private static int GetFeastOrFamineRegen( Mobile from, int value )
+		{
+			PlayerMobile player = from as PlayerMobile;
+			if ( player == null || ( !player.Temptations.HasFeastOrFamine && !player.Avatar.Active ) ) return 0;
+
+			return value < 10 ? -5 : 5;
+		}
+
 		private static TimeSpan Mobile_HitsRegenRate( Mobile from )
 		{
 			int points = AosAttributes.GetValue( from, AosAttribute.RegenHits );
@@ -74,6 +82,8 @@ namespace Server.Misc
 
 			if ( CheckAnimal( from, typeof( Dog ) ) || CheckAnimal( from, typeof( Cat ) ) )
 				points += from.Skills[SkillName.Ninjitsu].Fixed / 30;
+
+			points = Math.Max( points + GetFeastOrFamineRegen( from, from.Hunger ), 0 );
 
 			return TimeSpan.FromSeconds( 1.0 / (0.1 * (1 + points)) );
 		}
@@ -102,6 +112,7 @@ namespace Server.Misc
 				cappedPoints = Math.Min( cappedPoints, 24 );
 
 			points += cappedPoints;
+			points += GetFeastOrFamineRegen( from, from.Thirst );
 
 			if ( points < -1 )
 				points = -1;
@@ -149,6 +160,7 @@ namespace Server.Misc
 					cappedPoints = Math.Min( cappedPoints, MyServerSettings.PlayerLevelMod( 9, from ) ); // 18
 
 				totalPoints += cappedPoints;
+				totalPoints += GetFeastOrFamineRegen( from, from.Thirst );
 
 				if ( totalPoints < -1 )
 					totalPoints = -1;

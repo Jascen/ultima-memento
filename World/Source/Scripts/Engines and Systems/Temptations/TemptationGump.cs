@@ -16,7 +16,7 @@ namespace Server.Temptation
 			Close = 0,
 			I_can_take_it,
 			Strongest_Avenger,
-			Famine,
+			Feast_or_Famine,
 			Puzzle_master,
 			This_is_just_a_tribute,
 			Deathwish,
@@ -173,7 +173,10 @@ namespace Server.Temptation
 					m_Context.CanUsePuzzleboxes = !m_Context.CanUsePuzzleboxes;
 					break;
 
-				case ActionButtonType.Famine:
+				case ActionButtonType.Feast_or_Famine:
+					m_Context.HasFeastOrFamine = !m_Context.HasFeastOrFamine;
+					break;
+
 				case ActionButtonType.This_is_just_a_tribute:
 					Console.WriteLine("[Temptation] Selected a flag that is not yet implemented: {0}", (ActionButtonType)info.ButtonID);
 					return;
@@ -260,19 +263,18 @@ namespace Server.Temptation
 			var description = GetDescription(actionButtonType);
 			var height = description.Split('<').Length * 20;
 			TextDefinition.AddHtmlText(this, x, y + 2, width, height, description, HtmlColors.PALE_RED);
-			y += height + 10;
+			y += height + 2;
 		}
 
 		private void AddOptions(int x, ref int y, bool canEdit, PlayerContext context)
 		{
 			AddOption(x, ref y, ActionButtonType.Puzzle_master, canEdit, true, context);
-			// AddOption(x, ref y, ActionButtonType.Famine, canEdit, context); // Incomplete
+			if (!m_Target.Avatar.Active || !canEdit) AddOption(x, ref y, ActionButtonType.Feast_or_Famine, canEdit, false, context);
 			AddOption(x, ref y, ActionButtonType.I_can_take_it, canEdit, false, context);
 			AddOption(x, ref y, ActionButtonType.Strongest_Avenger, canEdit, false, context);
 			// AddOption(x, ref y, ActionButtonType.This_is_just_a_tribute, canEdit, context); // Incomplete
 
-			if (!m_Target.Avatar.Active || !canEdit)
-				AddOption(x, ref y, ActionButtonType.Deathwish, canEdit, false, context);
+			if (!m_Target.Avatar.Active || !canEdit) AddOption(x, ref y, ActionButtonType.Deathwish, canEdit, false, context);
 		}
 
 		private string GetDescription(ActionButtonType actionButtonType)
@@ -287,9 +289,9 @@ namespace Server.Temptation
 					return "+ You learn how to wear pants"
 					+ "<br>x Enemies cast spells faster";
 
-				case ActionButtonType.Famine:
-					return "+ Your stat and skill gain rate is impacted by your Hunger"
-					+ "<br>x Hunger and thirst decay twice as fast";
+				case ActionButtonType.Feast_or_Famine:
+					return "- Hunger and Thirst now provide a regeneration benefit or penalty"
+					+ "<br>x Your hunger and thirst now decay";
 
 				case ActionButtonType.Puzzle_master: {
 					var text = "+ You learn how to solve puzzle boxes";
@@ -318,7 +320,7 @@ namespace Server.Temptation
 			{
 				case ActionButtonType.I_can_take_it: return context.Flags.HasFlag(TemptationFlags.I_can_take_it);
 				case ActionButtonType.Strongest_Avenger: return context.Flags.HasFlag(TemptationFlags.Strongest_Avenger);
-				case ActionButtonType.Famine: return context.Flags.HasFlag(TemptationFlags.Famine);
+				case ActionButtonType.Feast_or_Famine: return context.Flags.HasFlag(TemptationFlags.Feast_or_Famine);
 				case ActionButtonType.Puzzle_master: return context.Flags.HasFlag(TemptationFlags.Puzzle_master);
 				case ActionButtonType.This_is_just_a_tribute: return context.Flags.HasFlag(TemptationFlags.This_is_just_a_tribute);
 				case ActionButtonType.Deathwish: return context.Flags.HasFlag(TemptationFlags.Deathwish);
@@ -332,7 +334,7 @@ namespace Server.Temptation
 			{
 				case ActionButtonType.I_can_take_it: return "I can take it";
 				case ActionButtonType.Strongest_Avenger: return "Strongest Avenger";
-				case ActionButtonType.Famine: return "Red warrior needs food, badly!";
+				case ActionButtonType.Feast_or_Famine: return "Feast or Famine";
 				case ActionButtonType.Puzzle_master: return "Puzzle master";
 				case ActionButtonType.This_is_just_a_tribute: return "This is just a tribute";
 				case ActionButtonType.Deathwish: return "It's dangerous to go alone! Take this.";

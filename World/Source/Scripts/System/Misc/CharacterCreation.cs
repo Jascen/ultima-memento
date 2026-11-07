@@ -852,13 +852,20 @@ namespace Server.Misc
 				}
 			});
 
-			PackItem(pack, new Pitcher(BeverageType.Water));
-			PackItem(pack, 1, () =>
+			if (m is PlayerMobile)
 			{
-				Container bag = new Bag();
-				PackItem(bag, 10, () => Loot.RandomFoods(true, true));
-				return bag;
-			});
+				var player = (PlayerMobile)m;
+				if (player.Temptations.HasFeastOrFamine || player.Avatar.Active)
+				{
+					PackItem(pack, new Pitcher(BeverageType.Water));
+					PackItem(pack, 1, () =>
+					{
+						Container bag = new Bag();
+						PackItem(bag, 10, () => Loot.RandomFoods(true, true));
+						return bag;
+					});
+				}
+			}
 
 			PackItem(pack, 2, () =>
 			{

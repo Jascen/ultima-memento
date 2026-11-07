@@ -103,7 +103,7 @@ namespace Server.Engines.Messaging
 				{
 					temptationFlags.HasFlag(TemptationFlags.Puzzle_master) ? Icons.Jigsaw: null,
 					temptationFlags.HasFlag(TemptationFlags.Strongest_Avenger) ? Icons.Jeans : null,
-					temptationFlags.HasFlag(TemptationFlags.Famine) ? Icons.Stew : null,
+					temptationFlags.HasFlag(TemptationFlags.Feast_or_Famine) ? Icons.Stew : null,
 					temptationFlags.HasFlag(TemptationFlags.I_can_take_it) ?Icons.Imp : null,
 					// temptationFlags.HasFlag(TemptationFlags.This_is_just_a_tribute) ? Icons.Question  : null,
 					temptationFlags.HasFlag(TemptationFlags.Deathwish) ? Icons.Skull_Crossbones : null,
