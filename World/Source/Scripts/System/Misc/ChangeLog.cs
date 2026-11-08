@@ -1344,6 +1344,7 @@ namespace Server.Misc
 					builder.Append("- Misc - Fix issue where rare mobs could be teleported to Lodoria instead of a dungeon<br>");
 					builder.Append("- Misc - Fix crash from Lawn Tools and Remodeling Tools placement<br>");
 					builder.Append("- Misc - Fix issue where Hoard Minions would not delete after server restart<br>");
+					builder.Append("- Misc - Trap secondary effects now trigger even if the target is dead<br>");
 					builder.Append("- Npc - Assassin guildmaster can now be Hired by non-guildmembers<br>");
 					builder.Append("- Spell - Fix excessive item iteration with Enchant after player logouts<br>");
 					builder.Append("- Spell - Protection and Elemental Protection no longer stack<br>");

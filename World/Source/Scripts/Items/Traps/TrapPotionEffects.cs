@@ -88,7 +88,7 @@ namespace Server.Items
 
 		public static void ApplySecondary( PotionEffect effect, Mobile owner, Mobile victim, Point3D trapLoc, Map map )
 		{
-			if ( map == null || map == Map.Internal || victim == null || victim.Deleted ) return;
+			if ( map == null || map == Map.Internal || victim == null ) return;
 
 			var potion = PotionKeg.CreatePotion( effect );
 			if ( potion == null ) return;
@@ -125,7 +125,7 @@ namespace Server.Items
 				}
 
 				var poison = potion as BasePoisonPotion;
-				if ( poison != null )
+				if ( poison != null && !victim.Deleted )
 				{
 					if ( owner != null )
 						owner.DoHarmful( victim );
