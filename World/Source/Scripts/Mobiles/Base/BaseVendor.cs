@@ -2117,14 +2117,14 @@ namespace Server.Mobiles
 			return true;
 		}
 
-		public virtual bool CheckVendorAccess( Mobile from )
+		public virtual bool CheckVendorAccess( Mobile from, bool skipGuildCheck = false )
 		{
 			PlayerMobile pm = (PlayerMobile)from;
 
 			if ( AccessLevel.Counselor <= pm.AccessLevel ) // Staff can always buy
 				return true;
 
-			if ( this is BaseGuildmaster && this.NpcGuild != pm.NpcGuild ) // ONLY GUILD MEMBERS CAN BUY FROM GUILD MASTERS
+			if ( this is BaseGuildmaster && !skipGuildCheck && this.NpcGuild != pm.NpcGuild ) // ONLY GUILD MEMBERS CAN BUY FROM GUILD MASTERS
 				return false;
 
 			if ( !from.Alive || from.Blessed )

@@ -185,10 +185,7 @@ namespace Server.Engines.Avatar
 					break;
 
 				case SkillName.Anatomy:
-				case SkillName.Healing:
-					if (
-						(skillName == SkillName.Healing && !HasAllSkillsButThis(skillName, SkillName.Healing, SkillName.Spiritualism)) // Holy Man
-						&& !IsAnySkillDraftedExcept( // Combat skills
+					if (!IsAnySkillDraftedExcept( // Combat skills
 						skillName,
 						SkillName.Anatomy,
 						SkillName.Healing,
@@ -239,13 +236,6 @@ namespace Server.Engines.Avatar
 							SkillName.Tinkering
 						)) return false;
 					}
-					break;
-
-				case SkillName.Begging:
-					// Make sure we have a relevant Jester skill
-					if (
-						!HasAllSkillsButThis(skillName, SkillName.Begging, SkillName.Psychology) // Jester
-					) return false;
 					break;
 
 				case SkillName.Bushido:
@@ -302,15 +292,15 @@ namespace Server.Engines.Avatar
 				case SkillName.Focus:
 				case SkillName.Meditation:
 					if (
-						!HasAllSkillsButThis(skillName, SkillName.Focus, SkillName.FistFighting, SkillName.Meditation) // Monk
-						&& !IsAnySkillDraftedExcept( // Mana skills
+						!IsAnySkillDraftedExcept( // Mana skills
 							skillName,
 							SkillName.Bushido,
 							SkillName.Elementalism,
 							SkillName.Knightship,
 							SkillName.Magery,
 							SkillName.Necromancy,
-							SkillName.Ninjitsu
+							SkillName.Ninjitsu,
+							SkillName.FistFighting // Monk
 					)) return false;
 					break;
 
@@ -386,6 +376,8 @@ namespace Server.Engines.Avatar
 					// No smart roll option
 					return false;
 
+				case SkillName.Begging: // Starts Jester
+				case SkillName.Healing: // Starts Holy Man
 				case SkillName.Musicianship:
 				case SkillName.Taming:
 					// Always possible
@@ -432,7 +424,7 @@ namespace Server.Engines.Avatar
 			for (var i = 0; i < player.Skills.Length; i++)
 			{
 				var skill = player.Skills[i];
-				skill.SetLockNoRelay(SkillLock.Locked);
+				skill.SetLockNoRelay(!enabled ? SkillLock.Up : SkillLock.Locked);
 				skill.CanGain = false;
 				skill.Base = 0;
 			}
