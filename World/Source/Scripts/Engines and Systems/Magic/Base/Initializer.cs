@@ -188,63 +188,15 @@ namespace Server.Spells
 			Register( Chivalry.RemoveCurseSpell.SpellInfo.SpellDefinition.SpellID, typeof( Chivalry.RemoveCurseSpell ) );
 			Register( Chivalry.SacredJourneySpell.SpellInfo.SpellDefinition.SpellID, typeof( Chivalry.SacredJourneySpell ) );
 
-			// Mystic abilities
-			Register( Mystic.AstralProjection.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.AstralProjection ) );
-			Register( Mystic.AstralTravel.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.AstralTravel ) );
-			Register( Mystic.CreateRobe.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.CreateRobe ) );
-			Register( Mystic.GentleTouch.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.GentleTouch ) );
-			Register( Mystic.Leap.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.Leap ) );
-			Register( Mystic.PsionicBlast.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.PsionicBlast ) );
-			Register( Mystic.PsychicWall.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.PsychicWall ) );
-			Register( Mystic.PurityOfBody.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.PurityOfBody ) );
-			Register( Mystic.QuiveringPalm.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.QuiveringPalm ) );
-			Register( Mystic.WindRunner.SpellInfo.SpellDefinition.SpellID, typeof( Mystic.WindRunner ) );
-
-			// Jester abilities
-			Register( Jester.CanOfSnakes.SpellInfo.SpellDefinition.SpellID, typeof( Jester.CanOfSnakes ) ); // 260
-			Register( Jester.Clowns.SpellInfo.SpellDefinition.SpellID, typeof( Jester.Clowns ) ); // 261
-			Register( Jester.FlowerPower.SpellInfo.SpellDefinition.SpellID, typeof( Jester.FlowerPower ) ); // 262
-			Register( Jester.Hilarity.SpellInfo.SpellDefinition.SpellID, typeof( Jester.Hilarity ) ); // 263
-			Register( Jester.Insult.SpellInfo.SpellDefinition.SpellID, typeof( Jester.Insult ) ); // 264
-			Register( Jester.JumpAround.SpellInfo.SpellDefinition.SpellID, typeof( Jester.JumpAround ) ); // 265
-			Register( Jester.PoppingBalloon.SpellInfo.SpellDefinition.SpellID, typeof( Jester.PoppingBalloon ) ); // 266
-			Register( Jester.RabbitInAHat.SpellInfo.SpellDefinition.SpellID, typeof( Jester.RabbitInAHat ) ); // 267
-			Register( Jester.SeltzerBottle.SpellInfo.SpellDefinition.SpellID, typeof( Jester.SeltzerBottle ) ); // 268
-			Register( Jester.SurpriseGift.SpellInfo.SpellDefinition.SpellID, typeof( Jester.SurpriseGift ) ); // 269
-
-			// Syth abilities
-			Register( Syth.Psychokinesis.SpellInfo.SpellDefinition.SpellID, typeof( Syth.Psychokinesis ) );
-			Register( Syth.DeathGrip.SpellInfo.SpellDefinition.SpellID, typeof( Syth.DeathGrip ) );
-			Register( Syth.Projection.SpellInfo.SpellDefinition.SpellID, typeof( Syth.Projection ) );
-			Register( Syth.ThrowSword.SpellInfo.SpellDefinition.SpellID, typeof( Syth.ThrowSword ) );
-			Register( Syth.SythSpeed.SpellInfo.SpellDefinition.SpellID, typeof( Syth.SythSpeed ) );
-			Register( Syth.SythLightning.SpellInfo.SpellDefinition.SpellID, typeof( Syth.SythLightning ) );
-			Register( Syth.Absorption.SpellInfo.SpellDefinition.SpellID, typeof( Syth.Absorption ) );
-			Register( Syth.PsychicBlast.SpellInfo.SpellDefinition.SpellID, typeof( Syth.PsychicBlast ) );
-			Register( Syth.DrainLife.SpellInfo.SpellDefinition.SpellID, typeof( Syth.DrainLife ) );
-			Register( Syth.CloneBody.SpellInfo.SpellDefinition.SpellID, typeof( Syth.CloneBody ) );
-
-			// Jedi abilities
-			Register( Jedi.ForceGrip.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.ForceGrip ) );
-			Register( Jedi.MindsEye.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.MindsEye ) );
-			Register( Jedi.Mirage.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.Mirage ) );
-			Register( Jedi.ThrowSabre.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.ThrowSabre ) );
-			Register( Jedi.Celerity.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.Celerity ) );
-			Register( Jedi.PsychicAura.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.PsychicAura ) );
-			Register( Jedi.Deflection.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.Deflection ) );
-			Register( Jedi.SoothingTouch.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.SoothingTouch ) );
-			Register( Jedi.StasisField.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.StasisField ) );
-			Register( Jedi.Replicate.SpellInfo.SpellDefinition.SpellID, typeof( Jedi.Replicate ) );
-
-			// Shinobi abilities
-			Register( Shinobi.CheetahPaws.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.CheetahPaws ) );
-			Register( Shinobi.Deception.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.Deception ) );
-			Register( Shinobi.EagleEye.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.EagleEye ) );
-			Register( Shinobi.Espionage.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.Espionage ) );
-			Register( Shinobi.FerretFlee.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.FerretFlee ) );
-			Register( Shinobi.MonkeyLeap.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.MonkeyLeap ) );
-			Register( Shinobi.MysticShuriken.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.MysticShuriken ) );
-			Register( Shinobi.TigerStrength.SpellInfo.SpellDefinition.SpellID, typeof( Shinobi.TigerStrength ) );
+			// Spell providers
+			SpellProviderRegistry.Register( Mystic.MysticSpellProvider.SpellDefinitions );
+			SpellProviderRegistry.Register( Jester.JesterSpellProvider.SpellDefinitions );
+			SpellProviderRegistry.Register( Syth.SythSpellProvider.SpellDefinitions );
+			SpellProviderRegistry.Register( Jedi.JediSpellProvider.SpellDefinitions );
+			SpellProviderRegistry.Register( Shinobi.ShinobiSpellProvider.SpellDefinitions );
+			SpellProviderRegistry.Register( DeathKnight.DeathKnightSpellProvider.SpellDefinitions );
+			SpellProviderRegistry.Register( HolyMan.HolyManSpellProvider.SpellDefinitions );
+			SpellProviderRegistry.Register( Song.BardSongProvider.SpellDefinitions );
 
 			// Samurai abilities
 			Register( 400, typeof( Bushido.HonorableExecution ) );
@@ -337,56 +289,6 @@ namespace Server.Spells
 			Register( 704, typeof( Magical.SummonSkeletonSpell ) );
 			Register( 705, typeof( Magical.IdentifySpell ) );
 			Register( 706, typeof( Magical.TravelSpell ) );
-
-			// Death Knight Spells
-			Register( DeathKnight.BanishSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.BanishSpell ) );
-			Register( DeathKnight.DemonicTouchSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.DemonicTouchSpell ) );
-			Register( DeathKnight.DevilPactSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.DevilPactSpell ) );
-			Register( DeathKnight.GrimReaperSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.GrimReaperSpell ) );
-			Register( DeathKnight.HagHandSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.HagHandSpell ) );
-			Register( DeathKnight.HellfireSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.HellfireSpell ) );
-			Register( DeathKnight.LucifersBoltSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.LucifersBoltSpell ) );
-			Register( DeathKnight.OrbOfOrcusSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.OrbOfOrcusSpell ) );
-			Register( DeathKnight.ShieldOfHateSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.ShieldOfHateSpell ) );
-			Register( DeathKnight.SoulReaperSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.SoulReaperSpell ) );
-			Register( DeathKnight.StrengthOfSteelSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.StrengthOfSteelSpell ) );
-			Register( DeathKnight.StrikeSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.StrikeSpell ) );
-			Register( DeathKnight.SuccubusSkinSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.SuccubusSkinSpell ) );
-			Register( DeathKnight.WrathSpell.SpellInfo.SpellDefinition.SpellID, typeof( DeathKnight.WrathSpell ) );
-
-			// Holy Man Spells
-			Register( HolyMan.BanishEvilSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.BanishEvilSpell ) );
-			Register( HolyMan.DampenSpiritSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.DampenSpiritSpell ) );
-			Register( HolyMan.EnchantSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.EnchantSpell ) );
-			Register( HolyMan.HammerOfFaithSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.HammerOfFaithSpell ) );
-			Register( HolyMan.HeavenlyLightSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.HeavenlyLightSpell ) );
-			Register( HolyMan.NourishSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.NourishSpell ) );
-			Register( HolyMan.PurgeSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.PurgeSpell ) );
-			Register( HolyMan.RebirthSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.RebirthSpell ) );
-			Register( HolyMan.SacredBoonSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.SacredBoonSpell ) );
-			Register( HolyMan.SanctifySpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.SanctifySpell ) );
-			Register( HolyMan.SeanceSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.SeanceSpell ) );
-			Register( HolyMan.SmiteSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.SmiteSpell ) );
-			Register( HolyMan.TouchOfLifeSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.TouchOfLifeSpell ) );
-			Register( HolyMan.TrialByFireSpell.SpellInfo.SpellDefinition.SpellID, typeof( HolyMan.TrialByFireSpell ) );
-
-			// Bard Songs
-			Register( Song.ArmysPaeonSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.ArmysPaeonSong ) );
-			Register( Song.EnchantingEtudeSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.EnchantingEtudeSong ) );
-			Register( Song.EnergyCarolSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.EnergyCarolSong ) );
-			Register( Song.EnergyThrenodySong.SpellInfo.SpellDefinition.SpellID, typeof( Song.EnergyThrenodySong ) );
-			Register( Song.FireCarolSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.FireCarolSong ) );
-			Register( Song.FireThrenodySong.SpellInfo.SpellDefinition.SpellID, typeof( Song.FireThrenodySong ) );
-			Register( Song.FoeRequiemSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.FoeRequiemSong ) );
-			Register( Song.IceCarolSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.IceCarolSong ) );
-			Register( Song.IceThrenodySong.SpellInfo.SpellDefinition.SpellID, typeof( Song.IceThrenodySong ) );
-			Register( Song.KnightsMinneSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.KnightsMinneSong ) );
-			Register( Song.MagesBalladSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.MagesBalladSong ) );
-			Register( Song.MagicFinaleSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.MagicFinaleSong ) );
-			Register( Song.PoisonCarolSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.PoisonCarolSong ) );
-			Register( Song.PoisonThrenodySong.SpellInfo.SpellDefinition.SpellID, typeof( Song.PoisonThrenodySong ) );
-			Register( Song.SheepfoeMamboSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.SheepfoeMamboSong ) );
-			Register( Song.SinewyEtudeSong.SpellInfo.SpellDefinition.SpellID, typeof( Song.SinewyEtudeSong ) );
 		}
 
 		public static void Register( int spellID, Type type )
