@@ -1,30 +1,38 @@
 using System;
-using Server;
-using Server.Targeting;
-using Server.Network;
-using Server.Regions;
 using Server.Items;
 using Server.Mobiles;
-using System.Collections.Generic;
 using Server.Spells;
 using Server.Spells.Necromancy;
 using Server.Spells.Ninjitsu;
+using Server.Targeting;
 
 namespace Server.Spells.Jester
 {
 	public class Clowns : JesterSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Clowns", "Get ready for the show!",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 261,
+					IconGraphic = 20751,
+					Name = "Clowns",
+					PowerWords = "Get ready for the show!",
+					Description = "Fool your audience by creating illusions of yourself, which may help you sneak away or distract one from yourself. Your illusions will vary in duration and amount, depending on your jester skills.",
+					ManaCost = 25,
+					TithingCost = 50,
+					MinSkill = 10,
+					TargetType = TargetFlags.Beneficial
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3.0 ); } }
-		public override int RequiredTithing{ get{ return 50; } }
-		public override int RequiredMana{ get{ return 25; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public Clowns( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public Clowns( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

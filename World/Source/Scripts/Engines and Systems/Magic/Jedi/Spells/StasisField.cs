@@ -1,29 +1,34 @@
 using System;
-using Server.Mobiles;
 using Server.Targeting;
-using Server.Network;
-using Server.Spells.Chivalry;
 
 namespace Server.Spells.Jedi
 {
     public class StasisField : JediSpell
 	{
-		public override int spellIndex { get { return 288; } }
-		public int CirclePower = 5;
-		public static int spellID = 288;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 288,
+					IconGraphic = 0x2BF5,
+					Name = "Stasis Field",
+					PowerWords = "Greggs",
+					Description = "A Jedi can create a field around another that will put them in stasis for a period of time, where they cannot take any actions for a short duration.",
+					ManaCost = 36,
+					TithingCost = 52,
+					MinSkill = 50,
+					TargetType = TargetFlags.Harmful
+				},
 				218,
 				0
 			);
 
-        public StasisField(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
+		public int CirclePower = 5;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+        public StasisField(Mobile caster, Item scroll) : base(caster, scroll, SpellInfo)
         {
         }
 

@@ -28,6 +28,60 @@ namespace Server.Gumps
 				return false;
 		}
 
+		public struct HolyManGrave
+		{
+			public readonly string Town;
+			public readonly string Resting;
+
+			public HolyManGrave( string town, string resting )
+			{
+				Town = town;
+				Resting = resting;
+			}
+		}
+
+		public static HolyManGrave GetGrave( int spellID )
+		{
+			if ( spellID == BanishEvilSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the Village of Springvale", "Patriarch Morden rests south of the Village of Springvale" );
+			if ( spellID == DampenSpiritSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the Village of Whisper", "Archbishop Halyrn rests by the Village of Whisper" );
+			if ( spellID == EnchantSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the City of Kuldara", "Bishop Leantre rests in the Kuldar Cemetery" );
+			if ( spellID == HammerOfFaithSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the City of Elidor", "Deacon Wilems rests in the City of Elidor" );
+			if ( spellID == HeavenlyLightSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the City of Britain", "Drumat the Apostle rests by the City of Britain" );
+			if ( spellID == NourishSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the Town of Moon", "Vincent the Priest rests by the Town of Moon" );
+			if ( spellID == PurgeSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the Town of Renika", "Abigayl the Preacher rests near the Church of the Divine in the Town of Renika" );
+			if ( spellID == RebirthSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "Greensky Village", "Cardinal Greggs rests near the Greensky Village" );
+			if ( spellID == SacredBoonSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the Village of Grey", "Father Michal rests by the Village of Grey" );
+			if ( spellID == SanctifySpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the City of Montor", "Sister Tiana rests south of the City of Montor" );
+			if ( spellID == SeanceSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the Village of Islegem", "Brother Kurklan rests near the Village of Islegem" );
+			if ( spellID == SmiteSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the City of Lodoria", "Edwin the Pope rests in the Lodoria Cemetery" );
+			if ( spellID == TouchOfLifeSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the Town of Devil Guard", "Xephyn the Monk rests near the Town of Devil Guard" );
+			if ( spellID == TrialByFireSpell.SpellInfo.SpellDefinition.SpellID ) return new HolyManGrave( "the Village of Fawn", "Chancellor Davis rests on an island near the Village of Fawn" );
+
+			return default( HolyManGrave );
+		}
+
+		private static string GetGraveLocation( HolyManGrave grave, out Map map, out int x, out int y )
+		{
+			map = Map.Internal;
+			x = 0;
+			y = 0;
+
+			if ( grave.Town == null )
+				return null;
+
+			var town = Worlds.GetTown( 0, grave.Town, out map, out x, out y );
+
+			return grave.Resting + "<br>" + town;
+		}
+
+		private static SpellDefinition GetDefinitionAt( int index )
+		{
+			if ( index < 0 || index >= HolyManSpellProvider.SpellCount )
+				return null;
+
+			return HolyManSpellProvider.SpellDefinitions[index];
+		}
+
 		public HolyManSpellbookGump( Mobile from, HolyManSpellbook book, int page ) : base( 100, 100 ) 
 		{
 			from.PlaySound( 0x55 );
@@ -99,151 +153,28 @@ namespace Server.Gumps
 
 				AddHtml( 78, 80, 250, 314, @"<BODY><BASEFONT Color=" + color + ">" + info + "</BASEFONT></BODY>", (bool)false, (bool)true);
 
-				info = "Magic Toolbars: Here are the commands you can use (include the bracket) to manage magic toolbars that might help you play better.<br><br>[holyspell1 - Opens the 1st priest spell bar editor.<BR><BR>[holyspell2 - Opens the 2nd priest spell bar editor.<BR><BR>[holytool1 - Opens the 1st priest spell bar.<BR><BR>[holytool2 - Opens the 2nd priest spell bar.<BR><BR>[holyclose1 - Closes the 1st priest spell bar.<BR><BR>[holyclose2 - Closes the 2nd priest spell bar.<BR><BR>Below are the [ commands you can either type to quickly cast a particular spell, or set a hot key to issue this command and cast the spell.<BR><BR>[HMBanish<BR>    Cast Banish<BR><BR>[HMDampenSpirit<BR>    Cast Dampen Spirit<BR><BR>[HMEnchant<BR>    Cast Enchant<BR><BR>[HMHammerFaith<BR>    Cast Hammer of Faith<BR><BR>[HMHeavenlyLight<BR>    Cast Heavenly Light<BR><BR>[HMNourish<BR>    Cast Nourish<BR><BR>[HMPurge<BR>    Cast Purge<BR><BR>[HMRebirth<BR>    Cast Rebirth<BR><BR>[HMSacredBoon<BR>    Cast Sacred Boon<BR><BR>[HMSanctify<BR>    Cast Sanctify<BR><BR>[HMSeance<BR>    Cast Seance<BR><BR>[HMSmite<BR>    Cast Smite<BR><BR>[HMTouchLife<BR>    Cast Touch of Life<BR><BR>[HMTrialFire<BR>    Cast Trial by Fire<BR><BR>";
+				info = "Quick bars for these prayers can be set up in the Magic Toolbars section of [toolbars<BR><BR>You can use these prayers by a typed command, which allows you to make macros for using these if you want. Type [Spells_HolyMan to see each of these commands.";
 
 				AddHtml( 366, 80, 250, 314, @"<BODY><BASEFONT Color=" + color + ">" + info + "</BASEFONT></BODY>", (bool)false, (bool)true);
 			}
 			else
 			{
-				m_Map_1 = Map.Internal;
-				var haveLeftSpell = false;
-				SpellDefinition leftSpell = null;
-				string leftSpellLocation = null;
-
-				m_Map_2 = Map.Internal;
-				var haveRightSpell = false;
-				SpellDefinition rightSpell = null;
-				string rightSpellLocation = null;
-
-				if ( page == 2 )
-				{
-					leftSpell = BanishEvilSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetTown( 0, "the Village of Springvale", out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Patriarch Morden rests south of the Village of Springvale<br>" + leftSpellGrave;
-					}
-
-					rightSpell = DampenSpiritSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetTown( 0, "the Village of Whisper", out m_Map_2, out m_X_2, out m_Y_2 );
-						rightSpellLocation = "Archbishop Halyrn rests by the Village of Whisper<br>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 3 )
-				{
-					leftSpell = EnchantSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetTown( 0, "the City of Kuldara", out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Bishop Leantre rests in the Kuldar Cemetery<br>" + leftSpellGrave;
-					}
-
-					rightSpell = HammerOfFaithSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetTown( 0, "the City of Elidor", out m_Map_2, out m_X_2, out m_Y_2 );
-						rightSpellLocation = "Deacon Wilems rests in the City of Elidor<br>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 4 )
-				{
-					leftSpell = HeavenlyLightSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetTown( 0, "the City of Britain", out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Drumat the Apostle rests by the City of Britain<br>" + leftSpellGrave;
-					}
-
-					rightSpell = NourishSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetTown( 0, "the Town of Moon", out m_Map_2, out m_X_2, out m_Y_2 );
-						rightSpellLocation = "Vincent the Priest rests by the Town of Moon<br>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 5 )
-				{
-					leftSpell = PurgeSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetTown( 0, "the Town of Renika", out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Abigayl the Preacher rests near the Church of the Divine in the Town of Renika<br>" + leftSpellGrave;
-					}
-
-					rightSpell = RebirthSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetTown( 0, "Greensky Village", out m_Map_2, out m_X_2, out m_Y_2 );
-						rightSpellLocation = "Cardinal Greggs rests near the Greensky Village<br>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 6 )
-				{
-					leftSpell = SacredBoonSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetTown( 0, "the Village of Grey", out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Father Michal rests by the Village of Grey<br>" + leftSpellGrave;
-					}
-
-					rightSpell = SanctifySpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetTown( 0, "the City of Montor", out m_Map_2, out m_X_2, out m_Y_2 );
-						rightSpellLocation = "Sister Tiana rests south of the City of Montor<br>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 7 )
-				{
-					leftSpell = SeanceSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetTown( 0, "the Village of Islegem", out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Brother Kurklan rests near the Village of Islegem<br>" + leftSpellGrave;
-					}
-
-					rightSpell = SmiteSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetTown( 0, "the City of Lodoria", out m_Map_2, out m_X_2, out m_Y_2 );
-						rightSpellLocation = "Edwin the Pope rests in the Lodoria Cemetery<br>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 8 )
-				{
-					leftSpell = TouchOfLifeSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetTown( 0, "the Town of Devil Guard", out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Xephyn the Monk rests near the Town of Devil Guard<br>" + leftSpellGrave;
-					}
-
-					rightSpell = TrialByFireSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetTown( 0, "the Village of Fawn", out m_Map_2, out m_X_2, out m_Y_2 );
-						rightSpellLocation = "Chancellor Davis rests on an island near the Village of Fawn<br>" + rightSpellGrave;
-					}
-				}
+				// Each page describes two spells, in provider order
+				int leftIndex = ( page - 2 ) * 2;
+				SpellDefinition leftSpell = GetDefinitionAt( leftIndex );
+				SpellDefinition rightSpell = GetDefinitionAt( leftIndex + 1 );
 
 				if ( leftSpell != null )
 				{
+					string leftSpellLocation = null;
+					if ( !HasSpell( from, leftSpell.SpellID ) )
+					{
+						var grave = GetGrave( leftSpell.SpellID );
+						leftSpellLocation = GetGraveLocation( grave, out m_Map_1, out m_X_1, out m_Y_1 );
+						if ( Sextants.HasSextant( from ) )
+							AddButton(73, 368, 10461, 10461, 98000+page, GumpButtonType.Reply, 0);
+					}
+
 					AddImage(75, 80, leftSpell.IconGraphic, 1071);
 					AddHtml( 129, 93, 200, 20, @"<BODY><BASEFONT Color=" + color + ">" + leftSpell.Name + "</BASEFONT></BODY>", (bool)false, (bool)false);
 					AddHtml( 134, 130, 57, 20, @"<BODY><BASEFONT Color=" + color + ">Piety:</BASEFONT></BODY>", (bool)false, (bool)false);
@@ -257,6 +188,15 @@ namespace Server.Gumps
 
 				if ( rightSpell != null )
 				{
+					string rightSpellLocation = null;
+					if ( !HasSpell( from, rightSpell.SpellID ) )
+					{
+						var grave = GetGrave( rightSpell.SpellID );
+						rightSpellLocation = GetGraveLocation( grave, out m_Map_2, out m_X_2, out m_Y_2 );
+						if ( Sextants.HasSextant( from ) )
+							AddButton(592, 368, 10461, 10461, 99000+page, GumpButtonType.Reply, 0);
+					}
+
 					AddImage(362, 80, rightSpell.IconGraphic, 1071);
 					AddHtml( 417, 93, 200, 20, @"<BODY><BASEFONT Color=" + color + ">" + rightSpell.Name + "</BASEFONT></BODY>", (bool)false, (bool)false);
 					AddHtml( 422, 130, 57, 20, @"<BODY><BASEFONT Color=" + color + ">Piety:</BASEFONT></BODY>", (bool)false, (bool)false);
@@ -267,12 +207,6 @@ namespace Server.Gumps
 					AddHtml( 484, 190, 57, 20, @"<BODY><BASEFONT Color=" + color + ">" + rightSpell.ManaCost + "</BASEFONT></BODY>", (bool)false, (bool)false);
 					AddHtml( 366, 220, 250, 175, @"<BODY><BASEFONT Color=" + color + ">" + (rightSpellLocation ?? "") + "<br><br>Mantra: " + rightSpell.PowerWords + "<BR><BR>" + rightSpell.Description + "</BASEFONT></BODY>", (bool)false, (bool)false);
 				}
-
-				if ( Sextants.HasSextant( from ) && m_X_1 > 0 && !haveLeftSpell )
-					AddButton(73, 368, 10461, 10461, 98000+page, GumpButtonType.Reply, 0);
-
-				if ( Sextants.HasSextant( from ) && m_X_2 > 0 && !haveRightSpell )
-					AddButton(592, 368, 10461, 10461, 99000+page, GumpButtonType.Reply, 0);
 			}
 		}
 

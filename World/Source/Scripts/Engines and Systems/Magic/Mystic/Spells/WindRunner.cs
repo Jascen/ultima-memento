@@ -1,8 +1,6 @@
 using System;
-using Server;
+using Server.Targeting;
 using System.Collections;
-using Server.Network;
-using System.Text;
 using Server.Items;
 using Server.Mobiles;
 
@@ -10,19 +8,30 @@ namespace Server.Spells.Mystic
 {
 	public class WindRunner : MysticSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Wind Runner", "Beh Ra Mu Ahm",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 259,
+					IconGraphic = 0x19,
+					Name = "Wind Runner",
+					PowerWords = "Beh Ra Mu Ahm",
+					Description = "This ability allows the monk to run as fast as a steed. This ability should be avoided if you already have a mount you are riding, or perhaps you have magical boots that allow you to run at this speed. using this ability in such conditions may cause unusual travel speeds, so be leery.",
+					ManaCost = 50,
+					TithingCost = 250,
+					MinSkill = 70,
+					TargetType = TargetFlags.None
+				},
 				269,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3 ); } }
-		public override int RequiredTithing{ get{ return 250; } }
-		public override double RequiredSkill{ get{ return 70.0; } }
-		public override int RequiredMana{ get{ return 50; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 		public override int MysticSpellCircle{ get{ return 2; } }
 
-		public WindRunner( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public WindRunner( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

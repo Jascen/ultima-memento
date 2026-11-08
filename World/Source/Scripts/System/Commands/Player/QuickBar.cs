@@ -269,7 +269,7 @@ namespace Server.Gumps
 						AddButton(x, y, QuickConfig.rowNumber(i,from), QuickConfig.rowNumber(i,from), i, GumpButtonType.Reply, 0);
 					}
 
-					if ( i == 25 || i == 26 || i == 27 || i == 29 || i == 33 || i == 34 || i == 35 )
+					if ( i == 25 || i == 26 || i == 27 || i == 29 || i == 30 || i == 31 || i == 33 || i == 34 || i == 35 || i == 37 || i == 38 )
 					{
 						x=x+v; y=y+w; AddButton(x, y, QuickConfig.rowNumber(i,from), QuickConfig.rowNumber(i,from), i*10, GumpButtonType.Reply, 0);
 					}
@@ -346,37 +346,10 @@ namespace Server.Gumps
 			}
 			else if ( info.ButtonID == 29 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Elemental_1 ); }
 			else if ( info.ButtonID == 290 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Elemental_2 ); }
-			else if ( info.ButtonID == 30 )
-			{ 
-				if ( from.HasGump( typeof( JediSpellbook.PowerColumn ) ) )
-				{
-					from.CloseGump( typeof( JediSpellbook.PowerColumn ) );
-					if ( from.Backpack.FindItemByType( typeof ( JediSpellbook ) ) != null )
-					{
-						JediSpellbook jedi = (JediSpellbook)(from.Backpack.FindItemByType( typeof ( JediSpellbook ) ));
-						if ( jedi.owner == from )
-							from.SendGump( new Server.Items.JediSpellbook.PowerRow( from, jedi ) );
-					}
-				}
-				else if ( from.HasGump( typeof( JediSpellbook.PowerRow ) ) )
-				{
-					from.CloseGump( typeof( JediSpellbook.PowerRow ) );
-				}
-				else if ( from.Backpack.FindItemByType( typeof ( JediSpellbook ) ) != null )
-				{
-					JediSpellbook cube = (JediSpellbook)(from.Backpack.FindItemByType( typeof ( JediSpellbook ) ));
-					if ( cube.owner == from )
-						from.SendGump( new Server.Items.JediSpellbook.PowerColumn( from, cube ) );
-				}
-			}
-			else if ( info.ButtonID == 31 )
-			{
-				if ( from.HasGump( typeof( BagOfTricks.TricksLargeColumn ) ) ){ 		from.CloseGump( typeof( BagOfTricks.TricksLargeColumn ) );	from.SendGump( new BagOfTricks.TricksLargeRow( from ) );	}
-				else if ( from.HasGump( typeof( BagOfTricks.TricksLargeRow ) ) ){ 		from.CloseGump( typeof( BagOfTricks.TricksLargeRow ) );		from.SendGump( new BagOfTricks.TricksSmallColumn( from ) );	}
-				else if ( from.HasGump( typeof( BagOfTricks.TricksSmallColumn ) ) ){ 	from.CloseGump( typeof( BagOfTricks.TricksSmallColumn ) );	from.SendGump( new BagOfTricks.TricksSmallRow( from ) );	}
-				else if ( from.HasGump( typeof( BagOfTricks.TricksSmallRow ) ) ){ 		from.CloseGump( typeof( BagOfTricks.TricksSmallRow ) );	}
-				else { 																																from.SendGump( new BagOfTricks.TricksLargeColumn( from ) );	}
-			}
+			else if ( info.ButtonID == 30 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Jedi_1 ); }
+			else if ( info.ButtonID == 300 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Jedi_2 ); }
+			else if ( info.ButtonID == 31 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Jester_1 ); }
+			else if ( info.ButtonID == 310 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Jester_2 ); }
 			else if ( info.ButtonID == 32 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Mage_1 ); }
 			else if ( info.ButtonID == 320 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Mage_2 ); }
 			else if ( info.ButtonID == 352 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Mage_3 ); }
@@ -391,52 +364,10 @@ namespace Server.Gumps
 			else if ( info.ButtonID == 360 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Ancient_2 ); }
 			else if ( info.ButtonID == 396 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Ancient_3 ); }
 			else if ( info.ButtonID == 432 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Ancient_4 ); }
-			else if ( info.ButtonID == 37 )
-			{
-				if ( from.HasGump( typeof( ShinobiScroll.ShinobiColumn ) ) )
-				{
-					from.CloseGump( typeof( ShinobiScroll.ShinobiColumn ) );
-					if ( from.Backpack.FindItemByType( typeof ( ShinobiScroll ) ) != null )
-					{
-						ShinobiScroll scroll = (ShinobiScroll)(from.Backpack.FindItemByType( typeof ( ShinobiScroll ) ));
-						if ( scroll.owner == from )
-							from.SendGump( new Server.Items.ShinobiScroll.ShinobiRow( from, scroll ) );
-					}
-				}
-				else if ( from.HasGump( typeof( ShinobiScroll.ShinobiRow ) ) )
-				{
-					from.CloseGump( typeof( ShinobiScroll.ShinobiRow ) );
-				}
-				else if ( from.Backpack.FindItemByType( typeof ( ShinobiScroll ) ) != null )
-				{
-					ShinobiScroll scroll = (ShinobiScroll)(from.Backpack.FindItemByType( typeof ( ShinobiScroll ) ));
-					if ( scroll.owner == from )
-						from.SendGump( new Server.Items.ShinobiScroll.ShinobiColumn( from, scroll ) );
-				}
-			}
-			else if ( info.ButtonID == 38 )
-			{ 
-				if ( from.HasGump( typeof( SythSpellbook.PowerColumn ) ) )
-				{
-					from.CloseGump( typeof( SythSpellbook.PowerColumn ) );
-					if ( from.Backpack.FindItemByType( typeof ( SythSpellbook ) ) != null )
-					{
-						SythSpellbook syth = (SythSpellbook)(from.Backpack.FindItemByType( typeof ( SythSpellbook ) ));
-						if ( syth.owner == from )
-							from.SendGump( new Server.Items.SythSpellbook.PowerRow( from, syth ) );
-					}
-				}
-				else if ( from.HasGump( typeof( SythSpellbook.PowerRow ) ) )
-				{
-					from.CloseGump( typeof( SythSpellbook.PowerRow ) );
-				}
-				else if ( from.Backpack.FindItemByType( typeof ( SythSpellbook ) ) != null )
-				{
-					SythSpellbook cube = (SythSpellbook)(from.Backpack.FindItemByType( typeof ( SythSpellbook ) ));
-					if ( cube.owner == from )
-						from.SendGump( new Server.Items.SythSpellbook.PowerColumn( from, cube ) );
-				}
-			}
+			else if ( info.ButtonID == 37 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Shinobi_1 ); }
+			else if ( info.ButtonID == 370 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Shinobi_2 ); }
+			else if ( info.ButtonID == 38 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Syth_1 ); }
+			else if ( info.ButtonID == 380 ){ SpellBarRegistry.ToggleToolbar( from, SpellBarId.Syth_2 ); }
 			else if ( info.ButtonID == 39 )
 			{
 				if ( from.HasGump( typeof( WitchPouch.WitchBar ) ) )

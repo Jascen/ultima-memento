@@ -5,9 +5,11 @@ using Server.Spells.Song;
 
 namespace Server.Gumps 
 { 
-	public class SongBookGump : Gump 
-	{ 
-		private readonly SongBook m_Book; 
+	public class SongBookGump : Gump
+	{
+		private const int CAST_SPELL_ACTION_BASE = 10000;
+
+		private readonly SongBook m_Book;
 
 		public bool HasSpell( Mobile from, int spellID )
 		{
@@ -54,7 +56,7 @@ namespace Server.Gumps
 				{
 					if ( !HasSpell( from, definition.SpellID ) ) continue;
 
-					AddButton(x-5, y-5, 7048, 7048, definition.SpellID, GumpButtonType.Reply, 0);
+					AddButton(x-5, y-5, 7048, 7048, CAST_SPELL_ACTION_BASE + definition.SpellID, GumpButtonType.Reply, 0);
 					AddHtml( x+25, y, 148, 20, @"<BODY><BASEFONT Color=" + color + ">" + definition.Name.String + "</BASEFONT></BODY>", (bool)false, (bool)false);
 					y += 38;
 					if ( ++c == 8 ){ x = 415; y = 100; }
@@ -99,7 +101,7 @@ namespace Server.Gumps
 		{
 			Mobile from = state.Mobile; 
 
-			if ( info.ButtonID < 300 && info.ButtonID > 0 )
+			if ( info.ButtonID < CAST_SPELL_ACTION_BASE && info.ButtonID > 0 )
 			{
 				from.SendSound( 0x55 );
 				int page = info.ButtonID;
@@ -109,7 +111,7 @@ namespace Server.Gumps
 			}
 			else
 			{
-				int spellID = info.ButtonID;
+				int spellID = info.ButtonID - CAST_SPELL_ACTION_BASE;
 				if ( HasSpell( from, spellID ) )
 				{
 					BardSongProvider.Cast(from, spellID);

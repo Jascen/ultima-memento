@@ -52,9 +52,9 @@ namespace Server.Spells.DeathKnight
 
 		public static bool HasSpell(Mobile from, int spellID)
 		{
-			Spellbook book = Spellbook.Find(from, spellID, SpellbookType.DeathKnight);
+			DeathKnightSpellbook book = Spellbook.Find(from, spellID, SpellbookType.DeathKnight) as DeathKnightSpellbook;
 
-			return book != null && book.HasSpell(spellID);
+			return book != null && book.Owner == from && book.HasSpell(spellID);
 		}
 	}
 }

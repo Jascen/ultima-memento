@@ -1,20 +1,33 @@
 using System;
+using Server.Targeting;
 
 namespace Server.Spells.Jester
 {
 	public class CanOfSnakes : JesterSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Can of Snakes", "How about some nuts?",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 260,
+					IconGraphic = 20749,
+					Name = "Can of Snakes",
+					PowerWords = "How about some nuts?",
+					Description = "Opening a can of nuts will simply dazzle the audience as snakes are released instead. These snakes will follow your commands for a short period of time. The better your jester skills, the longer they will remain and the stronger they will be. Their venom will also be equally strong.",
+					ManaCost = 40,
+					TithingCost = 200,
+					MinSkill = 10,
+					TargetType = TargetFlags.None
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3.0 ); } }
-		public override int RequiredTithing{ get{ return 200; } }
-		public override int RequiredMana{ get{ return 40; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public CanOfSnakes( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public CanOfSnakes( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

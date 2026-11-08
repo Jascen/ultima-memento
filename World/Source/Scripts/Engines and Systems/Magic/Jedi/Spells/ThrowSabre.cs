@@ -1,29 +1,35 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Mobiles;
 using Server.Items;
 
 namespace Server.Spells.Jedi
 {
 	public class ThrowSabre : JediSpell
 	{
-		public override int spellIndex { get { return 283; } }
-		public int CirclePower = 2;
-		public static int spellID = 283;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 283,
+					IconGraphic = 0x2BCF,
+					Name = "Throw Sabre",
+					PowerWords = "Tiana",
+					Description = "The Jedi can throw their equipped sword at an enemy, doing not only the sword's normal damage but also an extra 17-53 points of damage. The types of resistances that the sword inflicts damage on match that of the sword. The sword quickly returns to the Jedi's hand upon throwing it.",
+					ManaCost = 16,
+					TithingCost = 12,
+					MinSkill = 40,
+					TargetType = TargetFlags.Harmful
+				},
 				203,
 				0
 			);
 
-		public ThrowSabre( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public int CirclePower = 2;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+		public ThrowSabre( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

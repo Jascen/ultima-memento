@@ -28,6 +28,64 @@ namespace Server.Gumps
 				return false;
 		}
 
+		public struct DeathKnightGrave
+		{
+			public readonly string Knight;
+			public readonly string Area;
+			public readonly Map Map;
+			public readonly string Place;
+
+			public DeathKnightGrave( string knight, string area, Map map, string place )
+			{
+				Knight = knight;
+				Area = area;
+				Map = map;
+				Place = place;
+			}
+		}
+
+		public static DeathKnightGrave GetGrave( int spellID )
+		{
+			if ( spellID == BanishSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Saint Kargoth", "the Ancient Pyramid", Map.Sosaria, "Land of Sosaria: Ancient Pyramid" );
+			if ( spellID == DemonicTouchSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Lord Monduiz Dephaar", "Dungeon Clues", Map.Sosaria, "Land of Sosaria: Dungeon Clues" );
+			if ( spellID == DevilPactSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Lady Kath of Naelex", "Dungeon Doom", Map.Sosaria, "Land of Sosaria: Dungeon Doom" );
+			if ( spellID == GrimReaperSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Prince Myrhal of Rax", "the Fires of Hell", Map.Sosaria, "Land of Sosaria: Fires of Hell" );
+			if ( spellID == HagHandSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Sir Maeril of Naelax", "Dungeon Exodus", Map.Sosaria, "Land of Sosaria: Dungeon Exodus" );
+			if ( spellID == HellfireSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Sir Farian of Lirtham", "the City of the Dead", Map.Sosaria, "Land of Ambrosia: City of the Dead" );
+			if ( spellID == LucifersBoltSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Lord Androma of Gara", "the Mausoleum", Map.Sosaria, "Island of Umber Veil: the Mausoleum" );
+			if ( spellID == OrbOfOrcusSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Sir Oslan Knarren", "Dungeon Despise", Map.Lodor, "Land of Lodoria: Dungeon Despise" );
+			if ( spellID == ShieldOfHateSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Sir Rezinar of Haxx", "Dungeon Deceit", Map.Lodor, "Land of Lodoria: Dungeon Deceit" );
+			if ( spellID == SoulReaperSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Lord Thyrian of Naelax", "Dungeon Wrong", Map.Lodor, "Land of Lodoria: Dungeon Wrong" );
+			if ( spellID == StrengthOfSteelSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Sir Minar of Darmen", "the Lodoria Catacombs", Map.Lodor, "Land of Lodoria: Lodoria Catacombs" );
+			if ( spellID == StrikeSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Duke Urkar of Torquann", "Dungeon Shame", Map.Lodor, "Land of Lodoria: Dungeon Shame" );
+			if ( spellID == SuccubusSkinSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Sir Luren the Boar", "the City of Embers", Map.Lodor, "Land of Lodoria: the City of Embers" );
+			if ( spellID == WrathSpell.SpellInfo.SpellDefinition.SpellID ) return new DeathKnightGrave( "Lord Khayven of Rax", "Dungeon Hythloth", Map.Lodor, "Land of Lodoria: Dungeon Hythloth" );
+
+			return default( DeathKnightGrave );
+		}
+
+		private static string GetGraveLocation( DeathKnightGrave grave, out Map map, out int x, out int y )
+		{
+			map = Map.Internal;
+			x = 0;
+			y = 0;
+
+			if ( grave.Area == null )
+				return null;
+
+			var entrance = Worlds.GetAreaEntrance( 0, grave.Area, grave.Map, out map, out x, out y );
+
+			return grave.Knight + "<BR>" + grave.Place + "<BR>" + entrance;
+		}
+
+		private static SpellDefinition GetDefinitionAt( int index )
+		{
+			if ( index < 0 || index >= DeathKnightSpellProvider.SpellCount )
+				return null;
+
+			return DeathKnightSpellProvider.SpellDefinitions[index];
+		}
+
 		public DeathKnightSpellbookGump( Mobile from, DeathKnightSpellbook book, int page ) : base( 100, 100 ) 
 		{
 			from.PlaySound( 0x55 );
@@ -98,151 +156,28 @@ namespace Server.Gumps
 
 				AddHtml( 78, 80, 250, 314, @"<BODY><BASEFONT Color=" + color + ">" + info + "</BASEFONT></BODY>", (bool)false, (bool)true);
 
-				info = "Magic Toolbars: Here are the commands you can use (include the bracket) to manage magic toolbars that might help you play better.<BR><BR>[deathspell1 - Opens the 1st death knight spell bar editor.<BR><BR>[deathspell2 - Opens the 2nd death knight spell bar editor.<BR><BR>[deathtool1 - Opens the 1st death knight spell bar.<BR><BR>[deathtool2 - Opens the 2nd death knight spell bar.<BR><BR>[deathclose1 - Closes the 1st death knight spell bar.<BR><BR>[deathclose2 - Closes the 2nd death knight spell bar.<BR><BR>Below are the [ commands you can either type to quickly cast a particular spell, or set a hot key to issue this command and cast the spell.<BR><BR>[DKBanish<BR>    Cast Banish<BR><BR>[DKDemonicTouch<BR>    Cast Demonic Touch<BR><BR>[DKDevilPact<BR>    Cast Devil Pact<BR><BR>[DKGrimReaper<BR>    Cast Grim Reaper<BR><BR>[DKHagHand<BR>    Cast Hag Hand<BR><BR>[DKHellfire<BR>    Cast Hellfire<BR><BR>[DKLucifersBolt<BR>    Cast Lucifer's Bolt<BR><BR>[DKOrbOrcus<BR>    Cast Orb of Orcus<BR><BR>[DKShieldHate<BR>    Cast Shield of Hate<BR><BR>[DKSoulReaper<BR>    Cast Soul Reaper<BR><BR>[DKStrengthSteel<BR>    Cast Strength of Steel<BR><BR>[DKStrike<BR>    Cast Strike<BR><BR>[DKSuccubusSkin<BR>    Cast Succubus Skin<BR><BR>[DKWrath<BR>    Cast Wrath<BR><BR>";
+				info = "Quick bars for these spells can be set up in the Magic Toolbars section of [toolbars<BR><BR>You can use these spells by a typed command, which allows you to make macros for using these if you want. Type [Spells_DeathKnight to see each of these commands.";
 
 				AddHtml( 366, 80, 250, 314, @"<BODY><BASEFONT Color=" + color + ">" + info + "</BASEFONT></BODY>", (bool)false, (bool)true);
 			}
 			else
 			{
-				m_Map_1 = Map.Internal;
-				var haveLeftSpell = false;
-				SpellDefinition leftSpell = null;
-				string leftSpellLocation = null;
-
-				m_Map_2 = Map.Internal;
-				var haveRightSpell = false;
-				SpellDefinition rightSpell = null;
-				string rightSpellLocation = null;
-
-				if ( page == 2 )
-				{
-					leftSpell = BanishSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetAreaEntrance( 0, "the Ancient Pyramid", Map.Sosaria, out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Saint Kargoth<BR>Land of Sosaria: Ancient Pyramid<BR>" + leftSpellGrave;
-					}
-
-					rightSpell = DemonicTouchSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetAreaEntrance( 0, "Dungeon Clues", Map.Sosaria, out m_Map_1, out m_X_1, out m_Y_1 );
-						rightSpellLocation = "Lord Monduiz Dephaar<BR>Land of Sosaria: Dungeon Clues<BR>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 3 )
-				{
-					leftSpell = DevilPactSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetAreaEntrance( 0, "Dungeon Doom", Map.Sosaria, out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Lady Kath of Naelex<BR>Land of Sosaria: Dungeon Doom<BR>" + leftSpellGrave;
-					}
-
-					rightSpell = GrimReaperSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetAreaEntrance( 0, "the Fires of Hell", Map.Sosaria, out m_Map_1, out m_X_1, out m_Y_1 );
-						rightSpellLocation = "Prince Myrhal of Rax<BR>Land of Sosaria: Fires of Hell<BR>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 4 )
-				{
-					leftSpell = HagHandSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetAreaEntrance( 0, "Dungeon Exodus", Map.Sosaria, out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Sir Maeril of Naelax<BR>Land of Sosaria: Dungeon Exodus<BR>" + leftSpellGrave;
-					}
-
-					rightSpell = HellfireSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetAreaEntrance( 0, "the City of the Dead", Map.Sosaria, out m_Map_1, out m_X_1, out m_Y_1 );
-						rightSpellLocation = "Sir Farian of Lirtham<BR>Land of Ambrosia: City of the Dead<BR>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 5 )
-				{
-					leftSpell = LucifersBoltSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetAreaEntrance( 0, "the Mausoleum", Map.Sosaria, out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Lord Androma of Gara<BR>Island of Umber Veil: the Mausoleum<BR>" + leftSpellGrave;
-					}
-
-					rightSpell = OrbOfOrcusSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetAreaEntrance( 0, "Dungeon Despise", Map.Lodor, out m_Map_1, out m_X_1, out m_Y_1 );
-						rightSpellLocation = "Sir Oslan Knarren<BR>Land of Lodoria: Dungeon Despise<BR>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 6 )
-				{
-					leftSpell = ShieldOfHateSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetAreaEntrance( 0, "Dungeon Deceit", Map.Lodor, out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Sir Rezinar of Haxx<BR>Land of Lodoria: Dungeon Deceit<BR>" + leftSpellGrave;
-					}
-
-					rightSpell = SoulReaperSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetAreaEntrance( 0, "Dungeon Wrong", Map.Lodor, out m_Map_1, out m_X_1, out m_Y_1 );
-						rightSpellLocation = "Lord Thyrian of Naelax<BR>Land of Lodoria: Dungeon Wrong<BR>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 7 )
-				{
-					leftSpell = StrengthOfSteelSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetAreaEntrance( 0, "the Lodoria Catacombs", Map.Lodor, out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Sir Minar of Darmen<BR>Land of Lodoria: Lodoria Catacombs<BR>" + leftSpellGrave;
-					}
-
-					rightSpell = StrikeSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetAreaEntrance( 0, "Dungeon Shame", Map.Lodor, out m_Map_1, out m_X_1, out m_Y_1 );
-						rightSpellLocation = "Duke Urkar of Torquann<BR>Land of Lodoria: Dungeon Shame<BR>" + rightSpellGrave;
-					}
-				}
-				else if ( page == 8 )
-				{
-					leftSpell = SuccubusSkinSpell.SpellInfo.SpellDefinition;
-					haveLeftSpell = HasSpell( from, leftSpell.SpellID );
-					if ( !haveLeftSpell )
-					{
-						var leftSpellGrave = Worlds.GetAreaEntrance( 0, "the City of Embers", Map.Lodor, out m_Map_1, out m_X_1, out m_Y_1 );
-						leftSpellLocation = "Sir Luren the Boar<BR>Land of Lodoria: the City of Embers<BR>" + leftSpellGrave;
-					}
-
-					rightSpell = WrathSpell.SpellInfo.SpellDefinition;
-					haveRightSpell = HasSpell( from, rightSpell.SpellID );
-					if ( !haveRightSpell )
-					{
-						var rightSpellGrave = Worlds.GetAreaEntrance( 0, "Dungeon Hythloth", Map.Lodor, out m_Map_1, out m_X_1, out m_Y_1 );
-						rightSpellLocation = "Lord Khayven of Rax<BR>Land of Lodoria: Dungeon Hythloth<BR>" + rightSpellGrave;
-					}
-				}
+				// Each page describes two spells, in provider order
+				int leftIndex = ( page - 2 ) * 2;
+				SpellDefinition leftSpell = GetDefinitionAt( leftIndex );
+				SpellDefinition rightSpell = GetDefinitionAt( leftIndex + 1 );
 
 				if ( leftSpell != null )
 				{
+					string leftSpellLocation = null;
+					if ( !HasSpell( from, leftSpell.SpellID ) )
+					{
+						var grave = GetGrave( leftSpell.SpellID );
+						leftSpellLocation = GetGraveLocation( grave, out m_Map_1, out m_X_1, out m_Y_1 );
+						if ( Sextants.HasSextant( from ) )
+							AddButton(73, 368, 10461, 10461, 98000+page, GumpButtonType.Reply, 0);
+					}
+
 					AddImage(73, 78, 7052);
 					AddImage(75, 80, leftSpell.IconGraphic, 2405);
 					AddHtml( 129, 93, 200, 20, @"<BODY><BASEFONT Color=" + color + ">" + leftSpell.Name + "</BASEFONT></BODY>", (bool)false, (bool)false);
@@ -257,6 +192,15 @@ namespace Server.Gumps
 
 				if ( rightSpell != null )
 				{
+					string rightSpellLocation = null;
+					if ( !HasSpell( from, rightSpell.SpellID ) )
+					{
+						var grave = GetGrave( rightSpell.SpellID );
+						rightSpellLocation = GetGraveLocation( grave, out m_Map_2, out m_X_2, out m_Y_2 );
+						if ( Sextants.HasSextant( from ) )
+							AddButton(592, 368, 10461, 10461, 99000+page, GumpButtonType.Reply, 0);
+					}
+
 					AddImage(360, 78, 7052);
 					AddImage(362, 80, rightSpell.IconGraphic, 2405);
 					AddHtml( 417, 93, 200, 20, @"<BODY><BASEFONT Color=" + color + ">" + rightSpell.Name + "</BASEFONT></BODY>", (bool)false, (bool)false);
@@ -268,12 +212,6 @@ namespace Server.Gumps
 					AddHtml( 484, 190, 57, 20, @"<BODY><BASEFONT Color=" + color + ">" + rightSpell.ManaCost + "</BASEFONT></BODY>", (bool)false, (bool)false);
 					AddHtml( 366, 220, 250, 175, @"<BODY><BASEFONT Color=" + color + ">" + (rightSpellLocation ?? "") + "<br><br>Mantra: " + rightSpell.PowerWords + "<BR><BR>" + rightSpell.Description + "</BASEFONT></BODY>", (bool)false, (bool)false);
 				}
-
-				if ( Sextants.HasSextant( from ) && m_X_1 > 0 && !haveLeftSpell )
-					AddButton(73, 368, 10461, 10461, 98000+page, GumpButtonType.Reply, 0);
-
-				if ( Sextants.HasSextant( from ) && m_X_2 > 0 && !haveRightSpell )
-					AddButton(592, 368, 10461, 10461, 99000+page, GumpButtonType.Reply, 0);
 			}
 		}
 

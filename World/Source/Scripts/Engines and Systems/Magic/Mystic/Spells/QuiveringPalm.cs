@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Server.Network;
 using Server.Items;
 using Server.Targeting;
 
@@ -8,21 +7,32 @@ namespace Server.Spells.Mystic
 {
 	public class QuiveringPalm : MysticSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Quivering Palm", "Summ Cah Beh Ra",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 258,
+					IconGraphic = 0x5001,
+					Name = "Quivering Palm",
+					PowerWords = "Summ Cah Beh Ra",
+					Description = "You must be wearing some sort of pugilist gloves for this ability to work. It temporarily enhances the kind of damage the gloves do. The type of damage inflicted when hitting a target will be converted to the target's worst resistance type. The duration of the effect is affected by your fist fighting skill.",
+					ManaCost = 20,
+					TithingCost = 20,
+					MinSkill = 20,
+					TargetType = TargetFlags.None
+				},
 				269,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
 
-		public override double RequiredSkill{ get{ return 20.0; } }
-		public override int RequiredMana{ get{ return 20; } }
-		public override int RequiredTithing{ get{ return 20; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
 		public override bool BlocksMovement{ get{ return false; } }
 		public override int MysticSpellCircle{ get{ return 1; } }
 
-		public QuiveringPalm( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public QuiveringPalm( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

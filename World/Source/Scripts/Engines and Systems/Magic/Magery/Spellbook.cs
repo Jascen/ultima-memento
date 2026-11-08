@@ -10,6 +10,9 @@ using System.Globalization;
 using Server.Spells.HolyMan;
 using Server.Spells.Song;
 using Server.Spells.DeathKnight;
+using Server.Spells.Mystic;
+using Server.Spells.Jedi;
+using Server.Spells.Syth;
 
 namespace Server.Items
 {
@@ -259,11 +262,11 @@ namespace Server.Items
 				return SpellbookType.DeathKnight;
 			else if ( spellID >= HolyManSpellProvider.FirstSpellId && spellID <= HolyManSpellProvider.LastSpellId)
 				return SpellbookType.HolyMan;
-			else if ( spellID >= 250 && spellID < 260 )
+			else if ( spellID >= MysticSpellProvider.FirstSpellId && spellID <= MysticSpellProvider.LastSpellId )
 				return SpellbookType.Mystic;
-			else if ( spellID >= 270 && spellID < 280 )
+			else if ( spellID >= SythSpellProvider.FirstSpellId && spellID <= SythSpellProvider.LastSpellId )
 				return SpellbookType.Syth;
-			else if ( spellID >= 280 && spellID < 290 )
+			else if ( spellID >= JediSpellProvider.FirstSpellId && spellID <= JediSpellProvider.LastSpellId )
 				return SpellbookType.Jedi;
 			else if ( spellID >= 600 && spellID < 664 )
 				return SpellbookType.Archmage;

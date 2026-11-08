@@ -1,11 +1,6 @@
 using System;
-using Server;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
-using Server.Items;
 using Server.Mobiles;
-using System.Collections.Generic;
 using Server.Spells;
 using Server.Spells.Necromancy;
 using Server.Spells.Ninjitsu;
@@ -14,22 +9,30 @@ namespace Server.Spells.Jedi
 {
 	public class Mirage : JediSpell
 	{
-		public override int spellIndex { get { return 282; } }
-		public int CirclePower = 3;
-		public static int spellID = 282;
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 10 )); } }
-		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.75 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 2 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Spells.Jedi.JediSpell.SpellInfo( spellIndex, 3 )); } }
-
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 1 ),
-				Server.Misc.Research.CapsCast( Server.Spells.Jedi.JediSpell.SpellInfo( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 282,
+					IconGraphic = 0x2BC1,
+					Name = "Mirage",
+					PowerWords = "Michal",
+					Description = "This power allows the Jedi to create a projection of themselves that can distract foes from the Jedi themselves. This projection contains physical attributes as the psychic energy of the Jedi can maintain the illusion for up to about 3 minutes, depending on how powerful they are.",
+					ManaCost = 12,
+					TithingCost = 24,
+					MinSkill = 30,
+					TargetType = TargetFlags.None
+				},
 				-1,
 				0
 			);
 
-		public Mirage( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public int CirclePower = 3;
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.75 ); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
+
+		public Mirage( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

@@ -1,13 +1,6 @@
 using System;
-using Server;
-using Server.Items;
 using Server.Targeting;
-using Server.Network;
 using System.Collections.Generic;
-using System.Collections;
-using Server.Regions;
-using Server.Multis;
-using Server.Misc;
 using Server.Mobiles;
 using Server.Spells.Chivalry;
 
@@ -15,17 +8,29 @@ namespace Server.Spells.Jester
 {
 	public class Hilarity : JesterSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Hilarity", "Have you heard this one?",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 263,
+					IconGraphic = 20750,
+					Name = "Hilarity",
+					PowerWords = "Have you heard this one?",
+					Description = "Keep your audience in stitches! Tell a joke and see if others are frozen in laughter. The duration of the laughter is based on both your jester skills and the difficulty of the audience. The range of which your joke is heard, is also dependent on your jester skills.",
+					ManaCost = 50,
+					TithingCost = 40,
+					MinSkill = 10,
+					TargetType = TargetFlags.Harmful
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.0 ); } }
-		public override int RequiredTithing{ get{ return 40; } }
-		public override int RequiredMana{ get{ return 50; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public Hilarity( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public Hilarity( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

@@ -11,5 +11,9 @@ namespace Server.SpellBars
 		Monk,
 		Necromancy,
 		Priest,
+		Shinobi,
+		Jester,
+		Jedi,
+		Syth,
 	}
 }

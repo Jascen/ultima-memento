@@ -1,14 +1,10 @@
 using System;
-using Server;
-using Server.Spells;
 using Server.Network;
-using Server.Items;
 
 namespace Server.Spells.Shinobi
 {
 	public abstract class ShinobiSpell : Spell
 	{
-		public virtual int spellIndex { get { return 1; } }
 		public abstract double RequiredSkill{ get; }
 		public abstract int RequiredMana{ get; }
 		public abstract int RequiredTithing{ get; }

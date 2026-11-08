@@ -1,27 +1,34 @@
 using System;
-using Server;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
 using Server.Items;
-using Server.Mobiles;
-using Server.Misc;
 
 namespace Server.Spells.Jester
 {
 	public class SeltzerBottle : JesterSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Seltzer Bottle", "Are you thirsty?",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 268,
+					IconGraphic = 20755,
+					Name = "Seltzer Bottle",
+					PowerWords = "Are you thirsty?",
+					Description = "Offer your audience a drink, and they will probably not ask you again. This will spray a target with freezing water, where the effectiveness is dependent on your jester skills, and it may have the potential to cover the ground in ice cold water.",
+					ManaCost = 20,
+					TithingCost = 50,
+					MinSkill = 10,
+					TargetType = TargetFlags.Harmful
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.0 ); } }
-		public override int RequiredTithing{ get{ return 50; } }
-		public override int RequiredMana{ get{ return 20; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public SeltzerBottle( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public SeltzerBottle( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

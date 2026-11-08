@@ -1,7 +1,5 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
 using Server.Items;
 using Server.Mobiles;
 
@@ -9,19 +7,30 @@ namespace Server.Spells.Mystic
 {
 	public class Leap : MysticSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Leap", "Mu Ra Beh Cah",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 254,
+					IconGraphic = 0x4B2,
+					Name = "Leap",
+					PowerWords = "Mu Ra Beh Cah",
+					Description = "Allows you to leap over a long distance. This is a quick action and can allow a monk to leap toward an opponent, leap away to safety, or leap over some obstacles like rivers and streams.",
+					ManaCost = 20,
+					TithingCost = 10,
+					MinSkill = 35,
+					TargetType = TargetFlags.Beneficial
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override int RequiredTithing{ get{ return 10; } }
-		public override double RequiredSkill{ get{ return 35.0; } }
-		public override int RequiredMana{ get{ return 20; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 		public override int MysticSpellCircle{ get{ return 3; } }
 
-		public Leap( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public Leap( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

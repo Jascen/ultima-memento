@@ -6,19 +6,29 @@ namespace Server.Spells.Shinobi
 {
 	public class Espionage : ShinobiSpell
 	{
-		public override int spellIndex { get { return 293; } }
-		private static SpellInfo m_Info = new SpellInfo(
-				"Espionage", "Supai",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 293,
+					IconGraphic = 10873,
+					Name = "Espionage",
+					PowerWords = "Supai",
+					Description = "Some of the more minor locks can be manipulated with this ability, but not all of them as master thieves can.",
+					ManaCost = 10,
+					TithingCost = 15,
+					MinSkill = 20,
+					TargetType = TargetFlags.Beneficial
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "skill" ))); } }
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "points" )); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "mana" )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public Espionage( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public Espionage( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

@@ -32,5 +32,17 @@ namespace Server.SpellBars
 
 		Priest_1,
 		Priest_2,
+
+		Shinobi_1,
+		Shinobi_2,
+
+		Jester_1,
+		Jester_2,
+
+		Jedi_1,
+		Jedi_2,
+
+		Syth_1,
+		Syth_2,
 	}
 }

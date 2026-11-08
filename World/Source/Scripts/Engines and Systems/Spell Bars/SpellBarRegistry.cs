@@ -30,6 +30,14 @@ namespace Server.SpellBars
 				case SpellBarId.Necro_2: return typeof(SpellBarSetupGump_Necro_2);
 				case SpellBarId.Priest_1: return typeof(SpellBarSetupGump_Priest_1);
 				case SpellBarId.Priest_2: return typeof(SpellBarSetupGump_Priest_2);
+				case SpellBarId.Shinobi_1: return typeof(SpellBarSetupGump_Shinobi_1);
+				case SpellBarId.Shinobi_2: return typeof(SpellBarSetupGump_Shinobi_2);
+				case SpellBarId.Jester_1: return typeof(SpellBarSetupGump_Jester_1);
+				case SpellBarId.Jester_2: return typeof(SpellBarSetupGump_Jester_2);
+				case SpellBarId.Jedi_1: return typeof(SpellBarSetupGump_Jedi_1);
+				case SpellBarId.Jedi_2: return typeof(SpellBarSetupGump_Jedi_2);
+				case SpellBarId.Syth_1: return typeof(SpellBarSetupGump_Syth_1);
+				case SpellBarId.Syth_2: return typeof(SpellBarSetupGump_Syth_2);
 				default: throw new ArgumentOutOfRangeException("id");
 			}
 		}
@@ -60,6 +68,14 @@ namespace Server.SpellBars
 				case SpellBarId.Necro_2: return typeof(SpellBarToolbarGump_Necro_2);
 				case SpellBarId.Priest_1: return typeof(SpellBarToolbarGump_Priest_1);
 				case SpellBarId.Priest_2: return typeof(SpellBarToolbarGump_Priest_2);
+				case SpellBarId.Shinobi_1: return typeof(SpellBarToolbarGump_Shinobi_1);
+				case SpellBarId.Shinobi_2: return typeof(SpellBarToolbarGump_Shinobi_2);
+				case SpellBarId.Jester_1: return typeof(SpellBarToolbarGump_Jester_1);
+				case SpellBarId.Jester_2: return typeof(SpellBarToolbarGump_Jester_2);
+				case SpellBarId.Jedi_1: return typeof(SpellBarToolbarGump_Jedi_1);
+				case SpellBarId.Jedi_2: return typeof(SpellBarToolbarGump_Jedi_2);
+				case SpellBarId.Syth_1: return typeof(SpellBarToolbarGump_Syth_1);
+				case SpellBarId.Syth_2: return typeof(SpellBarToolbarGump_Syth_2);
 				default: throw new ArgumentOutOfRangeException("id");
 			}
 		}
@@ -90,6 +106,14 @@ namespace Server.SpellBars
 				Bar(SpellBarId.Necro_2, SpellBarSchool.Necromancy, NecromancySpellSchool.Instance, 2, "necrotool2", "necrospell2", "SPELL BAR - NECROMANCER", false),
 				Bar(SpellBarId.Priest_1, SpellBarSchool.Priest, PriestSpellSchool.Instance, 1, "holytool1", "holyclose1", "SPELL BAR - PRIEST", false),
 				Bar(SpellBarId.Priest_2, SpellBarSchool.Priest, PriestSpellSchool.Instance, 2, "holytool2", "holyclose2", "SPELL BAR - PRIEST", false),
+				Bar(SpellBarId.Shinobi_1, SpellBarSchool.Shinobi, ShinobiSpellSchool.Instance, 1, "shinobitool1", "shinobiclose1", "SPELL BAR - SHINOBI", false),
+				Bar(SpellBarId.Shinobi_2, SpellBarSchool.Shinobi, ShinobiSpellSchool.Instance, 2, "shinobitool2", "shinobiclose2", "SPELL BAR - SHINOBI", false),
+				Bar(SpellBarId.Jester_1, SpellBarSchool.Jester, JesterSpellSchool.Instance, 1, "jestertool1", "jesterclose1", "SPELL BAR - JESTER", false),
+				Bar(SpellBarId.Jester_2, SpellBarSchool.Jester, JesterSpellSchool.Instance, 2, "jestertool2", "jesterclose2", "SPELL BAR - JESTER", false),
+				Bar(SpellBarId.Jedi_1, SpellBarSchool.Jedi, JediSpellSchool.Instance, 1, "jeditool1", "jediclose1", "SPELL BAR - JEDI", false),
+				Bar(SpellBarId.Jedi_2, SpellBarSchool.Jedi, JediSpellSchool.Instance, 2, "jeditool2", "jediclose2", "SPELL BAR - JEDI", false),
+				Bar(SpellBarId.Syth_1, SpellBarSchool.Syth, SythSpellSchool.Instance, 1, "sythtool1", "sythclose1", "SPELL BAR - SYTH", false),
+				Bar(SpellBarId.Syth_2, SpellBarSchool.Syth, SythSpellSchool.Instance, 2, "sythtool2", "sythclose2", "SPELL BAR - SYTH", false),
 			};
 		}
 	}

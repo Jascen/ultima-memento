@@ -1,7 +1,5 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
 using Server.Items;
 using Server.Mobiles;
 
@@ -9,17 +7,29 @@ namespace Server.Spells.Jester
 {
 	public class JumpAround : JesterSpell
 	{
-		private static SpellInfo m_Info = new SpellInfo(
-				"Jump Around", "Now you see me...",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 265,
+					IconGraphic = 20754,
+					Name = "Jump Around",
+					PowerWords = "Now you see me...",
+					Description = "This allows you to demonstrate your acrobatic skills, as you can quickly jump and leap around, perhaps avoiding dangers or getting to hard reaching places.",
+					ManaCost = 20,
+					TithingCost = 20,
+					MinSkill = 10,
+					TargetType = TargetFlags.Beneficial
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override int RequiredTithing{ get{ return 20; } }
-		public override int RequiredMana{ get{ return 20; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public JumpAround( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public JumpAround( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

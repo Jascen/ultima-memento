@@ -9,6 +9,14 @@ namespace Server.Scripts.Commands
 	{
 		private static List<Docs.DocCommandEntry> m_HelpEntries;
 
+		// Commands that predate the spell names they cast
+		private static readonly Dictionary<int, string> m_LegacyCommands = new Dictionary<int, string>
+		{
+			{ HammerOfFaithSpell.SpellInfo.SpellDefinition.SpellID, "HMHammerFaith" },
+			{ TouchOfLifeSpell.SpellInfo.SpellDefinition.SpellID, "HMTouchLife" },
+			{ TrialByFireSpell.SpellInfo.SpellDefinition.SpellID, "HMTrialFire" },
+		};
+
 		public static void Initialize()
 		{
 			m_HelpEntries = CastSpellCommand.RegisterAll(
@@ -17,6 +25,10 @@ namespace Server.Scripts.Commands
 				HolyManSpellProvider.Cast,
 				definition =>
 				{
+					string legacyCommand;
+					if (m_LegacyCommands.TryGetValue(definition.SpellID, out legacyCommand))
+						return new string[] { legacyCommand };
+
 					var spellNameNormalized = definition.Name.String.Replace(" ", "");
 					return new string[] { string.Format("HM{0}", spellNameNormalized) };
 				}

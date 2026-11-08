@@ -1,32 +1,37 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Server.Misc;
 using Server.Targeting;
-using Server.Network;
 using Server.Items;
-using Server.Mobiles;
-using Server.Multis;
-using Server.Regions;
 using Server.Spells.Sixth;
 
 namespace Server.Spells.Shinobi
 {
 	public class EagleEye : ShinobiSpell
 	{
-		public override int spellIndex { get { return 292; } }
-		private static SpellInfo m_Info = new SpellInfo(
-				"Eagle Eye", "Surudoi Me",
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 292,
+					IconGraphic = 10872,
+					Name = "Eagle Eye",
+					PowerWords = "Surudoi Me",
+					Description = "The eyes of the ninja are focused where they can perhaps spot hidden creatures, traps, or treasure.",
+					ManaCost = 50,
+					TithingCost = 55,
+					MinSkill = 70,
+					TargetType = TargetFlags.Beneficial
+				},
 				-1,
 				0
 			);
 
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "skill" ))); } }
-		public override int RequiredTithing{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "points" )); } }
-		public override int RequiredMana{ get{ return Int32.Parse(  Server.Items.ShinobiScroll.ShinobiInfo( spellIndex, "mana" )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredTithing{ get{ return SpellInfo.SpellDefinition.TithingCost; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		public EagleEye( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public EagleEye( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 
