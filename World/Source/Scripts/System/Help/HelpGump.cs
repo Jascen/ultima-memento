@@ -1440,6 +1440,12 @@ namespace Server.Engines.Help
 					from.Preferences.ColorlessFabricBreakdown = !from.Preferences.ColorlessFabricBreakdown;
 					break;
 				}
+				case PageActionType.Setting_LegacyCarve:
+				{
+					reopenPage = true;
+					from.Preferences.LegacyCarve = !from.Preferences.LegacyCarve;
+					break;
+				}
 
 				case PageActionType.MagicToolbar_All_Close: {
 					reopenPage = true;

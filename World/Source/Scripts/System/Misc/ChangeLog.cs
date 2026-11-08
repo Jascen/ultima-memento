@@ -1340,6 +1340,7 @@ namespace Server.Misc
 					builder.Append("- Achievement - Fix issue where the Frozen Hells didn't have a quest item<br>");
 					builder.Append("- Craft - Restore hack to grant resource benefits to certain items<br>");
 					builder.Append("- Gump - Gargoyle Ear and Pixie Skull are now properly listed as Witchery regs<br>");
+					builder.Append("- Gump - Legacy Carve can now be toggled<br>");
 					builder.Append("- Item - Research bag can only consume Magery or Necromancy spellbooks<br>");
 					builder.Append("- Misc - Fix issue where rare mobs could be teleported to Lodoria instead of a dungeon<br>");
 					builder.Append("- Misc - Fix crash from Lawn Tools and Remodeling Tools placement<br>");
