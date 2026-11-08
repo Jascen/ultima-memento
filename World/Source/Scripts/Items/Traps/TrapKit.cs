@@ -499,7 +499,7 @@ namespace Server.Items
 
 			public override bool BlocksMovement { get { return true; } }
 			public override bool ClearHandsOnCast { get { return false; } }
-			public override bool RevealOnCast { get { return true; } }
+			public override bool RevealOnCast { get { return false; } }
 			public override bool CheckNextSpellTime { get { return false; } }
 			public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
 
@@ -535,6 +535,20 @@ namespace Server.Items
 					Caster.SendMessage( "You are interrupted while setting the trap." );
 			}
 
+			public override void OnBeginCast()
+			{
+				base.OnBeginCast();
+
+				if (Caster.Hidden)
+				{
+					if (!Caster.CheckSkillExplicit(SkillName.Stealth, 0, 100))
+					{
+						Caster.SendMessage("You stumble and reveal yourself!");
+						Caster.RevealingAction();
+					}
+				}
+			}
+
 			public override void OnCast()
 			{
 				if ( m_TrapKit == null || m_TrapKit.Deleted )
@@ -543,7 +557,12 @@ namespace Server.Items
 					return;
 				}
 
-				m_TrapKit.TryPlaceTrap( Caster, m_Location, m_Map );
+				if ( m_TrapKit.TryPlaceTrap( Caster, m_Location, m_Map ) )
+				{
+					// Extra gain check when successfully placing the trap
+					if (Caster.Hidden)
+						Caster.CheckSkillExplicit(SkillName.Stealth, 0, 100);
+				}
 
 				FinishSequence();
 			}
