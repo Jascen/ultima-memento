@@ -1,29 +1,34 @@
 using System;
 using Server.Mobiles;
-using Server.Network;
 using Server.Targeting;
-using Server.Items;
 
 namespace Server.Spells.Research
 {
 	public class ResearchSwarm : ResearchSpell
 	{
-		public override int spellIndex { get { return 33; } }
 		public int CirclePower = 5;
-		public static int spellID = 33;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 6.00 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 661,
+					IconGraphic = 11199,
+					Name = "Swarm",
+					PowerWords = "Kal Bet Xen",
+					Description = "Unleashes a swarm of insects at your enemies for 1-3 minutes.",
+					ManaCost = 15,
+					MinSkill = 40,
+					TargetType = TargetFlags.None
+				},
 				266,
 				9040,
 				Reagent.BeetleShell,Reagent.SilverWidow,Reagent.FairyEgg
 			);
 
-		public ResearchSwarm( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchSwarm( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

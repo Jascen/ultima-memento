@@ -1,30 +1,35 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server;
 using Server.Items;
 
 namespace Server.Spells.Research
 {
 	public class ResearchConjure : ResearchSpell
 	{
-		public override int spellIndex { get { return 1; } }
 		public override bool alwaysConsume { get{ return bool.Parse( Server.Misc.Research.SpellInformation( spellIndex, 14 )); } }
 		public int CirclePower = 1;
-		public static int spellID = 1;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 610,
+					IconGraphic = 11195,
+					Name = "Conjure",
+					PowerWords = "Kal Xen",
+					Description = "The magic of this spell will conjure a random item of minor significance, but it may be significant dependent on the caster's current motivations. Due to the creative nature of the spell, something needs to be destroyed in turn. That means that the spell scroll will always crumble to dust when cast.",
+					ManaCost = 10,
+					MinSkill = 15,
+					TargetType = TargetFlags.None
+				},
 				203,
 				9041,
 				Reagent.MoonCrystal,Reagent.FairyEgg
 			);
 
-		public ResearchConjure( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchConjure( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

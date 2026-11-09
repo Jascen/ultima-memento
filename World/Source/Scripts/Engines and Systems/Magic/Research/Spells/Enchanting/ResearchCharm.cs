@@ -1,8 +1,4 @@
 using System;
-using Server;
-using System.Collections;
-using Server.Network;
-using System.Text;
 using Server.Items;
 using Server.Mobiles;
 using Server.Targeting;
@@ -11,22 +7,29 @@ namespace Server.Spells.Research
 {
 	public class ResearchCharm : ResearchSpell
 	{
-		public override int spellIndex { get { return 51; } }
 		public int CirclePower = 7;
-		public static int spellID = 51;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 606,
+					IconGraphic = 11217,
+					Name = "Charm",
+					PowerWords = "An Xen Ex",
+					Description = "This spell can charm either aggressive monsters or those of animialistic natures. When charmed, their evil or neutral tendencies are wiped from their mind and they will attack evil creatures. This charm will only last for up to a minute before they come to their senses.",
+					ManaCost = 60,
+					MinSkill = 82,
+					TargetType = TargetFlags.Harmful
+				},
 				236,
 				9031,
 				Reagent.EnchantedSeaweed,Reagent.FairyEgg,Reagent.PixieSkull
 			);
 
-		public ResearchCharm( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchCharm( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

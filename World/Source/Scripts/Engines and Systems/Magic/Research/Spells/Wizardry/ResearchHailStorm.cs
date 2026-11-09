@@ -1,29 +1,33 @@
 using System;
 using Server.Targeting;
-using Server.Network;
-using Server.Mobiles;
-using Server.Items;
 
 namespace Server.Spells.Research
 {
 	public class ResearchHailStorm : ResearchSpell
 	{
-		public override int spellIndex { get { return 48; } }
 		public int CirclePower = 6;
-		public static int spellID = 48;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.75 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 630,
+					IconGraphic = 11256,
+					Name = "Hail Storm",
+					PowerWords = "Vas Ex Des",
+					Description = "Creates a storm of ice around an enemy, causing 28-125 points of cold damage.",
+					ManaCost = 25,
+					MinSkill = 55,
+					TargetType = TargetFlags.Harmful
+				},
 				230,
 				9041,
 				Reagent.FairyEgg,Reagent.MoonCrystal
 			);
 
-		public ResearchHailStorm( Mobile caster, Item scroll ): base( caster, scroll, m_Info )
+		public ResearchHailStorm( Mobile caster, Item scroll ): base( caster, scroll, SpellInfo )
 		{
 		}
 

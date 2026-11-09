@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Server.Network;
-using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
 
@@ -9,23 +7,30 @@ namespace Server.Spells.Research
 {
 	public class ResearchMassDeath : ResearchSpell
 	{
-		public override int spellIndex { get { return 64; } }
 		public override bool alwaysConsume { get{ return bool.Parse( Server.Misc.Research.SpellInformation( spellIndex, 14 )); } }
 		public int CirclePower = 8;
-		public static int spellID = 64;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 637,
+					IconGraphic = 11258,
+					Name = "Mass Death",
+					PowerWords = "Vas Corp",
+					Description = "Damages nearby enemies with deathly magics summoned from the void. If you hit more than one enemy, the damage amount is doubled and divided amongst each enemy evenly. The damage dealt is between 45-125 points, with the addition of the available hit points of the caster. After the mass death is unleashed, the caster will have a single hit point remaining. The caster may lose some karma if they attempt this. This spell is powerful enough that the scroll will always crumble to dust when cast.",
+					ManaCost = 55,
+					MinSkill = 90,
+					TargetType = TargetFlags.None
+				},
 				233,
 				9042,
 				Reagent.PixieSkull,Reagent.BatWing,Reagent.DragonTooth
 			);
 
-		public ResearchMassDeath( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchMassDeath( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

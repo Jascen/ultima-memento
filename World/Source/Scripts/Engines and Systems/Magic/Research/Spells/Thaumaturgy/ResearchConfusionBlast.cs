@@ -1,33 +1,36 @@
 using System;
-using Server; 
 using Server.Targeting;
 using Server.Network;
-using Server.Items;
-using System.Collections;
 using System.Collections.Generic;
 using Server.Mobiles;
-using Server.Misc;
 
 namespace Server.Spells.Research
 {
 	public class ResearchConfusionBlast : ResearchSpell
 	{
-		public override int spellIndex { get { return 6; } }
 		public int CirclePower = 4;
-		public static int spellID = 6;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 609,
+					IconGraphic = 11235,
+					Name = "Confusion Blast",
+					PowerWords = "In Quas Wis",
+					Description = "Those within the confusion blast could suffer from the effects for 5-20 seconds before they regain their senses.",
+					ManaCost = 15,
+					MinSkill = 40,
+					TargetType = TargetFlags.None
+				},
 				212,
 				9001,
 				Reagent.MandrakeRoot,Reagent.PixieSkull,Reagent.FairyEgg
 			);
 
-		public ResearchConfusionBlast( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchConfusionBlast( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

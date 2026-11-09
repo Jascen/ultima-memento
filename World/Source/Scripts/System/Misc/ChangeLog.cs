@@ -1326,6 +1326,7 @@ namespace Server.Misc
 					builder.Append("- Craft - Experimental change to enable breaking down more items<br>");
 					builder.Append("- Gump - Shinobi spellbars are now accessible via [toolbars<br>");
 					builder.Append("- Gump - Jester spellbars are now accessible via [toolbars<br>");
+					builder.Append("- Housekeeping - Refactor all custom spell systems<br>");
 					builder.Append("- Item - Research bag now warns before destroying spellbooks<br>");
 					builder.Append("- Item - Journal quest tomes now warn before pickup<br>");
 					builder.Append("- Misc - Added discord announcement for stolen items<br>");
@@ -1353,6 +1354,8 @@ namespace Server.Misc
 					builder.Append("- Spell - Fix excessive item iteration with Enchant after player logouts<br>");
 					builder.Append("- Spell - Protection and Elemental Protection no longer stack<br>");
 					builder.Append("- Spell - Elemental Protection now reduces Faster Casting cap<br>");
+					builder.Append("- Spell - Banish Daemon now uses it's values instead of Snow Ball<br>");
+					builder.Append("- Spell - Flame Bolt now uses it's values instead of Call Destruction's<br>");
 					break;
 			}
 		}

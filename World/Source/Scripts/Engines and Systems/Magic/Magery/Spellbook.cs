@@ -13,6 +13,7 @@ using Server.Spells.DeathKnight;
 using Server.Spells.Mystic;
 using Server.Spells.Jedi;
 using Server.Spells.Syth;
+using Server.Spells.Research;
 
 namespace Server.Items
 {
@@ -268,7 +269,7 @@ namespace Server.Items
 				return SpellbookType.Syth;
 			else if ( spellID >= JediSpellProvider.FirstSpellId && spellID <= JediSpellProvider.LastSpellId )
 				return SpellbookType.Jedi;
-			else if ( spellID >= 600 && spellID < 664 )
+			else if ( spellID >= ResearchSpellProvider.FirstSpellId && spellID <= ResearchSpellProvider.LastSpellId )
 				return SpellbookType.Archmage;
 
 			return SpellbookType.Invalid;

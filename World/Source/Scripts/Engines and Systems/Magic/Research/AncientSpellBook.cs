@@ -1,7 +1,5 @@
-using System;
-using Server.Network;
 using Server.Gumps;
-using Server.Spells;
+using Server.Spells.Research;
 
 namespace Server.Items
 {
@@ -28,8 +26,8 @@ namespace Server.Items
 		public string Names { get{ return names; } set{ names = value; } }
 
 		public override SpellbookType SpellbookType{ get{ return SpellbookType.Archmage; } }
-		public override int BookOffset{ get{ return 600; } }
-		public override int BookCount{ get{ return 64; } }
+		public override int BookOffset{ get{ return ResearchSpellProvider.FirstSpellId; } }
+		public override int BookCount{ get{ return ResearchSpellProvider.SpellCount; } }
 
 		[Constructable]
 		public AncientSpellbook() : this( (ulong)0 )

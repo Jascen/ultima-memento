@@ -1,31 +1,35 @@
 using System;
-using Server;
+using Server.Targeting;
 using System.Collections;
-using Server.Network;
-using System.Text;
 using Server.Items;
-using Server.Mobiles;
 
 namespace Server.Spells.Research
 {
 	public class ResearchRockFlesh : ResearchSpell
 	{
-		public override int spellIndex { get { return 10; } }
 		public int CirclePower = 5;
-		public static int spellID = 10;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 644,
+					IconGraphic = 11204,
+					Name = "Rock Flesh",
+					PowerWords = "Rel Sanct Ylem",
+					Description = "With this spell, the caster gains an innate resistance to damage by transforming the very flesh into a substance as strong as stone for 1-16 minutes of a 90% physical resistance. The caster may lose some karma if they attempt this.",
+					ManaCost = 10,
+					MinSkill = 15,
+					TargetType = TargetFlags.None
+				},
 				236,
 				9011,
 				Reagent.MoonCrystal,Reagent.Garlic,Reagent.PigIron,Reagent.BlackPearl
 			);
 
-		public ResearchRockFlesh( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchRockFlesh( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 
@@ -101,7 +105,7 @@ namespace Server.Spells.Research
 
 				Caster.SendMessage( "Your flesh turns to stone." );
 
-				Server.Misc.Research.ConsumeScroll( Caster, true, spellID, alwaysConsume, Scroll );
+				Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
 
 				KarmaMod( Caster, ((int)RequiredSkill+RequiredMana) );
 

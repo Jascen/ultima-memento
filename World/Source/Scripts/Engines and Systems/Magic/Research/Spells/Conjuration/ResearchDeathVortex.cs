@@ -1,29 +1,34 @@
 using System;
 using Server.Mobiles;
-using Server.Network;
 using Server.Targeting;
-using Server.Items;
 
 namespace Server.Spells.Research
 {
 	public class ResearchDeathVortex : ResearchSpell
 	{
-		public override int spellIndex { get { return 57; } }
 		public int CirclePower = 8;
-		public static int spellID = 57;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.25 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 615,
+					IconGraphic = 11202,
+					Name = "Death Vortex",
+					PowerWords = "Vas Corp Hur",
+					Description = "Creates a swirling mass of black death that spreads disease and unleashes electrical force on nearby enemies for 1-3 minutes.",
+					ManaCost = 60,
+					MinSkill = 90,
+					TargetType = TargetFlags.None
+				},
 				260,
 				9032,
 				Reagent.DaemonBlood,Reagent.EyeOfToad,Reagent.UnicornHorn
 			);
 
-		public ResearchDeathVortex( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchDeathVortex( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

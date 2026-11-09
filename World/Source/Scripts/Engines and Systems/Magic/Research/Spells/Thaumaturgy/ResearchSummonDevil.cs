@@ -1,30 +1,34 @@
 using System;
-using Server.Misc;
-using Server.Items;
 using Server.Mobiles;
-using Server.Network;
 using Server.Targeting;
 
 namespace Server.Spells.Research
 {
 	public class ResearchSummonDevil : ResearchSpell
 	{
-		public override int spellIndex { get { return 54; } }
 		public int CirclePower = 8;
-		public static int spellID = 54;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.25 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 654,
+					IconGraphic = 11241,
+					Name = "Invoke Devil",
+					PowerWords = "Uus Flam Corp Xen",
+					Description = "Calls forth a devil from the realms of hell to serve the caster for 2-8 minutes. The caster may lose some karma if they attempt this.",
+					ManaCost = 60,
+					MinSkill = 95,
+					TargetType = TargetFlags.None
+				},
 				269,
 				9050,
 				Reagent.DaemonBlood,Reagent.EyeOfToad,Reagent.Brimstone,Reagent.DemonClaw
 			);
 
-		public ResearchSummonDevil( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchSummonDevil( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

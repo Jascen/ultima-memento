@@ -1,30 +1,34 @@
 using System;
-using Server.Misc;
-using Server.Items;
 using Server.Mobiles;
-using Server.Network;
 using Server.Targeting;
 
 namespace Server.Spells.Research
 {
 	public class ResearchSummonCreature : ResearchSpell
 	{
-		public override int spellIndex { get { return 14; } }
 		public int CirclePower = 4;
-		public static int spellID = 14;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.25 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 652,
+					IconGraphic = 11236,
+					Name = "Spawn Creatures",
+					PowerWords = "Vas Kal Xen",
+					Description = "Summons random creatures that are controlled by the caster for 8-25 minutes.",
+					ManaCost = 20,
+					MinSkill = 45,
+					TargetType = TargetFlags.None
+				},
 				269,
 				9050,
 				Reagent.Ginseng,Reagent.GraveDust,Reagent.PixieSkull
 			);
 
-		public ResearchSummonCreature( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchSummonCreature( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

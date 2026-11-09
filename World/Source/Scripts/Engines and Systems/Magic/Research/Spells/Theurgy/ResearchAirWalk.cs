@@ -1,31 +1,34 @@
 using System;
-using Server;
-using System.Collections;
-using Server.Network;
-using System.Text;
+using Server.Targeting;
 using Server.Items;
-using Server.Mobiles;
 
 namespace Server.Spells.Research
 {
 	public class ResearchAirWalk : ResearchSpell
 	{
-		public override int spellIndex { get { return 55; } }
 		public int CirclePower = 7;
-		public static int spellID = 55;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 601,
+					IconGraphic = 11249,
+					Name = "Air Walk",
+					PowerWords = "Vas Hur Por",
+					Description = "This spell creates an apple high cushion of air under the caster's feet for 20-80 minutes. When moving on this cushion of air, the caster can avoid almost any floor trap even if they are hidden. It does not help the caster avoid stone face traps or exploding mushrooms, nor does it avoid traps placed on containers. Any harmful liquids on a floor can also be avoided.",
+					ManaCost = 55,
+					MinSkill = 65,
+					TargetType = TargetFlags.None
+				},
 				203,
 				9031,
 				Reagent.SpidersSilk,Reagent.PixieSkull,Reagent.ButterflyWings
 			);
 
-		public ResearchAirWalk( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchAirWalk( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 
@@ -57,7 +60,7 @@ namespace Server.Spells.Research
 				Point3D air = new Point3D( ( Caster.X+1 ), ( Caster.Y+1 ), ( Caster.Z+5 ) );
 				Effects.SendLocationParticles(EffectItem.Create(air, Caster.Map, EffectItem.DefaultDuration), 0x5590, 9, 32, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, 5022, 0);
 				Caster.PlaySound( 0x014 );
-				Server.Misc.Research.ConsumeScroll( Caster, true, spellID, alwaysConsume, Scroll );
+				Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
 
 				BuffInfo.RemoveBuff( Caster, BuffIcon.AirWalk );
 				BuffInfo.AddBuff( Caster, new BuffInfo( BuffIcon.AirWalk, 1063632, 1063633, TimeSpan.FromSeconds( TotalTime ), Caster));

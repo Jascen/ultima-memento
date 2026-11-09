@@ -1,35 +1,36 @@
 using System;
-using Server;
 using Server.Targeting;
-using Server.Network;
-using Server.Gumps;
 using Server.Mobiles;
 using Server.Items;
-using System.Collections;
-using System.Collections.Generic;
-using Server.Misc;
 
 namespace Server.Spells.Research
 {
 	public class ResearchWithstandDeath : ResearchSpell
 	{
-		public override int spellIndex { get { return 58; } }
 		public override bool alwaysConsume { get{ return bool.Parse( Server.Misc.Research.SpellInformation( spellIndex, 14 )); } }
 		public int CirclePower = 8;
-		public static int spellID = 58;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.25 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
-                245,
-                9062,
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 662,
+					IconGraphic = 11210,
+					Name = "Withstand Death",
+					PowerWords = "Vas An Corp",
+					Description = "This spell was lost to the ages, but legends tell of King Wolfgang learning the secrets of this spell and creating the gem of immortality. The caster, if they can find all of the reagents needed, should be able to create a gem almost similar to that. If one is holding the jewel that is created, and they meet an untimely end, they will be restored to full health instead as the jewel vanishes from this plane of existence. You will need a sapphire to imbue the magic in for this spell to work. This spell is powerful enough that the scroll will always crumble to dust when cast.",
+					ManaCost = 70,
+					MinSkill = 90,
+					TargetType = TargetFlags.Beneficial
+				},
+				245,
+				9062,
 				Reagent.PhoenixFeather,Reagent.DemigodBlood,Reagent.EnchantedSeaweed,Reagent.GhostlyDust
 			);
 
-        public ResearchWithstandDeath( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+        public ResearchWithstandDeath( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
         {
         }
  

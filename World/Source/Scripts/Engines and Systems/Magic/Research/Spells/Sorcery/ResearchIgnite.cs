@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Server.Network;
 using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
@@ -9,22 +8,29 @@ namespace Server.Spells.Research
 {
 	public class ResearchIgnite : ResearchSpell
 	{
-		public override int spellIndex { get { return 28; } }
 		public int CirclePower = 4;
-		public static int spellID = 28;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 633,
+					IconGraphic = 11222,
+					Name = "Ignite",
+					PowerWords = "In Flam",
+					Description = "Calls forth columns of fire that can cause up to 15-125 points of fire and physical damage. It will do twice the amount of damage toward creatures that suffer from watery grave or neptune's bane enchanted weapons.",
+					ManaCost = 30,
+					MinSkill = 40,
+					TargetType = TargetFlags.None
+				},
 				233,
 				9042,
 				Reagent.Brimstone,Reagent.SulfurousAsh,Reagent.BlackPearl
 			);
 
-		public ResearchIgnite( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchIgnite( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

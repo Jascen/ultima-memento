@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Server.Network;
-using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
 
@@ -9,23 +7,30 @@ namespace Server.Spells.Research
 {
 	public class ResearchCallDestruction : ResearchSpell
 	{
-		public override int spellIndex { get { return 38; } }
 		public override bool alwaysConsume { get{ return bool.Parse( Server.Misc.Research.SpellInformation( spellIndex, 14 )); } }
 		public int CirclePower = 5;
-		public static int spellID = 38;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 604,
+					IconGraphic = 11239,
+					Name = "Call Destruction",
+					PowerWords = "Kal Vas Grav Por",
+					Description = "Damages nearby enemies with an destructive force that causes mostly physical harm and some damage from energy. If you hit more than one enemy, the damage amount is doubled and divided amongst each enemy evenly. The damage dealt is between 8-50 points, with the addition of half the available hit points of the caster. After the destruction is unleashed, the caster will lose half of their remaining hit points.",
+					ManaCost = 25,
+					MinSkill = 40,
+					TargetType = TargetFlags.None
+				},
 				233,
 				9042,
 				Reagent.BatWing,Reagent.BlackPearl,Reagent.Brimstone,Reagent.PigIron
 			);
 
-		public ResearchCallDestruction( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchCallDestruction( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

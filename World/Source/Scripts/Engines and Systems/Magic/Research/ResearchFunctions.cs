@@ -4,6 +4,7 @@ using Server.Items;
 using Server.Network;
 using Server.Commands;
 using Server.Mobiles;
+using Server.Spells;
 using System.Globalization;
 
 namespace Server.Misc
@@ -78,7 +79,7 @@ namespace Server.Misc
 
 		public static string AncientKeywords()
 		{
-			return "<br><br>[CastAcidElemental<br><br>[CastAerialServant<br><br>[CastAirWalk<br><br>[CastAnimateBones<br><br>[CastAvalanche<br><br>[CastBanishDaemon<br><br>[CastBloodElemental<br><br>[CastCallDestruction<br><br>[CastCauseFear<br><br>[CastCharm<br><br>[CastClone<br><br>[CastConflagration<br><br>[CastConfusionBlast<br><br>[CastConjure<br><br>[CastCreateFire<br><br>[CastCreateGold<br><br>[CastCreateGolem<br><br>[CastDeathSpeak<br><br>[CastDeathVortex<br><br>[CastDevastation<br><br>[CastDivination<br><br>[CastElectricalElemental<br><br>[CastEnchant<br><br>[CastEndureCold<br><br>[CastEndureHeat<br><br>[CastEtherealTravel<br><br>[CastExplosion<br><br>[CastExtinguish<br><br>[CastFadefromSight<br><br>[CastFlameBolt<br><br>[CastFrostField<br><br>[CastFrostStrike<br><br>[CastGasCloud<br><br>[CastGemElemental<br><br>[CastGrantPeace<br><br>[CastHailStorm<br><br>[CastHealingTouch<br><br>[CastIceElemental<br><br>[CastIcicle<br><br>[CastIgnite<br><br>[CastIntervention<br><br>[CastInvokeDevil<br><br>[CastMagicSteed<br><br>[CastMaskofDeath<br><br>[CastMassDeath<br><br>[CastMassMight<br><br>[CastMassSleep<br><br>[CastMeteorShower<br><br>[CastMudElemental<br><br>[CastOpenGround<br><br>[CastPoisonElemental<br><br>[CastRestoration<br><br>[CastRingofFire<br><br>[CastRockFlesh<br><br>[CastSeeTruth<br><br>[CastSleep<br><br>[CastSleepField<br><br>[CastSneak<br><br>[CastSnowBall<br><br>[CastSpawnCreature<br><br>[CastSwarm<br><br>[CastWeedElemental<br><br>[CastWithstandDeath<br><br>[CastWizardEye<br><br><br><br><br><br>";
+			return "<br><br>You can also type [Spells_Ancient to see a list of these commands.<br><br>[CastAcidElemental<br><br>[CastAerialServant<br><br>[CastAirWalk<br><br>[CastAnimateBones<br><br>[CastAvalanche<br><br>[CastBanishDaemon<br><br>[CastBloodElemental<br><br>[CastCallDestruction<br><br>[CastCauseFear<br><br>[CastCharm<br><br>[CastClone<br><br>[CastConflagration<br><br>[CastConfusionBlast<br><br>[CastConjure<br><br>[CastCreateFire<br><br>[CastCreateGold<br><br>[CastCreateGolem<br><br>[CastDeathSpeak<br><br>[CastDeathVortex<br><br>[CastDevastation<br><br>[CastDivination<br><br>[CastElectricalElemental<br><br>[CastEnchant<br><br>[CastEndureCold<br><br>[CastEndureHeat<br><br>[CastEtherealTravel<br><br>[CastExplosion<br><br>[CastExtinguish<br><br>[CastFadefromSight<br><br>[CastFlameBolt<br><br>[CastFrostField<br><br>[CastFrostStrike<br><br>[CastGasCloud<br><br>[CastGemElemental<br><br>[CastGrantPeace<br><br>[CastHailStorm<br><br>[CastHealingTouch<br><br>[CastIceElemental<br><br>[CastIcicle<br><br>[CastIgnite<br><br>[CastIntervention<br><br>[CastInvokeDevil<br><br>[CastMagicSteed<br><br>[CastMaskofDeath<br><br>[CastMassDeath<br><br>[CastMassMight<br><br>[CastMassSleep<br><br>[CastMeteorShower<br><br>[CastMudElemental<br><br>[CastOpenGround<br><br>[CastPoisonElemental<br><br>[CastRestoration<br><br>[CastRingofFire<br><br>[CastRockFlesh<br><br>[CastSeeTruth<br><br>[CastSleep<br><br>[CastSleepField<br><br>[CastSneak<br><br>[CastSnowBall<br><br>[CastSpawnCreature<br><br>[CastSwarm<br><br>[CastWeedElemental<br><br>[CastWithstandDeath<br><br>[CastWizardEye<br><br><br><br><br><br>";
 		}
 
 		public static string BagOrBook()
@@ -598,161 +599,93 @@ namespace Server.Misc
 		{
 			string value = "";
 			string circle = "0";
-			string mana = "0";
-			string skill = "0";
-			string name = "";
 			string school = "";
-			string words = "";
 			string reagents = "";
-			string description = "";
-			string init = "0";
 			string much = "false";
 			string regs = "false";
 
-			if ( index == 1 ){ circle = "1"; name = "Conjure"; school = "Conjuration"; words = "kal xen"; reagents = "Moon Crystal, Fairy Egg"; mana = "10"; skill = "15";
-				init = "610"; regs = "true"; description = "The magic of this spell will conjure a random item of minor significance, but it may be significant dependent on the caster's current motivations. Due to the creative nature of the spell, something needs to be destroyed in turn. That means that the spell scroll will always crumble to dust when cast."; }
-			else if ( index == 2 ){ circle = "1"; name = "Death Speak"; school = "Death"; words = "kal wis corp"; reagents = "Grave Dust, Pixie Skull"; mana = "5"; skill = "10";
-				init = "614"; description = "This spell allows you to communicate with recently slain supernatural foes. If you can speak to their souls, you have the potential to restore a part of yourself. The restoration goes in order of mana, stamina, and health. The amount restored is dependent on the power of the caster and the fame of the slain creature. The caster may lose some karma if they attempt this."; }
-			else if ( index == 3 ){ circle = "1"; name = "Sneak"; school = "Enchanting"; words = "por ex tym"; reagents = "Fairy Egg, Pixie Skull"; mana = "10"; skill = "10";
-				init = "648"; description = "Hides the target and allows them to sneak around for 2-8 minutes. They can still be discovered, however, and they cannot sneak well in heavy armor."; }
-			else if ( index == 4 ){ circle = "1"; name = "Create Fire"; school = "Sorcery"; words = "in flam ylem"; reagents = "Brimstone, Mandrake Root, Ginseng"; mana = "5"; skill = "15";
-				init = "611"; description = "Creates a magical fire at the caster's feet. When anything approaches the fire, they will take 2-20 points of fire damage every couple of seconds. The magical fire can last between 15-200 seconds dependent on the power of the caster."; }
-			else if ( index == 5 ){ circle = "1"; name = "Electrical Elemental"; school = "Summoning"; words = "uus grav"; reagents = "Silver Widow, Sulfurous Ash"; mana = "40"; skill = "70";
-				init = "655"; description = "Summons an electrial elemental that is controlled by the caster for 8-25 minutes."; }
-			else if ( index == 6 ){ circle = "1"; name = "Confusion Blast"; school = "Thaumaturgy"; words = "in quas wis"; reagents = "Mandrake Root, Pixie Skull, Fairy Egg"; mana = "15"; skill = "40";
-				init = "609"; description = "Those within the confusion blast could suffer from the effects for 5-20 seconds before they regain their senses."; }
-			else if ( index == 7 ){ circle = "1"; name = "See Truth"; school = "Theurgy"; words = "an quas lor"; reagents = "Grave Dust, Sea Salt, Fairy Egg"; mana = "60"; skill = "20";
-				init = "645"; description = "This magic is an ancient form of that which gypsies use to see the truth in things. If you cast this spell on a book or parchment that you feel may be falsely written, you may learn the truth of things."; }
-			else if ( index == 8 ){ circle = "1"; name = "Icicle"; school = "Wizardry"; words = "ex des bet"; reagents = "Moon Crystal, Pig Iron"; mana = "10"; skill = "15";
-				init = "632"; description = "Throws a magical icicle at your enemies that can cause up to 80 points of cold damage."; }
+			SpellDefinition definition = Server.Spells.Research.ResearchSpellProvider.GetDefinitionByResearchIndex( index );
 
-			else if ( index == 9 ){ circle = "2"; name = "Extinguish"; school = "Conjuration"; words = "an flam"; reagents = "Nightshade, Sea Salt, Black Pearl"; mana = "20"; skill = "35";
-				init = "624"; description = "Calls forth waves of water that can cause up to 12-125 points of cold and physical damage. It will do twice the amount of damage toward creatures that suffer from flame extinguishing enchanted weapons."; }
-			else if ( index == 10 ){ circle = "2"; name = "Rock Flesh"; school = "Death"; words = "rel sanct ylem"; reagents = "Moon Crystal, Garlic, Pig Iron, Black Pearl"; mana = "10"; skill = "15";
-				init = "644"; description = "With this spell, the caster gains an innate resistance to damage by transforming the very flesh into a substance as strong as stone for 1-16 minutes of a 90% physical resistance. The caster may lose some karma if they attempt this."; }
-			else if ( index == 11 ){ circle = "2"; name = "Mass Might"; school = "Enchanting"; words = "in vas por"; reagents = "Fairy Egg, Butterfly Wings"; mana = "99"; skill = "66";
-				init = "638"; description = "Increases the casters strength for up to 8 minutes, and it will also affect the caster's allies that are no more than 10 spaces away."; }
-			else if ( index == 12 ){ circle = "2"; name = "Endure Cold"; school = "Sorcery"; words = "vas sanct flam"; reagents = "Spiders Silk, Moon Crystal"; mana = "15"; skill = "20";
-				init = "619"; description = "Increases the casters cold resistance for up to 8 minutes, and it will also affect the caster's allies that are no more than 3 spaces away."; }
-			else if ( index == 13 ){ circle = "2"; name = "Weed Elemental"; school = "Summoning"; words = "uus kal"; reagents = "Red Lotus, Nightshade"; mana = "40"; skill = "70";
-				init = "660"; description = "Summons a weed elemental that is controlled by the caster for 8-25 minutes."; }
-			else if ( index == 14 ){ circle = "2"; name = "Spawn Creatures"; school = "Thaumaturgy"; words = "vas kal xen"; reagents = "Ginseng, Grave Dust, Pixie Skull"; mana = "20"; skill = "45";
-				init = "652"; description = "Summons random creatures that are controlled by the caster for 8-25 minutes."; }
-			else if ( index == 15 ){ circle = "2"; name = "Healing Touch"; school = "Theurgy"; words = "in mani"; reagents = "Garlic, Ginseng, Fairy Egg, Pixie Skull"; mana = "15"; skill = "30";
-				init = "631"; description = "Heals the one touched, restoring 12-125 hit points. You need to be close to your target, however."; }
-			else if ( index == 16 ){ circle = "2"; name = "Snow Ball"; school = "Wizardry"; words = "ex des in"; reagents = "Black Pearl, Moon Crystal"; mana = "10"; skill = "10";
-				init = "649"; description = "Throws a magical snow ball toward your enemy, which can cause 2-80 points of cold damage."; }
+			if ( index == 1 ){ circle = "1"; school = "Conjuration"; reagents = "Moon Crystal, Fairy Egg"; regs = "true"; }
+			else if ( index == 2 ){ circle = "1"; school = "Death"; reagents = "Grave Dust, Pixie Skull"; }
+			else if ( index == 3 ){ circle = "1"; school = "Enchanting"; reagents = "Fairy Egg, Pixie Skull"; }
+			else if ( index == 4 ){ circle = "1"; school = "Sorcery"; reagents = "Brimstone, Mandrake Root, Ginseng"; }
+			else if ( index == 5 ){ circle = "1"; school = "Summoning"; reagents = "Silver Widow, Sulfurous Ash"; }
+			else if ( index == 6 ){ circle = "1"; school = "Thaumaturgy"; reagents = "Mandrake Root, Pixie Skull, Fairy Egg"; }
+			else if ( index == 7 ){ circle = "1"; school = "Theurgy"; reagents = "Grave Dust, Sea Salt, Fairy Egg"; }
+			else if ( index == 8 ){ circle = "1"; school = "Wizardry"; reagents = "Moon Crystal, Pig Iron"; }
 
-			else if ( index == 17 ){ circle = "3"; name = "Clone"; school = "Conjuration"; words = "in quas xen"; reagents = "Gargoyle Ear, Fairy Egg"; mana = "25"; skill = "45";
-				init = "607"; description = "Creates a clone of the caster that will appear and distract your enemies while you remain hidden from view."; }
-			else if ( index == 18 ){ circle = "3"; name = "Grant Peace"; school = "Death"; words = "in vas corp"; reagents = "Pixie Skull, Grave Dust"; mana = "35"; skill = "75";
-				init = "629"; description = "This spell can grant an undead creature the true and final death. If they cannot be laid to rest, then they may take 50-200 points of energy damage."; }
-			else if ( index == 19 ){ circle = "3"; name = "Sleep"; school = "Enchanting"; words = "in zu tym"; reagents = "Fairy Egg, Mandrake Root, Sea Salt"; mana = "15"; skill = "40";
-				init = "646"; description = "This spell can put a foe to sleep from 10-60 seconds, but taking actions against them will likely wake them up from their slumber. This spell cannot affect supernatural creatures, constructs, golems, or elementals."; }
-			else if ( index == 20 ){ circle = "3"; name = "Endure Heat"; school = "Sorcery"; words = "sanct flam"; reagents = "Swamp Berries, Gargoyle Ear"; mana = "15"; skill = "20";
-				init = "620"; description = "Increases the casters fire resistance for up to 8 minutes, and it will also affect the caster's allies that are no more than 3 spaces away."; }
-			else if ( index == 21 ){ circle = "3"; name = "Ice Elemental"; school = "Summoning"; words = "uus ex des"; reagents = "Sea Salt, Moon Crystal"; mana = "40"; skill = "70";
-				init = "657"; description = "Summons an ice elemental that is controlled by the caster for 8-25 minutes."; }
-			else if ( index == 22 ){ circle = "3"; name = "Ethereal Travel"; school = "Thaumaturgy"; words = "ort grav por"; reagents = "Black Pearl, Gargoyle Ear, Red Lotus"; mana = "20"; skill = "35";
-				init = "622"; description = "Caster is transported to the location marked on the recall rune. One can use this spell on a ship key to travel to a boat's location if the boat is not dry docked. The caster will appear at the destination in a hidden state."; }
-			else if ( index == 23 ){ circle = "3"; name = "Wizard Eye"; school = "Theurgy"; words = "por ort wis"; reagents = "Eye of Toad, Silver Widow, Gargoyle Ear, Black Pearl"; mana = "30"; skill = "50";
-				init = "663"; description = "This spell allows the caster to identify items that have origins that are unknown to others."; }
-			else if ( index == 24 ){ circle = "3"; name = "Frost Field"; school = "Wizardry"; words = "in ex des"; reagents = "Moon Crystal, Eye of Toad, Spiders Silk"; mana = "15"; skill = "30";
-				init = "627"; description = "Creates a wall of frost that can cause 2-16 points of cold damage per second to anyone within it."; }
+			else if ( index == 9 ){ circle = "2"; school = "Conjuration"; reagents = "Nightshade, Sea Salt, Black Pearl"; }
+			else if ( index == 10 ){ circle = "2"; school = "Death"; reagents = "Moon Crystal, Garlic, Pig Iron, Black Pearl"; }
+			else if ( index == 11 ){ circle = "2"; school = "Enchanting"; reagents = "Fairy Egg, Butterfly Wings"; }
+			else if ( index == 12 ){ circle = "2"; school = "Sorcery"; reagents = "Spiders Silk, Moon Crystal"; }
+			else if ( index == 13 ){ circle = "2"; school = "Summoning"; reagents = "Red Lotus, Nightshade"; }
+			else if ( index == 14 ){ circle = "2"; school = "Thaumaturgy"; reagents = "Ginseng, Grave Dust, Pixie Skull"; }
+			else if ( index == 15 ){ circle = "2"; school = "Theurgy"; reagents = "Garlic, Ginseng, Fairy Egg, Pixie Skull"; }
+			else if ( index == 16 ){ circle = "2"; school = "Wizardry"; reagents = "Black Pearl, Moon Crystal"; }
 
-			else if ( index == 25 ){ circle = "4"; name = "Create Gold"; school = "Conjuration"; words = "rel ylem"; much = "true"; reagents = "Unicorn Horn, Sea Salt, Ginseng, Golden Serpent Venom"; mana = "35"; skill = "55";
-				init = "612"; regs = "true"; description = "Originally created by the fiendish imp Rumpelstiltskin, this spell allows the caster to turn armor or weapons into gold. They can also transmute varying ingots into golden ingots, as well as turn coins into golden coins. Coins will often be destroyed during the transmutation process, but the better the skill of the archmage the less that is lost. This spell is powerful enough that the scroll will always crumble to dust when cast."; }
-			else if ( index == 26 ){ circle = "4"; name = "Animate Bones"; school = "Death"; words = "kal corp xen"; reagents = "Bat Wing, Grave Dust, Pixie Skull"; mana = "40"; skill = "70";
-				init = "653"; description = "Animates the bones of a mighty skeletal warrior that will fight for the caster for 8-25 minutes. The caster may lose some karma if they attempt this."; }
-			else if ( index == 27 ){ circle = "4"; name = "Cause Fear"; school = "Enchanting"; words = "quas wis tym"; reagents = "Bloodmoss, Daemon Blood, Red Lotus"; mana = "35"; skill = "45";
-				init = "605"; description = "The caster can cause fear in a foe, causing them to flee from you for 10-60 seconds. This spell does not work on golems or constructs."; }
-			else if ( index == 28 ){ circle = "4"; name = "Ignite"; school = "Sorcery"; words = "in flam"; reagents = "Brimstone, Sulfurous Ash, Black Pearl"; mana = "30"; skill = "40";
-				init = "633"; description = "Calls forth columns of fire that can cause up to 15-125 points of fire and physical damage. It will do twice the amount of damage toward creatures that suffer from watery grave or neptune's bane enchanted weapons."; }
-			else if ( index == 29 ){ circle = "4"; name = "Mud Elemental"; school = "Summoning"; words = "uus des ylem"; reagents = "Pig Iron, Mandrake Root"; mana = "40"; skill = "70";
-				init = "658"; description = "Summons a mud elemental that is controlled by the caster for 8-25 minutes."; }
-			else if ( index == 30 ){ circle = "4"; name = "Banish Daemon"; school = "Thaumaturgy"; words = "an flam corp xen"; reagents = "Gargoyle Ear, Demon Claw"; mana = "40"; skill = "80";
-				init = "603"; description = "This spell can send a demonic creature back to the plane of hell from which they spawned. If they cannot be banished, then they may take 50-200 points of energy damage."; }
-			else if ( index == 31 ){ circle = "4"; name = "Fade from Sight"; school = "Theurgy"; words = "quas an lor"; reagents = "Red Lotus, Nox Crystal"; mana = "15"; skill = "50";
-				init = "625"; description = "This spell will cause the caster to fade from the view of others, while at the same time moving them to a different location."; }
-			else if ( index == 32 ){ circle = "4"; name = "Gas Cloud"; school = "Wizardry"; words = "in hur grav"; reagents = "Nightshade, Silver Widow, Swamp Berries, Silver Serpent Venom"; mana = "25"; skill = "45";
-				init = "621"; description = "Creates a gaseous cloud of poison mist that will consume nearby enemies in the venomous vapor for 1-3 minutes."; }
+			else if ( index == 17 ){ circle = "3"; school = "Conjuration"; reagents = "Gargoyle Ear, Fairy Egg"; }
+			else if ( index == 18 ){ circle = "3"; school = "Death"; reagents = "Pixie Skull, Grave Dust"; }
+			else if ( index == 19 ){ circle = "3"; school = "Enchanting"; reagents = "Fairy Egg, Mandrake Root, Sea Salt"; }
+			else if ( index == 20 ){ circle = "3"; school = "Sorcery"; reagents = "Swamp Berries, Gargoyle Ear"; }
+			else if ( index == 21 ){ circle = "3"; school = "Summoning"; reagents = "Sea Salt, Moon Crystal"; }
+			else if ( index == 22 ){ circle = "3"; school = "Thaumaturgy"; reagents = "Black Pearl, Gargoyle Ear, Red Lotus"; }
+			else if ( index == 23 ){ circle = "3"; school = "Theurgy"; reagents = "Eye of Toad, Silver Widow, Gargoyle Ear, Black Pearl"; }
+			else if ( index == 24 ){ circle = "3"; school = "Wizardry"; reagents = "Moon Crystal, Eye of Toad, Spiders Silk"; }
 
-			else if ( index == 33 ){ circle = "5"; name = "Swarm"; school = "Conjuration"; words = "kal bet xen"; reagents = "Beetle Shell, Silver Widow, Fairy Egg"; mana = "15"; skill = "40";
-				init = "661"; description = "Unleashes a swarm of insects at your enemies for 1-3 minutes."; }
-			else if ( index == 34 ){ circle = "5"; name = "Mask of Death"; school = "Death"; words = "quas corp"; reagents = "Lich Dust, Grave Dust, Pixie Skull"; mana = "70"; skill = "90";
-				init = "636"; description = "Creates a mask for the caster that when worn the undead will see you as one of their own and ignore them. The mask remains on this plane of existence for 6-15 minutes before it returns to the realm from which it came. If you attack an undead creature while wearing the mask, it will vanish and you will have to face your foe. The caster may lose some karma if they attempt this."; }
-			else if ( index == 35 ){ circle = "5"; name = "Enchant"; school = "Enchanting"; words = "ort ylem tym"; reagents = "Pixie Skull, Fairy Egg, Dragon Tooth, Moon Crystal"; mana = "45"; skill = "75";
-				init = "618"; description = "This can greatly increase a weapon's damage by enchanting it for 15-60 minutes. A power orb is summoned and placed in the caster's pack that gives the enchantment strength until the spell wears off."; }
-			else if ( index == 36 ){ circle = "5"; name = "Flame Bolt"; school = "Sorcery"; words = "in ort flam"; reagents = "Brimstone, Sulfurous Ash"; mana = "15"; skill = "30";
-				init = "626"; description = "Throws a magical bolt of flame at your enemies that can cause 12-100 points of fire damage."; }
-			else if ( index == 37 ){ circle = "5"; name = "Gem Elemental"; school = "Summoning"; words = "uus sanct"; reagents = "Moon Crystal, Pig Iron"; mana = "50"; skill = "80";
-				init = "656"; description = "Summons a gem rock elemental that is controlled by the caster for 8-25 minutes."; }
-			else if ( index == 38 ){ circle = "5"; name = "Call Destruction"; school = "Thaumaturgy"; words = "kal vas grav por"; much = "true"; reagents = "Bat Wing, Black Pearl, Brimstone, Pig Iron"; mana = "25"; skill = "40";
-				init = "604"; regs = "true"; description = "Damages nearby enemies with an destructive force that causes mostly physical harm and some damage from energy. If you hit more than one enemy, the damage amount is doubled and divided amongst each enemy evenly. The damage dealt is between 8-50 points, with the addition of half the available hit points of the caster. After the destruction is unleashed, the caster will lose half of their remaining hit points."; }
-			else if ( index == 39 ){ circle = "5"; name = "Divination"; school = "Theurgy"; words = "in wis tym"; reagents = "Ginseng, Daemon Blood, Eye of Toad"; mana = "30"; skill = "50";
-				init = "617"; description = "One can cast this spell on most creatures and learn things about them that are not commonly know by others."; }
-			else if ( index == 40 ){ circle = "5"; name = "Frost Strike"; school = "Wizardry"; words = "ex des corp"; reagents = "Moon Crystal, Grave Dust"; mana = "40"; skill = "67";
-				init = "628"; description = "Damages an enemy with a column of frost crystals that causes 35-125 points of cold damage."; }
+			else if ( index == 25 ){ circle = "4"; school = "Conjuration"; reagents = "Unicorn Horn, Sea Salt, Ginseng, Golden Serpent Venom"; much = "true"; regs = "true"; }
+			else if ( index == 26 ){ circle = "4"; school = "Death"; reagents = "Bat Wing, Grave Dust, Pixie Skull"; }
+			else if ( index == 27 ){ circle = "4"; school = "Enchanting"; reagents = "Bloodmoss, Daemon Blood, Red Lotus"; }
+			else if ( index == 28 ){ circle = "4"; school = "Sorcery"; reagents = "Brimstone, Sulfurous Ash, Black Pearl"; }
+			else if ( index == 29 ){ circle = "4"; school = "Summoning"; reagents = "Pig Iron, Mandrake Root"; }
+			else if ( index == 30 ){ circle = "4"; school = "Thaumaturgy"; reagents = "Gargoyle Ear, Demon Claw"; }
+			else if ( index == 31 ){ circle = "4"; school = "Theurgy"; reagents = "Red Lotus, Nox Crystal"; }
+			else if ( index == 32 ){ circle = "4"; school = "Wizardry"; reagents = "Nightshade, Silver Widow, Swamp Berries, Silver Serpent Venom"; }
 
-			else if ( index == 41 ){ circle = "6"; name = "Magic Steed"; school = "Conjuration"; words = "in xen tym"; reagents = "Bat Wing, Butterfly Wings"; mana = "30"; skill = "50";
-				init = "635"; description = "Lures a horse to the caster's location where it can be ridden for 8-25 minutes."; }
-			else if ( index == 42 ){ circle = "6"; name = "Create Golem"; school = "Death"; words = "in ort ylem xen"; reagents = "Pixie Skull, Grave Dust, Daemon Blood"; mana = "40"; skill = "70";
-				init = "613"; description = "Creates a mighty flesh golem that will follow the commands of the cast for 8-25 minutes. The caster may lose some karma if they attempt this."; }
-			else if ( index == 43 ){ circle = "6"; name = "Sleep Field"; school = "Enchanting"; words = "in zu grav tym"; reagents = "Fairy Egg, Mandrake Root, Sea Salt, Grave Dust"; mana = "30"; skill = "60";
-				init = "647"; description = "This spell will create a field that will put entering foes to sleep for 10-60 seconds, but taking actions against them will likely wake them up from their slumber. This spell cannot affect supernatural creatures, constructs, golems, or elementals."; }
-			else if ( index == 44 ){ circle = "6"; name = "Conflagration"; school = "Sorcery"; words = "kal vas flam corp xen"; reagents = "Sulfurous Ash, Brimstone, Gargoyle Ear"; mana = "20"; skill = "35";
-				init = "608"; description = "Creates a huge inferno that can cause 2-16 points of fire damage per second to anyone within it."; }
-			else if ( index == 45 ){ circle = "6"; name = "Acid Elemental"; school = "Summoning"; words = "uus corp"; reagents = "Swamp Berries, Nox Crystal, Beetle Shell, Eye of Toad"; mana = "50"; skill = "82";
-				init = "650"; description = "Summons an acid elemental that is controlled by the caster for 8-25 minutes."; }
-			else if ( index == 46 ){ circle = "6"; name = "Meteor Shower"; school = "Thaumaturgy"; words = "kal des flam ylem"; reagents = "Blood Moss, Brimstone, Mandrake Root, Black Pearl"; mana = "40"; skill = "70";
-				init = "640"; description = "Damages nearby enemies with falling meteorites that hit for physical damage (with some fire and energy damage) split between the enemies. If you only hit one enemy, the enemy takes between 35-125 points of damage, but if you hit more than one enemy, the damage amount is doubled and divided amongst each enemy evenly."; }
-			else if ( index == 47 ){ circle = "6"; name = "Intervention"; school = "Theurgy"; words = "in sanct an jux"; reagents = "Moon Crystal, Brimstone, Nightshade, Fairy Egg"; mana = "25"; skill = "50";
-				init = "634"; description = "This is one of those rare spells that call upon the favor of the gods. When the spell is invoked, the caster is empowered with 10-50 additional points in their resistances. They are also protected from magery spell attack damage for 25-125 points. The effects last between 10-50 minutes."; }
-			else if ( index == 48 ){ circle = "6"; name = "Hail Storm"; school = "Wizardry"; words = "vas ex des"; reagents = "Fairy Egg, Moon Crystal"; mana = "25"; skill = "55";
-				init = "630"; description = "Creates a storm of ice around an enemy, causing 28-125 points of cold damage."; }
+			else if ( index == 33 ){ circle = "5"; school = "Conjuration"; reagents = "Beetle Shell, Silver Widow, Fairy Egg"; }
+			else if ( index == 34 ){ circle = "5"; school = "Death"; reagents = "Lich Dust, Grave Dust, Pixie Skull"; }
+			else if ( index == 35 ){ circle = "5"; school = "Enchanting"; reagents = "Pixie Skull, Fairy Egg, Dragon Tooth, Moon Crystal"; }
+			else if ( index == 36 ){ circle = "5"; school = "Sorcery"; reagents = "Brimstone, Sulfurous Ash"; }
+			else if ( index == 37 ){ circle = "5"; school = "Summoning"; reagents = "Moon Crystal, Pig Iron"; }
+			else if ( index == 38 ){ circle = "5"; school = "Thaumaturgy"; reagents = "Bat Wing, Black Pearl, Brimstone, Pig Iron"; much = "true"; regs = "true"; }
+			else if ( index == 39 ){ circle = "5"; school = "Theurgy"; reagents = "Ginseng, Daemon Blood, Eye of Toad"; }
+			else if ( index == 40 ){ circle = "5"; school = "Wizardry"; reagents = "Moon Crystal, Grave Dust"; }
 
-			else if ( index == 49 ){ circle = "7"; name = "Aerial Servant"; school = "Conjuration"; words = "kal ort xen"; reagents = "Butterfly Wings, Gargoyle Ear, Pegasus Feather"; mana = "50"; skill = "80";
-				init = "600"; description = "Calls upon a mystical servant from the ethereal plane to aid the caster by carrying items for 1-3 hours."; }
-			else if ( index == 50 ){ circle = "7"; name = "Open Ground"; school = "Death"; words = "des por ylem"; much = "true"; reagents = "Brimstone, Grave Dust, Pig Iron, Mandrake Root"; mana = "65"; skill = "85";
-				init = "641"; regs = "true"; description = "Opens a huge hole in the ground that can cause anyone that goes near it to fall in. Creatures may fall to their deaths and never be seen again, while advenuterers will fall into the huge chasm below. If an adventurer has comrades, familiars, summons, or tamed beasts that stumble into the chasm, then the adventurer will fall in after them. This spell is powerful enough that the scroll will always crumble to dust when cast. The caster may lose some karma if they attempt this."; }
-			else if ( index == 51 ){ circle = "7"; name = "Charm"; school = "Enchanting"; words = "an xen ex"; reagents = "Enchanted Seaweed, Fairy Egg, Pixie Skull"; mana = "60"; skill = "82";
-				init = "606"; description = "This spell can charm either aggressive monsters or those of animialistic natures. When charmed, their evil or neutral tendencies are wiped from their mind and they will attack evil creatures. This charm will only last for up to a minute before they come to their senses."; }
-			else if ( index == 52 ){ circle = "7"; name = "Explosion"; school = "Sorcery"; words = "vas ort flam"; reagents = "Fairy Egg, Brimstone, Sulfurous Ash"; mana = "30"; skill = "60";
-				init = "623"; description = "Damages nearby enemies with an explosive force consisting of mostly heat and some physical damage. If you only hit one enemy, the enemy takes between 35-125 points of damage, but if you hit more than one enemy, the damage amount is doubled and divided amongst each enemy evenly."; }
-			else if ( index == 53 ){ circle = "7"; name = "Poison Elemental"; school = "Summoning"; words = "uus nox"; reagents = "Nightshade, Nox Crystal, Silver Serpent Venom, Silver Widow"; mana = "50"; skill = "86";
-				init = "659"; description = "Summons a poison elemental that is controlled by the caster for 8-25 minutes."; }
-			else if ( index == 54 ){ circle = "7"; name = "Invoke Devil"; school = "Thaumaturgy"; words = "uus flam corp xen"; reagents = "Daemon Blood, Eye of Toad, Brimstone, Demon Claw"; mana = "60"; skill = "95";
-				init = "654"; description = "Calls forth a devil from the realms of hell to serve the caster for 2-8 minutes. The caster may lose some karma if they attempt this."; }
-			else if ( index == 55 ){ circle = "7"; name = "Air Walk"; school = "Theurgy"; words = "vas hur por"; reagents = "Spiders Silk, Pixie Skull, Butterfly Wings"; mana = "55"; skill = "65";
-				init = "601"; description = "This spell creates an apple high cushion of air under the caster's feet for 20-80 minutes. When moving on this cushion of air, the caster can avoid almost any floor trap even if they are hidden. It does not help the caster avoid stone face traps or exploding mushrooms, nor does it avoid traps placed on containers. Any harmful liquids on a floor can also be avoided."; }
-			else if ( index == 56 ){ circle = "7"; name = "Avalanche"; school = "Wizardry"; words = "ex vas des"; reagents = "Blood Moss, Spiders Silk, Mandrake Root, Moon Crystal"; mana = "40"; skill = "70";
-				init = "602"; description = "Damages nearby enemies with falling ice and snow that hit for cold damage split between the enemies. If you only hit one enemy, the enemy takes between 35-125 points of damage, but if you hit more than one enemy, the damage amount is doubled and divided amongst each enemy evenly."; }
+			else if ( index == 41 ){ circle = "6"; school = "Conjuration"; reagents = "Bat Wing, Butterfly Wings"; }
+			else if ( index == 42 ){ circle = "6"; school = "Death"; reagents = "Pixie Skull, Grave Dust, Daemon Blood"; }
+			else if ( index == 43 ){ circle = "6"; school = "Enchanting"; reagents = "Fairy Egg, Mandrake Root, Sea Salt, Grave Dust"; }
+			else if ( index == 44 ){ circle = "6"; school = "Sorcery"; reagents = "Sulfurous Ash, Brimstone, Gargoyle Ear"; }
+			else if ( index == 45 ){ circle = "6"; school = "Summoning"; reagents = "Swamp Berries, Nox Crystal, Beetle Shell, Eye of Toad"; }
+			else if ( index == 46 ){ circle = "6"; school = "Thaumaturgy"; reagents = "Blood Moss, Brimstone, Mandrake Root, Black Pearl"; }
+			else if ( index == 47 ){ circle = "6"; school = "Theurgy"; reagents = "Moon Crystal, Brimstone, Nightshade, Fairy Egg"; }
+			else if ( index == 48 ){ circle = "6"; school = "Wizardry"; reagents = "Fairy Egg, Moon Crystal"; }
 
-			else if ( index == 57 ){ circle = "8"; name = "Death Vortex"; school = "Conjuration"; words = "vas corp hur"; reagents = "Daemon Blood, Eye of Toad, Unicorn Horn"; mana = "60"; skill = "90";
-				init = "615"; description = "Creates a swirling mass of black death that spreads disease and unleashes electrical force on nearby enemies for 1-3 minutes."; }
-			else if ( index == 58 ){ circle = "8"; name = "Withstand Death"; school = "Death"; words = "vas an corp"; much = "true"; reagents = "Phoenix Feather, Demigod Blood, Enchanted Seaweed, Ghostly Dust"; mana = "70"; skill = "90";
-				init = "662"; regs = "true"; description = "This spell was lost to the ages, but legends tell of King Wolfgang learning the secrets of this spell and creating the gem of immortality. The caster, if they can find all of the reagents needed, should be able to create a gem almost similar to that. If one is holding the jewel that is created, and they meet an untimely end, they will be restored to full health instead as the jewel vanishes from this plane of existence. You will need a sapphire to imbue the magic in for this spell to work. This spell is powerful enough that the scroll will always crumble to dust when cast."; }
-			else if ( index == 59 ){ circle = "8"; name = "Mass Sleep"; school = "Enchanting"; words = "vas zu tym"; reagents = "Fairy Egg, Mandrake Root, Enchanted Seaweed, Lich Dust"; mana = "50"; skill = "85";
-				init = "639"; regs = "true"; description = "This spell will cause nearby foes to sleep for 10-60 seconds, but taking actions against them will likely wake them up from their slumber. This spell cannot affect supernatural creatures, constructs, golems, or elementals. This spell is powerful enough that the scroll will always crumble to dust when cast."; }
-			else if ( index == 60 ){ circle = "8"; name = "Ring of Fire"; school = "Sorcery"; words = "in flam an por"; reagents = "Brimstone, Pig Iron, Daemon Blood"; mana = "55"; skill = "85";
-				init = "643"; description = "This spell creates a ring of fire at a chosen location, where demonic creatures cannot pass. Any demonic creature that touches the flames will be unable to cast spells, but they may still perform any special attacks they may have. The ring can last up to 50 seconds before extinguishing itself, and there is a chance that the demon can traverse the flaming circle if cast on uneven terrain."; }
-			else if ( index == 61 ){ circle = "8"; name = "Blood Elemental"; school = "Summoning"; words = "uus mani"; reagents = "Black Pearl, Bloodmoss, Dragon Blood, Daemon Blood"; mana = "50"; skill = "90";
-				init = "651"; description = "Summons a blood elemental that is controlled by the caster for 8-25 minutes."; }
-			else if ( index == 62 ){ circle = "8"; name = "Armageddon"; school = "Thaumaturgy"; words = "in vas ort corp"; much = "true"; reagents = "Butterfly Wings, Black Pearl, Demigod Blood, Demon Claw"; mana = "80"; skill = "100";
-				init = "616"; description = "Over 700,000 years ago, the Xorinite Wisp gave the original version of this spell to a mage named Zog who was foolish enough to cast it, and all life was destroyed. What Zog may have done to enhance the spell is unknown, but this one is a much more minor version of that spell. Once it is cast, it destroys all creatures (often destroying their corpses) in a 20 space radius. It also kills the one casting it. Only the biggest fool, full of madness, would dare to cast this spell. The caster may lose some karma if they attempt this and the spell is powerful enough that the scroll will always crumble to dust when cast."; }
-			else if ( index == 63 ){ circle = "8"; name = "Restoration"; school = "Theurgy"; words = "vas in mani"; reagents = "Butterfly Wings, Garlic, Enchanted Seaweed"; mana = "50"; skill = "80";
-				init = "642"; description = "This spell can restore 12-125 points in health, stamina, and mana."; }
-			else if ( index == 64 ){ circle = "8"; name = "Mass Death"; school = "Wizardry"; words = "vas corp"; much = "true"; reagents = "Pixie Skull, Bat Wing, Dragon Tooth"; mana = "55"; skill = "90";
-				init = "637"; regs = "true"; description = "Damages nearby enemies with deathly magics summoned from the void. If you hit more than one enemy, the damage amount is doubled and divided amongst each enemy evenly. The damage dealt is between 45-125 points, with the addition of the available hit points of the caster. After the mass death is unleashed, the caster will have a single hit point remaining. The caster may lose some karma if they attempt this. This spell is powerful enough that the scroll will always crumble to dust when cast."; }
+			else if ( index == 49 ){ circle = "7"; school = "Conjuration"; reagents = "Butterfly Wings, Gargoyle Ear, Pegasus Feather"; }
+			else if ( index == 50 ){ circle = "7"; school = "Death"; reagents = "Brimstone, Grave Dust, Pig Iron, Mandrake Root"; much = "true"; regs = "true"; }
+			else if ( index == 51 ){ circle = "7"; school = "Enchanting"; reagents = "Enchanted Seaweed, Fairy Egg, Pixie Skull"; }
+			else if ( index == 52 ){ circle = "7"; school = "Sorcery"; reagents = "Fairy Egg, Brimstone, Sulfurous Ash"; }
+			else if ( index == 53 ){ circle = "7"; school = "Summoning"; reagents = "Nightshade, Nox Crystal, Silver Serpent Venom, Silver Widow"; }
+			else if ( index == 54 ){ circle = "7"; school = "Thaumaturgy"; reagents = "Daemon Blood, Eye of Toad, Brimstone, Demon Claw"; }
+			else if ( index == 55 ){ circle = "7"; school = "Theurgy"; reagents = "Spiders Silk, Pixie Skull, Butterfly Wings"; }
+			else if ( index == 56 ){ circle = "7"; school = "Wizardry"; reagents = "Blood Moss, Spiders Silk, Mandrake Root, Moon Crystal"; }
+
+			else if ( index == 57 ){ circle = "8"; school = "Conjuration"; reagents = "Daemon Blood, Eye of Toad, Unicorn Horn"; }
+			else if ( index == 58 ){ circle = "8"; school = "Death"; reagents = "Phoenix Feather, Demigod Blood, Enchanted Seaweed, Ghostly Dust"; much = "true"; regs = "true"; }
+			else if ( index == 59 ){ circle = "8"; school = "Enchanting"; reagents = "Fairy Egg, Mandrake Root, Enchanted Seaweed, Lich Dust"; regs = "true"; }
+			else if ( index == 60 ){ circle = "8"; school = "Sorcery"; reagents = "Brimstone, Pig Iron, Daemon Blood"; }
+			else if ( index == 61 ){ circle = "8"; school = "Summoning"; reagents = "Black Pearl, Bloodmoss, Dragon Blood, Daemon Blood"; }
+			else if ( index == 62 ){ circle = "8"; school = "Thaumaturgy"; reagents = "Butterfly Wings, Black Pearl, Demigod Blood, Demon Claw"; much = "true"; }
+			else if ( index == 63 ){ circle = "8"; school = "Theurgy"; reagents = "Butterfly Wings, Garlic, Enchanted Seaweed"; }
+			else if ( index == 64 ){ circle = "8"; school = "Wizardry"; reagents = "Pixie Skull, Bat Wing, Dragon Tooth"; much = "true"; regs = "true"; }
 
 			if ( slice == 1 ){ value = circle; }
-			else if ( slice == 2 ){ value = name; }
+			else if ( slice == 2 ){ value = definition != null ? definition.Name.String : ""; }
 			else if ( slice == 3 ){ value = school; }
-			else if ( slice == 4 ){ value = words; }
+			else if ( slice == 4 ){ value = definition != null ? definition.PowerWords.String.ToLower() : ""; }
 			else if ( slice == 5 ){ value = reagents; }
-			else if ( slice == 6 ){ value = description; }
-			else if ( slice == 7 ){ value = mana; }
-			else if ( slice == 8 ){ value = skill; }
+			else if ( slice == 6 ){ value = definition != null ? definition.Description.String : ""; }
+			else if ( slice == 7 ){ value = definition != null ? definition.ManaCost.ToString() : "0"; }
+			else if ( slice == 8 ){ value = definition != null ? definition.MinSkill.ToString() : "0"; }
 			else if ( slice == 13 ){ value = much; }
 			else if ( slice == 14 ){ value = regs; }
 			else if ( slice == 9 )
@@ -777,24 +710,8 @@ namespace Server.Misc
 				else if ( school == "Theurgy" ){ value = "11263"; }
 				else if ( school == "Wizardry" ){ value = "11261"; }
 			}
-			else if ( slice == 11 )
-			{
-				int mod = Int32.Parse( circle );
-				int mul = 0;
-				if ( school == "Death" ){ mul = 8; }
-				else if ( school == "Enchanting" ){ mul = 16; }
-				else if ( school == "Sorcery" ){ mul = 24; }
-				else if ( school == "Summoning" ){ mul = 32; }
-				else if ( school == "Thaumaturgy" ){ mul = 40; }
-				else if ( school == "Theurgy" ){ mul = 48; }
-				else if ( school == "Wizardry" ){ mul = 56; }
-				value = (11194+(mod+mul)).ToString();
-
-				if ( index == 45 ){ value = "11233"; }
-				else if ( index == 37 ){ value = "11232"; }
-				else if ( index == 53 ){ value = "11231"; }
-			}
-			else { value = init; }
+			else if ( slice == 11 ){ value = definition != null ? definition.IconGraphic.ToString() : "0"; }
+			else { value = definition != null ? definition.SpellID.ToString() : "0"; }
 
 			return value;
 		}
@@ -1649,73 +1566,9 @@ namespace Server.Misc
 		{
 			if ( Server.Misc.ResearchSettings.ResearchMaterials( from ) != null )
 			{
-				if ( ResearchSettings.HasSpell( from, spell ) )
-				{
-					if ( spell == 1 ){ InvokeCommand( "CastConjure", from ); }
-					else if ( spell == 2 ){ InvokeCommand( "CastDeathSpeak", from ); }
-					else if ( spell == 3 ){ InvokeCommand( "CastSneak", from ); }
-					else if ( spell == 4 ){ InvokeCommand( "CastCreateFire", from ); }
-					else if ( spell == 5 ){ InvokeCommand( "CastElectricalElemental", from ); }
-					else if ( spell == 6 ){ InvokeCommand( "CastConfusionBlast", from ); }
-					else if ( spell == 7 ){ InvokeCommand( "CastSeeTruth", from ); }
-					else if ( spell == 8 ){ InvokeCommand( "CastIcicle", from ); }
-					else if ( spell == 9 ){ InvokeCommand( "CastExtinguish", from ); }
-					else if ( spell == 10 ){ InvokeCommand( "CastRockFlesh", from ); }
-					else if ( spell == 11 ){ InvokeCommand( "CastMassMight", from ); }
-					else if ( spell == 12 ){ InvokeCommand( "CastEndureCold", from ); }
-					else if ( spell == 13 ){ InvokeCommand( "CastWeedElemental", from ); }
-					else if ( spell == 14 ){ InvokeCommand( "CastSpawnCreature", from ); }
-					else if ( spell == 15 ){ InvokeCommand( "CastHealingTouch", from ); }
-					else if ( spell == 16 ){ InvokeCommand( "CastSnowBall", from ); }
-					else if ( spell == 17 ){ InvokeCommand( "CastClone", from ); }
-					else if ( spell == 18 ){ InvokeCommand( "CastGrantPeace", from ); }
-					else if ( spell == 19 ){ InvokeCommand( "CastSleep", from ); }
-					else if ( spell == 20 ){ InvokeCommand( "CastEndureHeat", from ); }
-					else if ( spell == 21 ){ InvokeCommand( "CastIceElemental", from ); }
-					else if ( spell == 22 ){ InvokeCommand( "CastEtherealTravel", from ); }
-					else if ( spell == 23 ){ InvokeCommand( "CastWizardEye", from ); }
-					else if ( spell == 24 ){ InvokeCommand( "CastFrostField", from ); }
-					else if ( spell == 25 ){ InvokeCommand( "CastCreateGold", from ); }
-					else if ( spell == 26 ){ InvokeCommand( "CastAnimateBones", from ); }
-					else if ( spell == 27 ){ InvokeCommand( "CastCauseFear", from ); }
-					else if ( spell == 28 ){ InvokeCommand( "CastIgnite", from ); }
-					else if ( spell == 29 ){ InvokeCommand( "CastMudElemental", from ); }
-					else if ( spell == 30 ){ InvokeCommand( "CastBanishDaemon", from ); }
-					else if ( spell == 31 ){ InvokeCommand( "CastFadefromSight", from ); }
-					else if ( spell == 32 ){ InvokeCommand( "CastGasCloud", from ); }
-					else if ( spell == 33 ){ InvokeCommand( "CastSwarm", from ); }
-					else if ( spell == 34 ){ InvokeCommand( "CastMaskofDeath", from ); }
-					else if ( spell == 35 ){ InvokeCommand( "CastEnchant", from ); }
-					else if ( spell == 36 ){ InvokeCommand( "CastFlameBolt", from ); }
-					else if ( spell == 37 ){ InvokeCommand( "CastGemElemental", from ); }
-					else if ( spell == 38 ){ InvokeCommand( "CastCallDestruction", from ); }
-					else if ( spell == 39 ){ InvokeCommand( "CastDivination", from ); }
-					else if ( spell == 40 ){ InvokeCommand( "CastFrostStrike", from ); }
-					else if ( spell == 41 ){ InvokeCommand( "CastMagicSteed", from ); }
-					else if ( spell == 42 ){ InvokeCommand( "CastCreateGolem", from ); }
-					else if ( spell == 43 ){ InvokeCommand( "CastSleepField", from ); }
-					else if ( spell == 44 ){ InvokeCommand( "CastConflagration", from ); }
-					else if ( spell == 45 ){ InvokeCommand( "CastAcidElemental", from ); }
-					else if ( spell == 46 ){ InvokeCommand( "CastMeteorShower", from ); }
-					else if ( spell == 47 ){ InvokeCommand( "CastIntervention", from ); }
-					else if ( spell == 48 ){ InvokeCommand( "CastHailStorm", from ); }
-					else if ( spell == 49 ){ InvokeCommand( "CastAerialServant", from ); }
-					else if ( spell == 50 ){ InvokeCommand( "CastOpenGround", from ); }
-					else if ( spell == 51 ){ InvokeCommand( "CastCharm", from ); }
-					else if ( spell == 52 ){ InvokeCommand( "CastExplosion", from ); }
-					else if ( spell == 53 ){ InvokeCommand( "CastPoisonElemental", from ); }
-					else if ( spell == 54 ){ InvokeCommand( "CastInvokeDevil", from ); }
-					else if ( spell == 55 ){ InvokeCommand( "CastAirWalk", from ); }
-					else if ( spell == 56 ){ InvokeCommand( "CastAvalanche", from ); }
-					else if ( spell == 57 ){ InvokeCommand( "CastDeathVortex", from ); }
-					else if ( spell == 58 ){ InvokeCommand( "CastWithstandDeath", from ); }
-					else if ( spell == 59 ){ InvokeCommand( "CastMassSleep", from ); }
-					else if ( spell == 60 ){ InvokeCommand( "CastRingofFire", from ); }
-					else if ( spell == 61 ){ InvokeCommand( "CastBloodElemental", from ); }
-					else if ( spell == 62 ){ InvokeCommand( "CastDevastation", from ); }
-					else if ( spell == 63 ){ InvokeCommand( "CastRestoration", from ); }
-					else if ( spell == 64 ){ InvokeCommand( "CastMassDeath", from ); }
-				}
+				SpellDefinition definition = Server.Spells.Research.ResearchSpellProvider.GetDefinitionByResearchIndex( spell );
+				if ( definition != null )
+					Server.Spells.Research.ResearchSpellProvider.Cast( from, definition.SpellID );
 			}
 		}
 	}

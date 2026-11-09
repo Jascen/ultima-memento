@@ -1,32 +1,35 @@
 using System;
-using Server;
 using System.Collections;
-using Server.Network;
-using System.Text;
 using Server.Items;
-using Server.Mobiles;
 using Server.Targeting;
 
 namespace Server.Spells.Research
 {
 	public class ResearchSneak : ResearchSpell
 	{
-		public override int spellIndex { get { return 3; } }
 		public int CirclePower = 1;
-		public static int spellID = 3;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.75 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 648,
+					IconGraphic = 11211,
+					Name = "Sneak",
+					PowerWords = "Por Ex Tym",
+					Description = "Hides the target and allows them to sneak around for 2-8 minutes. They can still be discovered, however, and they cannot sneak well in heavy armor.",
+					ManaCost = 10,
+					MinSkill = 10,
+					TargetType = TargetFlags.Beneficial
+				},
 				212,
 				9061,
 				Reagent.FairyEgg,Reagent.PixieSkull
 			);
 
-		public ResearchSneak( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchSneak( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

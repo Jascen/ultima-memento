@@ -1,19 +1,13 @@
 using System;
-using Server;
 using Server.Misc;
-using Server.Spells;
 using Server.Network;
-using Server.Mobiles;
 using Server.Items;
-using System.Collections.Generic;
-using System.Collections;
-using Server.Gumps;
 
 namespace Server.Spells.Research
 {
 	public abstract class ResearchSpell : Spell
 	{
-		public virtual int spellIndex { get { return 1; } }
+		public int spellIndex { get { return ResearchSpellProvider.GetResearchIndex( Info.SpellDefinition.SpellID ); } }
 		public virtual bool alwaysConsume { get { return false; } }
 		public abstract double RequiredSkill { get; }
 		public abstract int RequiredMana{ get; }

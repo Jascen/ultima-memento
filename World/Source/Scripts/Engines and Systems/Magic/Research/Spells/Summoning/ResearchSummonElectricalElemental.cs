@@ -1,30 +1,34 @@
 using System;
-using Server.Misc;
-using Server.Items;
 using Server.Mobiles;
-using Server.Network;
 using Server.Targeting;
 
 namespace Server.Spells.Research
 {
 	public class ResearchSummonElectricalElemental : ResearchSpell
 	{
-		public override int spellIndex { get { return 5; } }
 		public int CirclePower = 7;
-		public static int spellID = 5;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.25 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 655,
+					IconGraphic = 11227,
+					Name = "Electrical Elemental",
+					PowerWords = "Uus Grav",
+					Description = "Summons an electrial elemental that is controlled by the caster for 8-25 minutes.",
+					ManaCost = 40,
+					MinSkill = 70,
+					TargetType = TargetFlags.None
+				},
 				269,
 				9050,
 				Reagent.SilverWidow,Reagent.SulfurousAsh
 			);
 
-		public ResearchSummonElectricalElemental( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchSummonElectricalElemental( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using Server.Targeting;
-using Server.Network;
-using Server.Misc;
 using Server.Items;
 using Server.Mobiles;
 
@@ -10,22 +7,29 @@ namespace Server.Spells.Research
 {
 	public class ResearchRingofFire : ResearchSpell
 	{
-		public override int spellIndex { get { return 60; } }
 		public int CirclePower = 8;
-		public static int spellID = 60;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 643,
+					IconGraphic = 11226,
+					Name = "Ring of Fire",
+					PowerWords = "In Flam An Por",
+					Description = "This spell creates a ring of fire at a chosen location, where demonic creatures cannot pass. Any demonic creature that touches the flames will be unable to cast spells, but they may still perform any special attacks they may have. The ring can last up to 50 seconds before extinguishing itself, and there is a chance that the demon can traverse the flaming circle if cast on uneven terrain.",
+					ManaCost = 55,
+					MinSkill = 85,
+					TargetType = TargetFlags.None
+				},
 				236,
 				9031,
 				Reagent.Brimstone,Reagent.PigIron,Reagent.DaemonBlood
 			);
 
-		public ResearchRingofFire( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchRingofFire( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Server.Network;
-using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
 
@@ -9,22 +7,29 @@ namespace Server.Spells.Research
 {
 	public class ResearchMeteorShower : ResearchSpell
 	{
-		public override int spellIndex { get { return 46; } }
 		public int CirclePower = 7;
-		public static int spellID = 46;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 640,
+					IconGraphic = 11240,
+					Name = "Meteor Shower",
+					PowerWords = "Kal Des Flam Ylem",
+					Description = "Damages nearby enemies with falling meteorites that hit for physical damage (with some fire and energy damage) split between the enemies. If you only hit one enemy, the enemy takes between 35-125 points of damage, but if you hit more than one enemy, the damage amount is doubled and divided amongst each enemy evenly.",
+					ManaCost = 40,
+					MinSkill = 70,
+					TargetType = TargetFlags.None
+				},
 				233,
 				9042,
 				Reagent.Bloodmoss,Reagent.Brimstone,Reagent.MandrakeRoot,Reagent.BlackPearl
 			);
 
-		public ResearchMeteorShower( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchMeteorShower( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

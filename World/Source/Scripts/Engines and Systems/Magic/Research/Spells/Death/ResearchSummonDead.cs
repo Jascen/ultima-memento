@@ -1,30 +1,34 @@
 using System;
-using Server.Misc;
-using Server.Items;
 using Server.Mobiles;
-using Server.Network;
 using Server.Targeting;
 
 namespace Server.Spells.Research
 {
 	public class ResearchSummonDead : ResearchSpell
 	{
-		public override int spellIndex { get { return 26; } }
 		public int CirclePower = 7;
-		public static int spellID = 26;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.25 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 653,
+					IconGraphic = 11206,
+					Name = "Animate Bones",
+					PowerWords = "Kal Corp Xen",
+					Description = "Animates the bones of a mighty skeletal warrior that will fight for the caster for 8-25 minutes. The caster may lose some karma if they attempt this.",
+					ManaCost = 40,
+					MinSkill = 70,
+					TargetType = TargetFlags.None
+				},
 				269,
 				9050,
 				Reagent.BatWing,Reagent.GraveDust,Reagent.PixieSkull
 			);
 
-		public ResearchSummonDead( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchSummonDead( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

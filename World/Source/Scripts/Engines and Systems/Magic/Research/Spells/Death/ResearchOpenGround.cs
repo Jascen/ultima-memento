@@ -1,10 +1,7 @@
 using System;
-using Server; 
 using Server.Targeting;
 using Server.Network;
 using Server.Items;
-using System.Collections;
-using System.Collections.Generic;
 using Server.Mobiles;
 using Server.Misc;
 
@@ -12,23 +9,30 @@ namespace Server.Spells.Research
 {
 	public class ResearchOpenGround : ResearchSpell
 	{
-		public override int spellIndex { get { return 50; } }
 		public override bool alwaysConsume { get{ return bool.Parse( Server.Misc.Research.SpellInformation( spellIndex, 14 )); } }
 		public int CirclePower = 7;
-		public static int spellID = 50;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.00 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 641,
+					IconGraphic = 11209,
+					Name = "Open Ground",
+					PowerWords = "Des Por Ylem",
+					Description = "Opens a huge hole in the ground that can cause anyone that goes near it to fall in. Creatures may fall to their deaths and never be seen again, while advenuterers will fall into the huge chasm below. If an adventurer has comrades, familiars, summons, or tamed beasts that stumble into the chasm, then the adventurer will fall in after them. This spell is powerful enough that the scroll will always crumble to dust when cast. The caster may lose some karma if they attempt this.",
+					ManaCost = 65,
+					MinSkill = 85,
+					TargetType = TargetFlags.None
+				},
 				212,
 				9001,
 				Reagent.Brimstone,Reagent.GraveDust,Reagent.PigIron,Reagent.MandrakeRoot
 			);
 
-		public ResearchOpenGround( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchOpenGround( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

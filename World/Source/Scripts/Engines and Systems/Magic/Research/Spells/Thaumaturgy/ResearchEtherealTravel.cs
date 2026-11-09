@@ -4,7 +4,6 @@ using Server.Multis;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
-using Server.Regions;
 using Server.Spells.Necromancy;
 using Server.Misc;
 
@@ -12,16 +11,23 @@ namespace Server.Spells.Research
 {
 	public class ResearchEtherealTravel : ResearchSpell
 	{
-		public override int spellIndex { get { return 22; } }
 		public int CirclePower = 4;
-		public static int spellID = 22;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 622,
+					IconGraphic = 11237,
+					Name = "Ethereal Travel",
+					PowerWords = "Ort Grav Por",
+					Description = "Caster is transported to the location marked on the recall rune. One can use this spell on a ship key to travel to a boat's location if the boat is not dry docked. The caster will appear at the destination in a hidden state.",
+					ManaCost = 20,
+					MinSkill = 35,
+					TargetType = TargetFlags.None
+				},
 				236,
 				9031,
 				Reagent.BlackPearl,Reagent.GargoyleEar,Reagent.RedLotus
@@ -34,7 +40,7 @@ namespace Server.Spells.Research
 		{
 		}
 
-		public ResearchEtherealTravel( Mobile caster, Item scroll, RunebookEntry entry, Runebook book ) : base( caster, scroll, m_Info )
+		public ResearchEtherealTravel( Mobile caster, Item scroll, RunebookEntry entry, Runebook book ) : base( caster, scroll, SpellInfo )
 		{
 			m_Entry = entry;
 			m_Book = book;

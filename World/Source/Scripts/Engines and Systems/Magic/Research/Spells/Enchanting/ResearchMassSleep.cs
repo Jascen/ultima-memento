@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Server.Network;
 using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
@@ -9,23 +8,30 @@ namespace Server.Spells.Research
 {
 	public class ResearchMassSleep : ResearchSpell
 	{
-		public override int spellIndex { get { return 59; } }
 		public override bool alwaysConsume { get{ return bool.Parse( Server.Misc.Research.SpellInformation( spellIndex, 14 )); } }
 		public int CirclePower = 8;
-		public static int spellID = 59;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 639,
+					IconGraphic = 11218,
+					Name = "Mass Sleep",
+					PowerWords = "Vas Zu Tym",
+					Description = "This spell will cause nearby foes to sleep for 10-60 seconds, but taking actions against them will likely wake them up from their slumber. This spell cannot affect supernatural creatures, constructs, golems, or elementals. This spell is powerful enough that the scroll will always crumble to dust when cast.",
+					ManaCost = 50,
+					MinSkill = 85,
+					TargetType = TargetFlags.None
+				},
 				233,
 				9042,
 				Reagent.FairyEgg,Reagent.MandrakeRoot,Reagent.EnchantedSeaweed,Reagent.LichDust
 			);
 
-		public ResearchMassSleep( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchMassSleep( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

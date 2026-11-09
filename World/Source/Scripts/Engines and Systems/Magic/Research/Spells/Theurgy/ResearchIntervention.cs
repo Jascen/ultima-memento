@@ -1,29 +1,34 @@
 using System;
 using System.Collections;
 using Server.Targeting;
-using Server.Network;
-using Server.Items;
 
 namespace Server.Spells.Research
 {
 	public class ResearchIntervention : ResearchSpell
 	{
-		public override int spellIndex { get { return 47; } }
 		public int CirclePower = 6;
-		public static int spellID = 47;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.5 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 634,
+					IconGraphic = 11248,
+					Name = "Intervention",
+					PowerWords = "In Sanct An Jux",
+					Description = "This is one of those rare spells that call upon the favor of the gods. When the spell is invoked, the caster is empowered with 10-50 additional points in their resistances. They are also protected from magery spell attack damage for 25-125 points. The effects last between 10-50 minutes.",
+					ManaCost = 25,
+					MinSkill = 50,
+					TargetType = TargetFlags.None
+				},
 				242,
 				9012,
 				Reagent.MoonCrystal,Reagent.Brimstone,Reagent.Nightshade,Reagent.FairyEgg
 			);
 
-		public ResearchIntervention( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchIntervention( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 
@@ -64,7 +69,7 @@ namespace Server.Spells.Research
 
 					int TotalTime = (int)( DamagingSkill( Caster ) / 12 );
 					new InternalTimer( Caster, TimeSpan.FromMinutes( TotalTime ) ).Start();
-					Server.Misc.Research.ConsumeScroll( Caster, true, spellID, alwaysConsume, Scroll );
+					Server.Misc.Research.ConsumeScroll( Caster, true, spellIndex, alwaysConsume, Scroll );
 
 					string args = String.Format("{0}\t{1}\t{2}\t{3}\t{4}", modify, modify, modify, modify, modify);
 

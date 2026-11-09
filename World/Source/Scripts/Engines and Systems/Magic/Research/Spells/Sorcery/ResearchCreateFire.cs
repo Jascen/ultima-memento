@@ -1,32 +1,35 @@
 using System;
-using Server;
 using Server.Targeting;
-using Server.Network;
 using Server.Items;
-using System.Collections.Generic;
-using System.Collections;
 using Server.Mobiles;
 
 namespace Server.Spells.Research
 {
 	public class ResearchCreateFire : ResearchSpell
 	{
-		public override int spellIndex { get { return 4; } }
 		public int CirclePower = 1;
-		public static int spellID = 4;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 611,
+					IconGraphic = 11219,
+					Name = "Create Fire",
+					PowerWords = "In Flam Ylem",
+					Description = "Creates a magical fire at the caster's feet. When anything approaches the fire, they will take 2-20 points of fire damage every couple of seconds. The magical fire can last between 15-200 seconds dependent on the power of the caster.",
+					ManaCost = 5,
+					MinSkill = 15,
+					TargetType = TargetFlags.None
+				},
 				212,
 				9001,
 				Reagent.Brimstone,Reagent.MandrakeRoot,Reagent.Ginseng
 			);
 
-		public ResearchCreateFire( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchCreateFire( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

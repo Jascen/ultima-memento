@@ -1,30 +1,35 @@
 using System;
-using Server;
 using Server.Targeting;
 using Server.Network;
 using Server.Mobiles;
-using Server.Items;
 
 namespace Server.Spells.Research
 {
 	public class ResearchHealingTouch : ResearchSpell
 	{
-		public override int spellIndex { get { return 15; } }
 		public int CirclePower = 4;
-		public static int spellID = 15;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.25 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 631,
+					IconGraphic = 11244,
+					Name = "Healing Touch",
+					PowerWords = "In Mani",
+					Description = "Heals the one touched, restoring 12-125 hit points. You need to be close to your target, however.",
+					ManaCost = 15,
+					MinSkill = 30,
+					TargetType = TargetFlags.Beneficial
+				},
 				204,
 				9061,
 				Reagent.Garlic,Reagent.Ginseng,Reagent.FairyEgg,Reagent.PixieSkull
 			);
 
-		public ResearchHealingTouch( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchHealingTouch( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

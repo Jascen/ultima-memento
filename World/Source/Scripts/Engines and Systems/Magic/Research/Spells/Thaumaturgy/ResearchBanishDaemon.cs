@@ -1,31 +1,35 @@
 using System;
-using System.Collections;
 using Server.Targeting;
-using Server.Network;
 using Server.Mobiles;
 using Server.Items;
-using Server.Gumps;
 
 namespace Server.Spells.Research
 {
 	public class ResearchBanishDaemon : ResearchSpell
 	{
-		public override int spellIndex { get { return 16; } }
 		public int CirclePower = 4;
-		public static int spellID = 16;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 603,
+					IconGraphic = 11238,
+					Name = "Banish Daemon",
+					PowerWords = "An Flam Corp Xen",
+					Description = "This spell can send a demonic creature back to the plane of hell from which they spawned. If they cannot be banished, then they may take 50-200 points of energy damage.",
+					ManaCost = 40,
+					MinSkill = 80,
+					TargetType = TargetFlags.Harmful
+				},
 				203,
 				9031,
 				Reagent.GargoyleEar,Reagent.DemonClaw
 			);
 
-		public ResearchBanishDaemon( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchBanishDaemon( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

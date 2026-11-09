@@ -1,31 +1,35 @@
 using System;
-using Server;
 using Server.Targeting;
-using Server.Network;
 using Server.Items;
-using System.Collections.Generic;
 using System.Collections;
 
 namespace Server.Spells.Research
 {
 	public class ResearchMaskofDeath : ResearchSpell
 	{
-		public override int spellIndex { get { return 34; } }
 		public int CirclePower = 8;
-		public static int spellID = 34;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 636,
+					IconGraphic = 11207,
+					Name = "Mask of Death",
+					PowerWords = "Quas Corp",
+					Description = "Creates a mask for the caster that when worn the undead will see you as one of their own and ignore them. The mask remains on this plane of existence for 6-15 minutes before it returns to the realm from which it came. If you attack an undead creature while wearing the mask, it will vanish and you will have to face your foe. The caster may lose some karma if they attempt this.",
+					ManaCost = 70,
+					MinSkill = 90,
+					TargetType = TargetFlags.None
+				},
 				212,
 				9001,
 				Reagent.LichDust,Reagent.GraveDust,Reagent.PixieSkull
 			);
 
-		public ResearchMaskofDeath( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchMaskofDeath( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

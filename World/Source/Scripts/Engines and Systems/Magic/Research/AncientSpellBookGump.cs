@@ -427,7 +427,7 @@ namespace Server.Gumps
 				from.CloseGump( typeof( AncientSpellbookGump ) );
 				from.SendGump( new AncientSpellbookGump( from, m_Book, page ) );
 			}
-			else if ( info.ButtonID >= 600 && HasSpell(from, info.ButtonID) )
+			else if ( info.ButtonID >= ResearchSpellProvider.FirstSpellId && info.ButtonID <= ResearchSpellProvider.LastSpellId && HasSpell(from, info.ButtonID) )
 			{
 				Spell spell = SpellRegistry.NewSpell( info.ButtonID, from, m_Book );
 

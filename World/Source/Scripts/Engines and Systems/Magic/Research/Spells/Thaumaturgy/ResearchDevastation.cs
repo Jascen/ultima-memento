@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Server.Network;
-using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
 
@@ -9,22 +7,29 @@ namespace Server.Spells.Research
 {
 	public class ResearchDevastation : ResearchSpell
 	{
-		public override int spellIndex { get { return 62; } }
 		public int CirclePower = 8;
-		public static int spellID = 62;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 616,
+					IconGraphic = 11242,
+					Name = "Armageddon",
+					PowerWords = "In Vas Ort Corp",
+					Description = "Over 700,000 years ago, the Xorinite Wisp gave the original version of this spell to a mage named Zog who was foolish enough to cast it, and all life was destroyed. What Zog may have done to enhance the spell is unknown, but this one is a much more minor version of that spell. Once it is cast, it destroys all creatures (often destroying their corpses) in a 20 space radius. It also kills the one casting it. Only the biggest fool, full of madness, would dare to cast this spell. The caster may lose some karma if they attempt this and the spell is powerful enough that the scroll will always crumble to dust when cast.",
+					ManaCost = 80,
+					MinSkill = 100,
+					TargetType = TargetFlags.None
+				},
 				233,
 				9042,
 				Reagent.ButterflyWings,Reagent.BlackPearl,Reagent.DemigodBlood,Reagent.DemonClaw
 			);
 
-		public ResearchDevastation( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchDevastation( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

@@ -1,5 +1,6 @@
-using Server.Misc;
 using Server.Mobiles;
+using Server.Spells;
+using Server.Spells.Research;
 
 namespace Server.SpellBars
 {
@@ -8,7 +9,7 @@ namespace Server.SpellBars
 		public static readonly AncientSpellSchool Instance = new AncientSpellSchool();
 
 		public int MaxSlots
-		{ get { return 64; } }
+		{ get { return ResearchSpellProvider.SpellCount; } }
 
 		public SpellBarSchool School
 		{ get { return SpellBarSchool.Ancient; } }
@@ -16,32 +17,23 @@ namespace Server.SpellBars
 		public int GetBackgroundImage(PlayerMobile from)
 		{ return 11193; }
 
+		// Slots follow research order (circle, then school) rather than spell ID order
 		public int GetIcon(PlayerMobile from, int slotIndex)
-		{
-			return int.Parse(Research.SpellInformation(slotIndex, 11));
-		}
+		{ return ResearchSpellProvider.GetDefinitionByResearchIndex(slotIndex).IconGraphic; }
 
 		public string GetName(int slotIndex)
 		{
-			return Research.SpellInformation(slotIndex, 2);
+			SpellDefinition definition = ResearchSpellProvider.GetDefinitionByResearchIndex(slotIndex);
+
+			return definition == null ? string.Empty : definition.Name.String;
 		}
 
 		public int GetRegistrySpellId(int slotIndex)
-		{
-			return int.Parse(Research.SpellInformation(slotIndex, 12));
-		}
+		{ return ResearchSpellProvider.GetDefinitionByResearchIndex(slotIndex).SpellID; }
 
 		public bool HasSpell(PlayerMobile from, int registrySpellId)
 		{
-			for (int index = 1; index <= MaxSlots; index++)
-			{
-				if (int.Parse(Research.SpellInformation(index, 12)) != registrySpellId)
-					continue;
-
-				return ResearchSettings.HasSpell(from, index);
-			}
-
-			return false;
+			return ResearchSpellProvider.HasSpell(from, registrySpellId);
 		}
 	}
 

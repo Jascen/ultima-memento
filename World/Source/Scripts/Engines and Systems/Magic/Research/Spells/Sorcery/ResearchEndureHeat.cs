@@ -1,34 +1,35 @@
 using System;
 using System.Collections;
-using Server;
 using Server.Mobiles;
-using Server.Network;
-using Server.Items;
 using Server.Targeting;
-using Server.Gumps;
-using Server.Spells;
-using Server.Misc;
 
 namespace Server.Spells.Research
 {
 	public class ResearchEndureHeat : ResearchSpell
 	{
-		public override int spellIndex { get { return 20; } }
 		public int CirclePower = 2;
-		public static int spellID = 20;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 0.75 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 620,
+					IconGraphic = 11221,
+					Name = "Endure Heat",
+					PowerWords = "Sanct Flam",
+					Description = "Increases the casters fire resistance for up to 8 minutes, and it will also affect the caster's allies that are no more than 3 spaces away.",
+					ManaCost = 15,
+					MinSkill = 20,
+					TargetType = TargetFlags.None
+				},
 				236,
 				9011,
 				Reagent.SwampBerries,Reagent.GargoyleEar
 			);
 
-		public ResearchEndureHeat( Mobile caster, Item scroll) : base( caster, scroll, m_Info )
+		public ResearchEndureHeat( Mobile caster, Item scroll) : base( caster, scroll, SpellInfo )
 		{
 		}
 

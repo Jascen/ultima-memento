@@ -1,29 +1,34 @@
 using System;
 using Server.Mobiles;
-using Server.Network;
 using Server.Targeting;
-using Server.Items;
 
 namespace Server.Spells.Research
 {
 	public class ResearchGasCloud : ResearchSpell
 	{
-		public override int spellIndex { get { return 32; } }
 		public int CirclePower = 5;
-		public static int spellID = 32;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.25 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 621,
+					IconGraphic = 11254,
+					Name = "Gas Cloud",
+					PowerWords = "In Hur Grav",
+					Description = "Creates a gaseous cloud of poison mist that will consume nearby enemies in the venomous vapor for 1-3 minutes.",
+					ManaCost = 25,
+					MinSkill = 45,
+					TargetType = TargetFlags.None
+				},
 				260,
 				9032,
 				Reagent.Nightshade,Reagent.SilverWidow,Reagent.SwampBerries,Reagent.SilverSerpentVenom
 			);
 
-		public ResearchGasCloud( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchGasCloud( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

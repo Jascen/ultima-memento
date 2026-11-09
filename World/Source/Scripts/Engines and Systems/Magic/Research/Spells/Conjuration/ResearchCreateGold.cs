@@ -1,29 +1,35 @@
 using System;
 using Server.Targeting;
-using Server.Network;
 using Server.Items;
 
 namespace Server.Spells.Research
 {
 	public class ResearchCreateGold : ResearchSpell
 	{
-		public override int spellIndex { get { return 25; } }
 		public override bool alwaysConsume { get{ return bool.Parse( Server.Misc.Research.SpellInformation( spellIndex, 14 )); } }
 		public int CirclePower = 4;
-		public static int spellID = 25;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 1.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 612,
+					IconGraphic = 11198,
+					Name = "Create Gold",
+					PowerWords = "Rel Ylem",
+					Description = "Originally created by the fiendish imp Rumpelstiltskin, this spell allows the caster to turn armor or weapons into gold. They can also transmute varying ingots into golden ingots, as well as turn coins into golden coins. Coins will often be destroyed during the transmutation process, but the better the skill of the archmage the less that is lost. This spell is powerful enough that the scroll will always crumble to dust when cast.",
+					ManaCost = 35,
+					MinSkill = 55,
+					TargetType = TargetFlags.None
+				},
 				266,
 				9040,
 				Reagent.UnicornHorn,Reagent.SeaSalt,Reagent.Ginseng,Reagent.GoldenSerpentVenom
 			);
 
-		public ResearchCreateGold( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchCreateGold( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 
@@ -32,7 +38,7 @@ namespace Server.Spells.Research
 			if ( CheckSequence() )
 			{
 				Caster.SendMessage( "What item do you want to transmute into gold?" );
-				Caster.Target = new InternalTarget( this, spellID, Scroll, alwaysConsume );
+				Caster.Target = new InternalTarget( this, spellIndex, Scroll, alwaysConsume );
 			}
 
 			FinishSequence();

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Server.Network;
-using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
 
@@ -9,22 +7,29 @@ namespace Server.Spells.Research
 {
 	public class ResearchExplosion : ResearchSpell
 	{
-		public override int spellIndex { get { return 52; } }
 		public int CirclePower = 6;
-		public static int spellID = 52;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 623,
+					IconGraphic = 11225,
+					Name = "Explosion",
+					PowerWords = "Vas Ort Flam",
+					Description = "Damages nearby enemies with an explosive force consisting of mostly heat and some physical damage. If you only hit one enemy, the enemy takes between 35-125 points of damage, but if you hit more than one enemy, the damage amount is doubled and divided amongst each enemy evenly.",
+					ManaCost = 30,
+					MinSkill = 60,
+					TargetType = TargetFlags.None
+				},
 				230,
 				9041,
 				Reagent.FairyEgg,Reagent.Brimstone,Reagent.SulfurousAsh
 			);
 
-		public ResearchExplosion( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchExplosion( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

@@ -1,7 +1,4 @@
 using System;
-using Server;
-using System.Collections.Generic;
-using Server.Network;
 using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
@@ -10,22 +7,29 @@ namespace Server.Spells.Research
 {
 	public class ResearchDeathSpeak : ResearchSpell
 	{
-		public override int spellIndex { get { return 2; } }
 		public int CirclePower = 1;
-		public static int spellID = 2;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 614,
+					IconGraphic = 11203,
+					Name = "Death Speak",
+					PowerWords = "Kal Wis Corp",
+					Description = "This spell allows you to communicate with recently slain supernatural foes. If you can speak to their souls, you have the potential to restore a part of yourself. The restoration goes in order of mana, stamina, and health. The amount restored is dependent on the power of the caster and the fame of the slain creature. The caster may lose some karma if they attempt this.",
+					ManaCost = 5,
+					MinSkill = 10,
+					TargetType = TargetFlags.None
+				},
 				233,
 				9042,
 				Reagent.GraveDust,Reagent.PixieSkull
 			);
 
-		public ResearchDeathSpeak( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchDeathSpeak( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 

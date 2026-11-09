@@ -1,36 +1,35 @@
 using System;
-using Server;
 using System.Collections;
-using System.Collections.Generic;
 using Server.Items;
-using Server.Gumps;
-using Server.Spells;
 using Server.Targeting;
-using Server.Network;
-using Server.Regions;
-using Server.Misc;
-using Server.Mobiles;
 
 namespace Server.Spells.Research
 {
 	public class ResearchEnchant : ResearchSpell
 	{
-		public override int spellIndex { get { return 35; } }
 		public int CirclePower = 5;
-		public static int spellID = 35;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 3.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 618,
+					IconGraphic = 11215,
+					Name = "Enchant",
+					PowerWords = "Ort Ylem Tym",
+					Description = "This can greatly increase a weapon's damage by enchanting it for 15-60 minutes. A power orb is summoned and placed in the caster's pack that gives the enchantment strength until the spell wears off.",
+					ManaCost = 45,
+					MinSkill = 75,
+					TargetType = TargetFlags.None
+				},
 				266,
 				9040,
 				Reagent.PixieSkull,Reagent.FairyEgg,Reagent.DragonTooth,Reagent.MoonCrystal
 			);
 
-        public ResearchEnchant(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
+        public ResearchEnchant(Mobile caster, Item scroll) : base(caster, scroll, SpellInfo)
         {
         }
 
@@ -41,7 +40,7 @@ namespace Server.Spells.Research
 
         public override void OnCast()
         {
-            Caster.Target = new InternalTarget(this, spellID);
+            Caster.Target = new InternalTarget(this, spellIndex);
         }
 
         private static void OnLogout(LogoutEventArgs e)

@@ -1,31 +1,35 @@
 using System;
-using System.Collections;
 using Server.Targeting;
-using Server.Network;
 using Server.Mobiles;
 using Server.Items;
-using Server.Gumps;
 
 namespace Server.Spells.Research
 {
 	public class ResearchGrantPeace : ResearchSpell
 	{
-		public override int spellIndex { get { return 18; } }
 		public int CirclePower = 4;
-		public static int spellID = 18;
 		public override TimeSpan CastDelayBase { get { return TimeSpan.FromSeconds( 2.0 ); } }
-		public override double RequiredSkill{ get{ return (double)(Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 8 ))); } }
-		public override int RequiredMana{ get{ return Int32.Parse( Server.Misc.Research.SpellInformation( spellIndex, 7 )); } }
+		public override double RequiredSkill{ get{ return SpellInfo.SpellDefinition.MinSkill; } }
+		public override int RequiredMana{ get{ return SpellInfo.SpellDefinition.ManaCost; } }
 
-		private static SpellInfo m_Info = new SpellInfo(
-				Server.Misc.Research.SpellInformation( spellID, 2 ),
-				Server.Misc.Research.CapsCast( Server.Misc.Research.SpellInformation( spellID, 4 ) ),
+		public static readonly SpellInfo SpellInfo = new SpellInfo(
+				new SpellDefinition
+				{
+					SpellID = 629,
+					IconGraphic = 11205,
+					Name = "Grant Peace",
+					PowerWords = "In Vas Corp",
+					Description = "This spell can grant an undead creature the true and final death. If they cannot be laid to rest, then they may take 50-200 points of energy damage.",
+					ManaCost = 35,
+					MinSkill = 75,
+					TargetType = TargetFlags.Harmful
+				},
 				203,
 				9031,
 				Reagent.PixieSkull,Reagent.GraveDust
 			);
 
-		public ResearchGrantPeace( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
+		public ResearchGrantPeace( Mobile caster, Item scroll ) : base( caster, scroll, SpellInfo )
 		{
 		}
 
