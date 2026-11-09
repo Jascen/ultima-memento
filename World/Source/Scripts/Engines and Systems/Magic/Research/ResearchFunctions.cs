@@ -463,14 +463,6 @@ namespace Server.Misc
 			return symbol;
 		}
 
-		public static string CapsCast( string words ) ///////////////////////////////////////////////////////////////////////////////////////////////
-		{
-			TextInfo cultInfo = new CultureInfo("en-US", false).TextInfo;
-			words = cultInfo.ToTitleCase(words);
-
-			return words;
-		}
-
 		public static bool GetRunes( ResearchBag bag, int cube ) ////////////////////////////////////////////////////////////////////////////////////
 		{
 			string found = bag.RuneFound;
