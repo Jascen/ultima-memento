@@ -153,13 +153,12 @@ namespace Server.Spells.Research
 
 		public static void Cast(Mobile from, int spellID)
 		{
-			if (ResearchSettings.ResearchMaterials(from) == null) return;
-			if (!HasSpell(from, spellID)) return;
 			if (!Multis.DesignContext.Check(from)) return;
 
-			Spell spell = SpellRegistry.NewSpell(spellID, from, null);
-			if (spell != null)
-				spell.Cast();
+			if (ResearchSettings.ResearchMaterials(from) != null && HasSpell(from, spellID))
+				SpellRegistry.NewSpell(spellID, from, null).Cast();
+			else
+				from.SendLocalizedMessage(500015); // You do not have that spell!
 		}
 
 		public static SpellDefinition GetDefinition(int spellID)

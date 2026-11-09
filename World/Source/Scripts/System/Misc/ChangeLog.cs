@@ -1356,6 +1356,7 @@ namespace Server.Misc
 					builder.Append("- Spell - Elemental Protection now reduces Faster Casting cap<br>");
 					builder.Append("- Spell - Banish Daemon now uses it's values instead of Snow Ball<br>");
 					builder.Append("- Spell - Flame Bolt now uses it's values instead of Call Destruction's<br>");
+					builder.Append("- Spell - Research spells properly warn when you lack the spell<br>");
 					break;
 			}
 		}
