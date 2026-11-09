@@ -464,8 +464,11 @@ namespace Server.Gumps
 {
     public class CustomTitleGump : Gump
     {
-        public CustomTitleGump(Mobile from) : base(50, 50)
+        private int m_Origin;
+
+        public CustomTitleGump(Mobile from, int origin) : base(50, 50)
         {
+			m_Origin = origin;
             this.Closable=true;
 			this.Disposable=true;
 			this.Dragable=true;
@@ -542,8 +545,11 @@ namespace Server.Gumps
 				from.Title = null;
                 from.SendMessage(0X22, "Your title has been removed.");
             }
-			from.CloseGump( typeof( Server.Engines.Help.HelpGump ) );
-			from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
+			if ( m_Origin > 0 )
+			{
+				from.CloseGump( typeof( Server.Engines.Help.HelpGump ) );
+				from.SendGump( new Server.Engines.Help.HelpGump( from, m_Origin ) );
+			}
         }
     }
 }

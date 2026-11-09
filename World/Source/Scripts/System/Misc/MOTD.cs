@@ -80,7 +80,7 @@ namespace Joeku.MOTD
 			else if ( m_Origin > 0 )
 			{
 				from.SendSound( 0x4A ); 
-				from.SendGump( new Server.Engines.Help.HelpGump( from, 1 ) );
+				from.SendGump( new Server.Engines.Help.HelpGump( from, m_Origin ) );
 			}
 		}
 	}

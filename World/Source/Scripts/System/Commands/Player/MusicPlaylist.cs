@@ -73,7 +73,7 @@ namespace Server.Gumps
 
 			from.SendSound( 0x4A ); 
 
-			if ( info.ButtonID < 1 && m_Origin > 0 ){ from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) ); }
+			if ( info.ButtonID < 1 && m_Origin > 0 ){ from.SendGump( new Server.Engines.Help.HelpGump( from, m_Origin ) ); }
 			else if ( info.ButtonID > 0 ){ from.SendGump( new MusicPlaylist( from, m_Origin ) ); }
 		}
 

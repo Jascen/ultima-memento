@@ -45,15 +45,17 @@ namespace Server.Menus.Questions
 
 		private Mobile m_Mobile, m_Sender;
 		private bool m_MarkUse;
+		private int m_Origin;
 		private Map m_Map;
 
 		private Timer m_Timer;
 
-		public StuckMenu( Mobile beholder, Mobile beheld, bool markUse ) : base( 50, 50 )
+		public StuckMenu( Mobile beholder, Mobile beheld, bool markUse, int origin = 0 ) : base( 50, 50 )
 		{
 			m_Sender = beholder;
 			m_Mobile = beheld;
 			m_MarkUse = markUse;
+			m_Origin = origin;
 			m_Map = Map.Sosaria;
 			string color = "#ddbc4b";
 
@@ -125,8 +127,11 @@ namespace Server.Menus.Questions
 				{
 					m_Mobile.SendSound( 0x4A ); 
 					m_Mobile.SendMessage( "You choose to remain where you are." );
-					m_Mobile.CloseGump( typeof(Server.Engines.Help.HelpGump) );
-					m_Mobile.SendGump( new Server.Engines.Help.HelpGump( m_Mobile, 1 ) );
+					if ( m_Origin > 0 )
+					{
+						m_Mobile.CloseGump( typeof(Server.Engines.Help.HelpGump) );
+						m_Mobile.SendGump( new Server.Engines.Help.HelpGump( m_Mobile, m_Origin ) );
+					}
 				}
 			}
 			else

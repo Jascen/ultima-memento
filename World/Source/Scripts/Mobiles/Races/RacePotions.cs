@@ -415,7 +415,7 @@ namespace Server.Items
 					if ( m_Tavern > 0 )
 					{
 						from.SendSound( 0x4A ); 
-						from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) );
+						from.SendGump( new Server.Engines.Help.HelpGump( from, m_Tavern ) );
 					}
 					else
 					{

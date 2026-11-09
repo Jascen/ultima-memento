@@ -6,8 +6,11 @@ namespace Server.Gumps
 {
     public class SkillTitleGump : Gump
     {
-        public SkillTitleGump ( Mobile from ) : base ( 50, 50 )
+        private int m_Origin;
+
+        public SkillTitleGump ( Mobile from, int origin ) : base ( 50, 50 )
         {
+			m_Origin = origin;
 			string color = "#ddbc4b";
 			int display = 60;
 			int line = 0;
@@ -42,8 +45,8 @@ namespace Server.Gumps
 			if ( info.ButtonID == 99 ){ ((PlayerMobile)from).CharacterSkill = 0; from.SendSound( 0x4A ); }
 			else if ( info.ButtonID > 0 ){ ((PlayerMobile)from).CharacterSkill = info.ButtonID; from.SendSound( 0x4A ); }
 
-			if ( info.ButtonID > 0 ){ from.SendGump( new SkillTitleGump( from ) ); }
-			else { from.SendGump( new Server.Engines.Help.HelpGump( from, 12 ) ); }
+			if ( info.ButtonID > 0 ){ from.SendGump( new SkillTitleGump( from, m_Origin ) ); }
+			else if ( m_Origin > 0 ){ from.SendGump( new Server.Engines.Help.HelpGump( from, m_Origin ) ); }
 		}
 
 		public void GetLine( int val, PlayerMobile player )

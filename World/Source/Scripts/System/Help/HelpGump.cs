@@ -1186,7 +1186,7 @@ namespace Server.Engines.Help
 					}
 					else if ( from.CanUseStuckMenu() && from.Region.CanUseStuckMenu( from ) && !CheckCombat( from ) && !from.Frozen && !from.Criminal && (Core.AOS || from.Kills < 5) )
 					{
-						StuckMenu menu = new StuckMenu( from, from, true );
+						StuckMenu menu = new StuckMenu( from, from, true, m_PageNumber );
 
 						menu.BeginClose();
 
@@ -1298,7 +1298,7 @@ namespace Server.Engines.Help
 				case PageActionType.Setting_SkillTitle:
 				{
 					from.CloseGump( typeof( SkillTitleGump ) );
-					from.SendGump( new SkillTitleGump( from ) );
+					from.SendGump( new SkillTitleGump( from, m_PageNumber ) );
 					break;
 				}
 				case PageActionType.Setting_UseAncientSpellbook:
@@ -1361,7 +1361,7 @@ namespace Server.Engines.Help
 				case PageActionType.Setting_CreatureType:
 				{
 					from.RaceSection = 1;
-					from.SendGump( new Server.Items.RacePotions.RacePotionsGump( from, 1, true ) );
+					from.SendGump( new Server.Items.RacePotions.RacePotionsGump( from, m_PageNumber, true ) );
 					break;
 				}
 				case PageActionType.Setting_CreatureSounds:
@@ -1456,7 +1456,7 @@ namespace Server.Engines.Help
 				case PageActionType.Setting_MusicPlaylist:
 				{
 					from.CloseGump( typeof( MusicPlaylist ) );
-					from.SendGump( new MusicPlaylist( from, 1 ) );
+					from.SendGump( new MusicPlaylist( from, m_PageNumber ) );
 					break;
 				}
 				case PageActionType.Setting_DoubleClickToIDItems:
@@ -1711,7 +1711,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_CustomTitle:
 				{
-					from.SendGump( new CustomTitleGump( from ) );
+					from.SendGump( new CustomTitleGump( from, m_PageNumber ) );
 					break;
 				}
 			}
@@ -2102,6 +2102,7 @@ namespace Server.Engines.Help
 			{
 				case PageActionType.Setting_MusicTone_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					scrollbar = false;
 					title = "Music Tone";
 					info = "This option will simply toggle your music preference to play a different set of music in the dungeons. When turned on, it will play music you normally hear when traveling the land, instead of the music commonly played in dungeons.";
@@ -2110,6 +2111,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_MusicPlaylist_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					title = "Music Playlist";
 					info = "This gives you a complete list of the in-game music. You can select the music you like and those choices will randomly play as you go from region to region. To listen to a song for review, select the blue gem icon. Note that the client has a delay time when you can start another song so selecting the blue gem may not respond if you started a song too soon before that. Wait for a few seconds and try clicking the blue gem again to see if that song starts to play. Playlists are disabled by default, so if you want your playlist to function, make sure to enable it.";
 					break;
@@ -2117,6 +2119,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_PrivatePlay_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					scrollbar = false;
 					title = "Private Play";
 					info = "This option turns on or off the detailed messages of your journey for the town crier and local citizen chatter. This keeps your activities private so others will not see where you are traveling the world.";
@@ -2140,6 +2143,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_SkillTitle_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					title = "Skill Title";
 					info = "When you don't set your skill title here, the game will take your highest skill and make that into your character's title. Choosing a skill here will force your title to that profession. So if you always want to be known as a wizard, then select the 'Magery' option (for example). You can let the game manage this at any time by setting it back to 'Auto Title'. Be warned when choosing a skill, if you have zero skill points in it, you will be titled 'the Village Idiot'. If you get at least 0.1, you will at least be 'Aspiring'.";
 					break;
@@ -2147,6 +2151,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_MessageColors_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					scrollbar = false;
 					title = "Message Color";
 					info = "By default, most of the messages appearing on the lower left of the screen are gray in color. Enabling this option will change those messages to have a random color whenenver a new message appears. This feature can help some more easily see such messages and the varying colors can also help distinguish individual messages that may be scrolling by.";
@@ -2275,6 +2280,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_MagerySpellColor_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					scrollbar = false;
 					title = "Magery Spell Color";
 					info = "You can change the color for all of your magery spell effects here. There are a limited amount of choices given here. Once set, your spells will be that color for every effect. If you want to set it back to normal, then select the 'Default' option. You can also use the '[spellhue' command followed by a number of any color you want to set it to.";
@@ -2291,6 +2297,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_WeaponAbilityNames_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					scrollbar = false;
 					title = "Weapon Ability Names";
 					info = "When you get good enough with tactics and a weapon type, you will get special abilities that they can perform. These usually appear as simple icons you can select to do the action, but this option will turn on or off the special weapon ability names next to the appropriate icons.";
@@ -2299,6 +2306,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_AutoSheath_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					scrollbar = false;
 					title = "Auto Sheath";
 					info = "This option turns on or off the feature to sheathe your weapon when not in battle. When you put your character back into war mode, they will draw the weapon.";
@@ -2307,6 +2315,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_GumpImages_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					scrollbar = false;
 					title = "Gump Images";
 					info = "Many window gumps have a faded image in the background. Turning this off will have those windows only be black in color, with no background image.";
@@ -2331,6 +2340,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_CreatureType_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					scrollbar = false;
 					title = "Creature Type";
 					info = "Some creature species has more than one option for appearance. This setting lets you change to another of that species if another appearance is available. You can also turn yourself into a human if you choose. If you become human, you will remain that way forever.";
@@ -2398,6 +2408,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_DoubleClickToTalk_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					scrollbar = false;
 					title = "Double Click Talk";
 					info = "When enabled, double clicking a citizen or other talkative NPC (the ones with a 'Talk' option in their context menu - found at meeting spots, town guards, innkeepers, couriers, and epic characters) will open their conversation directly instead of opening their paperdoll. NPCs without anything to say still show their paperdoll as normal.";
@@ -2413,6 +2424,7 @@ namespace Server.Engines.Help
 
 				case PageActionType.Setting_SkillList_Info:
 				{
+					returnPage = PageActionType.Show_Preferences;
 					title = "Skill Lists";
 					info = "Skill lists are an alternative to the normal skill lists you can get from clicking the appropriate button on the paper doll. Although you still need to use that for skill management (up, down, lock), skill lists have a more condensed appearance for when you play the game. In order for skills to appear in this alternate list, they have to either be set to 'up', or they can be set to 'locked'. The 'locked' skills will only display in this list if you change your settings here to reflect that. The list does not refresh in real time, but it will often refresh itself to show your skill status in both real and enhanced values. Any skill that appears in orange indicates a skill that you have locked. You can open this list with the '[skilllist' command, or the appropriate button on the main screen.";
 					break;
