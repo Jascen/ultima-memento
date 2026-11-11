@@ -867,7 +867,7 @@ namespace Server.Misc
 				}
 			}
 
-			PackItem(pack, 2, () =>
+			PackItem(pack, 1, () =>
 			{
 				switch (Utility.RandomMinMax(1, 3))
 				{
