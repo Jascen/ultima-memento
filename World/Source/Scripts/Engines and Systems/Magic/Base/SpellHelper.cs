@@ -16,6 +16,7 @@ using Server.Spells.Seventh;
 using Server.Spells.Fifth;
 using Server.Spells.Shinobi;
 using Server.Spells.Elementalism;
+using Server.Engines.Instancing;
 
 namespace Server
 {
@@ -570,6 +571,30 @@ namespace Server.Spells
 				return false;
 			}
 
+			if( type == TravelCheckType.Mark && InstanceManager.IsInstanceMap( map ) )
+			{
+				if( caster != null )
+					caster.SendMessage( "You cannot mark runes inside an instance." );
+
+				return false;
+			}
+
+			// A gate cast inside an instance would leave its return half open to anyone at the destination.
+			if( ( type == TravelCheckType.RecallTo || type == TravelCheckType.GateTo || type == TravelCheckType.GateFrom ) && InstanceManager.IsInstanceMap( map ) )
+			{
+				if( caster != null )
+					caster.SendMessage( type == TravelCheckType.GateFrom ? "You cannot open a gate inside an instance." : "You cannot travel into an instance." );
+
+				return false;
+			}
+
+			if( type == TravelCheckType.TeleportTo && InstanceManager.IsInstanceVoid( map, loc ) )
+			{
+				if( caster != null )
+					caster.SendMessage( "You cannot go there." );
+
+				return false;
+			}
 			if( caster != null && caster.AccessLevel == AccessLevel.Player && caster.Region.IsPartOf( typeof( Regions.Jail ) ) )
 			{
 				caster.SendLocalizedMessage( 1042632 ); // You'll need a better jailbreak plan then that!

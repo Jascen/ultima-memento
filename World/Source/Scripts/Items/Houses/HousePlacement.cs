@@ -7,6 +7,7 @@ using Server.Items;
 using Server.Misc;
 using Server.Regions;
 using Server.Spells;
+using Server.Engines.Instancing;
 
 namespace Server.Multis
 {
@@ -54,6 +55,9 @@ namespace Server.Multis
 
 			if ( map == null || map == Map.Internal )
 				return HousePlacementResult.BadLand; // A house cannot go here
+
+			if ( InstanceManager.IsInstanceMap( map ) )
+				return HousePlacementResult.BadRegion;
 
 			if ( from.AccessLevel >= AccessLevel.GameMaster )
 				return HousePlacementResult.Valid; // Staff can place anywhere

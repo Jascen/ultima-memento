@@ -1,4 +1,5 @@
 using Server;
+using Server.Engines.Instancing;
 using Server.Mobiles;
 using System;
 
@@ -21,7 +22,9 @@ namespace Scripts.Mythik.Systems.Achievements
             if (e == null || e.NewRegion == null || e.From == null || e.NewRegion.Name == null) return;
 
             var player = e.From as PlayerMobile;
-            if (e.NewRegion.Name == Region && player != null)
+            if (player == null || InstanceManager.IsInstanceMap(e.NewRegion.Map)) return;
+
+            if (e.NewRegion.Name == Region)
             {
                 AchievementSystem.SetAchievementStatus(player, this, 1);
             }

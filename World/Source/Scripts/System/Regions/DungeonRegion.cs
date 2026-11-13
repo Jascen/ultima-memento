@@ -30,6 +30,11 @@ namespace Server.Regions
 		public Point3D EntranceLocation{ get{ return m_EntranceLocation; } set{ m_EntranceLocation = value; } }
 		public Map EntranceMap{ get{ return m_EntranceMap; } set{ m_EntranceMap = value; } }
 
+		// Runtime copies (dungeon instances).
+		public DungeonRegion( string name, Map map, int priority, params Rectangle3D[] area ) : base( name, map, priority, area )
+		{
+		}
+
 		public DungeonRegion( XmlElement xml, Map map, Region parent ) : base( xml, map, parent )
 		{
 			XmlElement entrEl = xml["entrance"];
