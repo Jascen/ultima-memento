@@ -22,8 +22,13 @@ namespace Server.Items
 
 		public override bool OnMoveOver( Mobile m )
 		{
-			Point3D p = Worlds.GetRandomLocation( m.Land, "land" );
-			Map map = Worlds.GetMyDefaultMap( m.Land );
+			Point3D p;
+			Map map = m.Map;
+			if ( !Server.Engines.Instancing.InstanceManager.TryGetRandomPlayablePoint( map, out p ) )
+			{
+				p = Worlds.GetRandomLocation( m.Land, "land" );
+				map = Worlds.GetMyDefaultMap( m.Land );
+			}
 
 			if ( p != Point3D.Zero && m is PlayerMobile )
 			{

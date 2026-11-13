@@ -114,6 +114,9 @@ namespace Server.Engines.Instancing
 		private static void OnSkyVisitCommand( CommandEventArgs e )
 		{
 			Mobile from = e.Mobile;
+			if ( !Server.Spells.SpellHelper.CheckTravel( from, Server.Spells.TravelCheckType.RecallFrom ) )
+				return;
+
 			from.SendMessage( "Target the player whose sky dwelling you want to visit." );
 			from.Target = new SkyVisitTarget();
 		}
@@ -162,6 +165,9 @@ namespace Server.Engines.Instancing
 		private static void OnSkyDwellingCommand( CommandEventArgs e )
 		{
 			Mobile from = e.Mobile;
+			if ( !Server.Spells.SpellHelper.CheckTravel( from, Server.Spells.TravelCheckType.RecallFrom ) )
+				return;
+
 			Sky.SendOwnerToTheirInstance( from );
 		}
 

@@ -231,6 +231,10 @@ namespace Server.Misc
 		{
 			string world = "Sosaria";
 
+			// Never store an instance map: it may be freed or reused before the player returns.
+			if ( map != null && map.BaseMap != null )
+				map = map.BaseMap;
+
 			if ( Object.ReferenceEquals( map, Map.Lodor ) ){ world = "Lodor"; }
 			else if ( Object.ReferenceEquals( map, Map.Underworld ) ){ world = "Underworld"; }
 			else if ( Object.ReferenceEquals( map, Map.SerpentIsland ) ){ world = "SerpentIsland"; }

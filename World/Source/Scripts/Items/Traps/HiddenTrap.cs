@@ -639,8 +639,13 @@ namespace Server.Items
 							textLog = "an overcharged transporter pad";
 						}
 
-						Point3D p = Worlds.GetRandomLocation( m.Land, "land" );
-						Map map = Worlds.GetMyDefaultMap( m.Land );
+						Point3D p;
+						Map map = m.Map;
+						if ( !Server.Engines.Instancing.InstanceManager.TryGetRandomPlayablePoint( map, out p ) )
+						{
+							p = Worlds.GetRandomLocation( m.Land, "land" );
+							map = Worlds.GetMyDefaultMap( m.Land );
+						}
 
 						if ( p != Point3D.Zero )
 						{
@@ -956,18 +961,29 @@ namespace Server.Items
 						textSay = "A fall into a deep pit!";
 						textLog = "a deep pit";
 
+						// In an instance the pit lands inside it, with no saved way back to it.
+						Point3D instancePit;
+						bool inInstance = Server.Engines.Instancing.InstanceManager.TryGetRandomPlayablePoint( m.Map, out instancePit );
+
 						string sX = m.X.ToString();
 						string sY = m.Y.ToString();
 						string sZ = m.Z.ToString();
 						string sMap = Worlds.GetMyMapString( m.Map );
 						string sZone = Server.Lands.LandName( Server.Lands.GetLand( m.Map, m.Location, m.X, m.Y ) );
 
-						((PlayerMobile)m).CharacterPublicDoor = sX + "#" + sY + "#" + sZ + "#" + sMap + "#" + sZone;
+						if ( !inInstance )
+							((PlayerMobile)m).CharacterPublicDoor = sX + "#" + sY + "#" + sZ + "#" + sMap + "#" + sZone;
 
 						Effects.PlaySound( m.Location, m.Map, Utility.RandomList( 0x5D2,0x5D3 ) );
 						Point3D p = new Point3D( 2602, 3688, 100 );
 						Point3D b = new Point3D( 2602, 3688, 0 );
 						Map map = Map.Sosaria;
+
+						if ( inInstance )
+						{
+							p = b = instancePit;
+							map = m.Map;
+						}
 
 						Server.Mobiles.BaseCreature.TeleportPets( m, b, map );
 						m.MoveToWorld( p, map );

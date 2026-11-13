@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Server;
 using Server.Items;
 using Server.Mobiles;
@@ -28,9 +29,7 @@ namespace Server.Engines.Instancing
 
 		private const int CoreBaseMapCount = 7;
 		private const int ClonesPerBaseMap = 7;
-		private const int RuntimeRegionPriorityOffset = 1000;
 		private const int FunctionalItemMargin = 8;
-		private const int TeleporterEndpointMargin = 4;
 		private const int DungeonListingScanLimit = 85;
 			private const string ReturnSavePath = "Saves/Instancing/DungeonReturns.bin";
 
@@ -42,14 +41,13 @@ namespace Server.Engines.Instancing
 			"the Ice Fiend Lair"
 		};
 
-		private static readonly int[] BadEntranceOrExitDungeonIndexes = new int[]
+		// Dungeons taken out of instancing, by DisplayName (catalog indexes shift).
+		private static readonly string[] BadEntranceOrExitDungeons = new string[]
 		{
-			75, 74, 76, 40, 25, 28, 30, 32, 6, 38, 36
 		};
 
-		private static readonly int[] BrokenDungeonIndexes = new int[]
+		private static readonly string[] BrokenDungeons = new string[]
 		{
-			81, 60, 62, 63, 64, 65, 66, 67, 70, 71, 77, 78, 79, 21, 22, 23, 26, 27, 29, 31, 39, 1, 10, 11, 13, 17, 18
 		};
 
 		private const string BadEntranceOrExitReason = "entrance location incorrect or exit tiles incorrect";
@@ -79,14 +77,23 @@ namespace Server.Engines.Instancing
 			m_ReturnPersistenceConfigured = true;
 			EventSink.WorldLoad += new WorldLoadEventHandler( OnWorldLoad );
 			EventSink.WorldSave += new WorldSaveEventHandler( OnWorldSave );
+			EventSink.ServerStarted += new ServerStartedEventHandler( OnServerStarted );
 		}
 
-			private void OnWorldLoad()
-			{
-				m_Definitions = null;
-				m_DecorationTeleportersByMap.Clear();
-				LoadReturnRecords();
-			}
+		private void OnServerStarted()
+		{
+			GetDefinitions();
+		}
+
+		private void OnWorldLoad()
+		{
+			m_Definitions = null;
+			m_DecorationTeleportersByMap.Clear();
+			LoadReturnRecords();
+
+			// Instances aren't saved, but what stood on their maps was.
+			ClearPoolMap( null, null );
+		}
 
 		private void OnWorldSave( WorldSaveEventArgs e )
 		{
@@ -201,6 +208,60 @@ namespace Server.Engines.Instancing
 		// Reclaim an emptied dungeon fairly quickly.
 		public override TimeSpan UnloadAfter { get { return TimeSpan.FromMinutes( 5 ); } }
 
+		// Dungeons register their own region copies; nothing else on a pool map is playable.
+		public override bool UsesFootprintRegion { get { return false; } }
+
+		// Walking off the edge leaves only dungeons with no exit teleporter; elsewhere it's a wall.
+		public override void OnWalkIntoVoid( Mobile m, Map map )
+		{
+			if ( !m.Player )
+				return;
+
+			DungeonInstanceSettings settings = GetSettingsForMap( map );
+			if ( settings == null || settings.Definition == null || !settings.Definition.WalkOutExits )
+				return;
+
+			Timer.DelayCall( TimeSpan.Zero, delegate
+			{
+				if ( !m.Deleted && Object.ReferenceEquals( m.Map, map ) )
+					LeaveInstance( m );
+			} );
+		}
+
+		public override bool TryGetRandomPlayablePoint( Map map, out Point3D p )
+		{
+			DungeonInstanceSettings settings = GetSettingsForMap( map );
+			if ( settings != null && settings.Definition != null && settings.Definition.TryGetRandomStandable( map, out p ) )
+				return true;
+
+			p = settings != null && settings.Definition != null ? settings.Definition.Landing : Point3D.Zero;
+			return settings != null && settings.Definition != null;
+		}
+
+		// Drop return records of players who left by recall or gate, so no later exit uses an old gate.
+		protected override void OnSweep()
+		{
+			List<Serial> stale = null;
+
+			foreach ( KeyValuePair<Serial, DungeonReturnInfo> kvp in m_ReturnsByPlayer )
+			{
+				Mobile m = World.FindMobile( kvp.Key );
+				if ( m != null && m.NetState != null && !IsPoolMap( m.Map ) )
+				{
+					if ( stale == null )
+						stale = new List<Serial>();
+
+					stale.Add( kvp.Key );
+				}
+			}
+
+			if ( stale != null )
+			{
+				for ( int i = 0; i < stale.Count; i++ )
+					m_ReturnsByPlayer.Remove( stale[i] );
+			}
+		}
+
 		// ----- Pool / terrain -----
 
 		public override void RegisterMaps()
@@ -259,7 +320,7 @@ namespace Server.Engines.Instancing
 
 		public static Map NormalizeExternalMap( Map map )
 		{
-			if ( map != null && Instance.IsPoolMap( map ) && map.BaseMap != null )
+			if ( map != null && map.BaseMap != null )
 				return map.BaseMap;
 
 			return map;
@@ -284,6 +345,7 @@ namespace Server.Engines.Instancing
 
 			List<DungeonInstanceDefinition> list = new List<DungeonInstanceDefinition>();
 			HashSet<string> listedDungeonNames = BuildListedDungeonNames();
+			CatalogIndex catalog = CatalogIndex.Build();
 
 			foreach ( Region region in Region.Regions )
 			{
@@ -291,10 +353,10 @@ namespace Server.Engines.Instancing
 				if ( br == null || br.Map == null || br.Map == Map.Internal || br.Area == null || br.Area.Length == 0 )
 					continue;
 
-				if ( !IsCatalogRegionForDefinitionList( br ) || !IsListedDungeonDefinition( br, listedDungeonNames ) )
+				if ( !IsDungeonCatalogRegion( br ) || !IsListedDungeonDefinition( br, listedDungeonNames ) )
 					continue;
 
-				list.Add( new DungeonInstanceDefinition( br ) );
+				list.Add( new DungeonInstanceDefinition( br, catalog ) );
 			}
 
 			list.Sort( delegate( DungeonInstanceDefinition a, DungeonInstanceDefinition b )
@@ -348,7 +410,7 @@ namespace Server.Engines.Instancing
 				names.Add( normalized );
 		}
 
-		private static bool IsCatalogRegionForDefinitionList( BaseRegion region )
+		private static bool IsDungeonCatalogRegion( BaseRegion region )
 		{
 			return region is DungeonRegion || region is BardDungeonRegion || region is CaveRegion || region is DeadRegion;
 		}
@@ -399,20 +461,15 @@ namespace Server.Engines.Instancing
 			return name;
 		}
 
-		public static DungeonInstanceAvailability GetDefinitionAvailability( int index )
+		public static DungeonInstanceAvailability GetDefinitionAvailability( string displayName )
 		{
-			if ( ContainsIndex( BrokenDungeonIndexes, index ) )
+			if ( ContainsName( BrokenDungeons, displayName ) )
 				return DungeonInstanceAvailability.Broken;
 
-			if ( ContainsIndex( BadEntranceOrExitDungeonIndexes, index ) )
+			if ( ContainsName( BadEntranceOrExitDungeons, displayName ) )
 				return DungeonInstanceAvailability.BadEntranceOrExit;
 
 			return DungeonInstanceAvailability.Allowed;
-		}
-
-		public static bool IsDefinitionAvailable( int index )
-		{
-			return GetDefinitionAvailability( index ) == DungeonInstanceAvailability.Allowed;
 		}
 
 		public static string GetAvailabilityLabel( DungeonInstanceAvailability availability )
@@ -454,14 +511,11 @@ namespace Server.Engines.Instancing
 			}
 		}
 
-		private static bool ContainsIndex( int[] indexes, int index )
+		private static bool ContainsName( string[] names, string name )
 		{
-			if ( indexes == null )
-				return false;
-
-			for ( int i = 0; i < indexes.Length; i++ )
+			for ( int i = 0; i < names.Length; i++ )
 			{
-				if ( indexes[i] == index )
+				if ( String.Equals( names[i], name, StringComparison.OrdinalIgnoreCase ) )
 					return true;
 			}
 
@@ -630,6 +684,14 @@ namespace Server.Engines.Instancing
 			return true;
 		}
 
+		public bool SendToDefaultInstance( Mobile from, Map returnMap, Point3D returnPoint )
+		{
+			if ( from == null )
+				return false;
+
+			return SendToConfiguredInstance( from, OwnerKey( from ), GetDefaultDefinition(), Difficulty.Normal, returnMap, returnPoint, InstanceOwnerKind.Mobile );
+		}
+
 		private bool SendToInstanceAndRecordReturn( Mobile from, Instance inst, DungeonInstanceSettings settings )
 		{
 			if ( !SendToInstance( from, inst ) )
@@ -637,6 +699,25 @@ namespace Server.Engines.Instancing
 
 			RegisterReturn( from, inst, settings );
 			return true;
+		}
+
+		// For staff audits: builds an instance without sending anyone in, ignoring availability.
+		public Instance BuildAuditInstance( DungeonInstanceDefinition definition, Serial key )
+		{
+			Instance old = GetByKey( key );
+			if ( old != null )
+				FreeInstance( old );
+
+			Instance inst = GetOrCreateByKey( key, InstanceOwnerKind.PublicGateway );
+			m_SettingsByOwner[key] = new DungeonInstanceSettings( definition, Difficulty.Normal );
+
+			if ( !EnsureLive( inst ) )
+			{
+				FreeInstance( inst );
+				return null;
+			}
+
+			return inst;
 		}
 
 			public bool CleanupInstance( Serial instanceKey )
@@ -688,8 +769,7 @@ namespace Server.Engines.Instancing
 				if ( map == null )
 					return;
 
-				EjectPlayerCorpses( inst, map );
-
+				
 				List<Mobile> players = null;
 				foreach ( NetState ns in NetState.Instances )
 				{
@@ -712,9 +792,9 @@ namespace Server.Engines.Instancing
 					if ( m == null || m.Deleted || m.Map != map )
 						continue;
 
-					DungeonReturnInfo info = GetReturnInfo( m );
-					Map exitMap = info != null && info.ReturnMap != null ? info.ReturnMap : GetReturnMap( inst );
-					Point3D exitPoint = info != null && info.ReturnMap != null ? info.ReturnPoint : GetReturnPoint( inst );
+					DungeonReturnInfo info = GetReturnInfoFor( m, inst );
+					Map exitMap = info != null ? info.ReturnMap : GetReturnMap( inst );
+					Point3D exitPoint = info != null ? info.ReturnPoint : GetReturnPoint( inst );
 					exitMap = NormalizeExternalMap( exitMap );
 
 					BaseCreature.TeleportPets( m, exitPoint, exitMap, false );
@@ -723,61 +803,12 @@ namespace Server.Engines.Instancing
 				}
 			}
 
-		private void EjectPlayerCorpses( Instance inst, Map liveMap )
+		// Where a player's corpse or pet goes when its instance is cleared.
+		private void GetReturnLocationFor( Instance inst, Mobile owner, out Map returnMap, out Point3D returnPoint )
 		{
-			if ( inst == null || liveMap == null )
-				return;
+			DungeonReturnInfo info = GetReturnInfoFor( owner, inst );
 
-			List<Corpse> corpses = null;
-
-			foreach ( Item item in World.Items.Values )
-			{
-				if ( item == null || item.Deleted || item.Map != liveMap || item.Parent != null )
-					continue;
-
-				Corpse corpse = item as Corpse;
-				if ( corpse == null )
-					continue;
-
-				if ( corpses == null )
-					corpses = new List<Corpse>();
-
-				corpses.Add( corpse );
-			}
-
-			if ( corpses == null )
-				return;
-
-			for ( int i = 0; i < corpses.Count; i++ )
-			{
-				Corpse corpse = corpses[i];
-				if ( corpse == null || corpse.Deleted || corpse.Map != liveMap )
-					continue;
-
-				Mobile owner = corpse.Owner;
-				if ( owner != null && owner.Player && corpse.TotalItems > 0 )
-				{
-					Map returnMap;
-					Point3D returnPoint;
-					GetCorpseReturnLocation( inst, owner, out returnMap, out returnPoint );
-
-					if ( returnMap != null )
-					{
-						RemoveTrackedInstanceItem( inst, corpse );
-						corpse.MoveToWorld( returnPoint, returnMap );
-						continue;
-					}
-				}
-
-				corpse.Delete();
-			}
-		}
-
-		private void GetCorpseReturnLocation( Instance inst, Mobile owner, out Map returnMap, out Point3D returnPoint )
-		{
-			DungeonReturnInfo info = GetReturnInfo( owner );
-
-			if ( info != null && info.ReturnMap != null )
+			if ( info != null )
 			{
 				returnMap = NormalizeExternalMap( info.ReturnMap );
 				returnPoint = info.ReturnPoint;
@@ -823,21 +854,21 @@ namespace Server.Engines.Instancing
 			return String.Format( "Parked: {0}", dungeon );
 		}
 
-			public override bool LeaveInstance( Mobile m )
-			{
-				if ( m == null || !IsPoolMap( m.Map ) )
-					return false;
+		public override bool LeaveInstance( Mobile m )
+		{
+			if ( m == null || !IsPoolMap( m.Map ) )
+				return false;
 
-				DungeonReturnInfo info = GetReturnInfo( m );
-				Map exitMap = info != null && info.ReturnMap != null ? info.ReturnMap : GetExitMap( m );
-				Point3D exitPoint = info != null && info.ReturnMap != null ? info.ReturnPoint : GetExitPoint( m );
-				exitMap = NormalizeExternalMap( exitMap );
+			DungeonReturnInfo info = GetReturnInfoFor( m, GetLiveInstance( m.Map ) );
+			Map exitMap = info != null ? info.ReturnMap : GetExitMap( m );
+			Point3D exitPoint = info != null ? info.ReturnPoint : GetExitPoint( m );
+			exitMap = NormalizeExternalMap( exitMap );
 
-				BaseCreature.TeleportPets( m, exitPoint, exitMap, false );
-				m.MoveToWorld( exitPoint, exitMap );
-				ClearReturn( m );
-				return true;
-			}
+			BaseCreature.TeleportPets( m, exitPoint, exitMap, false );
+			m.MoveToWorld( exitPoint, exitMap );
+			ClearReturn( m );
+			return true;
+		}
 
 		public override void OnLogin( Mobile m )
 		{
@@ -862,7 +893,11 @@ namespace Server.Engines.Instancing
 			Instance privateInst = GetByOwner( m );
 			if ( privateInst != null )
 			{
-				SendToInstance( m, privateInst );
+				if ( Object.ReferenceEquals( privateInst.LiveMap, m.Map ) )
+					privateInst.Touch();
+				else
+					SendToInstance( m, privateInst );
+
 				return;
 			}
 
@@ -941,6 +976,19 @@ namespace Server.Engines.Instancing
 
 			DungeonReturnInfo info;
 			m_ReturnsByPlayer.TryGetValue( m.Serial, out info );
+			return info;
+		}
+
+		// Ignores a return record left over from an earlier visit.
+		private DungeonReturnInfo GetReturnInfoFor( Mobile m, Instance inst )
+		{
+			DungeonReturnInfo info = GetReturnInfo( m );
+			if ( info == null || info.ReturnMap == null )
+				return null;
+
+			if ( inst != null && info.InstanceKey != inst.OwnerSerial )
+				return null;
+
 			return info;
 		}
 
@@ -1034,133 +1082,230 @@ namespace Server.Engines.Instancing
 		{
 			CleanupRuntime( inst.OwnerSerial );
 
-				DungeonInstanceSettings settings = GetSettings( inst );
-				if ( settings == null || settings.Definition == null || map == null )
-					return;
+			DungeonInstanceSettings settings = GetSettings( inst );
+			if ( settings == null || settings.Definition == null || map == null )
+				return;
 
-				ClearTrackedInstanceItems( inst );
-				ClearStrayMobiles( map );
+			ClearTrackedInstanceItems( inst );
+			ClearPoolMap( map, inst );
 
-				m_SettingsByLiveMap[map.MapIndex] = settings;
+			m_SettingsByLiveMap[map.MapIndex] = settings;
 
-			RuntimeDungeonRegion region = new RuntimeDungeonRegion( this, inst, settings, map );
-			region.Register();
-
+			DungeonInstanceDefinition definition = settings.Definition;
+			List<BaseRegion> regions = new List<BaseRegion>();
 			List<SpawnEntry> entries = new List<SpawnEntry>();
-			SpawnEntry[] source = settings.Definition.Spawns;
 
-			if ( source != null )
+			for ( int i = 0; i < definition.ConnectedRegions.Length; i++ )
 			{
-				for ( int i = 0; i < source.Length; i++ )
-				{
-					SpawnEntry src = source[i];
-					if ( src == null || src.Definition == null || src.Max <= 0 )
-						continue;
+				BaseRegion source = definition.ConnectedRegions[i];
+				BaseRegion copy = CopyRegion( source, map, definition.GetRegionArea( i ) );
+				if ( copy == null )
+					continue;
 
-					SpawnEntry entry = new SpawnEntry(
-						NextRuntimeSpawnId(),
-						region,
-						src.HomeLocation,
-						src.HomeRange,
-						src.Direction,
-						src.Definition,
-						src.Max,
-						src.MinSpawnTime,
-						src.MaxSpawnTime );
-
-					entries.Add( entry );
-				}
+				copy.Register();
+				copy.Spawns = CopySpawns( source, copy, entries );
+				regions.Add( copy );
 			}
-
-			region.Spawns = entries.ToArray();
 
 			for ( int i = 0; i < entries.Count; i++ )
 				entries[i].Respawn();
 
-			CloneWorldContent( inst, map, settings.Definition );
+			CloneWorldContent( inst, map, definition );
 
-			RuntimeDungeonState state = new RuntimeDungeonState( settings, region, entries.ToArray(), map, settings.Definition.Area );
+			RuntimeDungeonState state = new RuntimeDungeonState( settings, regions, entries.ToArray(), map, definition.Area );
 			m_Runtimes[inst.OwnerSerial] = state;
 			state.ApplyDifficulty();
 			state.StartScaler();
 		}
 
+		// Same type, name and settings as the real region, so light, music and region checks match.
+		private static BaseRegion CopyRegion( BaseRegion source, Map map, Rectangle3D[] area )
+		{
+			BaseRegion copy;
+			DungeonRegion dungeon = source as DungeonRegion;
+
+			if ( dungeon != null )
+			{
+				DungeonRegion d = new DungeonRegion( source.Name, map, source.Priority, area );
+				d.EntranceLocation = dungeon.EntranceLocation;
+				d.EntranceMap = dungeon.EntranceMap;
+				copy = d;
+			}
+			else if ( source is CaveRegion )
+				copy = new CaveRegion( source.Name, map, source.Priority, area );
+			else if ( source is DeadRegion )
+				copy = new DeadRegion( source.Name, map, source.Priority, area );
+			else if ( source is BardDungeonRegion )
+				copy = new BardDungeonRegion( source.Name, map, source.Priority, area );
+			else if ( source is PublicRegion )
+				copy = new PublicRegion( source.Name, map, source.Priority, area );
+			else
+				return null;
+
+			copy.RuneName = source.RuneName;
+			copy.GoLocation = source.GoLocation;
+			copy.Music = source.Music;
+			copy.SpawnZLevel = source.SpawnZLevel;
+			copy.NoLogoutDelay = source.NoLogoutDelay;
+			copy.ExcludeFromParentSpawns = source.ExcludeFromParentSpawns;
+
+			return copy;
+		}
+
+		private SpawnEntry[] CopySpawns( BaseRegion source, BaseRegion copy, List<SpawnEntry> all )
+		{
+			SpawnEntry[] src = source.Spawns;
+			if ( src == null )
+				return null;
+
+			List<SpawnEntry> list = new List<SpawnEntry>();
+
+			for ( int i = 0; i < src.Length; i++ )
+			{
+				SpawnEntry e = src[i];
+				if ( e == null || e.Definition == null || e.Max <= 0 )
+					continue;
+
+				SpawnEntry entry = new SpawnEntry( NextRuntimeSpawnId(), copy, e.HomeLocation, e.HomeRange, e.Direction,
+					e.Definition, e.Max, e.MinSpawnTime, e.MaxSpawnTime );
+
+				list.Add( entry );
+				all.Add( entry );
+			}
+
+			return list.ToArray();
+		}
+
+		// Copies everything fixed in place (not loose items or spawner output), remapping item references to the copies.
 		private void CloneWorldContent( Instance inst, Map map, DungeonInstanceDefinition definition )
 		{
-			List<Item> sources = null;
+			List<Item> sources = new List<Item>();
 
 			foreach ( Item item in World.Items.Values )
 			{
-				if ( item == null || item.Deleted || item.Parent != null )
+				if ( item == null || item.Deleted || item.Parent != null || !Object.ReferenceEquals( item.Map, definition.Map ) )
 					continue;
 
-				if ( !Object.ReferenceEquals( item.Map, definition.Map ) || !definition.ContainsFunctionalItem( item.Location ) )
-					continue;
-
-				if ( item is PremiumSpawner || item is Spawner )
-				{
-					if ( !definition.Contains( item.Location ) )
-						continue;
-
-					if ( sources == null )
-						sources = new List<Item>();
-
+				if ( ShouldCloneWorldItem( item, definition ) )
 					sources.Add( item );
-				}
-				else if ( ShouldCloneDoor( item as BaseDoor, definition ) )
-				{
-					if ( sources == null )
-						sources = new List<Item>();
-
-					sources.Add( item );
-				}
-				else if ( ShouldCloneTeleporter( item, definition ) )
-				{
-					if ( sources == null )
-						sources = new List<Item>();
-
-					sources.Add( item );
-				}
 			}
 
-			Dictionary<BaseDoor, BaseDoor> doors = new Dictionary<BaseDoor, BaseDoor>();
+			Dictionary<Item, Item> clones = new Dictionary<Item, Item>();
 
-			if ( sources != null )
+			for ( int i = 0; i < sources.Count; i++ )
 			{
-				for ( int i = 0; i < sources.Count; i++ )
-				{
-					Item source = sources[i];
-					Item clone = CloneWorldItem( source );
-					if ( clone == null )
-						continue;
+				Item clone = CloneWorldItem( sources[i], definition );
+				if ( clone != null )
+					clones[sources[i]] = clone;
+			}
 
-					RetargetClone( source, clone, map, definition );
+			foreach ( KeyValuePair<Item, Item> kvp in clones )
+			{
+				Item source = kvp.Key;
+				Item clone = kvp.Value;
 
-					BaseDoor sourceDoor = source as BaseDoor;
-					BaseDoor cloneDoor = clone as BaseDoor;
-					if ( sourceDoor != null && cloneDoor != null )
-						doors[sourceDoor] = cloneDoor;
+				RemapItemReferences( clone, clones );
+				clone = ApplyDestinationRule( clone, map, definition );
 
-					clone.MoveToWorld( source.Location, map );
-					inst.Items.Add( new InstanceItem( clone, source.Location ) );
-					StartClonedSpawner( source, clone );
-				}
+				clone.MoveToWorld( source.Location, map );
+				inst.Items.Add( new InstanceItem( clone, source.Location ) );
+				StartClonedSpawner( source, clone );
 			}
 
 			CloneDecoratedTeleporters( inst, map, definition );
+		}
 
-			foreach ( KeyValuePair<BaseDoor, BaseDoor> kvp in doors )
+		// Portals that send players to another map or a random spot in the real world, skipping the
+		// gate; a real-world mirror could also pick an instance's copy as its destination.
+		private static readonly string[] UncopiedPortalTypes = new string[]
+		{
+			"MagicMirror", "RandomExit", "PrisonExit", "SkullGate", "SerpentPillars", "GateMoon",
+			"RaceTeleporter", "BasementDoor", "ElementalExit"
+		};
+
+		private static bool ShouldCloneWorldItem( Item item, DungeonInstanceDefinition definition )
+		{
+			if ( item is Spawner || item is PremiumSpawner )
+				return definition.Contains( item.Location );
+
+			if ( item is BaseDoor || IsTeleportItem( item ) )
+				return definition.ContainsFunctionalItem( item.Location );
+
+			if ( !definition.Contains( item.Location ) )
+				return false;
+
+			if ( item.Movable || item.Spawner != null )
+				return false;
+
+			if ( item is Corpse || item is BaseMulti || item is DungeonInstanceGate || item is DungeonInstanceExitTeleporter || item is DungeonEntrance )
+				return false;
+
+			if ( Array.IndexOf( UncopiedPortalTypes, item.GetType().Name ) >= 0 )
+				return false;
+
+			// Components come with their addon when it can be copied.
+			AddonComponent component = item as AddonComponent;
+			if ( component != null && component.Addon != null && IsCloneableAddon( component.Addon, definition ) )
+				return false;
+
+			return true;
+		}
+
+		private static bool IsTeleportItem( Item item )
+		{
+			return item is Teleporter || item is moongates || item is QuestTeleporter || item is ThruDoor;
+		}
+
+		private static bool IsCloneableAddon( BaseAddon addon, DungeonInstanceDefinition definition )
+		{
+			return Object.ReferenceEquals( addon.Map, definition.Map ) && addon.Parent == null && definition.Contains( addon.Location )
+				&& addon.GetType().GetConstructor( Type.EmptyTypes ) != null;
+		}
+
+		// Internal destinations are retargeted to the instance; any other (another map, surface, town) becomes an exit.
+		private static Item ApplyDestinationRule( Item clone, Map map, DungeonInstanceDefinition definition )
+		{
+			Map destinationMap;
+			Point3D destination;
+
+			if ( !TryGetTeleportDestination( clone, out destinationMap, out destination ) )
+				return clone;
+
+			if ( IsInternalDestination( definition.Map, destinationMap, destination, definition ) )
 			{
-				BaseDoor sourceDoor = kvp.Key;
-				BaseDoor cloneDoor = kvp.Value;
-				BaseDoor cloneLink;
+				SetTeleportDestinationMap( clone, map );
+				return clone;
+			}
 
-				if ( sourceDoor.Link != null && doors.TryGetValue( sourceDoor.Link, out cloneLink ) )
-					cloneDoor.Link = cloneLink;
-				else
-					cloneDoor.Link = null;
+			// A door graphic is impassable, so a magic door's exit takes the plain exit tile.
+			Item exit = clone is BaseDoor ? new DungeonInstanceExitTeleporter() : new DungeonInstanceExitTeleporter( clone.ItemID );
+			clone.Delete();
+			return exit;
+		}
+
+		private static void RemapItemReferences( Item clone, Dictionary<Item, Item> clones )
+		{
+			PropertyInfo[] props = clone.GetType().GetProperties();
+
+			for ( int i = 0; i < props.Length; i++ )
+			{
+				PropertyInfo prop = props[i];
+				if ( !prop.CanRead || !prop.CanWrite || !typeof( Item ).IsAssignableFrom( prop.PropertyType ) || prop.GetIndexParameters().Length > 0 )
+					continue;
+
+				try
+				{
+					Item value = prop.GetValue( clone, null ) as Item;
+					Item mapped;
+
+					if ( value != null && clones.TryGetValue( value, out mapped ) && prop.PropertyType.IsInstanceOfType( mapped ) )
+						prop.SetValue( clone, mapped, null );
+				}
+				catch
+				{
 				}
 			}
+		}
 
 			private void CloneDecoratedTeleporters( Instance inst, Map map, DungeonInstanceDefinition definition )
 			{
@@ -1252,33 +1397,7 @@ namespace Server.Engines.Instancing
 				return false;
 			}
 
-			private static bool ShouldCloneTeleporter( Item item, DungeonInstanceDefinition definition )
-			{
-				Map destinationMap;
-				Point3D destination;
-
-				return TryGetTeleportDestination( item, out destinationMap, out destination )
-					&& IsInternalDestination( item, destinationMap, destination, definition );
-			}
-
-		private static bool ShouldCloneDoor( BaseDoor door, DungeonInstanceDefinition definition )
-		{
-			if ( door == null )
-				return false;
-
-			ThruDoor thruDoor = door as ThruDoor;
-			if ( thruDoor == null )
-				return true;
-
-			Map destinationMap;
-			Point3D destination;
-			if ( !TryGetTeleportDestination( thruDoor, out destinationMap, out destination ) )
-				return true;
-
-			return IsInternalDestination( thruDoor, destinationMap, destination, definition );
-		}
-
-		private static bool TryGetTeleportDestination( Item item, out Map destinationMap, out Point3D destination )
+		internal static bool TryGetTeleportDestination( Item item, out Map destinationMap, out Point3D destination )
 		{
 			destinationMap = null;
 			destination = Point3D.Zero;
@@ -1318,36 +1437,20 @@ namespace Server.Engines.Instancing
 			return false;
 		}
 
-		private static bool IsInternalDestination( Item source, Map destinationMap, Point3D destination, DungeonInstanceDefinition definition )
+		private static bool IsInternalDestination( Map sourceMap, Map destinationMap, Point3D destination, DungeonInstanceDefinition definition )
 		{
-			if ( source == null || definition == null || destination == Point3D.Zero )
+			if ( sourceMap == null || definition == null || destination == Point3D.Zero )
 				return false;
 
-			return IsInternalDestination( source.Map, destinationMap, destination, definition );
+			Map resolvedMap = ResolveDestinationMap( sourceMap, destinationMap );
+			return Object.ReferenceEquals( resolvedMap, definition.Map ) && definition.Contains( destination );
 		}
 
-			private static bool IsInternalDestination( Map sourceMap, Map destinationMap, Point3D destination, DungeonInstanceDefinition definition )
-			{
-				if ( sourceMap == null || definition == null || destination == Point3D.Zero )
-					return false;
-
-				Map resolvedMap = ResolveDestinationMap( sourceMap, destinationMap );
-				return resolvedMap == definition.Map && definition.ContainsInstanceDestination( resolvedMap, destination );
-			}
-
-			private static bool ShouldCloneExitTeleporter( Map sourceMap, Map destinationMap, Point3D destination, DungeonInstanceDefinition definition )
-			{
-				if ( sourceMap == null || definition == null || destination == Point3D.Zero )
-					return false;
-
-				Map resolvedMap = ResolveDestinationMap( sourceMap, destinationMap );
-				return resolvedMap != definition.Map || !definition.ContainsInstanceDestination( resolvedMap, destination );
-			}
-
-			private static Map ResolveDestinationMap( Item source, Map destinationMap )
-			{
-				return ResolveDestinationMap( source != null ? source.Map : null, destinationMap );
-			}
+		private static bool ShouldCloneExitTeleporter( Map sourceMap, Map destinationMap, Point3D destination, DungeonInstanceDefinition definition )
+		{
+			return sourceMap != null && definition != null && destination != Point3D.Zero
+				&& !IsInternalDestination( sourceMap, destinationMap, destination, definition );
+		}
 
 		private static Map ResolveDestinationMap( Map sourceMap, Map destinationMap )
 		{
@@ -1355,19 +1458,6 @@ namespace Server.Engines.Instancing
 				return sourceMap;
 
 			return destinationMap;
-		}
-
-		private static void RetargetClone( Item source, Item clone, Map map, DungeonInstanceDefinition definition )
-		{
-			Map destinationMap;
-			Point3D destination;
-			if ( !TryGetTeleportDestination( clone, out destinationMap, out destination ) )
-				return;
-
-			if ( !IsInternalDestination( source, destinationMap, destination, definition ) )
-				return;
-
-			SetTeleportDestinationMap( clone, map );
 		}
 
 		private static void RetargetClone( Map sourceMap, Item clone, Map map, DungeonInstanceDefinition definition )
@@ -1670,34 +1760,65 @@ namespace Server.Engines.Instancing
 
 		private static Item CloneItem( Item source )
 		{
-			Type t = source.GetType();
-			System.Reflection.ConstructorInfo c = t.GetConstructor( Type.EmptyTypes );
+			ConstructorInfo c = source.GetType().GetConstructor( Type.EmptyTypes );
+			if ( c == null )
+				return null;
 
-			if ( c != null )
+			try
 			{
-				try
-				{
-					object o = c.Invoke( null );
-					Item newItem = o as Item;
-					if ( newItem != null )
-					{
-						Server.Commands.Dupe.CopyProperties( newItem, source );
-						return newItem;
-					}
-				}
-				catch { }
+				Item newItem = c.Invoke( null ) as Item;
+				if ( newItem != null )
+					CopyItemProperties( newItem, source );
+
+				return newItem;
 			}
-			return null;
+			catch
+			{
+				return null;
+			}
 		}
 
-		private static Item CloneWorldItem( Item source )
+		// Dupe.CopyProperties minus placement: setting Map or Location would put the copy on the real map.
+		private static readonly string[] UncopiedProperties = new string[]
+		{
+			"Map", "Location", "X", "Y", "Z", "Parent", "Spawner"
+		};
+
+		private static void CopyItemProperties( Item dest, Item src )
+		{
+			PropertyInfo[] props = src.GetType().GetProperties();
+
+			for ( int i = 0; i < props.Length; i++ )
+			{
+				PropertyInfo prop = props[i];
+				if ( !prop.CanRead || !prop.CanWrite || prop.GetIndexParameters().Length > 0 || Array.IndexOf( UncopiedProperties, prop.Name ) >= 0 )
+					continue;
+
+				try
+				{
+					prop.SetValue( dest, prop.GetValue( src, null ), null );
+				}
+				catch
+				{
+				}
+			}
+		}
+
+		private static Item CloneAsStatic( Item source )
+		{
+			Static copy = new Static( source.ItemID );
+			copy.Hue = source.Hue;
+			copy.Name = source.Name;
+			copy.Light = source.Light;
+			copy.Visible = source.Visible;
+			return copy;
+		}
+
+		private static Item CloneWorldItem( Item source, DungeonInstanceDefinition definition )
 		{
 			BaseDoor door = source as BaseDoor;
 			if ( door != null )
 				return CloneDoor( door );
-
-			if ( source is Teleporter || source is moongates || source is QuestTeleporter )
-				return CloneItem( source );
 
 			PremiumSpawner premium = source as PremiumSpawner;
 			if ( premium != null )
@@ -1744,7 +1865,15 @@ namespace Server.Engines.Instancing
 				return clone;
 			}
 
-			return null;
+			BaseAddon addon = source as BaseAddon;
+			if ( addon != null )
+				return IsCloneableAddon( addon, definition ) ? CloneItem( addon ) : null;
+
+			if ( source is AddonComponent )
+				return CloneAsStatic( source );
+
+			Item copy = CloneItem( source );
+			return copy != null ? copy : CloneAsStatic( source );
 		}
 
 		private static Item CloneDoor( BaseDoor source )
@@ -1753,18 +1882,17 @@ namespace Server.Engines.Instancing
 			if ( clone != null )
 				return clone;
 
-			System.Reflection.ConstructorInfo c = source.GetType().GetConstructor( new Type[] { typeof( DoorFacing ) } );
+			ConstructorInfo c = source.GetType().GetConstructor( new Type[] { typeof( DoorFacing ) } );
 			if ( c == null )
 				return null;
 
 			try
 			{
-				object o = c.Invoke( new object[] { GuessDoorFacing( source ) } );
-				BaseDoor door = o as BaseDoor;
+				BaseDoor door = c.Invoke( new object[] { GuessDoorFacing( source ) } ) as BaseDoor;
 				if ( door == null )
 					return null;
 
-				Server.Commands.Dupe.CopyProperties( door, source );
+				CopyItemProperties( door, source );
 				return door;
 			}
 			catch
@@ -1819,17 +1947,16 @@ namespace Server.Engines.Instancing
 
 		protected override void OnFreeInstance( Instance inst, Map liveMap )
 		{
-			EjectPlayerCorpses( inst, liveMap );
-
 			CleanupRuntime( inst.OwnerSerial );
 
-			m_SettingsByOwner.Remove( inst.OwnerSerial );
-
+			// Clear before dropping the settings: clearing reads them for return points.
 			if ( liveMap != null )
 			{
+				ClearPoolMap( liveMap, inst );
 				m_SettingsByLiveMap.Remove( liveMap.MapIndex );
-				ClearStrayMobiles( liveMap );
 			}
+
+			m_SettingsByOwner.Remove( inst.OwnerSerial );
 		}
 
 		private void CleanupRuntime( Serial owner )
@@ -1842,28 +1969,183 @@ namespace Server.Engines.Instancing
 			}
 		}
 
-		private static void ClearStrayMobiles( Map liveMap )
+		// Clears a pool map (null: all of them); player corpses and tamed pets go to their owner's return point.
+		private void ClearPoolMap( Map map, Instance inst )
 		{
-			List<Mobile> strays = null;
-
-			foreach ( Mobile m in World.Mobiles.Values )
+			List<Item> items = new List<Item>();
+			foreach ( Item item in World.Items.Values )
 			{
-				if ( m == null || m.Deleted || m.Map != liveMap )
-					continue;
-
-				if ( m is BaseCreature && !m.Player )
-				{
-					if ( strays == null )
-						strays = new List<Mobile>();
-
-					strays.Add( m );
-				}
+				if ( item != null && !item.Deleted && item.Parent == null && IsClearTarget( item.Map, map ) )
+					items.Add( item );
 			}
 
-			if ( strays != null )
+			List<Mobile> mobiles = new List<Mobile>();
+			foreach ( Mobile m in World.Mobiles.Values )
 			{
-				for ( int i = 0; i < strays.Count; i++ )
-					strays[i].Delete();
+				if ( m != null && !m.Deleted && !m.Player && IsClearTarget( m.Map, map ) )
+					mobiles.Add( m );
+			}
+
+			Map returnMap;
+			Point3D returnPoint;
+
+			for ( int i = 0; i < items.Count; i++ )
+			{
+				Item item = items[i];
+				if ( item.Deleted )
+					continue;
+
+				Corpse corpse = item as Corpse;
+				if ( corpse != null && corpse.Owner != null && corpse.Owner.Player && corpse.TotalItems > 0 )
+				{
+					GetReturnLocationFor( inst, corpse.Owner, out returnMap, out returnPoint );
+					RemoveTrackedInstanceItem( inst, corpse );
+					corpse.MoveToWorld( returnPoint, returnMap );
+					continue;
+				}
+
+				item.Delete();
+			}
+
+			for ( int i = 0; i < mobiles.Count; i++ )
+			{
+				Mobile m = mobiles[i];
+				if ( m.Deleted )
+					continue;
+
+				BaseCreature pet = m as BaseCreature;
+				if ( pet != null && pet.Controlled && !pet.Summoned && pet.ControlMaster != null )
+				{
+					GetReturnLocationFor( inst, pet.ControlMaster, out returnMap, out returnPoint );
+					pet.ControlTarget = null;
+					pet.ControlOrder = OrderType.Stay;
+					pet.MoveToWorld( returnPoint, returnMap );
+					continue;
+				}
+
+				m.Delete();
+			}
+		}
+
+		private bool IsClearTarget( Map itemMap, Map map )
+		{
+			if ( itemMap == null )
+				return false;
+
+			return map != null ? Object.ReferenceEquals( itemMap, map ) : IsPoolMap( itemMap );
+		}
+
+		internal sealed class TeleportLink
+		{
+			public Map SourceMap;
+			public Point3D Location;
+			public Map DestMap;
+			public Point3D Dest;
+			public bool ViaDoor;
+		}
+
+		// One world scan of teleporters and dungeon regions, shared by the whole catalog build.
+		internal sealed class CatalogIndex
+		{
+			private readonly Dictionary<int, List<TeleportLink>> m_LinksBySourceMap = new Dictionary<int, List<TeleportLink>>();
+			private readonly List<TeleportLink> m_AllLinks = new List<TeleportLink>();
+			private readonly Dictionary<int, List<BaseRegion>> m_RegionsByMap = new Dictionary<int, List<BaseRegion>>();
+			private readonly Dictionary<int, List<BaseRegion>> m_ChambersByMap = new Dictionary<int, List<BaseRegion>>();
+			private static readonly List<TeleportLink> NoLinks = new List<TeleportLink>();
+
+			public List<TeleportLink> AllLinks { get { return m_AllLinks; } }
+
+			public static CatalogIndex Build()
+			{
+				CatalogIndex index = new CatalogIndex();
+
+				foreach ( Item item in World.Items.Values )
+				{
+					if ( item == null || item.Deleted || item.Parent != null || item.Map == null || item.Map == Map.Internal || Instance.IsPoolMap( item.Map ) )
+						continue;
+
+					Map destinationMap;
+					Point3D destination;
+					if ( TryGetTeleportDestination( item, out destinationMap, out destination ) && destination != Point3D.Zero )
+						index.AddLink( item.Map, item.Location, destinationMap, destination, item is ThruDoor );
+				}
+
+				Map[] bases = GetCloneBaseMaps();
+				for ( int i = 0; i < bases.Length; i++ )
+				{
+					List<DecorationTeleporterSource> sources = GetDecorationTeleporterSources( bases[i] );
+					for ( int j = 0; sources != null && j < sources.Count; j++ )
+						index.AddLink( sources[j].SourceMap, sources[j].Location, sources[j].DestinationMap, sources[j].Destination, false );
+				}
+
+				foreach ( Region region in Region.Regions )
+				{
+					BaseRegion br = region as BaseRegion;
+					if ( br == null || br.Map == null || br.Map == Map.Internal || br.Area == null || br.Area.Length == 0 || Instance.IsPoolMap( br.Map ) )
+						continue;
+
+					Dictionary<int, List<BaseRegion>> byMap;
+					if ( IsDungeonCatalogRegion( br ) )
+						byMap = index.m_RegionsByMap;
+					else if ( br is PublicRegion )
+						byMap = index.m_ChambersByMap;
+					else
+						continue;
+
+					List<BaseRegion> list;
+					if ( !byMap.TryGetValue( br.Map.MapIndex, out list ) )
+						byMap[br.Map.MapIndex] = list = new List<BaseRegion>();
+
+					list.Add( br );
+				}
+
+				return index;
+			}
+
+			private void AddLink( Map sourceMap, Point3D location, Map destinationMap, Point3D destination, bool viaDoor )
+			{
+				TeleportLink link = new TeleportLink();
+				link.ViaDoor = viaDoor;
+				link.SourceMap = sourceMap;
+				link.Location = location;
+				link.DestMap = ResolveDestinationMap( sourceMap, destinationMap );
+				link.Dest = destination;
+
+				List<TeleportLink> list;
+				if ( !m_LinksBySourceMap.TryGetValue( sourceMap.MapIndex, out list ) )
+					m_LinksBySourceMap[sourceMap.MapIndex] = list = new List<TeleportLink>();
+
+				list.Add( link );
+				m_AllLinks.Add( link );
+			}
+
+			public List<TeleportLink> LinksFrom( Map map )
+			{
+				List<TeleportLink> list;
+				return m_LinksBySourceMap.TryGetValue( map.MapIndex, out list ) ? list : NoLinks;
+			}
+
+			// A magic door (ThruDoor) may also lead into a public chamber: a quest or guardian room.
+			public BaseRegion FindRegion( Map map, Point3D p, bool viaDoor )
+			{
+				BaseRegion best = FindIn( m_RegionsByMap, map, p );
+				return best == null && viaDoor ? FindIn( m_ChambersByMap, map, p ) : best;
+			}
+
+			private static BaseRegion FindIn( Dictionary<int, List<BaseRegion>> byMap, Map map, Point3D p )
+			{
+				List<BaseRegion> list;
+				if ( !byMap.TryGetValue( map.MapIndex, out list ) )
+					return null;
+
+				BaseRegion best = null;
+				for ( int i = 0; i < list.Count; i++ )
+				{
+					if ( list[i].Contains( p ) && ( best == null || list[i].Priority > best.Priority ) )
+						best = list[i];
+				}
+
+				return best;
 			}
 		}
 
@@ -1879,7 +2161,13 @@ namespace Server.Engines.Instancing
 			private readonly int m_Priority;
 			private readonly SpawnZLevel m_SpawnZLevel;
 			private readonly SpawnEntry[] m_Spawns;
+			private readonly BaseRegion[] m_ConnectedRegions;
+			private readonly Rectangle3D[][] m_RegionAreas;
+			private readonly bool m_WalkOutExits;
 
+			public bool WalkOutExits { get { return m_WalkOutExits; } }
+
+			public BaseRegion[] ConnectedRegions { get { return m_ConnectedRegions; } }
 			public int Index { get { return m_Index; } set { m_Index = value; } }
 			public string Name { get { return m_Name; } }
 			public string DisplayName { get { return m_DisplayName; } }
@@ -1891,14 +2179,40 @@ namespace Server.Engines.Instancing
 			public SpawnZLevel SpawnZLevel { get { return m_SpawnZLevel; } }
 			public SpawnEntry[] Spawns { get { return m_Spawns; } }
 			public int SpawnCount { get { return m_Spawns == null ? 0 : m_Spawns.Length; } }
-			public DungeonInstanceAvailability Availability { get { return DungeonInstanceType.GetDefinitionAvailability( m_Index ); } }
+			public DungeonInstanceAvailability Availability { get { return DungeonInstanceType.GetDefinitionAvailability( m_DisplayName ); } }
 			public string AvailabilityLabel { get { return DungeonInstanceType.GetAvailabilityLabel( Availability ); } }
 			public string InstanceBlockReason { get { return DungeonInstanceType.GetAvailabilityReason( Availability ); } }
 			public bool CanSpawnInstance { get { return Availability == DungeonInstanceAvailability.Allowed; } }
 
+			// The region's rectangles plus pads for its teleporters just outside them.
+			public Rectangle3D[] GetRegionArea( int index )
+			{
+				return (Rectangle3D[])m_RegionAreas[index].Clone();
+			}
+
+			public bool TryGetRandomStandable( Map map, out Point3D p )
+			{
+				for ( int attempt = 0; attempt < 100; attempt++ )
+				{
+					Rectangle3D rect = m_Area[Utility.Random( m_Area.Length )];
+					int x = rect.Start.X + Utility.Random( Math.Max( 1, rect.Width ) );
+					int y = rect.Start.Y + Utility.Random( Math.Max( 1, rect.Height ) );
+
+					int z;
+					if ( FindStandableZ( map, x, y, rect.Start.Z, out z ) && Contains( new Point3D( x, y, z ) ) && !InstanceManager.IsInstanceVoid( map, new Point3D( x, y, z ) ) )
+					{
+						p = new Point3D( x, y, z );
+						return true;
+					}
+				}
+
+				p = Point3D.Zero;
+				return false;
+			}
+
 			public bool Contains( Point3D loc )
 			{
-				return Contains( m_Area, loc );
+				return Contains( m_Area, loc, 0 );
 			}
 
 			public bool ContainsFunctionalItem( Point3D loc )
@@ -1906,298 +2220,270 @@ namespace Server.Engines.Instancing
 				return Contains( m_Area, loc, FunctionalItemMargin );
 			}
 
-			public bool ContainsInstanceDestination( Map map, Point3D loc )
+			internal DungeonInstanceDefinition( BaseRegion region, CatalogIndex catalog )
 			{
-				if ( !Object.ReferenceEquals( map, m_Map ) )
-					return false;
+				m_Name = region.Name != null ? region.Name : region.ToString();
+				m_Map = region.Map;
+				m_MapName = m_Map != null && m_Map.Name != null ? m_Map.Name : "Unknown";
+				m_DisplayName = String.Format( "{0}: {1}", m_MapName, m_Name );
 
-				if ( Contains( loc ) )
-					return true;
+				List<BaseRegion> connected;
+				List<List<Rectangle3D>> regionAreas;
+				BuildCloneArea( region, catalog, out connected, out regionAreas );
 
-				if ( !ContainsFunctionalItem( loc ) )
-					return false;
+				m_ConnectedRegions = connected.ToArray();
+				m_RegionAreas = new Rectangle3D[regionAreas.Count][];
+				List<Rectangle3D> all = new List<Rectangle3D>();
 
-				return FindCloneableRegion( map, loc ) != null;
-			}
-
-				public DungeonInstanceDefinition( BaseRegion region )
+				for ( int i = 0; i < regionAreas.Count; i++ )
 				{
-					m_Name = region.Name != null ? region.Name : region.ToString();
-					m_Map = region.Map;
-					m_MapName = m_Map != null && m_Map.Name != null ? m_Map.Name : "Unknown";
-					m_DisplayName = String.Format( "{0}: {1}", m_MapName, m_Name );
-					m_Landing = GetLandingFor( region );
-					BaseRegion[] connectedRegions;
-					m_Area = BuildCloneArea( region, out connectedRegions );
-					m_Priority = region.Priority;
-					m_SpawnZLevel = region.SpawnZLevel;
-					m_Spawns = BuildSpawnsForConnectedRegions( connectedRegions );
+					m_RegionAreas[i] = regionAreas[i].ToArray();
+					all.AddRange( regionAreas[i] );
 				}
 
-				private static Rectangle3D[] BuildCloneArea( BaseRegion root, out BaseRegion[] connectedRegions )
-				{
-					List<Rectangle3D> areas = new List<Rectangle3D>();
-					List<BaseRegion> connected = new List<BaseRegion>();
-					AddAreas( areas, root.Area );
-					connected.Add( root );
+				m_Area = all.ToArray();
+				m_Landing = GetLandingFor( region, catalog, m_Area );
+				m_WalkOutExits = !HasTeleporterExit( catalog, m_Map, m_Area );
+				m_Priority = region.Priority;
+				m_SpawnZLevel = region.SpawnZLevel;
+				m_Spawns = BuildSpawnsForConnectedRegions( m_ConnectedRegions );
+			}
 
+			// The root region plus the dungeon-type regions its teleporters lead into; any other destination is an exit.
+			private static void BuildCloneArea( BaseRegion root, CatalogIndex catalog, out List<BaseRegion> connected, out List<List<Rectangle3D>> regionAreas )
+			{
+				connected = new List<BaseRegion>();
+				regionAreas = new List<List<Rectangle3D>>();
+				List<Rectangle3D> all = new List<Rectangle3D>();
+
+				connected.Add( root );
+				regionAreas.Add( new List<Rectangle3D>( root.Area ) );
+				all.AddRange( root.Area );
+
+				List<TeleportLink> links = catalog.LinksFrom( root.Map );
 				bool changed = true;
 				int pass = 0;
 
-					while ( changed && pass++ < 16 )
+				while ( changed && pass++ < 16 )
+				{
+					changed = false;
+
+					for ( int i = 0; i < links.Count; i++ )
 					{
-						changed = false;
-						changed |= AddTeleporterConnectedAreas( root, areas, connected );
-						changed |= AddDecorationTeleporterConnectedAreas( root, areas, connected );
-
-						foreach ( Item item in World.Items.Values )
-						{
-						if ( item == null || item.Deleted || item.Parent != null )
+						TeleportLink link = links[i];
+						if ( !Object.ReferenceEquals( link.DestMap, root.Map ) || !Contains( all, link.Location, FunctionalItemMargin ) )
 							continue;
 
-						if ( !Object.ReferenceEquals( item.Map, root.Map ) || !Contains( areas, item.Location, FunctionalItemMargin ) )
+						BaseRegion destination = catalog.FindRegion( root.Map, link.Dest, link.ViaDoor );
+						if ( destination == null || !ShouldAddConnectedRegion( root, destination ) || connected.Contains( destination ) )
 							continue;
 
-						Map destinationMap;
-						Point3D destination;
-						if ( !TryGetTeleportDestination( item, out destinationMap, out destination ) || destination == Point3D.Zero )
-							continue;
-
-						bool implicitSameMap = destinationMap == null || destinationMap == Map.Internal;
-						destinationMap = ResolveDestinationMap( item, destinationMap );
-
-						if ( !Object.ReferenceEquals( destinationMap, root.Map ) )
-							continue;
-
-						BaseRegion destinationRegion = FindCloneableRegion( destinationMap, destination );
-						if ( ShouldAddConnectedRegion( root, destinationRegion ) )
-							changed |= AddConnectedRegion( root, destinationRegion, connected, areas );
-						else if ( implicitSameMap )
-							changed |= AddTeleporterEndpointArea( areas, destination );
-						}
+						connected.Add( destination );
+						regionAreas.Add( new List<Rectangle3D>( destination.Area ) );
+						all.AddRange( destination.Area );
+						changed = true;
 					}
-
-					connectedRegions = connected.ToArray();
-					return areas.ToArray();
 				}
 
-			private static bool AddTeleporterConnectedAreas( BaseRegion root, List<Rectangle3D> areas, List<BaseRegion> connected )
-			{
-				bool changed = false;
-
-				foreach ( Item item in World.Items.Values )
+				// A teleporter into the dungeon just outside its rectangles is a stair the region data missed.
+				for ( int i = 0; i < links.Count; i++ )
 				{
-					if ( item == null || item.Deleted || item.Parent != null || !Object.ReferenceEquals( item.Map, root.Map ) )
+					TeleportLink link = links[i];
+					if ( Contains( all, link.Location, 0 ) || !Contains( all, link.Location, FunctionalItemMargin ) )
 						continue;
 
-					Map destinationMap;
-					Point3D destination;
-					if ( !TryGetTeleportDestination( item, out destinationMap, out destination ) || destination == Point3D.Zero )
+					if ( !Object.ReferenceEquals( link.DestMap, root.Map ) || !Contains( all, link.Dest, 0 ) )
 						continue;
 
-					bool implicitSameMap = destinationMap == null || destinationMap == Map.Internal;
-					destinationMap = ResolveDestinationMap( item, destinationMap );
+					Rectangle3D pad = new Rectangle3D(
+						new Point3D( link.Location.X - 1, link.Location.Y - 1, Region.MinZ ),
+						new Point3D( link.Location.X + 2, link.Location.Y + 2, Region.MaxZ ) );
 
-					if ( !Object.ReferenceEquals( destinationMap, root.Map ) )
-						continue;
-
-					BaseRegion sourceRegion = FindCloneableRegion( item.Map, item.Location );
-					if ( sourceRegion == null || !ContainsRegion( connected, sourceRegion ) )
-						continue;
-
-					BaseRegion destinationRegion = FindCloneableRegion( destinationMap, destination );
-					if ( ShouldAddConnectedRegion( root, destinationRegion ) )
-						changed |= AddConnectedRegion( root, destinationRegion, connected, areas );
-					else if ( implicitSameMap )
-						changed |= AddTeleporterEndpointArea( areas, destination );
+					regionAreas[NearestRegion( regionAreas, link.Location )].Add( pad );
 				}
-
-					return changed;
-				}
-
-				private static bool AddDecorationTeleporterConnectedAreas( BaseRegion root, List<Rectangle3D> areas, List<BaseRegion> connected )
-				{
-					bool changed = false;
-					List<DecorationTeleporterSource> sources = GetDecorationTeleporterSources( root.Map );
-
-					if ( sources == null || sources.Count == 0 )
-						return false;
-
-					for ( int i = 0; i < sources.Count; i++ )
-					{
-						DecorationTeleporterSource source = sources[i];
-						if ( source == null || !Object.ReferenceEquals( source.SourceMap, root.Map ) )
-							continue;
-
-						if ( !Contains( areas, source.Location, FunctionalItemMargin ) )
-							continue;
-
-						bool implicitSameMap = source.DestinationMap == null || source.DestinationMap == Map.Internal;
-						Map destinationMap = ResolveDestinationMap( source.SourceMap, source.DestinationMap );
-
-						if ( !Object.ReferenceEquals( destinationMap, root.Map ) )
-							continue;
-
-						BaseRegion destinationRegion = FindCloneableRegion( destinationMap, source.Destination );
-						if ( ShouldAddConnectedRegion( root, destinationRegion ) )
-							changed |= AddConnectedRegion( root, destinationRegion, connected, areas );
-						else if ( implicitSameMap )
-							changed |= AddTeleporterEndpointArea( areas, source.Destination );
-					}
-
-					return changed;
-				}
-
-				private static bool AddTeleporterEndpointArea( List<Rectangle3D> areas, Point3D destination )
-				{
-					Rectangle3D area = new Rectangle3D(
-						new Point3D( destination.X - TeleporterEndpointMargin, destination.Y - TeleporterEndpointMargin, Region.MinZ ),
-					new Point3D( destination.X + TeleporterEndpointMargin + 1, destination.Y + TeleporterEndpointMargin + 1, Region.MaxZ ) );
-
-				if ( ContainsArea( areas, area ) )
-					return false;
-
-				areas.Add( area );
-				return true;
 			}
 
-				private static SpawnEntry[] BuildSpawnsForConnectedRegions( BaseRegion[] connectedRegions )
-				{
-					List<SpawnEntry> spawns = new List<SpawnEntry>();
-					HashSet<int> seen = new HashSet<int>();
-
-					if ( connectedRegions == null )
-						return spawns.ToArray();
-
-					for ( int r = 0; r < connectedRegions.Length; r++ )
-					{
-						BaseRegion br = connectedRegions[r];
-						if ( br == null || !IsDungeonCatalogRegion( br ) )
-							continue;
-
-						SpawnEntry[] entries = br.Spawns;
-						if ( entries == null )
-							continue;
-
-						for ( int i = 0; i < entries.Length; i++ )
-						{
-							SpawnEntry entry = entries[i];
-							if ( entry != null && seen.Add( entry.ID ) )
-								spawns.Add( entry );
-						}
-					}
-
-					return spawns.ToArray();
-				}
-
-			private static bool ShouldAddConnectedRegion( BaseRegion root, BaseRegion destinationRegion )
+			private static bool HasTeleporterExit( CatalogIndex catalog, Map map, Rectangle3D[] area )
 			{
-				if ( root == null || destinationRegion == null )
-					return false;
-
-				if ( Object.ReferenceEquals( root, destinationRegion ) )
-					return true;
-
-				if ( destinationRegion.Priority < root.Priority && AreasIntersect( root.Area, destinationRegion.Area ) )
-					return false;
-
-				return true;
-			}
-
-			private static bool AddConnectedRegion( BaseRegion root, BaseRegion region, List<BaseRegion> connected, List<Rectangle3D> areas )
-			{
-				if ( !ShouldAddConnectedRegion( root, region ) )
-					return false;
-
-				bool changed = false;
-
-				if ( !ContainsRegion( connected, region ) )
+				List<TeleportLink> links = catalog.LinksFrom( map );
+				for ( int i = 0; i < links.Count; i++ )
 				{
-					connected.Add( region );
-					changed = true;
-				}
+					TeleportLink link = links[i];
+					if ( !Contains( area, link.Location, 0 ) )
+						continue;
 
-				return AddAreas( areas, region.Area ) || changed;
-			}
-
-			private static bool ContainsRegion( List<BaseRegion> regions, BaseRegion region )
-			{
-				for ( int i = 0; i < regions.Count; i++ )
-				{
-					if ( Object.ReferenceEquals( regions[i], region ) )
+					if ( !Object.ReferenceEquals( link.DestMap, map ) || !Contains( area, link.Dest, 0 ) )
 						return true;
 				}
 
 				return false;
 			}
 
-			private static BaseRegion FindCloneableRegion( Map map, Point3D location )
+			private static int NearestRegion( List<List<Rectangle3D>> regionAreas, Point3D p )
 			{
-				BaseRegion best = null;
+				int best = 0;
+				int bestDistance = int.MaxValue;
 
-				foreach ( Region region in Region.Regions )
+				for ( int i = 0; i < regionAreas.Count; i++ )
 				{
-					BaseRegion br = region as BaseRegion;
-					if ( br == null || !Object.ReferenceEquals( br.Map, map ) || br.Area == null || br.Area.Length == 0 )
-						continue;
+					for ( int j = 0; j < regionAreas[i].Count; j++ )
+					{
+						Rectangle3D r = regionAreas[i][j];
+						int dx = Math.Max( 0, Math.Max( r.Start.X - p.X, p.X - ( r.End.X - 1 ) ) );
+						int dy = Math.Max( 0, Math.Max( r.Start.Y - p.Y, p.Y - ( r.End.Y - 1 ) ) );
+						int distance = dx + dy;
 
-					if ( !IsCloneableConnectedRegion( br ) || !Contains( br.Area, location ) )
-						continue;
-
-					if ( best == null || br.Priority > best.Priority )
-						best = br;
+						if ( distance < bestDistance )
+						{
+							bestDistance = distance;
+							best = i;
+						}
+					}
 				}
 
 				return best;
 			}
 
-			private static bool IsDungeonCatalogRegion( BaseRegion region )
+			private static SpawnEntry[] BuildSpawnsForConnectedRegions( BaseRegion[] connectedRegions )
 			{
-				return region is DungeonRegion || region is BardDungeonRegion || region is CaveRegion || region is DeadRegion;
-			}
+				List<SpawnEntry> spawns = new List<SpawnEntry>();
 
-			private static bool IsCloneableConnectedRegion( BaseRegion region )
-			{
-				return IsDungeonCatalogRegion( region )
-					|| region is PublicRegion
-					|| region is UnderHouseRegion
-					|| region is SafeRegion;
-			}
-
-			private static bool AddAreas( List<Rectangle3D> areas, Rectangle3D[] add )
-			{
-				bool changed = false;
-
-				if ( add == null )
-					return false;
-
-				for ( int i = 0; i < add.Length; i++ )
+				for ( int r = 0; r < connectedRegions.Length; r++ )
 				{
-					if ( ContainsArea( areas, add[i] ) )
-						continue;
-
-					areas.Add( add[i] );
-					changed = true;
+					SpawnEntry[] entries = connectedRegions[r].Spawns;
+					if ( entries != null )
+						spawns.AddRange( entries );
 				}
 
-				return changed;
+				return spawns.ToArray();
 			}
 
-			private static bool ContainsArea( List<Rectangle3D> areas, Rectangle3D area )
+			private static bool ShouldAddConnectedRegion( BaseRegion root, BaseRegion destinationRegion )
 			{
-				for ( int i = 0; i < areas.Count; i++ )
+				if ( Object.ReferenceEquals( root, destinationRegion ) )
+					return true;
+
+				return !( destinationRegion.Priority < root.Priority && AreasIntersect( root.Area, destinationRegion.Area ) );
+			}
+
+			// Prefers where real entrances drop players, then the recorded entrance, go location, any internal destination,
+			// any standable tile.
+			private static Point3D GetLandingFor( BaseRegion region, CatalogIndex catalog, Rectangle3D[] area )
+			{
+				Map map = region.Map;
+				Point3D standable;
+
+				List<TeleportLink> links = catalog.AllLinks;
+				for ( int i = 0; i < links.Count; i++ )
 				{
-					Rectangle3D existing = areas[i];
-					if ( existing.Start == area.Start && existing.End == area.End )
-						return true;
+					TeleportLink link = links[i];
+					if ( !Object.ReferenceEquals( link.DestMap, map ) || !region.Contains( link.Dest ) )
+						continue;
+
+					if ( Object.ReferenceEquals( link.SourceMap, map ) && Contains( area, link.Location, 0 ) )
+						continue; // a teleporter inside the dungeon, not an entrance
+
+					if ( TryStandable( map, area, link.Dest, out standable ) )
+						return standable;
+				}
+
+				DungeonRegion dungeon = region as DungeonRegion;
+				if ( dungeon != null && Object.ReferenceEquals( dungeon.EntranceMap, map ) && TryStandable( map, area, dungeon.EntranceLocation, out standable ) )
+					return standable;
+
+				if ( TryStandable( map, area, region.GoLocation, out standable ) )
+					return standable;
+
+				for ( int i = 0; i < links.Count; i++ )
+				{
+					if ( Object.ReferenceEquals( links[i].DestMap, map ) && TryStandable( map, area, links[i].Dest, out standable ) )
+						return standable;
+				}
+
+				for ( int i = 0; i < region.Area.Length; i++ )
+				{
+					if ( FindStandableIn( map, area, region.Area[i], out standable ) )
+						return standable;
+				}
+
+				return region.GoLocation;
+			}
+
+			private static bool TryStandable( Map map, Rectangle3D[] area, Point3D p, out Point3D standable )
+			{
+				standable = p;
+
+				if ( p == Point3D.Zero || !Contains( area, p, 0 ) )
+					return false;
+
+				if ( map.CanFit( p.X, p.Y, p.Z, 16, false, false, true ) )
+					return true;
+
+				int z;
+				if ( FindStandableZ( map, p.X, p.Y, p.Z, out z ) )
+				{
+					standable = new Point3D( p.X, p.Y, z );
+					return Contains( area, standable, 0 );
 				}
 
 				return false;
 			}
 
-			private static bool Contains( List<Rectangle3D> areas, Point3D location )
+			private static bool FindStandableIn( Map map, Rectangle3D[] area, Rectangle3D rect, out Point3D standable )
 			{
-				return Contains( areas, location, 0 );
+				int cx = rect.Start.X + rect.Width / 2;
+				int cy = rect.Start.Y + rect.Height / 2;
+				int maxRadius = Math.Max( rect.Width, rect.Height ) / 2 + 1;
+
+				for ( int radius = 0; radius <= maxRadius; radius++ )
+				{
+					for ( int x = cx - radius; x <= cx + radius; x++ )
+					{
+						for ( int y = cy - radius; y <= cy + radius; y++ )
+						{
+							if ( Math.Max( Math.Abs( x - cx ), Math.Abs( y - cy ) ) != radius )
+								continue;
+
+							int z;
+							if ( FindStandableZ( map, x, y, rect.Start.Z, out z ) && Contains( area, new Point3D( x, y, z ), 0 ) )
+							{
+								standable = new Point3D( x, y, z );
+								return true;
+							}
+						}
+					}
+				}
+
+				standable = Point3D.Zero;
+				return false;
+			}
+
+			private static bool FindStandableZ( Map map, int x, int y, int preferZ, out int z )
+			{
+				List<int> candidates = new List<int>();
+				candidates.Add( map.GetAverageZ( x, y ) );
+
+				StaticTile[] tiles = map.Tiles.GetStaticTiles( x, y, true );
+				for ( int i = 0; i < tiles.Length; i++ )
+				{
+					ItemData data = TileData.ItemTable[tiles[i].ID & TileData.MaxItemValue];
+					if ( data.Surface )
+						candidates.Add( tiles[i].Z + data.CalcHeight );
+				}
+
+				candidates.Sort( delegate( int a, int b ) { return Math.Abs( a - preferZ ).CompareTo( Math.Abs( b - preferZ ) ); } );
+
+				for ( int i = 0; i < candidates.Count; i++ )
+				{
+					if ( map.CanFit( x, y, candidates[i], 16, false, false, true ) )
+					{
+						z = candidates[i];
+						return true;
+					}
+				}
+
+				z = preferZ;
+				return false;
 			}
 
 			private static bool Contains( List<Rectangle3D> areas, Point3D location, int margin )
@@ -2209,11 +2495,6 @@ namespace Server.Engines.Instancing
 				}
 
 				return false;
-			}
-
-			private static bool Contains( Rectangle3D[] areas, Point3D location )
-			{
-				return Contains( areas, location, 0 );
 			}
 
 			private static bool Contains( Rectangle3D[] areas, Point3D location, int margin )
@@ -2239,60 +2520,18 @@ namespace Server.Engines.Instancing
 
 			private static bool AreasIntersect( Rectangle3D[] a, Rectangle3D[] b )
 			{
-				if ( a == null || b == null )
-					return false;
-
 				for ( int i = 0; i < a.Length; i++ )
 				{
 					for ( int j = 0; j < b.Length; j++ )
 					{
-						if ( RectsIntersect2D( a[i], b[j] ) )
+						if ( a[i].Start.X < b[j].End.X && a[i].End.X > b[j].Start.X && a[i].Start.Y < b[j].End.Y && a[i].End.Y > b[j].Start.Y )
 							return true;
 					}
 				}
 
 				return false;
 			}
-
-			private static bool RectsIntersect2D( Rectangle3D a, Rectangle3D b )
-			{
-				return a.Start.X < b.End.X && a.End.X > b.Start.X
-					&& a.Start.Y < b.End.Y && a.End.Y > b.Start.Y;
-			}
-
-			private static Point3D GetLandingFor( BaseRegion region )
-			{
-				DungeonRegion dungeon = region as DungeonRegion;
-				if ( dungeon != null && dungeon.EntranceMap == region.Map && dungeon.EntranceLocation != Point3D.Zero )
-					return dungeon.EntranceLocation;
-
-				if ( region.GoLocation != Point3D.Zero )
-					return region.GoLocation;
-
-				// 1. Try to find an overworld teleporter that drops players into this region
-				foreach ( Item item in World.Items.Values )
-				{
-					Teleporter teleporter = item as Teleporter;
-					if ( teleporter != null && teleporter.MapDest == region.Map && region.Contains( teleporter.PointDest ) )
-						return teleporter.PointDest;
-				}
-
-				// 2. Fallback: find any teleporter inside this region (like an exit teleporter)
-				foreach ( Item item in World.Items.Values )
-				{
-					Teleporter teleporter = item as Teleporter;
-					if ( teleporter != null && teleporter.Map == region.Map && region.Contains( teleporter.Location ) )
-						return teleporter.Location;
-				}
-
-				Rectangle3D rect = region.Area[0];
-				int x = rect.Start.X + ( rect.Width / 2 );
-				int y = rect.Start.Y + ( rect.Height / 2 );
-				int z = region.Map != null ? region.Map.GetAverageZ( x, y ) : rect.Start.Z;
-
-				return new Point3D( x, y, z );
-				}
-			}
+		}
 
 			private sealed class DecorationTeleporterSource
 			{
@@ -2751,46 +2990,10 @@ namespace Server.Engines.Instancing
 			}
 		}
 
-		private sealed class RuntimeDungeonRegion : BaseRegion
-		{
-			private readonly DungeonInstanceType m_Type;
-			private readonly int m_MapIndex;
-
-			public RuntimeDungeonRegion( DungeonInstanceType type, Instance inst, DungeonInstanceSettings settings, Map map )
-				: base(
-					String.Format( "{0} Instance {1}", settings.Definition.Name, (int)inst.OwnerSerial ),
-					map,
-					settings.Definition.Priority + RuntimeRegionPriorityOffset,
-					settings.Definition.Area )
-			{
-				m_Type = type;
-				m_MapIndex = map.MapIndex;
-				SpawnZLevel = settings.Definition.SpawnZLevel;
-				RuneName = settings.Definition.Name;
-				GoLocation = settings.Definition.Landing;
-			}
-
-			public override bool YoungProtected { get { return false; } }
-
-			public override bool AllowHousing( Mobile from, Point3D p )
-			{
-				return false;
-			}
-
-			public override void OnEnter( Mobile m )
-			{
-				base.OnEnter( m );
-
-				PlayerMobile pm = m as PlayerMobile;
-				if ( pm != null )
-					m_Type.OnPlayerEnteredMap( m_MapIndex, pm );
-			}
-		}
-
 		private sealed class RuntimeDungeonState
 		{
 			private readonly DungeonInstanceSettings m_Settings;
-			private readonly RuntimeDungeonRegion m_Region;
+			private readonly List<BaseRegion> m_Regions;
 			private readonly SpawnEntry[] m_Entries;
 			private readonly Map m_Map;
 			private readonly Rectangle3D[] m_Area;
@@ -2798,10 +3001,10 @@ namespace Server.Engines.Instancing
 			private readonly List<Mobile> m_Mobiles = new List<Mobile>();
 			private Timer m_Timer;
 
-			public RuntimeDungeonState( DungeonInstanceSettings settings, RuntimeDungeonRegion region, SpawnEntry[] entries, Map map, Rectangle3D[] area )
+			public RuntimeDungeonState( DungeonInstanceSettings settings, List<BaseRegion> regions, SpawnEntry[] entries, Map map, Rectangle3D[] area )
 			{
 				m_Settings = settings;
-				m_Region = region;
+				m_Regions = regions;
 				m_Entries = entries;
 				m_Map = map;
 				m_Area = area;
@@ -2869,12 +3072,10 @@ namespace Server.Engines.Instancing
 				if ( bc == null || bc.Controlled || bc.Summoned || bc.ControlMaster != null || bc.SummonMaster != null )
 					return;
 
-				if ( !m_Mobiles.Contains( m ) )
-					m_Mobiles.Add( m );
-
 				if ( m_Scaled.Contains( bc.Serial ) )
 					return;
 
+				m_Mobiles.Add( m );
 				BaseCreature.BeefUp( bc, m_Settings.Difficulty, false );
 				m_Scaled.Add( bc.Serial );
 			}
@@ -2887,15 +3088,11 @@ namespace Server.Engines.Instancing
 					m_Timer = null;
 				}
 
-				if ( m_Region != null && m_Region.Registered )
-					m_Region.Unregister();
-				else
+				// Unregistering a region deletes its spawn entries.
+				for ( int i = 0; i < m_Regions.Count; i++ )
 				{
-					for ( int i = 0; i < m_Entries.Length; i++ )
-					{
-						if ( m_Entries[i] != null )
-							m_Entries[i].Delete();
-					}
+					if ( m_Regions[i].Registered )
+						m_Regions[i].Unregister();
 				}
 
 				for ( int i = 0; i < m_Mobiles.Count; i++ )

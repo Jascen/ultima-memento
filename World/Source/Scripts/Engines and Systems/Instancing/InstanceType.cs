@@ -70,6 +70,9 @@ namespace Server.Engines.Instancing
 		// instance and its visitors only ever occupy this small area.
 		public virtual int RegionHalfExtent { get { return 64; } }
 
+		// Off for types that register their own regions per instance.
+		public virtual bool UsesFootprintRegion { get { return true; } }
+
 		public virtual Rectangle3D RegionFootprint()
 		{
 			return new Rectangle3D(
@@ -137,6 +140,11 @@ namespace Server.Engines.Instancing
 
 				Map map = Map.Maps[idx];
 				if ( map == null )
+					continue;
+
+				map.DefaultRegion = new InstanceVoidRegion( this, map );
+
+				if ( !UsesFootprintRegion )
 					continue;
 
 				InstanceRegion region = new InstanceRegion( this, map );
@@ -504,6 +512,11 @@ namespace Server.Engines.Instancing
 			}
 
 			ReleaseDeadOwners();
+			OnSweep();
+		}
+
+		protected virtual void OnSweep()
+		{
 		}
 
 		protected bool HasPlayersInside( Instance inst )
@@ -603,6 +616,56 @@ namespace Server.Engines.Instancing
 			BaseCreature.TeleportPets( m, exitPoint, exitMap, false );
 			m.MoveToWorld( exitPoint, exitMap );
 			return true;
+		}
+
+		// The step is refused; types where walking out is the way out send the player out here.
+		public virtual void OnWalkIntoVoid( Mobile m, Map map )
+		{
+		}
+
+		// A random standable point in the instance live on this map, for effects that would
+		// otherwise send a player somewhere outside it.
+		public virtual bool TryGetRandomPlayablePoint( Map map, out Point3D p )
+		{
+			p = Point3D.Zero;
+			return false;
+		}
+
+		// A mobile reached the void other than by walking: players go back to the landing (or out), pets to their
+		// master.
+		public virtual void ReturnFromVoid( Mobile m, Map map )
+		{
+			if ( m == null || m.Deleted || !Object.ReferenceEquals( m.Map, map ) || !( m.Region is InstanceVoidRegion ) )
+				return;
+
+			Instance inst = GetLiveInstance( map );
+
+			if ( m.Player )
+			{
+				if ( inst != null )
+				{
+					Point3D landing = GetLandingPoint( inst, map );
+					BaseCreature.TeleportPets( m, landing, map, false );
+					m.MoveToWorld( landing, map );
+				}
+				else
+				{
+					LeaveInstance( m );
+				}
+
+				m.SendMessage( "You cannot go there." );
+				return;
+			}
+
+			BaseCreature bc = m as BaseCreature;
+			Mobile master = bc != null ? ( bc.ControlMaster != null ? bc.ControlMaster : bc.SummonMaster ) : null;
+
+			if ( master != null && !master.Deleted && master.Map != null && master.Map != Map.Internal && !( master.Region is InstanceVoidRegion ) )
+				m.MoveToWorld( master.Location, master.Map );
+			else if ( bc != null && bc.Controlled && inst != null )
+				m.MoveToWorld( GetLandingPoint( inst, map ), map );
+			else if ( !( bc != null && bc.Controlled ) )
+				m.Delete();
 		}
 
 		// A player who logged out (or was caught by a restart) inside an instance

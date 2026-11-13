@@ -29,7 +29,7 @@ namespace Server.Engines.Instancing
 				return;
 			}
 
-			DungeonInstanceType.Instance.SendOwnerToTheirInstance( from );
+			DungeonInstanceType.Instance.SendToDefaultInstance( from, Map, GetWorldLocation() );
 		}
 
 		public override void AddNameProperties( ObjectPropertyList list )

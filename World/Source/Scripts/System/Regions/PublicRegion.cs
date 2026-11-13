@@ -13,6 +13,11 @@ namespace Server.Regions
 {
 	public class PublicRegion : BaseRegion
 	{
+		// Runtime copies (dungeon instances).
+		public PublicRegion( string name, Map map, int priority, params Rectangle3D[] area ) : base( name, map, priority, area )
+		{
+		}
+
 		public PublicRegion( XmlElement xml, Map map, Region parent ) : base( xml, map, parent )
 		{
 		}

@@ -18,14 +18,14 @@ namespace Server.Engines.Instancing
 		{
 			Dungeon.Configure();
 
-			CommandSystem.Register( "dungeon", AccessLevel.Player, new CommandEventHandler( OnEnterCommand ) );
+			CommandSystem.Register( "dungeon", AccessLevel.GameMaster, new CommandEventHandler( OnEnterCommand ) );
 			CommandSystem.Register( "leavedungeon", AccessLevel.Player, new CommandEventHandler( OnLeaveCommand ) );
 			CommandSystem.Register( "dungeoninstance", AccessLevel.GameMaster, new CommandEventHandler( OnAdminCommand ) );
 		}
 
 		private static void OnEnterCommand( CommandEventArgs e )
 		{
-			Dungeon.SendOwnerToTheirInstance( e.Mobile );
+			Dungeon.SendToDefaultInstance( e.Mobile, e.Mobile.Map, e.Mobile.Location );
 		}
 
 		private static void OnLeaveCommand( CommandEventArgs e )
@@ -41,7 +41,7 @@ namespace Server.Engines.Instancing
 
 				if ( e.Arguments.Length == 0 )
 				{
-					from.SendMessage( "[dungeoninstance subcommands: status | list [filter] | placeentrance | spawnall | clearall" );
+					from.SendMessage( "[dungeoninstance subcommands: status | list [filter] | audit [index|filter] | placeentrance | spawnall | clearall" );
 					return;
 				}
 
@@ -101,6 +101,12 @@ namespace Server.Engines.Instancing
 							from.Target = new SpawnAllTarget();
 							break;
 						}
+					case "audit":
+						{
+							string filter = e.Arguments.Length > 1 ? String.Join( " ", e.Arguments, 1, e.Arguments.Length - 1 ) : "all";
+							DungeonInstanceAudit.Run( from, filter );
+							break;
+						}
 					case "clearall":
 						{
 							int count = Dungeon.ClearAllInstances();
@@ -108,7 +114,7 @@ namespace Server.Engines.Instancing
 							break;
 						}
 					default:
-						from.SendMessage( "Unknown subcommand. Try: status, list, placeentrance, spawnall, clearall" );
+						from.SendMessage( "Unknown subcommand. Try: status, list, audit, placeentrance, spawnall, clearall" );
 						break;
 				}
 		}

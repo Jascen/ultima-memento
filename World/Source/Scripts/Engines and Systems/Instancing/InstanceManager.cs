@@ -44,6 +44,32 @@ namespace Server.Engines.Instancing
 			return false;
 		}
 
+		// Outside the playable part of an instance; always false on normal maps.
+		public static bool IsInstanceVoid( Map map, Point3D p )
+		{
+			return IsInstanceMap( map ) && Region.Find( p, map ) is InstanceVoidRegion;
+		}
+
+		// Where a "teleport you away" effect (trap, portal tile) should land a mobile on an instance
+		// map: somewhere random inside the same instance. False on normal maps.
+		public static bool TryGetRandomPlayablePoint( Map map, out Point3D p )
+		{
+			p = Point3D.Zero;
+
+			if ( map == null )
+				return false;
+
+			EnsureRegistered();
+
+			foreach ( InstanceType type in _types )
+			{
+				if ( type.IsPoolMap( map ) )
+					return type.TryGetRandomPlayablePoint( map, out p );
+			}
+
+			return false;
+		}
+
 		// The known instance systems. Constructed here (rather than relying on each
 		// type's own Configure() running first) so pool-map registration is safe
 		// regardless of Configure() ordering.
